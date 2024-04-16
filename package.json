@@ -1,10 +1,10 @@
 {
   "name": "internship-2024-doctoo",
   "version": "1.0.0",
-  "description": "",
+  "description": "WIP.",
   "type": "module",
   "scripts": {
-    "backend:dev": "pnpm -F @internship-2024-doctoo/backend start:dev",
+    "backend:dev": "pnpm -F @internship-2024-doctoo/backend dev",
     "backend:build": "pnpm -F @internship-2024-doctoo/backend build",
     "backend:start": "pnpm -F @internship-2024-doctoo/backend start",
     "backend:test": "pnpm -F @internship-2024-doctoo/backend test",
@@ -22,7 +22,16 @@
   "engines": {
     "node": ">=18"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Radency/internship-2024-doctoo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Radency/internship-2024-doctoo/issues"
+  },
+  "homepage": "https://github.com/Radency/internship-2024-doctoo#readme",
   "devDependencies": {
-    "prettier": "^3.2.5"
+    "prettier": "^3.2.5",
+    "prettier-plugin-tailwindcss": "0.5.14"
   }
 }

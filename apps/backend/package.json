@@ -1,12 +1,12 @@
 {
   "name": "@internship-2024-doctoo/backend",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "prebuild": "pnpm prisma generate",
     "build": "nest build",
     "prestart": "pnpm prisma migrate deploy",
-    "start:dev": "nest start --debug --watch",
+    "dev": "nest start --debug --watch",
     "start": "node --enable-source-maps dist/main",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
+    "@nestjs/config": "3.2.2",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
     "@prisma/client": "5.12.1",

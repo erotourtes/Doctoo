@@ -41,10 +41,7 @@ interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
  * @param extendedRenderOptions - Optional configuration options for rendering. This includes `preloadedState` for initial Redux state and `store` for a specific Redux store instance. Any additional properties are passed to React Testing Library's render function.
  * @returns An object containing the Redux store used in the render, User event API for simulating user interactions in tests, and all of React Testing Library's query functions for testing the component.
  */
-export const renderWithProviders = (
-  ui: ReactElement,
-  extendedRenderOptions: ExtendedRenderOptions = {},
-) => {
+export const renderWithProviders = (ui: ReactElement, extendedRenderOptions: ExtendedRenderOptions = {}) => {
   const {
     preloadedState = {},
     // Automatically create a store instance if no store was passed in
@@ -52,9 +49,7 @@ export const renderWithProviders = (
     ...renderOptions
   } = extendedRenderOptions;
 
-  const Wrapper = ({ children }: PropsWithChildren) => (
-    <Provider store={store}>{children}</Provider>
-  );
+  const Wrapper = ({ children }: PropsWithChildren) => <Provider store={store}>{children}</Provider>;
 
   // Return an object with the store and all of RTL's query functions
   return {
