@@ -8,9 +8,9 @@ RUN corepack enable
 
 RUN pnpm i
 
-ARG VITE_API_URL
+ARG VITE_BACKEND_API_URL
 
-RUN VITE_API_URL=${VITE_API_URL} pnpm build
+RUN VITE_BACKEND_API_URL=${VITE_BACKEND_API_URL} pnpm build
 
 FROM devforth/spa-to-http:latest
 
