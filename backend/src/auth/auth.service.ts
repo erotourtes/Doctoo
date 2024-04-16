@@ -10,4 +10,13 @@ export class AuthService {
     }
     return null;
   }
+
+  async validateGoogleUser(token: string): Promise<any> {
+    const user = { token }; // TODO: use user service
+    if (user && user.token === token) {
+      const { token: _, ...result } = user;
+      return result;
+    }
+    return null;
+  }
 }
