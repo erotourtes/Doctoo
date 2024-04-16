@@ -1,5 +1,5 @@
 import { IsBoolean, IsEmail, IsOptional, IsPhoneNumber } from 'class-validator';
-import { IsNotEmptyString } from 'src/validators/IsNotEmptyString';
+import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
 
 export class CreateUserDto {
   @IsNotEmptyString()
