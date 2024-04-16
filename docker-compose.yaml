@@ -1,37 +1,35 @@
 version: '3.8'
 
 services:
+  postgres:
+    restart: always
+    image: postgres:14.5
+    environment:
+      POSTGRES_USER: 'task_user_v2'
+      POSTGRES_PASSWORD: 'task_password_v2'
+      POSTGRES_DB: 'task_manager_v2'
+
   backend:
+    restart: always
     build:
-      context: ./apps/backend
-      dockerfile: ./Dockerfile
-    env_file: ./.env
+      context: ./
+      dockerfile: ./apps/backend/Dockerfile
+    environment:
+      BACKEND_PORT: ${BACKEND_PORT}
+      DATABASE_URL: ${DATABASE_URL}
     ports:
-      - 3000:3000
-    volumes:
-      - ./backend/src:/app/src
-      - ./backend/test:/app/test
+      - ${BACKEND_PORT}:${BACKEND_PORT}
     depends_on:
-      - db
+      - postgres
 
   frontend:
+    restart: always
     build:
-      context: ./apps/frontend
-      dockerfile: ./Dockerfile
-    env_file: ./.env
+      context: ./
+      dockerfile: ./apps/frontend/Dockerfile
+      args:
+        VITE_API_URL: 'http://localhost:3000'
     ports:
-      - 3005:80
-    volumes:
-      - ./frontend/src:/app/src
+      - 3005:8080
     depends_on:
       - backend
-
-  db:
-    image: postgres:14.2-alpine
-    restart: on-failure
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    ports:
-      - ${DB_PORT}:5432

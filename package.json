@@ -17,13 +17,12 @@
     "frontend:preview": "pnpm -F @internship-2024-doctoo/frontend preview",
     "frontend:storybook": "pnpm -F @internship-2024-doctoo/frontend storybook",
     "frontend:storybook:build": "pnpm -F @internship-2024-doctoo/frontend storybook:build",
-    "build": "pnpm -r build",
-    "lint": "pnpm -r lint"
+    "build": "pnpm -r build"
   },
   "engines": {
     "node": ">=18"
   },
   "devDependencies": {
-    "prettier": "^2.7.1"
+    "prettier": "^3.2.5"
   }
 }
