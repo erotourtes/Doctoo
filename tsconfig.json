@@ -1,6 +1,5 @@
 {
-  "exclude": ["node_modules/**/*"],
-  "include": ["./shared/**/*"],
+  "exclude": ["node_modules//*"],
   "compilerOptions": {
     "module": "ESNext",
     "declaration": true,
