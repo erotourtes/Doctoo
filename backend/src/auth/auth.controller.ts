@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common'
 import { AuthService } from 'src/auth/auth.service';
 import { GoogleAuthGuard } from 'src/auth/strategies/google-strategy';
 import { LocalAuthGuard } from 'src/auth/strategies/local-strategy';
+import { UserDec } from 'src/auth/user.decorator';
 import { CreateUserDto } from 'src/user/dto';
 
 @Controller('auth')
@@ -10,8 +11,7 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async localLogin(@Request() req, @Body() _: CreateUserDto) {
-    const user = req.user;
+  async localLogin(@Request() req, @Body() _: CreateUserDto, @UserDec() user: any) {
     const token = await this.authService.signJwtToken(user.id);
     this.authService.attachJwtTokenToCookie(req.res, token.access_token);
     return user;
