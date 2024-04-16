@@ -20,15 +20,16 @@ WIP.
 
 ### Development Mode
 
-1. Rename `.env.dev.example` to `.env.dev` and fill all variables.
-2. Run `docker compose -f docker-compose.dev.yaml --env-file=.env.dev up -d`.
-3. Use psql connection string `postgresql://[user]:[pass]@localhost:[port]/[db]?schema=public` for
+1. Create `.env.dev` from `.env.dev.example` and fill all variables.
+2. In backend create `.env` from `.env.example` and fill all variables.
+3. Run `docker compose -f docker-compose.dev.yaml --env-file=.env.dev up -d`.
+4. Use psql connection string `postgresql://[user]:[pass]@localhost:[port]/[db]?schema=public` for
    `DATABASE_URL` inside `./apps/backend/.env` file.
-4. Done. When running locally, the backend should have a connection to the database.
+5. Done. When running locally, the backend should have a connection to the database.
 
 ### Production Mode
 
-1. Rename `.env.prod.example` to `.env.prod` and fill all variables.
+1. Create `.env.prod` from `.env.prod.example` and fill all variables.
 2. Run `docker compose -f docker-compose.prod.yaml --env-file=.env.prod up --build -d`.
 3. Done. With the `docker ps` command you should see the database, backend, frontend and more
    additional services.
