@@ -21,8 +21,8 @@
       "@assets/*": ["src/assets/*"],
       "@components/*": ["src/components/*"],
       "@UI/*": ["src/components/UI/*"],
-      "@store/*": ["src/store/*"],
-    },
+      "@store/*": ["src/store/*"]
+    }
   },
   "references": [{ "path": "./tsconfig.node.json" }]
 }
