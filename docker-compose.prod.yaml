@@ -5,9 +5,9 @@ services:
     restart: always
     image: postgres:14.5
     environment:
-      POSTGRES_USER: 'task_user_v2'
-      POSTGRES_PASSWORD: 'task_password_v2'
-      POSTGRES_DB: 'task_manager_v2'
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
 
   backend:
     restart: always
@@ -15,8 +15,8 @@ services:
       context: ./
       dockerfile: ./apps/backend/Dockerfile
     environment:
-      BACKEND_PORT: ${BACKEND_PORT}
-      DATABASE_URL: ${DATABASE_URL}
+      PORT: ${BACKEND_PORT}
+      DATABASE_URL: 'postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres/${POSTGRES_DB}?schema=public'
     ports:
       - ${BACKEND_PORT}:${BACKEND_PORT}
     depends_on:
@@ -28,8 +28,8 @@ services:
       context: ./
       dockerfile: ./apps/frontend/Dockerfile
       args:
-        VITE_API_URL: 'http://localhost:3000'
+        VITE_BACKEND_API_URL: ${VITE_BACKEND_API_URL}
     ports:
-      - 3005:8080
+      - ${FRONTNED_PORT}:8080
     depends_on:
       - backend
