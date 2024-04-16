@@ -10,8 +10,11 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  localLogin(@Request() req, @Body() _: CreateUserDto) {
-    return req.user;
+  async localLogin(@Request() req, @Body() _: CreateUserDto) {
+    const user = req.user;
+    const token = await this.authService.signJwtToken(user.id);
+    this.authService.attachJwtTokenToCookie(req.res, token.access_token);
+    return user;
   }
 
   @Post('signup')
