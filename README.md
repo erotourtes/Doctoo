@@ -1,82 +1,41 @@
-# Project name
+# doctoo
 
-Project description
+WIP.
 
----
+## Installation
 
-#### For Windows users:
+1. Install [nvm](https://github.com/nvm-sh/nvm) (Optional).
+2. Install node `v18` or high.
+3. Activate corepack - `corepack enable`.
+4. Clone repository - `git clone https://github.com/Radency/internship-2024-doctoo`.
+5. Install all dependencies - `pnpm i -r`.
 
--   WSL is mandatory for running this project.
+## Development
 
--   Project is to be cloned to WSL disk.
-    If you're seeing `/mnt/` path prefix in your terminal it means the project **isn't** on the WSL disk.
-    **This is required for hot reloading with docker**.
+1. Make sure you are in the `development` branch.
+2. Create a new branch from the `development` branch with the name of what you are going to do.
+3. Make the necessary changes and create a PR that will be directed to the `development` branch.
 
----
+## Docker
 
-#### 0.1. What's shipped with this boilerplate?
+### Development Mode
 
--   React (CRA) + NestJS applications
--   Configured sequelize for PostgreSQL
--   Storybook
--   Tailwind
--   React Redux (+Saga)
--   React Router
--   docker-compose
+1. Rename `.env.dev.example` to `.env.dev` and fill all variables.
+2. Run `docker compose -f docker-compose.dev.yaml --env-file=.env.dev up -d`.
+3. Use psql connection string `postgresql://[user]:[pass]@localhost:[port]/[db]?schema=public` for
+   `DATABASE_URL` inside `./apps/backend/.env` file.
+4. Done. When running locally, the backend should have a connection to the database.
 
-#### 0.2. Reference
+### Production Mode
 
--   [Backend folder structure](./docs/backend.md)
--   [Frontend folder structure](./docs/frontend.md)
--   `shared` is a directory where common code is located in order to avoid duplication.
-    Its build is automatically mounted to the `node_modules` folders of the frontend and the backend development containers.
-    To use the shared code you have to just import it from a module called `shared` like you import code from `react`, `@nestjs/common`, etc.
-    After you have changed the source from the `shared` directory you have to run `npm run build:shared` to rebuild the shared module.
+1. Rename `.env.prod.example` to `.env.prod` and fill all variables.
+2. Run `docker compose -f docker-compose.prod.yaml --env-file=.env.prod up --build -d`.
+3. Done. With the `docker ps` command you should see the database, backend, frontend and more
+   additional services.
 
-#### 0.3. Eslint
+> To stop **prod** or **dev** containers, you need run
+> `docker compose -f docker-compose.[dev|prod].yaml down`.
 
--   To follow project code style you should use Eslint that is already configured
--   To enable linting, you need to use an extension for your code editor
--   [Extension for VSCode](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
-    If you want to integrate Eslint with other code editors you can find information on how to do it
-    [here](https://eslint.org/docs/user-guide/integrations#editors)
+## Conventional Commits
 
----
-
-#### 1. Project init
-
--   Run `npm run init` after git clone. This command might need root access because of `npm link`, so feel free to add `sudo` before the command if you get an error related to permissions. Also you can resolve this error by updating the global npm context or by using [nvm](https://github.com/nvm-sh/nvm).
-- Create a `.env.dev` file. Here is an example of a minimal required configuration:
-```
-FRONTEND_PORT=3000
-BACKEND_PORT=8000
-DB_PORT=5432
-
-POSTGRES_DB=db
-POSTGRES_USER=user
-POSTGRES_PASSWORD=user
-```
----
-
-#### 2. Bootstrap project using Docker Compose
-
--   To build (rebuild) `npm run start:build`
--   To start without building `npm run start`
--   To stop `npm run stop`
-
-
----
-
-#### 3. Version control
-
--   To make any change in the project you should create separate branch from develop
--   Branch name should start with `fix/` or `feature/`
--   Commit names should
-    -   Be short (10-12 words)
-    -   Describe the changes that were done specifically
-    -   Follow [best practices](https://gist.github.com/robertpainsi/b632364184e70900af4ab688decf6f53#commit-message-guidelines)
--   Once you finish with changes you should create a pull request
--   Then you should request approval from your colleague and one of your mentors
--   If your pull request approved by these people you can squash & merge into develop branch
--   It's a good thing to keep your branch in sync with develop, so once in a while you should merge develop into your branch
--   Prefer small but frequent pull requests over infrequent and huge ones
+We must use [CC standarts](https://www.conventionalcommits.org/en/v1.0.0/).
