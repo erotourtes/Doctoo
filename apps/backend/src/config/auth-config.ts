@@ -9,5 +9,5 @@ export default registerAs('auth-config', () => ({
   googleSecret: getOrThrow('GOOGLE_SECRET'),
   googleRedirectURL: getOrThrow('GOOGLE_REDIRECT_URL'),
 
-  saltRounds: getOrThrow('SALT_ROUNDS'),
+  saltRounds: +getOrThrow('SALT_ROUNDS'),
 }));

@@ -6,7 +6,7 @@ import config from 'src/config/config';
 import { CreateUserDto } from 'src/user/dto/create.dto';
 import { ResponseUserDto } from 'src/user/dto/response.dto';
 import { UserService } from 'src/user/user.service';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 import authConfig from 'src/config/auth-config';
 import { ResponseWithoutRelationsUserDto } from 'src/user/dto/responseWithoutRelations';
 
@@ -66,7 +66,8 @@ export class AuthService {
   }
 
   private async hashPassword(password: string): Promise<string> {
-    return await bcrypt.hash(password, this.authConf.saltRounds);
+    const salt = await bcrypt.genSalt(this.authConf.saltRounds);
+    return await bcrypt.hash(password, salt);
   }
 
   private async verifyPassword(password: string, hash: string): Promise<boolean> {
