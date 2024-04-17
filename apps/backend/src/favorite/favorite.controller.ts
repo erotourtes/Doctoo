@@ -12,9 +12,14 @@ export class FavoriteController {
     return this.favoriteService.create(createFavoriteDto);
   }
 
-  @Get('by-user/:id')
+  @Get('all-by-user/:id')
   findAllByUserId(@Param('id') id: string) {
     return this.favoriteService.findAllByPatientId(id);
+  }
+
+  @Get('/:id')
+  findOneById(@Param('id') id: string) {
+    return this.favoriteService.findOneById(id);
   }
 
   @Delete(':id')

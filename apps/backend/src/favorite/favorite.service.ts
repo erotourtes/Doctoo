@@ -24,6 +24,17 @@ export class FavoriteService {
     return favorites;
   }
 
+  async findOneById(id: string) {
+    const favorites = await this.prismaService.favorite.findUnique(
+      { 
+        where: { id: id },
+        include: {doctor: true},
+    }
+    );
+
+    return favorites;
+  }
+
   async deleteFavorite(id: string) {
      return await this.prismaService.favorite.delete({ where: { id } });
   }
