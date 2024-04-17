@@ -1,14 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
-import { config } from 'src/config';
+import config from 'src/config/config';
 import { CreateUserDto } from 'src/user/dto';
 
 type JwtPayload = { sub: number };
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    @Inject(config.KEY) private readonly conf: ConfigType<typeof config>,
+  ) {}
 
   async signupUser(createUserDto: CreateUserDto): Promise<any> {
     const name = createUserDto.name;
@@ -41,15 +45,13 @@ export class AuthService {
   }
 
   attachJwtTokenToCookie(res: Response, token: string) {
-    res.cookie(AuthService.JWT_COOKIE_NAME, token, { httpOnly: true, secure: config.isProduction });
+    res.cookie(AuthService.JWT_COOKIE_NAME, token, { httpOnly: true, secure: this.conf.nodeEnv === 'production' });
   }
 
   async getUserFromJwtToken(token?: string) {
     if (!token) return null;
 
-    const { sub } = await this.jwtService
-      .verifyAsync<JwtPayload>(token)
-      .catch(() => ({ sub: null }));
+    const { sub } = await this.jwtService.verifyAsync<JwtPayload>(token).catch(() => ({ sub: null }));
     if (!sub) return null;
 
     const user = { id: sub }; // TODO: use user service

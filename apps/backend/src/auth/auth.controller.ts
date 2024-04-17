@@ -11,11 +11,7 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async localLogin(
-    @Res({ passthrough: true }) res,
-    @Body() _: CreateUserDto,
-    @UserDec() user: any,
-  ) {
+  async localLogin(@Res({ passthrough: true }) res, @Body() _: CreateUserDto, @UserDec() user: any) {
     const token = await this.authService.signJwtToken(user.id);
     this.authService.attachJwtTokenToCookie(res, token.access_token);
     return user;

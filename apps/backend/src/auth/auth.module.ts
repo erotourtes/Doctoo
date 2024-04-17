@@ -5,14 +5,19 @@ import { AuthService } from './auth.service';
 import { LocalStrategy } from 'src/auth/strategies/local-strategy';
 import { GoogleStrategy } from 'src/auth/strategies/google-strategy';
 import { JwtModule } from '@nestjs/jwt';
-import { config } from 'src/config';
+import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
 
 @Module({
   imports: [
     PassportModule,
-    JwtModule.register({
-      secret: config.jwtSecret,
-      signOptions: { expiresIn: config.jwtExpirationDays },
+    ConfigModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (conf: ConfigService) => ({
+        secret: conf.getOrThrow('auth-config.jwtSecret'),
+        signOptions: { expiresIn: conf.getOrThrow('auth-config.jwtExpirationDays') },
+      }),
+      inject: [ConfigService],
     }),
   ],
   controllers: [AuthController],
