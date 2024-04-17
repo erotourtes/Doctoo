@@ -9,8 +9,9 @@ import { ResponseUserDto } from 'src/user/dto/response.dto';
 import { UserService } from 'src/user/user.service';
 import bcrypt from 'bcrypt';
 import authConfig from 'src/config/auth-config';
+import { ResponseWithoutRelationsUserDto } from 'src/user/dto/responseWithoutRelations';
 
-type JwtPayload = { sub: number };
+type JwtPayload = { sub: string };
 
 @Injectable()
 export class AuthService {
@@ -21,7 +22,7 @@ export class AuthService {
     @Inject(authConfig.KEY) private readonly authConf: ConfigType<typeof authConfig>,
   ) {}
 
-  async signupUser(createUserDto: CreateUserDto): Promise<User> {
+  async signupUser(createUserDto: CreateUserDto): Promise<ResponseWithoutRelationsUserDto> {
     const user = await this.userService.createUser(createUserDto);
     return user;
   }
@@ -40,7 +41,7 @@ export class AuthService {
     return null;
   }
 
-  async signJwtToken(userId: number) {
+  async signJwtToken(userId: string) {
     const payload: JwtPayload = { sub: userId };
     return {
       access_token: await this.jwtService.signAsync(payload),
