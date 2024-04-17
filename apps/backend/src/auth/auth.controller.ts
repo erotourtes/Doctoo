@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
+import { ResponseGoogleSignDto } from 'src/auth/dto/google-sign-response.dto';
 import { GoogleAuthGuard } from 'src/auth/strategies/google-strategy';
 import { LocalAuthGuard } from 'src/auth/strategies/local-strategy';
 import { UserDec } from 'src/auth/user.decorator';
@@ -24,13 +25,11 @@ export class AuthController {
 
   @UseGuards(GoogleAuthGuard)
   @Get('login/google')
-  googleLogin(@UserDec() user: any) {
-    return user;
-  }
+  googleLogin() {}
 
-  @UseGuards(GoogleAuthGuard)
   @Get('login/google/redirect')
-  googleLoginRedirect() {
-    // This route is specified in the GoogleStrategy
+  @UseGuards(GoogleAuthGuard)
+  googleLoginRedirect(@UserDec() data: ResponseGoogleSignDto): ResponseGoogleSignDto {
+    return data;
   }
 }
