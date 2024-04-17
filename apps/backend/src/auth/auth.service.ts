@@ -22,7 +22,11 @@ export class AuthService {
   ) {}
 
   async signupUser(createUserDto: CreateUserDto): Promise<ResponseWithoutRelationsUserDto> {
-    const user = await this.userService.createUser(createUserDto);
+    const hashedPassword = await this.hashPassword(createUserDto.password);
+    const user = await this.userService.createUser({
+      ...createUserDto,
+      password: hashedPassword,
+    });
     return user;
   }
 
