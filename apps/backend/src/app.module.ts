@@ -7,10 +7,11 @@ import authConfig from 'src/config/auth-config';
 import config from 'src/config/config';
 import { UserModule } from './user/user.module';
 import { UserService } from './user/user.service';
+import { PrismaService } from 'src/prisma.service';
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true, load: [authConfig, config] }), UserModule, AuthModule],
   controllers: [AppController],
-  providers: [AppService, UserService],
+  providers: [AppService, UserService, PrismaService],
 })
 export class AppModule {}

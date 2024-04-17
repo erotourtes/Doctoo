@@ -5,6 +5,6 @@ export default registerAs('auth-config', () => ({
   jwtSecret: getOrThrow('JWT_SECRET'),
   jwtExpirationDays: getOrThrow('JWT_EXPIRATION_DAYS'),
 
-  clientID: getOrThrow('GOOGLE_CLIENT_ID'),
-  clientSecret: getOrThrow('GOOGLE_SECRET'),
+  googleClientID: getOrThrow('GOOGLE_CLIENT_ID'),
+  googleSecret: getOrThrow('GOOGLE_SECRET'),
 }));
