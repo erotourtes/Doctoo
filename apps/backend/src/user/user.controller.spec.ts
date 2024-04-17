@@ -45,8 +45,6 @@ describe('UserController', () => {
   it('Should return user object', async () => {
     const user = await controller.getUser(userId);
 
-    console.log(Object.keys(user));
-
     expect(Object.keys(user).length).toBe(6);
   });
 

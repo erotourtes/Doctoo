@@ -3,12 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "nest start --debug --watch",
-    "build": "nest build",
-    "start": "node dist/main",
     "prebuild": "pnpm prisma generate",
+    "build": "nest build",
     "prestart": "pnpm prisma migrate deploy",
-    "start:dev": "nest start --debug --watch",
+    "dev": "nest start --debug --watch",
+    "start": "node --enable-source-maps dist/main",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
@@ -62,6 +61,9 @@
       "ts"
     ],
     "rootDir": "src",
+    "moduleNameMapper": {
+      "^src/(.*)": "<rootDir>/$1"
+    },
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
