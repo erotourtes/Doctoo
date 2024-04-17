@@ -1,0 +1,35 @@
+  .spinner {
+    animation: spinner_animation .8s infinite;
+  }
+  .spinner_delay_1 {
+    animation-delay: .1s;
+  }
+  .spinner_delay_2 {
+    animation-delay: .2s;
+  }
+  .spinner_delay_3 {
+    animation-delay: .3s;
+  }
+  .spinner_delay_4 {
+    animation-delay: .4s;
+  }
+  .spinner_delay_5 {
+    animation-delay: .5s;
+  }
+  .spinner_delay_6 {
+    animation-delay: .6s;
+  }
+  .spinner_delay_7 {
+    animation-delay: .7s;
+  }
+  
+  @keyframes spinner_animation {
+    0%, 100% {
+      animation-timing-function: cubic-bezier(0, 1, 0, 1);
+      r: 0;
+    }
+    12.5% {
+      animation-timing-function: cubic-bezier(.53, 0, .61, .73);
+      r: 2px;
+    }
+  }
