@@ -1,3 +1,5 @@
+import { Doctor, Patient } from '@prisma/client';
+
 export class ResponseUserDto {
   readonly id: string;
   readonly first_name: string;
@@ -6,8 +8,8 @@ export class ResponseUserDto {
   readonly email: string;
   readonly email_verified: boolean;
   readonly password: string;
-  readonly gogole_id: string;
+  readonly google_id: string;
   readonly avatar_key: string;
-  readonly doctors: string[]; // TODO: Use Doctor dto
-  readonly patients: string[]; // TODO: use Patient dto
+  readonly doctors: Doctor[]; // TODO: Use Doctor dto instead of prisma model.
+  readonly patients: Patient[]; // TODO: use Patient dto instead of prisma model.
 }
