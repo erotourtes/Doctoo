@@ -1,9 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { User } from '@prisma/client';
 import { Response } from 'express';
 import config from 'src/config/config';
-import { CreateUserDto } from 'src/user/dto';
+import { CreateUserDto } from 'src/user/dto/create.dto';
+import { ResponseUserDto } from 'src/user/dto/response.dto';
+import { UserService } from 'src/user/user.service';
 
 type JwtPayload = { sub: number };
 
@@ -11,12 +14,13 @@ type JwtPayload = { sub: number };
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
+    private readonly userService: UserService,
     @Inject(config.KEY) private readonly conf: ConfigType<typeof config>,
   ) {}
 
-  async signupUser(createUserDto: CreateUserDto): Promise<any> {
-    const name = createUserDto.name;
-    return { name };
+  async signupUser(createUserDto: CreateUserDto): Promise<User> {
+    const user = await this.userService.createUser(createUserDto);
+    return user;
   }
 
   async validateUser(email: string, password: string): Promise<any> {
@@ -28,11 +32,10 @@ export class AuthService {
     return null;
   }
 
-  async validateGoogleUser(token: string): Promise<any> {
-    const user = { token }; // TODO: use user service
-    if (user && user.token === token) {
-      const { token: _, ...result } = user;
-      return result;
+  async validateGoogleUser(email: string, google_id: string): Promise<ResponseUserDto | null> {
+    const user = await this.userService.findUserByEmail(email);
+    if (user && user.google_id === google_id) {
+      return user;
     }
     return null;
   }

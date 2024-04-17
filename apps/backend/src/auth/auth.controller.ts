@@ -3,7 +3,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { GoogleAuthGuard } from 'src/auth/strategies/google-strategy';
 import { LocalAuthGuard } from 'src/auth/strategies/local-strategy';
 import { UserDec } from 'src/auth/user.decorator';
-import { CreateUserDto } from 'src/user/dto';
+import { CreateUserDto } from 'src/user/dto/create.dto';
 
 @Controller('auth')
 export class AuthController {
