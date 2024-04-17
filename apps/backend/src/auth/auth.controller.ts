@@ -31,7 +31,15 @@ export class AuthController {
 
   @Get('login/google/redirect')
   @UseGuards(GoogleAuthGuard)
-  googleLoginRedirect(@UserDec() data: ResponseGoogleSignDto): ResponseGoogleSignDto {
+  async googleLoginRedirect(
+    @UserDec() data: ResponseGoogleSignDto,
+    @Res({ passthrough: true }) res,
+  ): Promise<ResponseGoogleSignDto> {
+    if (data.isSignedUp) {
+      const token = await this.authService.signJwtToken(data.user.id);
+      this.authService.attachJwtTokenToCookie(res, token.access_token);
+    }
+
     return data;
   }
 }

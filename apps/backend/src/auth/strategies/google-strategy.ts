@@ -23,7 +23,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
 
   async validate(accessToken: string, refreshToken: string, profile: Profile): Promise<ResponseGoogleSignDto> {
     const email = profile.emails[0];
-    const user: User = await this.authService.validateGoogleUser(email.value, profile.id);
+    const user = await this.authService.validateGoogleUser(email.value, profile.id);
     if (!user) {
       const user = {
         last_name: profile.name.familyName,
@@ -40,10 +40,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     }
     return {
       isSignedUp: true,
-      user: {
-        email: user.email,
-        google_id: user.google_id,
-      },
+      user,
     };
   }
 }

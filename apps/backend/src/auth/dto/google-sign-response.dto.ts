@@ -10,8 +10,5 @@ export class ResponseGoogleSignDto {
     google_id: string;
     avatar_key: string;
   };
-  user?: {
-    email: string;
-    google_id: string;
-  };
+  user?: ResponseUserDto;
 }
