@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Input } from './Input';
+import Input from './Input';
 
 const meta: Meta<typeof Input> = {
-  title: 'ui/Input',
+  title: 'Components/UI/Input',
   component: Input,
   parameters: {
     layout: 'centered',
@@ -14,52 +14,65 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const xs: Story = {
+export const Default: Story = {
+    args: {
+      type: 'text',
+      label: '',
+      placeholder: 'Type your text',
+      className: ''
+    },
+  };
+
+// Input to enter the verification code
+export const XSInput: Story = {
   args: {
-    type: 'number',
+    type: 'text',
     label: '',
-    placeholder: '-',
-    className: 'w-12 bg-gray-100',
+    placeholder: '___',
+    className: 'w-12 h-12 flex justify-center items-center font-black bg-background'
   },
 };
 
-export const sm: Story = {
+// Input for CVV, expiry date, country code(telephone number)
+export const SMInput: Story = {
   args: {
     type: 'text',
     label: 'CVV',
     placeholder: '',
-    className: 'w-36 bg-gray-100',
+    className: 'w-36 bg-background',
   },
 };
 
-export const md: Story = {
+// Input for chat search, cardholder name, card number
+export const MDInput: Story = {
   args: {
     type: 'text',
     label: 'Cardholder name',
     placeholder: '',
-    className: 'w-72 bg-gray-100',
+    className: 'w-72 bg-background',
   },
 };
 
-export const lgSearch: Story = {
+export const LGEmailInput: Story = {
   args: {
-    type: 'text',
+    type: 'email',
     label: '',
-    placeholder: 'Search',
-    className: 'w-96 bg-gray-100',
+    placeholder: 'Email',
+    className: 'w-96 bg-background',
   },
 };
 
-export const lgPassword: Story = {
+export const LGPasswordInput: Story = {
   args: {
-    type: 'text',
+    type: 'password',
     label: 'Old Password',
     placeholder: 'Password',
-    className: 'w-96 bg-gray-100',
+    className: 'w-96 bg-background',
   },
 };
 
-export const xl: Story = {
+// Input for doctor and sympthoms search
+export const XLSearchInput: Story = {
   args: {
     type: 'text',
     label: '',
@@ -67,3 +80,4 @@ export const xl: Story = {
     className: 'w-96 bg-white',
   },
 };
+
