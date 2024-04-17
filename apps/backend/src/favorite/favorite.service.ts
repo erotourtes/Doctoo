@@ -7,7 +7,6 @@ import { PrismaService } from 'src/prisma.service';
 export class FavoriteService {
   constructor(private readonly prismaService: PrismaService) {}
   
-  //TODO: Dosen`t work correctly
   async create(createFavoriteDto: CreateFavoriteDto) {
     const favorite = await this.prismaService.favorite.create({ data: createFavoriteDto });
     return favorite;
