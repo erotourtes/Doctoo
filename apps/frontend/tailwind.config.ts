@@ -23,6 +23,7 @@ export default <Config>{
       main: '#089BAB',
       'main-medium': '#6BC3CD',
       'main-light': '#D9F0F2',
+      'main-dark': '#057D8A',
       orange: '#F2A450',
       'orange-light': '#FDF4E7',
       error: '#ED5252',
