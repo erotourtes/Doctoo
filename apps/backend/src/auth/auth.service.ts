@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '@prisma/client';
 import { Response } from 'express';
 import config from 'src/config/config';
 import { CreateUserDto } from 'src/user/dto/create.dto';
@@ -52,13 +51,13 @@ export class AuthService {
     res.cookie(AuthService.JWT_COOKIE_NAME, token, { httpOnly: true, secure: this.conf.nodeEnv === 'production' });
   }
 
-  async getUserFromJwtToken(token?: string) {
+  async getUserFromJwtToken(token?: string): Promise<ResponseUserDto> {
     if (!token) return null;
 
     const { sub } = await this.jwtService.verifyAsync<JwtPayload>(token).catch(() => ({ sub: null }));
     if (!sub) return null;
 
-    const user = { id: sub }; // TODO: use user service
+    const user = await this.userService.getUser(sub);
     return user;
   }
 
