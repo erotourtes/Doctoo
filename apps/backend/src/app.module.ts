@@ -9,6 +9,6 @@ import { FavoriteModule } from './favorite/favorite.module';
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }), UserModule, FavoriteModule],
   controllers: [AppController],
-  providers: [AppService, UserService],
+  providers: [AppService],
 })
 export class AppModule {}
