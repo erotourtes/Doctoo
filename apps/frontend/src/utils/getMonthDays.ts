@@ -1,22 +1,13 @@
 import { Dayjs } from 'dayjs';
 
 export const getMonthDays = (currentMonth: Dayjs) => {
-  const firstDayOfMonth = currentMonth.startOf('month');
-  const firstDayOfWeek = firstDayOfMonth.startOf('week').weekday(1);
+  const firstDayOfWeek = currentMonth.startOf('month').startOf('week').weekday(1);
   const lastDayOfMonth = currentMonth.endOf('month').endOf('week');
+  const daysDifference = lastDayOfMonth.diff(firstDayOfWeek, 'days') + 2;
 
-  const days = [];
-  let currentDay = firstDayOfWeek;
-
-  while (currentDay.isBefore(lastDayOfMonth)) {
-    days.push(currentDay);
-    currentDay = currentDay.add(1, 'day');
-  }
-
-  while (currentDay.day() !== 1) {
-    days.push(currentDay);
-    currentDay = currentDay.add(1, 'day');
-  }
+  const days = Array.from({ length: daysDifference }, (_, index) =>
+    firstDayOfWeek.add(index, 'days')
+  );
 
   return days;
 };
