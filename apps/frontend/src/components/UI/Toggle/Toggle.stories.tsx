@@ -1,7 +1,7 @@
 import '@/index.css';
+import { useArgs } from '@storybook/preview-api';
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
-import { useArgs } from '@storybook/preview-api';
 import { Toggle } from './Toggle';
 
 const meta: Meta<typeof Toggle> = {
