@@ -36,7 +36,6 @@ export const ConferenceButtons = <T,>({ options, children, onClick, classNames =
         <button
           type="button"
           className={`flex w-fit rounded-md items-center pl-4 pr-2 h-[86px] rounded-[12px] hover:bg-[#454f50] hover:text-white ${classNames}`}
-          className={`flex w-fit rounded-md items-center pl-4 pr-2 h-[86px] rounded-[12px] hover:bg-[#454f50] hover:text-white ${classNames}`}
           id="options-menu"
           aria-haspopup="true"
           aria-expanded="true"
