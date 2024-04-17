@@ -7,6 +7,8 @@ import config from 'src/config/config';
 import { CreateUserDto } from 'src/user/dto/create.dto';
 import { ResponseUserDto } from 'src/user/dto/response.dto';
 import { UserService } from 'src/user/user.service';
+import bcrypt from 'bcrypt';
+import authConfig from 'src/config/auth-config';
 
 type JwtPayload = { sub: number };
 
@@ -16,6 +18,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
     @Inject(config.KEY) private readonly conf: ConfigType<typeof config>,
+    @Inject(authConfig.KEY) private readonly authConf: ConfigType<typeof authConfig>,
   ) {}
 
   async signupUser(createUserDto: CreateUserDto): Promise<User> {
@@ -23,13 +26,10 @@ export class AuthService {
     return user;
   }
 
-  async validateUser(email: string, password: string): Promise<any> {
-    const user = { email, password, id: 1 }; // TODO: use user service
-    if (user && user.password === password) {
-      const { password: _, ...result } = user;
-      return result;
-    }
-    return null;
+  async validateUser(email: string, password: string): Promise<ResponseUserDto | null> {
+    const user = await this.userService.findUserByEmail(email);
+    const isValid = user && (await this.verifyPassword(password, user.password));
+    return isValid ? user : null;
   }
 
   async validateGoogleUser(email: string, google_id: string): Promise<ResponseUserDto | null> {
@@ -59,6 +59,14 @@ export class AuthService {
 
     const user = { id: sub }; // TODO: use user service
     return user;
+  }
+
+  private async hashPassword(password: string): Promise<string> {
+    return await bcrypt.hash(password, this.authConf.saltRounds);
+  }
+
+  private async verifyPassword(password: string, hash: string): Promise<boolean> {
+    return await bcrypt.compare(password, hash);
   }
 
   static readonly JWT_COOKIE_NAME = 'jwt';
