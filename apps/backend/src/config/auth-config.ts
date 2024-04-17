@@ -7,4 +7,5 @@ export default registerAs('auth-config', () => ({
 
   googleClientID: getOrThrow('GOOGLE_CLIENT_ID'),
   googleSecret: getOrThrow('GOOGLE_SECRET'),
+  googleRedirectURL: getOrThrow('GOOGLE_REDIRECT_URL'),
 }));
