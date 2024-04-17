@@ -6,7 +6,8 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended",
     "plugin:react/jsx-runtime",
-    "plugin:react/recommended"
+    "plugin:react/recommended",
+    "plugin:storybook/recommended"
   ],
   "root": true,
   "env": {
