@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "nest start --debug --watch",
+    "prebuild": "pnpm prisma generate",
     "build": "nest build",
-    "start": "node dist/main",
+    "prestart": "pnpm prisma migrate deploy",
+    "dev": "nest start --debug --watch",
+    "start": "node --enable-source-maps dist/main",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
@@ -17,6 +19,7 @@
     "@nestjs/config": "3.2.2",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
+    "@prisma/client": "5.12.1",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1"
   },
