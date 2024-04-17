@@ -93,8 +93,6 @@ model Doctor {
   id                     String                 @id @default(uuid())
   user_id                String
   payrate                Int
-  rating                 Int
-  availability           Boolean
   about_me               String
   user                   User                   @relation(fields: [user_id], references: [id])
   appointments           Appointment[]
