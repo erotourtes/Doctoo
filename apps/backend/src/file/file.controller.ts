@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Param, Delete, UploadedFile, UseInterceptors, NotFoundException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Delete,
+  UploadedFile,
+  UseInterceptors,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MinioService } from '../minio/minio.service';
 
@@ -15,7 +25,7 @@ export class FileController {
       const fileName = await this.minioService.uploadFile(file);
       return `File ${fileName} uploaded successfully`;
     } catch (error) {
-      throw error;
+      throw new BadRequestException(error.message);
     }
   }
 
@@ -32,8 +42,7 @@ export class FileController {
   @Delete(':fileName')
   async deleteFile(@Param('fileName') fileName: string) {
     try {
-      await this.minioService.deleteFile(fileName)
-      return `File ${fileName} deleted successfully`;
+      return await this.minioService.deleteFile(fileName);
     } catch (error) {
       throw new NotFoundException(error.message);
     }
