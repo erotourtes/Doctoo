@@ -35,3 +35,7 @@ services:
       - ${FRONTEND_PORT}:8080
     depends_on:
       - backend
+
+
+volumes:
+  postgres_db:
