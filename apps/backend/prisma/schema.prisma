@@ -93,8 +93,6 @@ model Doctor {
   id                     String                 @id @default(uuid())
   user_id                String
   payrate                Int
-  rating                 Int
-  availability           Boolean
   about_me               String
   user                   User                   @relation(fields: [user_id], references: [id])
   appointments           Appointment[]
@@ -156,15 +154,15 @@ model Patient {
   age                  Int
   blood_type           BloodType
   gender               Gender
-  declaration_id       Int
-  identity_card_key    String
+  declaration_id       Int?
+  identity_card_key    String?
   user                 User                 @relation(fields: [user_id], references: [id])
   appointments         Appointment[]
   chats                Chat[]
   patient_conditions   PatientCondition[]
   patient_allergies    PatientAllergy[]
   patient_caccinations PatientVaccination[]
-  declaration          Declaration          @relation(fields: [declaration_id], references: [id])
+  declaration          Declaration?         @relation(fields: [declaration_id], references: [id])
   country              String
   state                String?
   city                 String
