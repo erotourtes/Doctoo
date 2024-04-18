@@ -18,6 +18,15 @@ export class UserService {
     return user;
   }
 
+  async findUserByEmail(email: string): Promise<ResponseUserDto> {
+    const user = await this.prismaService.user.findFirst({
+      where: { email: email },
+      include: { doctors: true, patients: true },
+    });
+
+    return user;
+  }
+
   async createUser(body: CreateUserDto): Promise<ResponseWithoutRelationsUserDto> {
     const user = await this.prismaService.user.create({ data: body });
 
