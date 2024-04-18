@@ -27,7 +27,13 @@ export default function TodaysAppointments() {
 
       <ul className='flex w-full flex-col gap-y-3 px-6 pb-6'>
         {todaysAppointments.map(({ avatar, name, specialization, time }) => (
-          <AppointmentsListItem avatar={avatar} name={name} specialization={specialization} time={time} />
+          <AppointmentsListItem
+            key={`${name}-${time}`}
+            avatar={avatar}
+            name={name}
+            specialization={specialization}
+            time={time}
+          />
         ))}
       </ul>
     </article>

@@ -15,42 +15,64 @@ interface BigCalendarBodyProps {
 export default function BigCalendarBody({ meetingsForDay, currentMonth }: BigCalendarBodyProps) {
   const days = getMonthDays(currentMonth as Dayjs);
   const today = dayjs();
+  console.log(meetingsForDay);
 
   return (
-    <div className='flex flex-col'>
-      <div className='flex justify-between'>
+    <div className='flex w-fit flex-col'>
+      <div className='grid grid-cols-7'>
         {weeks.map(day => (
-          <div key={day} className='text-grey-2 mb-2 text-center text-xs font-normal not-italic leading-4'>
+          <time key={day} className='text-grey-2 mb-2 pr-4 text-right text-xs font-normal not-italic leading-4'>
             {day}
-          </div>
+          </time>
         ))}
       </div>
-      <div className='grid w-full max-w-[302px] grid-cols-[repeat(7,1fr)] rounded-xl bg-white p-6'>
+
+      <div className='bg-background grid h-full grid-cols-7 rounded-xl'>
         {days.map((day, index) => {
           const meetings =
             meetingsForDay && meetingsForDay.filter(meeting => day.isSame(meeting.date, 'day')).slice(0, 3);
 
+          const calls =
+            meetings && meetings.length > 1
+              ? 'Calls'
+              : meetings!.length === 1
+                ? meetings![0].status.length > 11
+                  ? `${meetings![0].status.substring(0, 11)}...`
+                  : meetings![0].status
+                : '';
+
           return (
             <div
-              className={`grid h-11 w-[36.3px] grid-rows-[6px_30px_2px_6px] justify-items-center text-base font-normal leading-6
-              ${day.month() === currentMonth?.month() ? 'text-black' : 'text-grey-4'}
+              className={`grid-rows-auto grid h-[116px] w-[116px] text-base font-normal leading-6
+              ${day.month() === currentMonth?.month() ? 'text-text' : 'text-grey-3'}
+               hover:ring-main m-1
+               cursor-pointer select-none rounded-xl
+               bg-white
+               hover:ring-1
             `}
               key={index}
             >
-              <p
-                className={`col-[1_/_1] row-[2_/_2] flex h-8 w-8 items-center justify-center 
-                ${day.isSame(today, 'day') && 'bg-main-light rounded-full'}
+              <time
+                className={`mr-[10px] mt-[10px] flex self-start justify-self-end px-2 py-1
+                ${day.isSame(today, 'day') && 'bg-main rounded-full text-white'}
               `}
               >
                 {day.format('D')}
-              </p>
+              </time>
 
-              {meetings && (
-                <ul className='col-[1_/_1] row-[3_/_5] flex items-center gap-1'>
-                  {meetings.map((meeting, i) => (
-                    <li key={i} className={`h-2 w-2 rounded-full ${getMeetingStatusColor(meeting.status)}`} />
-                  ))}
-                </ul>
+              {meetings && meetings.length > 0 && (
+                <div
+                  key={index}
+                  className={`bg-main-light mb-3 flex h-7 w-24 items-center ${calls !== 'Calls' ? 'justify-center' : 'justify-between'} self-end justify-self-center rounded-2xl px-3 py-1
+                     `}
+                >
+                  <span className='whitespace-nowrap text-sm font-medium text-black'>{calls}</span>
+                  {meetings.length > 1 && (
+                    <span className='flex h-5 w-5 items-center justify-center rounded-full bg-white text-sm font-normal text-black'>
+                      {meetings.length}
+                    </span>
+                  )}
+                </div>
               )}
             </div>
           );
