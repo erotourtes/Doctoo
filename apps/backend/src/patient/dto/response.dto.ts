@@ -17,10 +17,10 @@ export class ResponsePatientDto {
   @ApiProperty({ description: 'The age of the patient' })
   readonly age: number;
 
-  @ApiProperty({ description: 'The blood type of the patient' })
+  @ApiProperty({ description: 'The blood type of the patient', type: 'enum', enum: BloodType })
   readonly blood_type: BloodType;
 
-  @ApiProperty({ description: 'The gender of the patient' })
+  @ApiProperty({ description: 'The gender of the patient', type: 'enum', enum: Gender })
   readonly gender: Gender;
 
   @ApiProperty({ description: 'The declaration ID associated with the patient' })

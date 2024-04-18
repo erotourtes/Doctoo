@@ -21,11 +21,11 @@ export class CreatePatientDto {
   readonly age: number;
 
   @IsEnum(BloodType)
-  @ApiProperty({ description: 'The blood type of the patient' })
+  @ApiProperty({ description: 'The blood type of the patient', type: 'enum', enum: BloodType })
   readonly blood_type: BloodType;
 
   @IsEnum(Gender)
-  @ApiProperty({ description: 'The gender of the patient' })
+  @ApiProperty({ description: 'The gender of the patient', type: 'enum', enum: Gender })
   readonly gender: Gender;
 
   @IsString()
