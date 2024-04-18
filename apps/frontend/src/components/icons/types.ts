@@ -1,6 +1,6 @@
 import React from "react";
 
-type IconVariant =
+export type IconVariant =
   'logo' |
   'account' |
   'logout' |
