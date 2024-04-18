@@ -4,11 +4,11 @@ WIP.
 
 ## Installation
 
-1. Install [nvm](https://github.com/nvm-sh/nvm) (Optional).
-2. Install node `v18` or high.
-3. Activate corepack - `corepack enable`.
-4. Clone repository - `git clone https://github.com/Radency/internship-2024-doctoo`.
-5. Install all dependencies - `pnpm i -r`.
+1. Install [nvm](https://github.com/nvm-sh/nvm) or [LTS Node.js](https://nodejs.org) directly from official website.
+2. Install [Docker](https://www.docker.com) to run project in containers for dev and prod environment.
+3. Activate corepack (`corepack enable`) to enable pnpm or install it manually: `npm i pnpm@latest -g`.
+4. Clone this repository - `git clone https://github.com/Radency/internship-2024-doctoo`.
+5. Install all project dependencies - `pnpm i -r`.
 
 ## Development
 
@@ -20,22 +20,21 @@ WIP.
 
 ### Development Mode
 
-1. Rename `.env.dev.example` to `.env.dev` and fill all variables.
-2. Run `docker compose -f docker-compose.dev.yaml --env-file=.env.dev up -d`.
-3. Use psql connection string `postgresql://[user]:[pass]@localhost:[port]/[db]?schema=public` for
-   `DATABASE_URL` inside `./apps/backend/.env` file.
+1. Create a new file `.env.dev` and paste the contents from the `.env.dev.example` file into it.
+2. In `apps/backend` folder create a new file `.env` and paste the contents from the `.env.example` file.
+3. Run `docker compose -f docker-compose.dev.yaml --env-file=.env.dev up -d`.
 4. Done. When running locally, the backend should have a connection to the database.
 
 ### Production Mode
 
-1. Rename `.env.prod.example` to `.env.prod` and fill all variables.
-2. Run `docker compose -f docker-compose.prod.yaml --env-file=.env.prod up --build -d`.
-3. Done. With the `docker ps` command you should see the database, backend, frontend and more
-   additional services.
+1. Create a new file `.env.prod` and paste the contents from the `.env.prod.example` file into it. Fill in all required
+   variables.
+2. Run `docker compose -f docker-compose.prod.yaml --env-file=.env.prod up --build -d --remove-orphans`.
+3. Done. With the `docker ps` command you should see the database, backend, frontend and some additional services.
 
-> To stop **prod** or **dev** containers, you need run
-> `docker compose -f docker-compose.[dev|prod].yaml down`.
+> To stop **prod** or **dev** containers, you need run `docker compose -f docker-compose.[dev|prod].yaml down`.
 
 ## Conventional Commits
 
-We must use [CC standarts](https://www.conventionalcommits.org/en/v1.0.0/).
+Commits, PR names, and anything else related to Git management must be named according to the
+[CC standart](https://www.conventionalcommits.org/en/v1.0.0/).

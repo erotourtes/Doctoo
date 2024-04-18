@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import Spinner from './spinner';
+import Spinner from './Spinner';
 
 const meta = {
   title: 'Example/Spinner',
@@ -7,18 +7,18 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
-  
+
   argTypes: {
     size: {
-        control: { type: 'number' },
-        defaultValue: 40,
-      },
-      color: {
-        control: { type: 'color' },
-        defaultValue: '#707D7E',
-      },
+      control: { type: 'number' },
+      defaultValue: 40,
+    },
+    color: {
+      control: { type: 'color' },
+      defaultValue: '#707D7E',
+    },
   },
-  args: { size: 40, color: '#707D7E'},
+  args: { size: 40, color: '#707D7E' },
 } satisfies Meta<typeof Spinner>;
 
 export default meta;

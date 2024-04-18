@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "prebuild": "pnpm prisma generate",
-    "build": "nest build",
     "prestart": "pnpm prisma migrate deploy",
     "dev": "nest start --debug --watch",
     "start": "node --enable-source-maps dist/main",
