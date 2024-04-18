@@ -75,24 +75,13 @@ export class AuthService {
   }
 
   private async signUpUserWithPassword(createUserDto: SignUpDto): Promise<ResponsePatientDto> {
-    const hashedPassword = await this.hashPassword(createUserDto.password);
-    const user = await this.userService.createUser({
-      ...createUserDto,
-      password: hashedPassword,
-    });
-    const patient = await this.patientService.createPatient({
-      user_id: user.id,
-      ...createUserDto,
-    });
-    return patient;
+    return await this.createPatient(createUserDto);
   }
 
   private async signUpUserWithGoogleId(createUserDto: SignUpDto): Promise<ResponsePatientDto> {
     const isValid = await this.isValidSignedGoogleId(createUserDto.google_id);
     if (!isValid) throw new BadRequestException('Invalid google id');
-    const user = await this.userService.createUser(createUserDto);
-    const patient = await this.patientService.createPatient({ user_id: user.id, ...createUserDto });
-    return patient;
+    return await this.createPatient(createUserDto);
   }
 
   private async hashPassword(password: string): Promise<string> {
@@ -102,6 +91,33 @@ export class AuthService {
 
   private async verifyPassword(password: string, hash: string): Promise<boolean> {
     return await bcrypt.compare(password, hash);
+  }
+
+  private async createPatient(createUserDto: SignUpDto): Promise<ResponsePatientDto> {
+    const user = await this.userService.createUser({
+      avatar_key: createUserDto.avatar_key,
+      email: createUserDto.email,
+      first_name: createUserDto.first_name,
+      google_id: createUserDto.google_id,
+      last_name: createUserDto.last_name,
+      phone: createUserDto.phone,
+      email_verified: createUserDto.email_verified,
+      password: createUserDto.password && (await this.hashPassword(createUserDto.password)),
+    });
+    const patient = await this.patientService.createPatient({
+      user_id: user.id,
+      age: createUserDto.age,
+      blood_type: createUserDto.blood_type,
+      weight: createUserDto.weight,
+      height: createUserDto.height,
+      city: createUserDto.city,
+      country: createUserDto.country,
+      declaration_id: createUserDto.declaration_id,
+      gender: createUserDto.gender,
+      identity_card_key: createUserDto.identity_card_key,
+      street: createUserDto.street,
+    });
+    return patient;
   }
 
   static readonly JWT_COOKIE_NAME = 'jwt';
