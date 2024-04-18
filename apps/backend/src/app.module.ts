@@ -9,6 +9,7 @@ import config from 'src/config/config';
 import { UserModule } from './user/user.module';
 import { FavoriteModule } from './favorite/favorite.module';
 import { DoctorModule } from './doctor/doctor.module';
+import { HospitalModule } from './hospital/hospital.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { DoctorModule } from './doctor/doctor.module';
     DoctorModule,
     PatientModule,
     AuthModule,
+    HospitalModule,
   ],
   controllers: [AppController],
   providers: [AppService],
