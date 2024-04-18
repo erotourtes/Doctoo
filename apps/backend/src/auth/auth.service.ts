@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
@@ -22,12 +22,8 @@ export class AuthService {
   ) {}
 
   async signupUser(createUserDto: CreateUserDto): Promise<ResponseWithoutRelationsUserDto> {
-    const hashedPassword = await this.hashPassword(createUserDto.password);
-    const user = await this.userService.createUser({
-      ...createUserDto,
-      password: hashedPassword,
-    });
-    return user;
+    if (createUserDto.password) return await this.signUpUserWithPassword(createUserDto);
+    else if (createUserDto.google_id) return await this.signUpUserWithGoogleId(createUserDto);
   }
 
   async validateUser(email: string, password: string): Promise<ResponseUserDto | null> {
@@ -51,6 +47,15 @@ export class AuthService {
     };
   }
 
+  async signGoogleId(googleId: string) {
+    return await this.jwtService.signAsync({ sub: googleId }, { expiresIn: '1d' });
+  }
+
+  private async isValidSignedGoogleId(signedGoogleId: string): Promise<boolean> {
+    const payload = await this.jwtService.verifyAsync(signedGoogleId).catch(() => null);
+    return payload !== null;
+  }
+
   attachJwtTokenToCookie(res: Response, token: string) {
     res.cookie(AuthService.JWT_COOKIE_NAME, token, { httpOnly: true, secure: this.conf.nodeEnv === 'production' });
   }
@@ -62,6 +67,22 @@ export class AuthService {
     if (!sub) return null;
 
     const user = await this.userService.getUser(sub);
+    return user;
+  }
+
+  private async signUpUserWithPassword(createUserDto: CreateUserDto): Promise<ResponseWithoutRelationsUserDto> {
+    const hashedPassword = await this.hashPassword(createUserDto.password);
+    const user = await this.userService.createUser({
+      ...createUserDto,
+      password: hashedPassword,
+    });
+    return user;
+  }
+
+  private async signUpUserWithGoogleId(createUserDto: CreateUserDto): Promise<ResponseWithoutRelationsUserDto> {
+    const isValid = await this.isValidSignedGoogleId(createUserDto.google_id);
+    if (!isValid) throw new BadRequestException('Invalid google id');
+    const user = await this.userService.createUser(createUserDto);
     return user;
   }
 

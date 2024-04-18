@@ -1,4 +1,4 @@
-import { JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 import { AuthService } from 'src/auth/auth.service';
 import authConfig from 'src/config/auth-config';
@@ -14,10 +14,10 @@ describe('AuthService', () => {
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
+      imports: [JwtModule.register({ secret: 'secret' })],
       providers: [
         AuthService,
         { provide: UserService, useValue: userServiceMock },
-        JwtService,
         { provide: config.KEY, useValue: config },
         { provide: authConfig.KEY, useValue: authConfig },
       ],
@@ -97,6 +97,19 @@ describe('AuthService', () => {
     const validated = await authService.validateGoogleUser(user.email, 'google_id_wrong');
 
     expect(validated).toBeNull();
+  });
+
+  it('should signup user with valid google_id', async () => {
+    userServiceMock.createUser = jest.fn().mockResolvedValue(user);
+    let newUser = { ...user, google_id: await authService.signGoogleId('google_id'), password: null };
+
+    expect(authService.signupUser(newUser)).resolves.toEqual(user);
+  });
+
+  it('should not signup user without valid google_id', async () => {
+    user = { ...user, google_id: 'google_id', password: null };
+
+    expect(authService.signupUser(user)).rejects.toThrow();
   });
 
   it('should attach jwt token to cookie', () => {

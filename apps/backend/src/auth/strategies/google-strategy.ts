@@ -30,7 +30,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
         first_name: profile.name.givenName,
         email: email.value,
         email_verified: email.verified,
-        google_id: profile.id,
+        google_id: await this.authService.signGoogleId(profile.id),
         avatar_key: profile.photos[0].value,
       };
       return {
