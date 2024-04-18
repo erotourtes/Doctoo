@@ -19,6 +19,15 @@ export const AuthCreateAccount = () => {
   );
 };
 
+export const AuthLogInIntoAccount = () => {
+  return (
+    <div className='mx-6 flex justify-center gap-1'>
+      <p>Already have an account?</p>
+      <p className='text-main'>Log In</p>
+    </div>
+  );
+};
+
 export const AuthMainContainer: FC<PropsWithChildren> = ({ children }) => {
   return (
     <div className='flex h-svh w-svw justify-center'>
