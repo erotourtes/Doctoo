@@ -15,7 +15,12 @@ export class MinioService {
       accessKey: this.configService.get('MINIO_ACCESS_KEY'),
       secretKey: this.configService.get('MINIO_SECRET_KEY'),
     });
+
     this.bucketName = this.configService.get('MINIO_BUCKET_NAME');
+  }
+
+  async onModuleInit() {
+    await this.createBucketIfNotExists();
   }
 
   async createBucketIfNotExists() {
