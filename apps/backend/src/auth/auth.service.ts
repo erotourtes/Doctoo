@@ -9,6 +9,9 @@ import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import authConfig from 'src/config/auth-config';
 import { ResponseWithoutRelationsUserDto } from 'src/user/dto/responseWithoutRelations';
+import { SignUpDto } from 'src/auth/dto/signup.dto';
+import { PatientService } from 'src/patient/patient.service';
+import { ResponsePatientDto } from 'src/patient/dto/response.dto';
 
 type JwtPayload = { sub: string };
 
@@ -17,11 +20,12 @@ export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
+    private readonly patientService: PatientService,
     @Inject(config.KEY) private readonly conf: ConfigType<typeof config>,
     @Inject(authConfig.KEY) private readonly authConf: ConfigType<typeof authConfig>,
   ) {}
 
-  async signupUser(createUserDto: CreateUserDto): Promise<ResponseWithoutRelationsUserDto> {
+  async signupUser(createUserDto: SignUpDto): Promise<ResponsePatientDto> {
     if (createUserDto.password) return await this.signUpUserWithPassword(createUserDto);
     else if (createUserDto.google_id) return await this.signUpUserWithGoogleId(createUserDto);
   }
@@ -70,20 +74,25 @@ export class AuthService {
     return user;
   }
 
-  private async signUpUserWithPassword(createUserDto: CreateUserDto): Promise<ResponseWithoutRelationsUserDto> {
+  private async signUpUserWithPassword(createUserDto: SignUpDto): Promise<ResponsePatientDto> {
     const hashedPassword = await this.hashPassword(createUserDto.password);
     const user = await this.userService.createUser({
       ...createUserDto,
       password: hashedPassword,
     });
-    return user;
+    const patient = await this.patientService.createPatient({
+      user_id: user.id,
+      ...createUserDto,
+    });
+    return patient;
   }
 
-  private async signUpUserWithGoogleId(createUserDto: CreateUserDto): Promise<ResponseWithoutRelationsUserDto> {
+  private async signUpUserWithGoogleId(createUserDto: SignUpDto): Promise<ResponsePatientDto> {
     const isValid = await this.isValidSignedGoogleId(createUserDto.google_id);
     if (!isValid) throw new BadRequestException('Invalid google id');
     const user = await this.userService.createUser(createUserDto);
-    return user;
+    const patient = await this.patientService.createPatient({ user_id: user.id, ...createUserDto });
+    return patient;
   }
 
   private async hashPassword(password: string): Promise<string> {

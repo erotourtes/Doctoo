@@ -7,6 +7,7 @@ import { GoogleStrategy } from 'src/auth/strategies/google-strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
 import { UserModule } from 'src/user/user.module';
+import { PatientModule } from 'src/patient/patient.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { UserModule } from 'src/user/user.module';
       inject: [ConfigService],
     }),
     UserModule,
+    PatientModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, GoogleStrategy],

@@ -6,5 +6,6 @@ import { PatientService } from './patient.service';
 @Module({
   controllers: [PatientController],
   providers: [PatientService, PrismaService],
+  exports: [PatientService],
 })
 export class PatientModule {}

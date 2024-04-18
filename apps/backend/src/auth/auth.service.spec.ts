@@ -6,11 +6,16 @@ import config from 'src/config/config';
 import { CreateUserDto } from 'src/user/dto/create.dto';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
+import { CreatePatientDto } from 'src/patient/dto/create.dto';
+import { plainToClass } from 'class-transformer';
+import { PatientService } from 'src/patient/patient.service';
 
 describe('AuthService', () => {
   let authService: AuthService;
   const userServiceMock: Partial<UserService> = {};
+  const patientServiceMock: Partial<PatientService> = {};
   let user: CreateUserDto;
+  let patient: CreatePatientDto;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -18,6 +23,7 @@ describe('AuthService', () => {
       providers: [
         AuthService,
         { provide: UserService, useValue: userServiceMock },
+        { provide: PatientService, useValue: patientServiceMock },
         { provide: config.KEY, useValue: config },
         { provide: authConfig.KEY, useValue: authConfig },
       ],
@@ -35,6 +41,7 @@ describe('AuthService', () => {
       phone: '1234567890',
       google_id: null,
     };
+    patient = plainToClass(CreatePatientDto, {});
   });
 
   it('should be defined', () => {
@@ -42,18 +49,20 @@ describe('AuthService', () => {
   });
 
   it('should signup user', async () => {
-    userServiceMock.createUser = jest.fn().mockResolvedValue({
-      ...user,
-      id: '1',
-    });
+    userServiceMock.createUser = jest.fn().mockResolvedValue({ ...user, id: '1' });
+    patientServiceMock.createPatient = jest.fn().mockResolvedValue({ ...patient, id: '2' });
+    const signUpDto = { ...user, ...patient };
 
-    const signedUp = await authService.signupUser(user);
+    const signedUp = await authService.signupUser(signUpDto);
 
     expect(userServiceMock.createUser).toHaveBeenCalledWith({
       ...user,
       password: expect.not.stringMatching(user.password),
     });
-    expect(signedUp).toEqual({ ...user, id: '1' });
+    expect(patientServiceMock.createPatient).toHaveBeenCalledWith(
+      expect.objectContaining({ ...patient, user_id: '1' }),
+    );
+    expect(signedUp).toEqual({ ...patient, id: '2' });
   });
 
   it("should validate user's credentials", async () => {
@@ -101,15 +110,20 @@ describe('AuthService', () => {
 
   it('should signup user with valid google_id', async () => {
     userServiceMock.createUser = jest.fn().mockResolvedValue(user);
+    patientServiceMock.createPatient = jest.fn().mockResolvedValue(patient);
     let newUser = { ...user, google_id: await authService.signGoogleId('google_id'), password: null };
+    let signUpDto = { ...newUser, ...patient };
 
-    expect(authService.signupUser(newUser)).resolves.toEqual(user);
+    expect(authService.signupUser(signUpDto)).resolves.toEqual({
+      ...patient,
+    });
   });
 
   it('should not signup user without valid google_id', async () => {
     user = { ...user, google_id: 'google_id', password: null };
+    let signUpDto = { ...user, ...patient };
 
-    expect(authService.signupUser(user)).rejects.toThrow();
+    expect(authService.signupUser(signUpDto)).rejects.toThrow();
   });
 
   it('should attach jwt token to cookie', () => {

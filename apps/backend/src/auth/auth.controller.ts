@@ -2,10 +2,10 @@ import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common
 import { AuthService } from 'src/auth/auth.service';
 import { ResponseGoogleSignDto } from 'src/auth/dto/google-sign-response.dto';
 import { LocalLoginDto } from 'src/auth/dto/local-login.dto';
+import { SignUpDto } from 'src/auth/dto/signup.dto';
 import { GoogleAuthGuard } from 'src/auth/strategies/google-strategy';
 import { LocalAuthGuard } from 'src/auth/strategies/local-strategy';
 import { UserDec } from 'src/auth/user.decorator';
-import { CreateUserDto } from 'src/user/dto/create.dto';
 import { ResponseUserDto } from 'src/user/dto/response.dto';
 
 @Controller('auth')
@@ -21,7 +21,7 @@ export class AuthController {
   }
 
   @Post('signup')
-  localSignup(@Body() createUserDto: CreateUserDto) {
+  localSignup(@Body() createUserDto: SignUpDto) {
     return this.authService.signupUser(createUserDto);
   }
 
