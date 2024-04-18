@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { ResponseUserDto } from 'src/user/dto/response.dto';
 
 export class ResponseGoogleSignDto {
@@ -10,5 +11,13 @@ export class ResponseGoogleSignDto {
     google_id: string;
     avatar_key: string;
   };
-  user?: ResponseUserDto;
+  user?: ResponseSignUpUserDto;
+}
+
+export class ResponseSignUpUserDto extends ResponseUserDto {
+  @Exclude()
+  override password: string;
+
+  @Exclude()
+  override google_id: string;
 }

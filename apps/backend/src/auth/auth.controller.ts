@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
-import { ResponseGoogleSignDto } from 'src/auth/dto/google-sign-response.dto';
+import { ResponseGoogleSignDto, ResponseSignUpUserDto } from 'src/auth/dto/google-sign-response.dto';
 import { LocalLoginDto } from 'src/auth/dto/local-login.dto';
 import { SignUpDto } from 'src/auth/dto/signup.dto';
 import { GoogleAuthGuard } from 'src/auth/strategies/google-strategy';
@@ -14,7 +14,11 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async localLogin(@Res({ passthrough: true }) res, @Body() _: LocalLoginDto, @UserDec() user: ResponseUserDto) {
+  async localLogin(
+    @Res({ passthrough: true }) res,
+    @Body() _: LocalLoginDto,
+    @UserDec() user: ResponseUserDto,
+  ): Promise<ResponseSignUpUserDto> {
     const token = await this.authService.signJwtToken(user.id);
     this.authService.attachJwtTokenToCookie(res, token.access_token);
     return user;
