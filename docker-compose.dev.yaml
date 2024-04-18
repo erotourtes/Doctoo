@@ -13,5 +13,19 @@ services:
     ports:
       - ${POSTGRES_PORT}:5432
 
+  minio:
+    image: bitnami/minio:latest
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: 123456789
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - 'minio_data:/data'
+
 volumes:
   postgres_db:
+
+  minio_data:
+    driver: local
