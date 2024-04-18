@@ -21,12 +21,6 @@ export class CreatePatientDto {
   @IsEnum(Gender)
   readonly gender: Gender;
 
-  @IsNumber()
-  readonly declaration_id: number;
-
-  @IsString()
-  readonly identity_card_key: string;
-
   @IsString()
   readonly country: string;
 
