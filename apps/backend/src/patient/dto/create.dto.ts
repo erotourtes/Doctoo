@@ -28,14 +28,6 @@ export class CreatePatientDto {
   @ApiProperty({ description: 'The gender of the patient' })
   readonly gender: Gender;
 
-  @IsNumber()
-  @ApiProperty({ description: 'The declaration ID associated with the patient' })
-  readonly declaration_id: number;
-
-  @IsString()
-  @ApiProperty({ description: 'The identity card key of the patient' })
-  readonly identity_card_key: string;
-
   @IsString()
   @ApiProperty({ description: 'The country of residence of the patient' })
   readonly country: string;
