@@ -8,7 +8,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { GoogleStrategy } from './strategies/google';
 import { LocalStrategy } from './strategies/local';
-import auth from 'src/config/auth';
+import auth from '../config/auth';
 
 @Module({
   imports: [
