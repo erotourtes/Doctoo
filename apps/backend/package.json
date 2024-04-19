@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build" : "nest build",
     "prebuild": "pnpm prisma generate",
     "build": "nest build",
     "prestart": "pnpm prisma migrate deploy",
@@ -14,10 +13,6 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-<<<<<<< HEAD
-    "build" : "nest build",
-=======
->>>>>>> 08c53456e1cb345d497a1cbc8dec625468a57df4
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,test}/**/*.ts\" --fix"
   },
