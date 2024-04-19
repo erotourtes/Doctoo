@@ -24,8 +24,8 @@ enum Gender {
 }
 
 enum AppointmentStatus {
-  COMPLETED
   PLANNED
+  COMPLETED
   CANCELED
 }
 
@@ -36,264 +36,275 @@ enum NotificationModel {
 
 enum NotificationAction {
   TODO
-  // TODO
+  // TODO: Create add required enums for notifications.
 }
 
 model User {
-  id             String    @id @default(uuid())
-  first_name     String
-  last_name      String
-  phone          String
-  email          String
-  email_verified Boolean
-  password       String?
-  google_id      String?
-  avatar_key     String
-  doctors        Doctor[]
-  patients       Patient[]
+  id            String    @id @default(uuid())
+  firstName     String    @map("first_name")
+  lastName      String    @map("last_name")
+  phone         String
+  email         String    @unique
+  emailVerified Boolean   @default(false) @map("email_verified") // TODO: Remove this field when create user.
+  password      String?
+  googleId      String?   @map("googleId")
+  avatarKey     String    @map("avatar_key")
+  doctors       Doctor[]
+  patients      Patient[]
 
   @@map("users")
 }
 
 model Favorite {
-  id         String  @id @default(uuid())
-  doctor_id  String
-  patient_id String
-  doctor     Doctor  @relation(fields: [doctor_id], references: [id])
-  patient    Patient @relation(fields: [patient_id], references: [id])
+  id        String  @id @default(uuid())
+  doctorId  String  @map("doctor_id")
+  patientId String  @map("patient_id")
+  doctor    Doctor  @relation(fields: [doctorId], references: [id])
+  patient   Patient @relation(fields: [patientId], references: [id])
 
+  @@unique([doctorId, patientId])
   @@map("favorites")
 }
 
 model Review {
-  id         String  @id @default(uuid())
-  doctor_id  String
-  patient_id String
-  docor      Doctor  @relation(fields: [doctor_id], references: [id])
-  patient    Patient @relation(fields: [patient_id], references: [id])
-  text       String
-  rate       Int
+  id        String  @id @default(uuid())
+  text      String
+  rate      Int
+  doctorId  String  @map("doctor_id")
+  patientId String  @map("patient_id")
+  doctor    Doctor  @relation(fields: [doctorId], references: [id])
+  patient   Patient @relation(fields: [patientId], references: [id])
 
   @@map("reviews")
 }
 
-model NotificationLog {
-  id         String             @id @default(uuid())
-  patient_id String
-  model_id   String
-  created_at DateTime           @default(now())
-  patient    Patient            @relation(fields: [patient_id], references: [id])
-  model      NotificationModel
-  action     NotificationAction
+model Notification {
+  id        String             @id @default(uuid())
+  patientId String             @map("patient_id")
+  modelId   String             @map("model_id")
+  createdAt DateTime           @default(now()) @map("created_at")
+  patient   Patient            @relation(fields: [patientId], references: [id])
+  model     NotificationModel
+  action    NotificationAction
 
-  @@map("notification_logs")
+  @@map("notifications")
+}
+
+model Adress {
+  id        String     @id @default(uuid())
+  country   String
+  state     String?
+  city      String
+  street    String
+  apartment String?
+  zipCode   Int?       @map("zip_code")
+  hospitals Hospital[]
+  patients  Patient[]
+
+  @@map("adresses")
 }
 
 model Doctor {
-  id                     String                 @id @default(uuid())
-  user_id                String
-  payrate                Int
-  about_me               String
-  user                   User                   @relation(fields: [user_id], references: [id])
-  appointments           Appointment[]
-  chats                  Chat[]
-  doctor_specializations DoctorSpecialization[]
-  hospital_doctors       HospitalDoctor[]
-  declarations           Declaration[]
-  favorites              Favorite[]
-  reviews                Review[]
+  id              String                 @id @default(uuid())
+  userId          String                 @unique @map("user_id")
+  payrate         Int
+  about           String                 @map("about")
+  user            User                   @relation(fields: [userId], references: [id])
+  appointments    Appointment[]
+  chats           Chat[]
+  specializations DoctorSpecialization[]
+  hospitals       HospitalDoctor[]
+  declarations    Declaration[]
+  favorites       Favorite[]
+  reviews         Review[]
 
   @@map("doctors")
 }
 
 model HospitalDoctor {
-  id          String   @id @default(uuid())
-  hospital_id String
-  doctor_id   String
-  hospital    Hospital @relation(fields: [hospital_id], references: [id])
-  doctor      Doctor   @relation(fields: [doctor_id], references: [id])
+  id         String   @id @default(uuid())
+  hospitalId String   @map("hospital_id")
+  doctorId   String   @map("doctor_id")
+  hospital   Hospital @relation(fields: [hospitalId], references: [id])
+  doctor     Doctor   @relation(fields: [doctorId], references: [id])
 
+  @@unique([hospitalId, doctorId])
   @@map("hospital_doctors")
 }
 
 model Hospital {
-  id               String           @id @default(uuid())
-  name             String
-  country          String
-  state            String?
-  city             String
-  street           String
-  hospital_doctors HospitalDoctor[]
+  id       String           @id @default(uuid())
+  name     String
+  adress   Adress           @relation(fields: [adressId], references: [id])
+  adressId String
+  doctors  HospitalDoctor[]
 
   @@map("hospitals")
 }
 
 model Declaration {
-  id        Int       @id
-  doctor_id String
-  doctor    Doctor    @relation(fields: [doctor_id], references: [id])
-  patients  Patient[]
+  id        Int     @id @default(autoincrement())
+  doctorId  String  @map("doctor_id")
+  patientId String  @unique @map("patient_id")
+  doctor    Doctor  @relation(fields: [doctorId], references: [id])
+  patient   Patient @relation(fields: [patientId], references: [id])
 
   @@map("declarations")
 }
 
 model DoctorSpecialization {
-  id                String @id @default(uuid())
-  doctor_id         String
-  specialization_id String
-  doctor            Doctor @relation(fields: [doctor_id], references: [id])
+  id               String @id @default(uuid())
+  doctorId         String @map("doctor_id")
+  specializationId String @map("specialization_id")
+  doctor           Doctor @relation(fields: [doctorId], references: [id])
 
   @@map("doctor_specializations")
 }
 
 model Patient {
-  id                   String               @id @default(uuid())
-  user_id              String
-  weight               Int
-  height               Int
-  age                  Int
-  blood_type           BloodType
-  gender               Gender
-  declaration_id       Int?
-  identity_card_key    String?
-  user                 User                 @relation(fields: [user_id], references: [id])
-  appointments         Appointment[]
-  chats                Chat[]
-  patient_conditions   PatientCondition[]
-  patient_allergies    PatientAllergy[]
-  patient_caccinations PatientVaccination[]
-  declaration          Declaration?         @relation(fields: [declaration_id], references: [id])
-  country              String
-  state                String?
-  city                 String
-  street               String
-  apartment            String?
-  zip_code             Int?
-  favorites            Favorite[]
-  reviews              Review[]
-  notification_logs    NotificationLog[]
+  id              String               @id @default(uuid())
+  userId          String               @unique @map("user_id")
+  weight          Int
+  height          Int
+  age             Int
+  bloodType       BloodType            @map("blood_type")
+  gender          Gender
+  identityCardKey String               @map("identity_card_key")
+  user            User                 @relation(fields: [userId], references: [id])
+  declaration     Declaration?
+  appointments    Appointment[]
+  chats           Chat[]
+  conditions      PatientCondition[]
+  allergies       PatientAllergy[]
+  vaccinations    PatientVaccination[]
+  adressId        String
+  adress          Adress               @relation(fields: [adressId], references: [id])
+  favorites       Favorite[]
+  reviews         Review[]
+  notifications   Notification[]
 
   @@map("patients")
 }
 
 model Vaccination {
-  id                   String               @id @default(uuid())
-  name                 String
-  patient_vaccinations PatientVaccination[]
+  id       String               @id @default(uuid())
+  name     String
+  patients PatientVaccination[]
 
   @@map("vaccinations")
 }
 
 model PatientVaccination {
-  id             String      @id @default(uuid())
-  vaccination_id String
-  patient_id     String
-  vaccination    Vaccination @relation(fields: [vaccination_id], references: [id])
-  patient        Patient     @relation(fields: [patient_id], references: [id])
+  id            String      @id @default(uuid())
+  vaccinationId String      @map("vaccination_id")
+  patientId     String      @map("patient_id")
+  vaccination   Vaccination @relation(fields: [vaccinationId], references: [id])
+  patient       Patient     @relation(fields: [patientId], references: [id])
 
   @@map("patient_vaccinations")
 }
 
 model Allergy {
-  id                String           @id @default(uuid())
-  name              String
-  patient_allergies PatientAllergy[]
+  id       String           @id @default(uuid())
+  name     String
+  patients PatientAllergy[]
 
   @@map("allergies")
 }
 
 model PatientAllergy {
-  id         String  @id @default(uuid())
-  patient_id String
-  allergy_id String
-  patient    Patient @relation(fields: [patient_id], references: [id])
-  allergy    Allergy @relation(fields: [allergy_id], references: [id])
+  id        String  @id @default(uuid())
+  patientId String  @map("patient_id")
+  allergyId String  @map("allergy_id")
+  patient   Patient @relation(fields: [patientId], references: [id])
+  allergy   Allergy @relation(fields: [allergyId], references: [id])
 
   @@map("patient_allergies")
 }
 
-model PatientCondition {
-  id           String     @id @default(uuid())
-  patient_id   String
-  condition_id String
-  patient      Patient    @relation(fields: [patient_id], references: [id])
-  condition    Conditiion @relation(fields: [condition_id], references: [id])
-
-  @@map("patient_conditions")
-}
-
-model Conditiion {
-  id                        String                    @id @default(uuid())
-  name                      String
-  patient_conditions        PatientCondition[]
-  specialization_conditions SpecializationCondition[]
+model Condition {
+  id              String                    @id @default(uuid())
+  name            String
+  patients        PatientCondition[]
+  specializations SpecializationCondition[]
 
   @@map("conditions")
 }
 
+model PatientCondition {
+  id          String    @id @default(uuid())
+  patientId   String    @map("patient_id")
+  conditionId String    @map("condition_id")
+  patient     Patient   @relation(fields: [patientId], references: [id])
+  condition   Condition @relation(fields: [conditionId], references: [id])
+
+  @@map("patient_conditions")
+}
+
 model SpecializationCondition {
-  id                String         @id @default(uuid())
-  specialization_id String
-  condition_id      String
-  specialization    Specialization @relation(fields: [specialization_id], references: [id])
-  condition         Conditiion     @relation(fields: [condition_id], references: [id])
+  id               String         @id @default(uuid())
+  specializationId String         @map("specialization_id")
+  conditionId      String         @map("condition_id")
+  specialization   Specialization @relation(fields: [specializationId], references: [id])
+  condition        Condition      @relation(fields: [conditionId], references: [id])
 
   @@map("specialization_conditions")
 }
 
 model Specialization {
-  id                        String                    @id @default(uuid())
-  name                      String
-  specialization_conditions SpecializationCondition[]
+  id         String                    @id @default(uuid())
+  name       String
+  conditions SpecializationCondition[]
 
   @@map("specializations")
 }
 
 model Appointment {
-  id          String            @id @default(uuid())
-  patient_id  String
-  doctor_id   String
-  date        DateTime
-  status      AppointmentStatus
-  notes       String
-  video_key   String?
-  invoice_key String
-  receipt_key String
-  patient     Patient           @relation(fields: [patient_id], references: [id])
-  doctor      Doctor            @relation(fields: [doctor_id], references: [id])
+  id                String            @id @default(uuid())
+  patientId         String            @map("patient_id")
+  doctorId          String            @map("doctor_id")
+  assignedAt        DateTime          @map("assigned_at")
+  status            AppointmentStatus
+  notes             String
+  videoRecordKey    String?           @map("video_record_key")
+  paymentInvoiceKey String            @map("payment_invoice_key")
+  paymentReceiptKey String            @map("payment_receipt_key")
+  patient           Patient           @relation(fields: [patientId], references: [id])
+  doctor            Doctor            @relation(fields: [doctorId], references: [id])
 
   @@map("appointments")
 }
 
 model Chat {
-  id         String        @id @default(uuid())
-  patient_id String
-  doctor_id  String
-  patient    Patient       @relation(fields: [patient_id], references: [id])
-  doctor     Doctor        @relation(fields: [doctor_id], references: [id])
-  messages   ChatMessage[]
+  id        String        @id @default(uuid())
+  patientId String        @map("patient_id")
+  doctorId  String        @map("doctor_id")
+  patient   Patient       @relation(fields: [patientId], references: [id])
+  doctor    Doctor        @relation(fields: [doctorId], references: [id])
+  messages  ChatMessage[]
 
+  @@unique([patientId, doctorId])
   @@map("chats")
 }
 
 model ChatMessage {
-  id                       String                  @id @default(uuid())
-  chat_id                  String
-  sender_id                String
-  sent_at                  DateTime                @default(now())
-  text                     String
-  edited_at                DateTime
-  chat                     Chat                    @relation(fields: [chat_id], references: [id])
-  chat_message_attachments ChatMessageAttachment[]
+  id          String              @id @default(uuid())
+  chatId      String              @map("chat_id")
+  senderId    String              @map("sender_id")
+  sentAt      DateTime            @default(now()) @map("sent_at")
+  text        String
+  editedAt    DateTime            @map("edited_at")
+  chat        Chat                @relation(fields: [chatId], references: [id])
+  attachments MessageAttachment[]
 
-  @@map("chats_messages")
+  @@map("chat_messages")
 }
 
-model ChatMessageAttachment {
-  id              String      @id @default(uuid())
-  chat_message_id String
-  attachment_key  String
-  chat_message    ChatMessage @relation(fields: [chat_message_id], references: [id])
+model MessageAttachment {
+  id            String      @id @default(uuid())
+  messageId     String      @map("message_id")
+  attachmentKey String      @map("attachment_key")
+  message       ChatMessage @relation(fields: [messageId], references: [id])
 
-  @@map("chats_messages_attachments")
+  @@map("message_attachments")
 }
