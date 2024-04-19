@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { AppointmentModule } from '../appointment/appointment.module';
 import { AuthModule } from '../auth/auth.module';
 import auth from '../config/auth';
 import config from '../config/config';
@@ -21,6 +22,7 @@ import { UserModule } from '../user/user.module';
     PatientModule,
     FileModule,
     HospitalModule,
+    AppointmentModule,
   ],
   providers: [MinioService],
 })
