@@ -9,6 +9,7 @@ type ButtonProps = {
   type: keyof typeof ButtonTypes;
 };
 
+// TODO: Fix it.
 export const Button = ({ children, onClick, disabled = false, className = '', type }: ButtonProps) => {
   const ButtonTypeStyles = {
     [ButtonTypes.PRIMARY]: `text-white ${disabled ? 'bg-grey-3' : 'bg-main hover:bg-main-dark active:bg-main-darker'}`,

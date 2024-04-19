@@ -1,5 +1,4 @@
 import { Button } from '@/components/UI/Button/Button';
-import { ButtonTypes } from '@/components/UI/Button/ButtonTypes';
 import '@/index.css';
 import type { Meta, StoryObj } from '@storybook/react';
 import PageHeader from './PageHeader';
@@ -31,10 +30,10 @@ export const Default: Story = {
   },
   render: args => (
     <PageHeader {...args}>
-      <Button type={ButtonTypes.PRIMARY} onClick={() => {}}>
+      <Button type={'PRIMARY'} onClick={() => {}}>
         Test
       </Button>
-      <Button type={ButtonTypes.SECONDARY} onClick={() => {}}>
+      <Button type={'SECONDARY'} onClick={() => {}}>
         Test
       </Button>
     </PageHeader>
