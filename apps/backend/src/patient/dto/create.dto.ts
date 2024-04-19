@@ -1,9 +1,8 @@
 import { BloodType, Gender } from '@prisma/client';
-import { IsEnum, IsNumber, IsString } from 'class-validator';
-import { AdressDto } from '../../Adress.dto';
+import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
 
-export class CreatePatientBaseDto {
+export class CreatePatientDto {
   @IsNotEmptyString()
   readonly userId: string;
 
@@ -24,8 +23,22 @@ export class CreatePatientBaseDto {
 
   @IsEnum(Gender)
   readonly gender: Gender;
-}
 
-export class CreatePatientDto extends CreatePatientBaseDto {
-  readonly address: AdressDto;
+  @IsString()
+  readonly country: string;
+
+  @IsOptional()
+  readonly state?: string;
+
+  @IsString()
+  readonly city: string;
+
+  @IsString()
+  readonly street: string;
+
+  @IsOptional()
+  readonly apartment?: string;
+
+  @IsNumber()
+  readonly zipCode?: number;
 }

@@ -1,9 +1,24 @@
-import { IsString } from 'class-validator';
-import { AdressDto } from '../../Adress.dto';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateHospitalDto {
   @IsString()
   readonly name: string;
 
-  readonly adress: AdressDto;
+  @IsString()
+  readonly country: string;
+
+  @IsOptional()
+  readonly state?: string;
+
+  @IsString()
+  readonly city: string;
+
+  @IsString()
+  readonly street: string;
+
+  @IsOptional()
+  readonly apartment?: string;
+
+  @IsNumber()
+  readonly zipCode?: number;
 }

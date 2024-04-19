@@ -90,20 +90,6 @@ model Notification {
   @@map("notifications")
 }
 
-model Adress {
-  id        String     @id @default(uuid())
-  country   String
-  state     String?
-  city      String
-  street    String
-  apartment String?
-  zipCode   Int?       @map("zip_code")
-  hospitals Hospital[]
-  patients  Patient[]
-
-  @@map("adresses")
-}
-
 model Doctor {
   id              String                 @id @default(uuid())
   userId          String                 @unique @map("user_id")
@@ -133,11 +119,15 @@ model HospitalDoctor {
 }
 
 model Hospital {
-  id       String           @id @default(uuid())
-  name     String
-  adress   Adress           @relation(fields: [adressId], references: [id])
-  adressId String
-  doctors  HospitalDoctor[]
+  id        String           @id @default(uuid())
+  name      String
+  country   String
+  state     String?
+  city      String
+  street    String
+  apartment String?
+  zipCode   Int?             @map("zip_code")
+  doctors   HospitalDoctor[]
 
   @@map("hospitals")
 }
@@ -169,6 +159,7 @@ model Patient {
   age             Int
   bloodType       BloodType            @map("blood_type")
   gender          Gender
+  /// TODO: Should we make this field is optiona?
   identityCardKey String               @map("identity_card_key")
   user            User                 @relation(fields: [userId], references: [id])
   declaration     Declaration?
@@ -177,8 +168,12 @@ model Patient {
   conditions      PatientCondition[]
   allergies       PatientAllergy[]
   vaccinations    PatientVaccination[]
-  adressId        String
-  adress          Adress               @relation(fields: [adressId], references: [id])
+  country         String
+  state           String?
+  city            String
+  street          String
+  apartment       String?
+  zipCode         Int?                 @map("zip_code")
   favorites       Favorite[]
   reviews         Review[]
   notifications   Notification[]

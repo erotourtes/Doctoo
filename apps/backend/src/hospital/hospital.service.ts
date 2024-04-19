@@ -10,11 +10,7 @@ export class HospitalService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async createHospital(body: CreateHospitalDto): Promise<ResponseHospitalDto> {
-    const { adress, ...data } = body;
-
-    const { id } = await this.prismaService.adress.create({ data: adress });
-
-    const hospital = await this.prismaService.hospital.create({ data: { ...data, adressId: id } });
+    const hospital = await this.prismaService.hospital.create({ data: body });
 
     return plainToInstance(ResponseHospitalDto, hospital);
   }

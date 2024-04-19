@@ -1,9 +1,4 @@
 import { PartialType } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
-import { AdressDto } from '../../Adress.dto';
+import { CreateHospitalDto } from './create.dto';
 
-export class PatchHospitalDto extends PartialType(AdressDto) {
-  @IsOptional()
-  @IsString()
-  readonly name?: string;
-}
+export class PatchHospitalDto extends PartialType(CreateHospitalDto) {}

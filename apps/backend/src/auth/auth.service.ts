@@ -132,7 +132,12 @@ export class AuthService {
       height: body.height,
       gender: body.gender,
       identityCardKey: '1',
-      address: body.address,
+      city: '',
+      country: '',
+      street: '',
+      apartment: '',
+      state: '',
+      zipCode: 1,
     });
 
     return plainToInstance(ResponsePatientDto, patient);

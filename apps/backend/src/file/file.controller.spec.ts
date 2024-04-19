@@ -1,6 +1,6 @@
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { MinioService } from 'src/minio/minio.service';
+import { MinioService } from '../minio/minio.service';
 import { FileController } from './file.controller';
 
 describe('FileController', () => {

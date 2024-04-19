@@ -1,5 +1,5 @@
 import { prismaMock } from './prisma/prisma.mock';
 
-jest.mock('./prisma.service.ts', () => ({
+jest.mock('./prisma/prisma.service.ts', () => ({
   PrismaService: jest.fn(() => prismaMock),
 }));

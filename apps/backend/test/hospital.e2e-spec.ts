@@ -29,9 +29,7 @@ describe('HospitalController (e2e)', () => {
 
   describe('/hospital (GET)', () => {
     it('Should return array of objects', async () => {
-      const { id } = await prisma.adress.create({ data: hospitalStub().adress });
-
-      await prisma.hospital.create({ data: { ...hospitalStub(), adressId: id } });
+      await prisma.hospital.create({ data: hospitalStub() });
 
       const response = await request(app.getHttpServer()).get('/hospital');
 
@@ -91,12 +89,19 @@ describe('HospitalController (e2e)', () => {
 
       const { id } = await prisma.hospital.create({ data: hospital });
 
-      const delta: ResponseHospitalDto = { name: 'updated-name', country: 'updated-country', state: 'updated-state' };
+      const body: ResponseHospitalDto = {
+        name: 'updated-name',
+        country: 'updated-country',
+        state: 'updated-state',
+        city: 'updated-city',
+        street: 'updated-street',
+        id,
+      };
 
-      const response = await request(app.getHttpServer()).patch(`/hospital/${id}`).send(delta);
+      const response = await request(app.getHttpServer()).patch(`/hospital/${id}`).send(body);
 
       expect(response.status).toEqual(200);
-      expect(response.body).toMatchObject({ ...hospital, ...delta });
+      expect(response.body).toMatchObject({ ...hospital, ...body });
     });
   });
 

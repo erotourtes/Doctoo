@@ -1,4 +1,4 @@
-import { Adress, BloodType, Gender } from '@prisma/client';
+import { BloodType, Gender } from '@prisma/client';
 
 export class ResponsePatientDto {
   readonly id: string;
@@ -9,5 +9,10 @@ export class ResponsePatientDto {
   readonly bloodType: BloodType;
   readonly gender: Gender;
   readonly identityCardKey: string;
-  readonly adress: Adress; // TODO: Use adress DTO instead of Prisma model
+  readonly country: string;
+  readonly state?: string;
+  readonly city: string;
+  readonly street: string;
+  readonly apartment?: string;
+  readonly zipCode?: number;
 }

@@ -25,7 +25,9 @@ describe('HospitalService', () => {
   it('should create hospital', async () => {
     const hospitalDto: CreateHospitalDto = {
       name: 'test-hospital',
-      adress: { city: 'test', country: 'test', street: 'test' },
+      city: 'test',
+      country: 'test',
+      street: 'test',
     };
 
     const createdHospital = await hospitalService.createHospital(hospitalDto);
@@ -37,14 +39,12 @@ describe('HospitalService', () => {
   it('should return hospital by id', async () => {
     const hospitalDto: CreateHospitalDto = {
       name: 'test-hospital',
-      adress: { city: 'test', country: 'test', street: 'test' },
+      city: 'test',
+      country: 'test',
+      street: 'test',
     };
 
-    const { adress, ...data } = hospitalDto;
-
-    const newAdress = await prisma.adress.create({ data: adress });
-
-    const { id } = await prisma.hospital.create({ data: { ...data, adressId: newAdress.id } });
+    const { id } = await prisma.hospital.create({ data: hospitalDto });
 
     const hospital = await hospitalService.getHospital(id);
 
@@ -54,14 +54,12 @@ describe('HospitalService', () => {
   it('should update hospital', async () => {
     const hospitalDto: CreateHospitalDto = {
       name: 'test-hospital',
-      adress: { city: 'test', country: 'test', street: 'test' },
+      city: 'test',
+      country: 'test',
+      street: 'test',
     };
 
-    const { adress, ...data } = hospitalDto;
-
-    const newAdress = await prisma.adress.create({ data: adress });
-
-    const { id } = await prisma.hospital.create({ data: { ...data, adressId: newAdress.id } });
+    const { id } = await prisma.hospital.create({ data: hospitalDto });
 
     const delta: PatchHospitalDto = { name: 'updated-name', city: 'test', country: 'test', street: 'test' };
 
@@ -73,17 +71,15 @@ describe('HospitalService', () => {
   it('should delete hospital', async () => {
     const hospitalDto: CreateHospitalDto = {
       name: 'test-hospital',
-      adress: { city: 'test', country: 'test', street: 'test' },
+      city: 'test',
+      country: 'test',
+      street: 'test',
     };
 
-    const { adress, ...data } = hospitalDto;
-
-    const newAdress = await prisma.adress.create({ data: adress });
-
-    const { id } = await prisma.hospital.create({ data: { ...data, adressId: newAdress.id } });
+    const { id } = await prisma.hospital.create({ data: hospitalDto });
 
     const deleteResult = await hospitalService.deleteHospital(id);
 
-    expect(deleteResult).toMatchObject({ message: `Hospital with id ${id} was deleted successfully` });
+    expect(deleteResult).toBeUndefined();
   });
 });
