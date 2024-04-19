@@ -23,7 +23,7 @@
     "frontend:storybook:build": "pnpm -F @internship-2024-doctoo/frontend storybook:build",
     "frontend:format": "pnpm -F @internship-2024-doctoo/frontend format",
     "frontend:lint": "pnpm -F @internship-2024-doctoo/frontend lint",
-    "fromat": "pnpm -r format",
+    "format": "pnpm -r format",
     "lint": "pnpm -r lint",
     "build": "pnpm -r build"
   },
