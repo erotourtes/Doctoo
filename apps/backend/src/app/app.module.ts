@@ -6,6 +6,7 @@ import config from '../config/config';
 import { DoctorModule } from '../doctor/doctor.module';
 import { FavoriteModule } from '../favorite/favorite.module';
 import { FileModule } from '../file/file.module';
+import { HospitalModule } from '../hospital/hospital.module';
 import { MinioService } from '../minio/minio.service';
 import { PatientModule } from '../patient/patient.module';
 import { UserModule } from '../user/user.module';
@@ -19,6 +20,7 @@ import { UserModule } from '../user/user.module';
     DoctorModule,
     PatientModule,
     FileModule,
+    HospitalModule,
   ],
   providers: [MinioService],
 })

@@ -8,8 +8,8 @@ import { ResponseDoctorDto } from './dto/response.dto';
 @Injectable()
 export class DoctorService {
   constructor(
-    private prismaService: PrismaService,
-    private userService: UserService,
+    private readonly prismaService: PrismaService,
+    private readonly userService: UserService,
   ) {}
 
   async createDoctor(body: CreateDoctorDto): Promise<ResponseDoctorDto> {

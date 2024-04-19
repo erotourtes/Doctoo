@@ -1,0 +1,119 @@
+import { INestApplication } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import * as request from 'supertest';
+import { CreateHospitalDto } from '../src/hospital/dto/create.dto';
+import { ResponseHospitalDto } from '../src/hospital/dto/response.dto';
+import { HospitalModule } from '../src/hospital/hospital.module';
+import { PrismaService } from '../src/prisma/prisma.service';
+import { hospitalStub } from './stubs/hospital.stub';
+
+// TODO: Rewrite this tests.
+describe('HospitalController (e2e)', () => {
+  let app: INestApplication;
+  let prisma: PrismaService;
+
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [HospitalModule],
+      providers: [PrismaService],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+
+    await app.init();
+
+    prisma = moduleFixture.get<PrismaService>(PrismaService);
+  });
+
+  beforeEach(async () => prisma.hospital.deleteMany());
+
+  describe('/hospital (GET)', () => {
+    it('Should return array of objects', async () => {
+      const { id } = await prisma.adress.create({ data: hospitalStub().adress });
+
+      await prisma.hospital.create({ data: { ...hospitalStub(), adressId: id } });
+
+      const response = await request(app.getHttpServer()).get('/hospital');
+
+      expect(response.status).toEqual(200);
+      expect(response.body).toMatchObject([hospitalStub()]);
+    });
+  });
+
+  describe('/hospital (POST)', () => {
+    it('Should created hospital without state', async () => {
+      const hospital: CreateHospitalDto = hospitalStub();
+
+      const expectedResponseBody: Omit<ResponseHospitalDto, 'id'> = { ...hospital, state: null };
+
+      const response = await request(app.getHttpServer()).post('/hospital').send(hospital);
+
+      expect(response.status).toEqual(201);
+      expect(response.body).toMatchObject(expectedResponseBody);
+    });
+
+    it('Should created hospital with state', async () => {
+      const hospital: CreateHospitalDto = { ...hospitalStub(), state: 'test' };
+
+      const response = await request(app.getHttpServer()).post('/hospital').send(hospital);
+
+      expect(response.status).toEqual(201);
+      expect(response.body).toMatchObject(hospital);
+    });
+  });
+
+  describe('/hospital/:id (GET)', () => {
+    it('Should return object hospital', async () => {
+      const hospital: CreateHospitalDto = hospitalStub();
+
+      const { id } = await prisma.hospital.create({ data: hospital });
+
+      const response = await request(app.getHttpServer()).get(`/hospital/${id}`);
+
+      expect(response.status).toEqual(200);
+      expect(response.body).toMatchObject(hospital);
+    });
+
+    it('Should return Not Found error with message that hospital with defined id does not exist', async () => {
+      const id = 'non-existent';
+      const response = await request(app.getHttpServer()).get(`/hospital/${id}`);
+
+      expect(response.status).toEqual(404);
+      expect(response.body).toMatchObject({
+        message: `Hospital with id ${id} does not exist`,
+      });
+    });
+  });
+
+  describe('/hospital/:id (PATCH)', () => {
+    it('Should return updated object', async () => {
+      const hospital: CreateHospitalDto = hospitalStub();
+
+      const { id } = await prisma.hospital.create({ data: hospital });
+
+      const delta: ResponseHospitalDto = { name: 'updated-name', country: 'updated-country', state: 'updated-state' };
+
+      const response = await request(app.getHttpServer()).patch(`/hospital/${id}`).send(delta);
+
+      expect(response.status).toEqual(200);
+      expect(response.body).toMatchObject({ ...hospital, ...delta });
+    });
+  });
+
+  describe('/hospital/:id (DELETE)', () => {
+    it('Should delete hospital', async () => {
+      const hospital: CreateHospitalDto = hospitalStub();
+
+      const { id } = await prisma.hospital.create({ data: hospital });
+
+      const response = await request(app.getHttpServer()).delete(`/hospital/${id}`);
+
+      expect(response.status).toEqual(200);
+      expect(response.body).toMatchObject({
+        message: `Hospital with id ${id} was deleted successfully`,
+      });
+    });
+  });
+
+  afterAll(() => app.close());
+});
