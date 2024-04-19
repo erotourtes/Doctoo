@@ -23,6 +23,8 @@ export const Default: Story = {
     tags: [],
     buttons: [],
     isBookMode: false,
+    payrate: 0,
+    className: '',
   },
 };
 
@@ -35,5 +37,7 @@ export const BookMode: Story = {
     tags: [],
     buttons: [],
     isBookMode: true,
+    payrate: 0,
+    className: '',
   },
 };
