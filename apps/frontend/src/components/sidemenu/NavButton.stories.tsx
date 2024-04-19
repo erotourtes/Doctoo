@@ -11,13 +11,14 @@ const meta = {
   },
   tags: ['autodocs'],
   decorators: [
-    (Story) => (
+    Story => (
       <BrowserRouter>
-        <div className="w-72 p-8 bg-main-medium">
+        <div className='w-72 bg-main-medium p-8'>
           <Story />
         </div>
       </BrowserRouter>
-    )]
+    ),
+  ],
 } satisfies Meta<typeof NavButton>;
 
 export default meta;
@@ -30,7 +31,7 @@ export const Default: Story = {
     iconVariant: 'dashboard',
     text: 'Dashboard',
     variant: 'large',
-    selected: false
+    selected: false,
   },
 };
 
@@ -40,7 +41,7 @@ export const Selected: Story = {
     iconVariant: 'dashboard',
     text: 'Dashboard',
     variant: 'large',
-    selected: true
+    selected: true,
   },
 };
 
@@ -50,7 +51,7 @@ export const Small: Story = {
     iconVariant: 'dashboard',
     text: 'Dashboard',
     variant: 'small',
-    selected: false
+    selected: false,
   },
 };
 
@@ -60,7 +61,6 @@ export const SmallSelected: Story = {
     iconVariant: 'dashboard',
     text: 'Dashboard',
     variant: 'small',
-    selected: true
+    selected: true,
   },
 };
-

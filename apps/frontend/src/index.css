@@ -1,11 +1,10 @@
 /* Import fonts */
-@import url("https://fonts.googleapis.com/css?family=Inter:regular,500?display=swap");
-@import url("https://fonts.googleapis.com/css?family=Syncopate:regular,700?display=swap");
+@import url('https://fonts.googleapis.com/css?family=Inter:regular,500?display=swap');
+@import url('https://fonts.googleapis.com/css?family=Syncopate:regular,700?display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 
 body {
   margin: 0;
@@ -21,28 +20,28 @@ code {
 
 @layer base {
   h1 {
-    @apply text-3xl font-inter font-medium;
+    @apply font-inter text-3xl font-medium;
   }
 
   h2 {
-    @apply text-2xl font-inter font-medium;
+    @apply font-inter text-2xl font-medium;
   }
 
   h3 {
-    @apply text-xl font-inter font-medium;
+    @apply font-inter text-xl font-medium;
   }
 
   p {
-    @apply text-base font-inter font-normal;
+    @apply font-inter text-base font-normal;
   }
 
   a {
-    @apply text-base font-inter font-normal underline;
+    @apply font-inter text-base font-normal underline;
   }
 }
 
 @layer components {
   .text-helper {
-    @apply text-sm font-inter font-normal;
+    @apply font-inter text-sm font-normal;
   }
 }

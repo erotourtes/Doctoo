@@ -10,7 +10,7 @@
     "build": "vite build",
     "prepreveiw": "pnpm build",
     "preview": "vite preview",
-    "test": "vitest run",
+    "test": "vitest run --passWithNoTests",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
     "format": "prettier src/ --write",

@@ -6,9 +6,9 @@ export default <Config>{
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
-        "inter": ["Inter", "sans-serif"],
-        "syncopate": ["Syncopate", "Inter", "sans-serif"]
+        sans: ['Inter', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
+        syncopate: ['Syncopate', 'Inter', 'sans-serif'],
       },
       spacing: {
         128: '32rem',

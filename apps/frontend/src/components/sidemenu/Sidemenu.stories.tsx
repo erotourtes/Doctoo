@@ -11,13 +11,14 @@ const meta = {
   },
   tags: ['autodocs'],
   decorators: [
-    (Story) => (
+    Story => (
       <BrowserRouter>
-        <div className="h-[768px]">
+        <div className='h-[768px]'>
           <Story />
         </div>
       </BrowserRouter>
-    )]
+    ),
+  ],
 } satisfies Meta<typeof Sidemenu>;
 
 export default meta;
@@ -30,6 +31,6 @@ export const Default: Story = {
 
 export const Small: Story = {
   args: {
-    variant: 'small'
+    variant: 'small',
   },
 };
