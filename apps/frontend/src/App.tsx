@@ -1,4 +1,4 @@
-import Sidemenu from './components/sidemenu/Sidemenu';
+import Sidemenu from '@components/Sidemenu/Sidemenu';
 import PageContainer from './pages/PageContainer';
 
 const App = () => {

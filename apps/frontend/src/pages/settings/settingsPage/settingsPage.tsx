@@ -1,5 +1,5 @@
 import { Toggle } from '@/components/UI/Toggle';
-import Icon from '@/components/icons/Icon';
+import Icon from '@UI/Icon/Icon';
 import { useState } from 'react';
 
 const Settings = () => {

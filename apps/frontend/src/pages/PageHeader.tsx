@@ -1,6 +1,6 @@
 import type React from 'react';
-import Icon from '../components/icons/Icon';
-import type { IconVariant } from '../components/icons/types';
+import Icon from '@UI/Icon/Icon';
+import type { IconVariant } from '@UI/Icon/types';
 
 type PageHeaderProps = {
   iconVariant: IconVariant;
