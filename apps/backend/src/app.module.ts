@@ -12,6 +12,7 @@ import { DoctorModule } from './doctor/doctor.module';
 import { HospitalModule } from './hospital/hospital.module';
 import { FileModule } from './file/file.module';
 import { MinioService } from './minio/minio.service';
+import { AppointmentModule } from './appointment/appointment.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { MinioService } from './minio/minio.service';
     AuthModule,
     HospitalModule,
     FileModule,
+    AppointmentModule,
   ],
   controllers: [AppController],
   providers: [AppService, MinioService],
