@@ -1,71 +1,63 @@
-import React, { useState } from 'react';
-import Icon from '../../icons/Icon';
+import Icon from '@/components/icons/Icon';
+import { useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 interface InputPasswordProps {
-  id?: string;
-  name: string;
-  value: string;
-  setValue: (value: string) => void;
+  id: string;
   label?: string;
+  errorMessage?: string;
   placeholder?: string;
   className?: string;
+  classNameInput?: string;
   classNameLabel?: string;
-  valid: boolean;
-  error?: string;
 }
 
-const InputPassword: React.FC<InputPasswordProps> = ({
-  label,
-  className,
+const InputPassword = ({
   id,
-  name,
+  label,
   placeholder,
-  value,
-  setValue,
+  errorMessage,
+  className,
+  classNameInput,
   classNameLabel,
-  valid,
-  error,
-}) => {
+}: InputPasswordProps) => {
   const [inputType, setInputType] = useState('password');
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
   const handleTogglePassword = () => {
     setInputType(inputType === 'password' ? 'text' : 'password');
   };
 
+  const hasError = errors[id];
+
   return (
-    <div className='flex flex-col items-start'>
+    <div className={`${className || ''} grid`}>
       {label && (
-        <label htmlFor={id || name} className={`text-md block text-grey-2 ${classNameLabel}`}>
+        <label htmlFor={id} className={`${classNameLabel || ''} text-md my-2 block text-grey-2`}>
           {label}
         </label>
       )}
-      <div className='relative'>
+      <div className='grid'>
         <input
-          id={id || name}
-          name={name}
+          {...register(id)}
           type={inputType}
-          value={value}
-          className={`h-10 cursor-pointer rounded-lg px-4 py-2 text-base leading-6 text-text bg-background ${!valid && 'border border-error'} hover:${!valid ? 'border border-error' : 'border border-green-border'} focus:${!valid ? 'border border-error' : 'border border-green-border'} focus:outline-none ${className}`}
+          className={`${classNameInput || ''} col-start-1 row-start-1 w-full rounded-lg bg-background py-2 pl-4 pr-10 text-base text-text hover:border focus:border focus:outline-none ${hasError && 'border border-solid border-error'}`}
           placeholder={placeholder}
         />
-        {!valid ? (
-          <React.Fragment>
-            <Icon
-              variant='warning'
-              className='absolute right-3 top-[21px] size-[20px] -translate-y-1/2 transform cursor-pointer text-error'
-            />
-            <p className='my-1 text-left text-error'>{error || 'Validation error'}</p>
-          </React.Fragment>
-        ) : (
-          <button>
-            <Icon
-              variant={inputType === 'password' ? 'eye-closed' : 'eye-open'}
-              className='absolute right-3 top-[21px] size-[24px] -translate-y-1/2 transform cursor-pointer text-grey-2'
-              onClick={handleTogglePassword}
-            />
-          </button>
-        )}
+
+        <button
+          type='button'
+          className='col-start-1 row-start-1 mr-2 self-center justify-self-end text-grey-2'
+          onClick={handleTogglePassword}
+        >
+          <Icon variant={`${inputType === 'password' ? 'eye-closed' : 'eye-open'}`} />
+        </button>
       </div>
+
+      {hasError && errorMessage && <p className='mt-2 text-sm font-normal leading-[17px] text-error'>{errorMessage}</p>}
     </div>
   );
 };

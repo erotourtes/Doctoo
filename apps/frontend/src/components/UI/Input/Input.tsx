@@ -1,74 +1,71 @@
-import React, { forwardRef, ChangeEvent, Ref, InputHTMLAttributes } from 'react';
-import Icon from '../../icons/Icon';
-import { RegisterOptions, UseFormRegisterReturn } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
+import Icon from '@components/icons/Icon';
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  value: string;
-  setValue: (value: string) => void;
+interface InputProps {
+  id: string;
+  type: string;
   label?: string;
-  error?: string;
-  register: (rules?: RegisterOptions) => UseFormRegisterReturn;
-  name: string;
+  placeholder?: string;
+  defaultValue?: string;
+  errorMessage?: string;
+  className?: string;
+  classNameInput?: string;
+  classNameLabel?: string;
 }
 
-const Input = forwardRef(
-  (
-    {
-      type,
-      label,
-      className,
-      id,
-      name,
-      placeholder,
-      value,
-      setValue,
-      error,
-      register,
-      ...rest
-    }: InputProps,
-    ref: Ref<HTMLInputElement>
-  ) => {
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-      const newValue = event.target.value;
-      setValue(newValue);
-    };
+const Input = ({
+  id,
+  type,
+  label,
+  placeholder,
+  defaultValue,
+  errorMessage,
+  className,
+  classNameInput,
+  classNameLabel,
+}: InputProps) => {
+  const {
+    register,
+    formState: { errors, dirtyFields, isValid },
+  } = useFormContext();
 
-    return (
-      <div className="flex flex-col items-start">
-        {label && (
-          <label
-            htmlFor={id || name}
-            className={`text-md my-2 block text-grey-1`}
-          >
-            {label}
-          </label>
+  const hasError = errors[id];
+  const isDirty = id in dirtyFields;
+
+  return (
+    <div className={`${className || ''} grid`}>
+      {label && (
+        <label htmlFor={id} className={`${classNameLabel || ''} text-md my-2 block text-grey-1`}>
+          {label}
+        </label>
+      )}
+      <div className='grid'>
+        <input
+          {...register(id)}
+          type={type}
+          placeholder={placeholder}
+          className={`${classNameInput || ''} col-start-1 row-start-1 w-full rounded-lg bg-background py-2 pl-4 pr-10 text-base text-text hover:border focus:border focus:outline-none ${hasError && 'border border-solid border-error'}`}
+          defaultValue={defaultValue}
+        />
+
+        {isDirty && !hasError && !isValid && (
+          <button type='reset' className='col-start-1 row-start-1 mr-2 self-center justify-self-end'>
+            <Icon variant='close' />
+          </button>
         )}
-        <div className="relative">
-          <input
-            ref={ref}
-            id={id || name}
-            name={name}
-            type={type}
-            value={value}
-            onChange={handleChange}
-            className={`h-10 cursor-pointer rounded-lg px-4 py-2 bg-background text-base leading-6 text-text border focus:outline-none ${className}`}
-            placeholder={placeholder}
-            {...rest}
-            {...register} // Register the input with the provided register function
-          />
-          {error && (
-            <>
-              <Icon
-                variant="warning"
-                className="absolute right-3 top-[21px] size-[20px] -translate-y-1/2 transform cursor-pointer text-error"
-              />
-              <p className="text-error my-1 text-left">{error}</p>
-            </>
-          )}
-        </div>
+
+        {hasError && (
+          <Icon variant='warning' className='col-start-1 row-start-1 mr-2 self-center justify-self-end text-error' />
+        )}
+
+        {defaultValue && !hasError && !isDirty && (
+          <Icon variant='valid' className='col-start-1 row-start-1 mr-2 self-center justify-self-end text-main' />
+        )}
       </div>
-    );
-  }
-);
+
+      {hasError && errorMessage && <p className='mt-2 text-sm font-normal leading-[17px] text-error'>{errorMessage}</p>}
+    </div>
+  );
+};
 
 export default Input;
