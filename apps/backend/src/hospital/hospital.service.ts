@@ -16,9 +16,9 @@ export class HospitalService {
   }
 
   async getHospitals(): Promise<ResponseHospitalDto[]> {
-    const hospitals = this.prismaService.hospital.findMany();
+    const hospitals = await this.prismaService.hospital.findMany();
 
-    return plainToInstance(Array<ResponseHospitalDto>, hospitals);
+    return plainToInstance(ResponseHospitalDto, hospitals);
   }
 
   async getHospital(id: string): Promise<ResponseHospitalDto> {
