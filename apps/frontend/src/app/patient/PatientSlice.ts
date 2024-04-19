@@ -1,7 +1,6 @@
 import type { RootState } from '@/app/store';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '../createAppSlice';
-import type PatientModel from './PatientModel';
 
 export enum BloodType {
   O_PLUS = 'O+',
@@ -12,6 +11,29 @@ export enum BloodType {
   B_MINUS = 'B-',
   AB_PLUS = 'AB+',
   AB_MINUS = 'AB-',
+}
+
+interface Patient {
+  id: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
+  avatarKey: string;
+  weight: number;
+  height: number;
+  age: number;
+  bloodType: BloodType;
+  gender: Gender;
+  declarationId: number;
+  conditions: Condition[];
+  allergies: Allergy[];
+  country: string;
+  state?: string;
+  city: string;
+  street: string;
+  apartment?: string;
+  zipCode?: number;
 }
 
 export enum Gender {
@@ -30,7 +52,7 @@ export type Allergy = {
 };
 
 interface PatientData {
-  data: PatientModel;
+  data: Patient;
 }
 
 const initialState: PatientData = {
@@ -59,7 +81,7 @@ export const patientSlice = createAppSlice({
   name: 'patient',
   initialState,
   reducers: {
-    setPatientData: (state, action: PayloadAction<PatientModel>) => {
+    setPatientData: (state, action: PayloadAction<Patient>) => {
       state.data = action.payload;
     },
   },
