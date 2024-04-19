@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { PrismaService } from '../prisma/prisma.service';
 import { FavoriteService } from './favorite.service';
 
 describe('FavoriteService', () => {
@@ -6,13 +7,13 @@ describe('FavoriteService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [FavoriteService],
+      providers: [FavoriteService, PrismaService],
     }).compile();
 
     service = module.get<FavoriteService>(FavoriteService);
   });
 
-  it('should be defined', () => {
+  it('Should be defined', () => {
     expect(service).toBeDefined();
   });
 });
