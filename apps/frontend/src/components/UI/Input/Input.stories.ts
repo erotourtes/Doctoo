@@ -16,6 +16,7 @@ type Story = StoryObj<typeof meta>;
 
 export const CVVInput: Story = {
   args: {
+    value: '456',
     valid: true,
     type: 'text',
     label: 'CVV',
@@ -71,6 +72,7 @@ export const EmailInputNotValid: Story = {
     label: 'Email',
     placeholder: 'example@gmail.com',
     className: 'w-96 bg-background',
+    error: 'Email is not valid'
   },
 }
 

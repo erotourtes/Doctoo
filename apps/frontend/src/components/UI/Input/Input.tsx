@@ -1,69 +1,74 @@
-import React from 'react';
+import React, { forwardRef, ChangeEvent, Ref, InputHTMLAttributes } from 'react';
 import Icon from '../../icons/Icon';
+import { RegisterOptions, UseFormRegisterReturn } from 'react-hook-form';
 
-interface InputProps {
-  id?: string;
-  name: string;
-  type: string;
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   value: string;
   setValue: (value: string) => void;
-  valid?: boolean;
   label?: string;
-  placeholder?: string;
-  className?: string;
-  classNameLabel?: string;
-  iconVariant: 'warning' | 'valid';
   error?: string;
+  register: (rules?: RegisterOptions) => UseFormRegisterReturn;
+  name: string;
 }
 
-const Input: React.FC<InputProps> = ({
-  type,
-  label,
-  className,
-  id,
-  name,
-  placeholder,
-  iconVariant,
-  valid,
-  classNameLabel,
-  value,
-  setValue,
-  error,
-}) => {
-  return (
-    <div className=''>
-      {label && (
-        <label htmlFor={id || name} className={`text-md my-2 block text-grey-1 ${classNameLabel}`}>
-          {label}
-        </label>
-      )}
-      <div className='relative'>
-        <input
-          id={id || name}
-          name={name}
-          type={type}
-          value={value}
-          className={`h-10 cursor-pointer rounded-lg  border px-4 py-2 text-base leading-6 text-text ${!valid ? 'border-error' : 'border-transparent'} hover:${!valid ? 'border-error' : 'border-green-border'} focus:${!valid ? 'border-error' : 'border-green-border'} focus:outline-none ${className}`}
-          placeholder={placeholder}
-        />
-        {valid && type !== 'email' && (
-          <Icon
-            variant='valid'
-            className='absolute right-3 top-1/2 size-[24px] -translate-y-1/2 transform cursor-pointer text-main'
+const Input = forwardRef(
+  (
+    {
+      type,
+      label,
+      className,
+      id,
+      name,
+      placeholder,
+      value,
+      setValue,
+      error,
+      register,
+      ...rest
+    }: InputProps,
+    ref: Ref<HTMLInputElement>
+  ) => {
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+      const newValue = event.target.value;
+      setValue(newValue);
+    };
+
+    return (
+      <div className="flex flex-col items-start">
+        {label && (
+          <label
+            htmlFor={id || name}
+            className={`text-md my-2 block text-grey-1`}
+          >
+            {label}
+          </label>
+        )}
+        <div className="relative">
+          <input
+            ref={ref}
+            id={id || name}
+            name={name}
+            type={type}
+            value={value}
+            onChange={handleChange}
+            className={`h-10 cursor-pointer rounded-lg px-4 py-2 bg-background text-base leading-6 text-text border focus:outline-none ${className}`}
+            placeholder={placeholder}
+            {...rest}
+            {...register} // Register the input with the provided register function
           />
-        )}
-        {!valid && (
-          <React.Fragment>
-            <Icon
-              variant='warning'
-              className='absolute right-3 top-[21px] size-[20px] -translate-y-1/2 transform cursor-pointer text-error'
-            />
-            <p className='text-error'>{error || 'Validation error'}</p>
-          </React.Fragment>
-        )}
+          {error && (
+            <>
+              <Icon
+                variant="warning"
+                className="absolute right-3 top-[21px] size-[20px] -translate-y-1/2 transform cursor-pointer text-error"
+              />
+              <p className="text-error my-1 text-left">{error}</p>
+            </>
+          )}
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+);
 
 export default Input;

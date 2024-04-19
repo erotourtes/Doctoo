@@ -24,7 +24,7 @@ const InputPassword: React.FC<InputPasswordProps> = ({
   setValue,
   classNameLabel,
   valid,
-  error
+  error,
 }) => {
   const [inputType, setInputType] = useState('password');
 
@@ -33,7 +33,7 @@ const InputPassword: React.FC<InputPasswordProps> = ({
   };
 
   return (
-    <div className='bg-grey-5'>
+    <div className='flex flex-col items-start'>
       {label && (
         <label htmlFor={id || name} className={`text-md block text-grey-2 ${classNameLabel}`}>
           {label}
@@ -45,22 +45,22 @@ const InputPassword: React.FC<InputPasswordProps> = ({
           name={name}
           type={inputType}
           value={value}
-          className={`h-10 cursor-pointer rounded-lg border-green-border px-4 py-2 text-base leading-6 text-text hover:border focus:border focus:outline-none ${className}`}
+          className={`h-10 cursor-pointer rounded-lg px-4 py-2 text-base leading-6 text-text bg-background ${!valid && 'border border-error'} hover:${!valid ? 'border border-error' : 'border border-green-border'} focus:${!valid ? 'border border-error' : 'border border-green-border'} focus:outline-none ${className}`}
           placeholder={placeholder}
         />
         {!valid ? (
           <React.Fragment>
             <Icon
               variant='warning'
-              className='text-gray-600 absolute right-3 top-1/2 size-[20px] -translate-y-1/2 transform cursor-pointer'
+              className='absolute right-3 top-[21px] size-[20px] -translate-y-1/2 transform cursor-pointer text-error'
             />
-            <p>{error || 'Validation error'}</p>
+            <p className='my-1 text-left text-error'>{error || 'Validation error'}</p>
           </React.Fragment>
         ) : (
           <button>
             <Icon
               variant={inputType === 'password' ? 'eye-closed' : 'eye-open'}
-              className='text-gray-600 absolute right-3 top-1/2 size-[24px] -translate-y-1/2 transform cursor-pointer'
+              className='absolute right-3 top-[21px] size-[24px] -translate-y-1/2 transform cursor-pointer text-grey-2'
               onClick={handleTogglePassword}
             />
           </button>
