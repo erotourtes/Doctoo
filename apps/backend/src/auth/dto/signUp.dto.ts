@@ -1,8 +1,9 @@
 import { BloodType, Gender } from '@prisma/client';
 import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
-import { CreateUserDto } from 'src/user/dto/create.dto';
+import { CreateUserDto } from '../../user/dto/create.dto';
 
-export class SignUpDto extends CreateUserDto {
+// TODO: Ask auth developer about this dto.
+export class AuthSignUpDto extends CreateUserDto {
   @IsNumber()
   readonly weight: number;
 
@@ -13,16 +14,10 @@ export class SignUpDto extends CreateUserDto {
   readonly age: number;
 
   @IsEnum(BloodType)
-  readonly blood_type: BloodType;
+  readonly bloodType: BloodType;
 
   @IsEnum(Gender)
   readonly gender: Gender;
-
-  @IsNumber()
-  readonly declaration_id: number;
-
-  @IsString()
-  readonly identity_card_key: string;
 
   @IsString()
   readonly country: string;
@@ -40,5 +35,5 @@ export class SignUpDto extends CreateUserDto {
   readonly apartment?: string;
 
   @IsOptional()
-  readonly zip_code?: number;
+  readonly zipCode?: number;
 }
