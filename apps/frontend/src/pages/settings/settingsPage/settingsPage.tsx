@@ -21,8 +21,8 @@ const Settings = () => {
 
   return (
     <>
-      <div className='settings h-screen bg-background'>
-        <header className='settings__header flex w-11/12 items-center gap-2 p-9 pl-20 max-sm:justify-center'>
+      <div className='settings h-screen w-full'>
+        <header className='settings__header flex w-full items-center gap-2 p-9 pl-20 max-sm:justify-center  max-sm:pl-0  '>
           <Icon variant='settings' className='text-main '></Icon> <h1 className='text-2xl '>Settings</h1>
         </header>
 
