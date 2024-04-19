@@ -14,28 +14,9 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-    args: {
-      type: 'text',
-      label: '',
-      placeholder: 'Type your text',
-      className: ''
-    },
-  };
-
-// Input to enter the verification code
-export const XSInput: Story = {
+export const CVVInput: Story = {
   args: {
-    type: 'text',
-    label: '',
-    placeholder: '___',
-    className: 'w-12 h-12 flex justify-center items-center font-black bg-background'
-  },
-};
-
-// Input for CVV, expiry date, country code(telephone number)
-export const SMInput: Story = {
-  args: {
+    valid: true,
     type: 'text',
     label: 'CVV',
     placeholder: '',
@@ -43,9 +24,19 @@ export const SMInput: Story = {
   },
 };
 
-// Input for chat search, cardholder name, card number
-export const MDInput: Story = {
+export const CVVInputNotValid: Story = {
   args: {
+    valid: false,
+    type: 'text',
+    label: 'CVV',
+    placeholder: '',
+    className: 'w-36 bg-background',
+  },
+};
+
+export const CardInput: Story = {
+  args: {
+    valid: true,
     type: 'text',
     label: 'Cardholder name',
     placeholder: '',
@@ -53,31 +44,53 @@ export const MDInput: Story = {
   },
 };
 
-export const LGEmailInput: Story = {
+export const CardInputNotValid: Story = {
   args: {
-    type: 'email',
-    label: '',
-    placeholder: 'Email',
-    className: 'w-96 bg-background',
-  },
-};
-
-export const LGPasswordInput: Story = {
-  args: {
-    type: 'password',
-    label: 'Old Password',
-    placeholder: 'Password',
-    className: 'w-96 bg-background',
-  },
-};
-
-// Input for doctor and sympthoms search
-export const XLSearchInput: Story = {
-  args: {
+    valid: false,
     type: 'text',
-    label: '',
-    placeholder: 'Search by doctors, sympthoms',
-    className: 'w-96 bg-white',
+    label: 'Cardholder name',
+    placeholder: '',
+    className: 'w-72 bg-background',
   },
 };
+
+export const EmailInput: Story = {
+  args: {
+    valid: true,
+    type: 'email',
+    label: 'Email',
+    placeholder: 'example@gmail.com',
+    className: 'w-96 bg-background',
+  },
+}
+
+export const EmailInputNotValid: Story = {
+  args: {
+    valid: false,
+    type: 'email',
+    label: 'Email',
+    placeholder: 'example@gmail.com',
+    className: 'w-96 bg-background',
+  },
+}
+
+export const TextInputValid: Story = {
+  args: {
+    valid: true,
+    type: 'text',
+    label: 'text',
+    placeholder: 'country',
+    className: 'w-96 bg-background',
+  },
+}
+
+export const TextInputNotValid: Story = {
+  args: {
+    valid: false,
+    type: 'text',
+    label: 'text',
+    placeholder: 'country',
+    className: 'w-96 bg-background',
+  },
+}
 
