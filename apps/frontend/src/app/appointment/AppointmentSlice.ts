@@ -1,7 +1,6 @@
 import type { RootState } from '@/app/store';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '../createAppSlice';
-import AppointmentModel from './AppointmentModel';
 
 export enum AppointmentStatus {
   PLANNED = 'Planned',
@@ -9,11 +8,7 @@ export enum AppointmentStatus {
   CANCELLED = 'Cancelled',
 }
 
-type AppointmentData = {
-  appointments: AppointmentModel[];
-};
-
-type CreateAppointment = {
+export interface IAppointment {
   id: string;
   doctorId: string;
   patientId: string;
@@ -23,6 +18,10 @@ type CreateAppointment = {
   videoRecordKey: string;
   paymentInvoiceKey: string;
   paymentReceiptKey: string;
+}
+
+type AppointmentData = {
+  appointments: IAppointment[];
 };
 
 const initialState: AppointmentData = {
@@ -33,22 +32,22 @@ export const appointmentSlice = createAppSlice({
   name: 'appointment',
   initialState,
   reducers: {
-    setCurrentAppointments: (state, action: PayloadAction<AppointmentModel[]>) => {
+    setCurrentAppointments: (state, action: PayloadAction<IAppointment[]>) => {
       state.appointments = action.payload;
     },
 
-    planAppointment: (state, action: PayloadAction<CreateAppointment>) => {
+    setNewAppointment: (state, action: PayloadAction<IAppointment>) => {
       state.appointments.push(action.payload);
     },
 
-    cancelAppointment: (state, action: PayloadAction<string>) => {
+    setAppointmentCanceled: (state, action: PayloadAction<string>) => {
       const appointment = state.appointments.find(appointment => appointment.id === action.payload);
       if (appointment) {
         appointment.status = AppointmentStatus.CANCELLED;
       }
     },
 
-    completeAppointment: (state, action: PayloadAction<string>) => {
+    setAppointmentCompleted: (state, action: PayloadAction<string>) => {
       const appointment = state.appointments.find(appointment => appointment.id === action.payload);
       if (appointment) {
         appointment.status = AppointmentStatus.COMPLETED;
@@ -61,7 +60,7 @@ export const appointmentSlice = createAppSlice({
   },
 });
 
-export const { setCurrentAppointments, planAppointment, cancelAppointment, completeAppointment } =
+export const { setCurrentAppointments, setAppointmentCompleted, setAppointmentCanceled, setNewAppointment } =
   appointmentSlice.actions;
 
 export const appointmentData = (state: RootState) => state.doctor.data;
