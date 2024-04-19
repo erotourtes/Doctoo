@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
+import { plainToInstance } from 'class-transformer';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreatePatientDto } from './dto/create.dto';
 import { PatchPatientDto } from './dto/patch.dto';
 import { ResponsePatientDto } from './dto/response.dto';
@@ -9,21 +10,29 @@ export class PatientService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async getPatient(id: string): Promise<ResponsePatientDto> {
-    const patient = await this.prismaService.patient.findUnique({ where: { id } });
+    const patient = await this.prismaService.patient.findUnique({ where: { id }, include: { adress: true } });
 
-    return patient;
+    return plainToInstance(ResponsePatientDto, patient);
   }
 
+  // TODO: Does we really need to add adress immediatly?
   async createPatient(body: CreatePatientDto): Promise<ResponsePatientDto> {
-    const patient = await this.prismaService.patient.create({ data: body });
+    const { address, ...base } = body;
 
-    return patient;
+    const { id } = await this.prismaService.adress.create({ data: address });
+
+    const patient = await this.prismaService.patient.create({
+      data: { ...base, adressId: id },
+      include: { adress: true },
+    });
+
+    return plainToInstance(ResponsePatientDto, patient);
   }
 
-  async pathPatient(id: string, body: PatchPatientDto): Promise<ResponsePatientDto> {
-    const patient = await this.prismaService.patient.update({ where: { id }, data: body });
+  async patchPatient(id: string, body: PatchPatientDto): Promise<ResponsePatientDto> {
+    const patient = await this.prismaService.patient.update({ where: { id }, data: body, include: { adress: true } });
 
-    return patient;
+    return plainToInstance(ResponsePatientDto, patient);
   }
 
   async deletePatient(id: string) {

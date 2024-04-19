@@ -130,10 +130,9 @@ export class AuthService {
       bloodType: body.bloodType,
       weight: body.weight,
       height: body.height,
-      city: body.city,
-      country: body.country,
       gender: body.gender,
-      street: body.street,
+      identityCardKey: '1',
+      address: body.address,
     });
 
     return plainToInstance(ResponsePatientDto, patient);

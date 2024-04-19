@@ -1,9 +1,10 @@
 import { BloodType, Gender } from '@prisma/client';
-import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNumber } from 'class-validator';
+import { CreatePatientAdressDto } from '../../patient/dto/create.dto';
 import { CreateUserDto } from '../../user/dto/create.dto';
 
 // TODO: Ask auth developer about this dto.
-export class AuthSignUpDto extends CreateUserDto {
+export class AuthSignUpBaseDto extends CreateUserDto {
   @IsNumber()
   readonly weight: number;
 
@@ -18,22 +19,9 @@ export class AuthSignUpDto extends CreateUserDto {
 
   @IsEnum(Gender)
   readonly gender: Gender;
+}
 
-  @IsString()
-  readonly country: string;
-
-  @IsOptional()
-  readonly state?: string;
-
-  @IsString()
-  readonly city: string;
-
-  @IsString()
-  readonly street: string;
-
-  @IsOptional()
-  readonly apartment?: string;
-
-  @IsOptional()
-  readonly zipCode?: number;
+// TODO: Find way how it can be optimized.
+export class AuthSignUpDto extends AuthSignUpBaseDto {
+  readonly address: CreatePatientAdressDto;
 }
