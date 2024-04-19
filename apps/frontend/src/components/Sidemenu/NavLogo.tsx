@@ -8,7 +8,7 @@ type LogoTextProps = {
 const NavLogo: React.FunctionComponent<LogoTextProps> = ({ variant = 'large' }) => {
   return (
     <Link to={'/'} className={`flex items-center ${variant === 'small' ? 'justify-center' : ''} sticky gap-2 text-white no-underline`}>
-      <Icon variant='logo-white' className={variant === 'large' ? 'size-[26px]' : 'size-[36px]'} />
+      <Icon variant='logo' className={variant === 'large' ? 'size-[26px]' : 'size-[36px]'} />
       {variant !== 'small' && <span className='font-syncopate text-xl font-bold uppercase text-white'>Doctoo</span>}
     </Link>
   );
