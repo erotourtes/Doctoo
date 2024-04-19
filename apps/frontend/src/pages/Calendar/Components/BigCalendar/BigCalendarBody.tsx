@@ -1,33 +1,53 @@
 import dayjs, { Dayjs } from 'dayjs';
-import { getMeetingStatusColor } from '@/utils/getMeetingStatusColor';
 import { getMonthDays } from '@/utils/getMonthDays';
+import { AppointmentsListItemProps } from '../AppointmentsWidget/AppointmentsListItem';
 
 const weeks = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 
 interface BigCalendarBodyProps {
-  meetingsForDay?: {
-    date: Date | Dayjs;
-    status: string;
-  }[];
+  meetingsForDay?: AppointmentsListItemProps[];
   currentMonth: Dayjs | null;
+  chooseDate: React.Dispatch<React.SetStateAction<Date>>;
+  setAppointmentsForDay: React.Dispatch<React.SetStateAction<AppointmentsListItemProps[]>>;
 }
 
-export default function BigCalendarBody({ meetingsForDay, currentMonth }: BigCalendarBodyProps) {
+export default function BigCalendarBody({
+  meetingsForDay,
+  currentMonth,
+  chooseDate,
+  setAppointmentsForDay,
+}: BigCalendarBodyProps) {
   const days = getMonthDays(currentMonth as Dayjs);
   const today = dayjs();
-  console.log(meetingsForDay);
+
+  function chooseAppointments(date: Dayjs, appointments: AppointmentsListItemProps[]) {
+    chooseDate(date.toDate());
+    appointments && appointments.length > 0 && setAppointmentsForDay(appointments);
+  }
 
   return (
-    <div className='flex w-fit flex-col'>
+    <div
+      className='h-[85%] overflow-y-scroll'
+      style={{
+        msOverflowStyle: 'none',
+        scrollbarColor: 'transparent transparent',
+      }}
+    >
       <div className='grid grid-cols-7'>
         {weeks.map(day => (
-          <time key={day} className='text-grey-2 mb-2 pr-4 text-right text-xs font-normal not-italic leading-4'>
+          <time
+            key={day}
+            style={{
+              color: '#B0B0B0',
+            }}
+            className='mb-2 pr-4 text-right text-base font-medium'
+          >
             {day}
           </time>
         ))}
       </div>
 
-      <div className='bg-background grid h-full grid-cols-7 rounded-xl'>
+      <div className='grid grid-cols-7 gap-x-[13.17px] gap-y-4 rounded-xl pl-1 pr-1'>
         {days.map((day, index) => {
           const meetings =
             meetingsForDay && meetingsForDay.filter(meeting => day.isSame(meeting.date, 'day')).slice(0, 3);
@@ -36,25 +56,30 @@ export default function BigCalendarBody({ meetingsForDay, currentMonth }: BigCal
             meetings && meetings.length > 1
               ? 'Calls'
               : meetings!.length === 1
-                ? meetings![0].status.length > 11
-                  ? `${meetings![0].status.substring(0, 11)}...`
-                  : meetings![0].status
+                ? meetings![0].doctor.name.length > 11
+                  ? `${meetings![0].doctor.name.substring(0, 11)}...`
+                  : meetings![0].doctor.name
                 : '';
 
           return (
             <div
-              className={`grid-rows-auto grid h-[116px] w-[116px] text-base font-normal leading-6
+              onClick={() => chooseAppointments(day, meetings || [])}
+              className={`grid-rows-auto grid text-base
+              font-normal
               ${day.month() === currentMonth?.month() ? 'text-text' : 'text-grey-3'}
-               hover:ring-main m-1
-               cursor-pointer select-none rounded-xl
-               bg-white
-               hover:ring-1
+              h-[116px]
+              w-[116px]
+              cursor-pointer
+              select-none rounded-xl
+            bg-white
+              hover:ring-1
+            hover:ring-main
             `}
               key={index}
             >
               <time
                 className={`mr-[10px] mt-[10px] flex self-start justify-self-end px-2 py-1
-                ${day.isSame(today, 'day') && 'bg-main rounded-full text-white'}
+                ${day.isSame(today, 'day') && 'rounded-full bg-main text-white'}
               `}
               >
                 {day.format('D')}
@@ -63,7 +88,7 @@ export default function BigCalendarBody({ meetingsForDay, currentMonth }: BigCal
               {meetings && meetings.length > 0 && (
                 <div
                   key={index}
-                  className={`bg-main-light mb-3 flex h-7 w-24 items-center ${calls !== 'Calls' ? 'justify-center' : 'justify-between'} self-end justify-self-center rounded-2xl px-3 py-1
+                  className={`mb-3 flex h-7 w-24 items-center bg-main-light ${calls !== 'Calls' ? 'justify-center' : 'justify-between'} self-end justify-self-center rounded-2xl px-3 py-1
                      `}
                 >
                   <span className='whitespace-nowrap text-sm font-medium text-black'>{calls}</span>
