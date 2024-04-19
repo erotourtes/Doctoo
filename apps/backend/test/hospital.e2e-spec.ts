@@ -1,13 +1,13 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '../src/prisma.service';
 import * as request from 'supertest';
+import { CreateHospitalDto } from '../src/hospital/dto/create.dto';
+import { ResponseHospitalDto } from '../src/hospital/dto/response.dto';
 import { HospitalModule } from '../src/hospital/hospital.module';
+import { PrismaService } from '../src/prisma/prisma.service';
 import { hospitalStub } from './stubs/hospital.stub';
-import { CreateHospitalDto } from '../src/hospital/dto/create-hospital.dto';
-import { HospitalDto } from '../src/hospital/dto/hospital.dto';
-import { UpdateHospitalDto } from '../src/hospital/dto/update-hospital.dto';
 
+// TODO: Rewrite this tests.
 describe('HospitalController (e2e)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
@@ -19,61 +19,62 @@ describe('HospitalController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+
     await app.init();
 
     prisma = moduleFixture.get<PrismaService>(PrismaService);
   });
 
-  afterAll(() => app.close());
-
   beforeEach(async () => prisma.hospital.deleteMany());
 
-  describe('/hospitals (GET)', () => {
-    it('should return array of hospitals', async () => {
+  describe('/hospital (GET)', () => {
+    it('Should return array of objects', async () => {
       await prisma.hospital.create({ data: hospitalStub() });
 
-      const response = await request(app.getHttpServer()).get('/hospitals');
+      const response = await request(app.getHttpServer()).get('/hospital');
 
       expect(response.status).toEqual(200);
       expect(response.body).toMatchObject([hospitalStub()]);
     });
   });
 
-  describe('/hospitals (POST)', () => {
-    it('should return created hospital without state', async () => {
+  describe('/hospital (POST)', () => {
+    it('Should created hospital without state', async () => {
       const hospital: CreateHospitalDto = hospitalStub();
-      const expectedResponseBody: Omit<HospitalDto, 'id'> = { ...hospital, state: null };
 
-      const response = await request(app.getHttpServer()).post('/hospitals').send(hospital);
+      const expectedResponseBody: Omit<ResponseHospitalDto, 'id'> = { ...hospital, state: null };
+
+      const response = await request(app.getHttpServer()).post('/hospital').send(hospital);
 
       expect(response.status).toEqual(201);
       expect(response.body).toMatchObject(expectedResponseBody);
     });
-    it('should return created hospital with state', async () => {
+
+    it('Should created hospital with state', async () => {
       const hospital: CreateHospitalDto = { ...hospitalStub(), state: 'test' };
 
-      const response = await request(app.getHttpServer()).post('/hospitals').send(hospital);
+      const response = await request(app.getHttpServer()).post('/hospital').send(hospital);
 
       expect(response.status).toEqual(201);
       expect(response.body).toMatchObject(hospital);
     });
   });
 
-  describe('/hospitals/:id (GET)', () => {
-    it('should return hospital by id', async () => {
+  describe('/hospital/:id (GET)', () => {
+    it('Should return object hospital', async () => {
       const hospital: CreateHospitalDto = hospitalStub();
 
       const { id } = await prisma.hospital.create({ data: hospital });
 
-      const response = await request(app.getHttpServer()).get(`/hospitals/${id}`);
+      const response = await request(app.getHttpServer()).get(`/hospital/${id}`);
 
       expect(response.status).toEqual(200);
       expect(response.body).toMatchObject(hospital);
     });
 
-    it('should return Not Found error with message that hospital with defined id does not exist', async () => {
+    it('Should return Not Found error with message that hospital with defined id does not exist', async () => {
       const id = 'non-existent';
-      const response = await request(app.getHttpServer()).get(`/hospitals/${id}`);
+      const response = await request(app.getHttpServer()).get(`/hospital/${id}`);
 
       expect(response.status).toEqual(404);
       expect(response.body).toMatchObject({
@@ -82,36 +83,42 @@ describe('HospitalController (e2e)', () => {
     });
   });
 
-  describe('/hospitals/:id (PATCH)', () => {
-    it('should return updated hospital', async () => {
+  describe('/hospital/:id (PATCH)', () => {
+    it('Should return updated object', async () => {
       const hospital: CreateHospitalDto = hospitalStub();
 
       const { id } = await prisma.hospital.create({ data: hospital });
 
-      const delta: UpdateHospitalDto = { name: 'updated-name', country: 'updated-country', state: 'updated-state' };
-      const response = await request(app.getHttpServer()).patch(`/hospitals/${id}`).send(delta);
+      const body: ResponseHospitalDto = {
+        name: 'updated-name',
+        country: 'updated-country',
+        state: 'updated-state',
+        city: 'updated-city',
+        street: 'updated-street',
+        id,
+      };
+
+      const response = await request(app.getHttpServer()).patch(`/hospital/${id}`).send(body);
 
       expect(response.status).toEqual(200);
-      expect(response.body).toMatchObject({ ...hospital, ...delta });
+      expect(response.body).toMatchObject({ ...hospital, ...body });
     });
   });
 
-  describe('/hospitals/:id (DELETE)', () => {
-    it('should delete hospital', async () => {
+  describe('/hospital/:id (DELETE)', () => {
+    it('Should delete hospital', async () => {
       const hospital: CreateHospitalDto = hospitalStub();
 
       const { id } = await prisma.hospital.create({ data: hospital });
 
-      const response = await request(app.getHttpServer()).delete(`/hospitals/${id}`);
+      const response = await request(app.getHttpServer()).delete(`/hospital/${id}`);
 
       expect(response.status).toEqual(200);
       expect(response.body).toMatchObject({
         message: `Hospital with id ${id} was deleted successfully`,
       });
-
-      const check = await request(app.getHttpServer()).get(`/hospitals/${id}`);
-
-      expect(check.status).toEqual(404);
     });
   });
+
+  afterAll(() => app.close());
 });

@@ -1,3 +1,4 @@
+import { cn } from '../../../utils/cn';
 import { ButtonTypes } from './ButtonTypes';
 
 type ButtonProps = {
@@ -17,7 +18,7 @@ export const Button = ({ children, onClick, disabled = false, className = '', ty
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`${ButtonTypeStyles[type]} h-10 min-w-[100px] rounded-md px-6 ${className}`}
+      className={cn(ButtonTypeStyles[ButtonTypes[type]], 'h-10 min-w-[100px] rounded-md px-6', className)}
     >
       {children}
     </button>

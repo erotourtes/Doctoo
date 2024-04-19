@@ -4,7 +4,7 @@ import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
 
 export class CreatePatientDto {
   @IsNotEmptyString()
-  readonly user_id: string;
+  readonly userId: string;
 
   @IsNumber()
   readonly weight: number;
@@ -15,8 +15,11 @@ export class CreatePatientDto {
   @IsNumber()
   readonly age: number;
 
+  @IsString()
+  readonly identityCardKey: string;
+
   @IsEnum(BloodType)
-  readonly blood_type: BloodType;
+  readonly bloodType: BloodType;
 
   @IsEnum(Gender)
   readonly gender: Gender;
@@ -36,6 +39,6 @@ export class CreatePatientDto {
   @IsOptional()
   readonly apartment?: string;
 
-  @IsOptional()
-  readonly zip_code?: number;
+  @IsNumber()
+  readonly zipCode?: number;
 }

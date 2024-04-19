@@ -15,13 +15,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-    args: {
-      type: 'text',
-      label: '',
-      placeholder: 'Type your text',
-      className: ''
-    },
-  };
+  args: {
+    type: 'text',
+    label: '',
+    placeholder: 'Type your text',
+    className: '',
+  },
+};
 
 // Input to enter the verification code
 export const XSInput: Story = {
@@ -29,7 +29,7 @@ export const XSInput: Story = {
     type: 'text',
     label: '',
     placeholder: '___',
-    className: 'w-12 h-12 flex justify-center items-center font-black bg-background'
+    className: 'w-12 h-12 flex justify-center items-center font-black bg-background',
   },
 };
 
@@ -80,4 +80,3 @@ export const XLSearchInput: Story = {
     className: 'w-96 bg-white',
   },
 };
-

@@ -13,6 +13,17 @@ services:
     ports:
       - ${POSTGRES_PORT}:5432
 
+  adminer:
+    restart: always
+    image: adminer:latest
+    environment:
+      ADMINER_PLUGINS: 'dump-json'
+      ADMINER_DESIGN: 'rm-soft'
+    depends_on:
+      - postgres
+    ports:
+      - ${ADMINER_PORT}:8080
+
   minio:
     image: bitnami/minio:latest
     environment:

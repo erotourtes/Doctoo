@@ -1,8 +1,8 @@
-import '../../../index.css';
+import { useArgs } from '@storybook/preview-api';
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
+import '../../../index.css';
 import { RadioButton } from './RadioButton';
-import { useArgs } from '@storybook/preview-api';
 
 const meta = {
   title: 'Components/UI/RadioButton',
@@ -23,6 +23,7 @@ const meta = {
 } satisfies Meta<typeof RadioButton>;
 
 export default meta;
+
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {

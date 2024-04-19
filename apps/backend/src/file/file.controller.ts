@@ -1,17 +1,18 @@
 import {
+  BadRequestException,
   Controller,
-  Get,
-  Post,
-  Param,
   Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
   UploadedFile,
   UseInterceptors,
-  NotFoundException,
-  BadRequestException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MinioService } from '../minio/minio.service';
 
+// TODO: Use new code-style
 @Controller('file')
 export class FileController {
   constructor(private readonly minioService: MinioService) {}
@@ -21,6 +22,8 @@ export class FileController {
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
     try {
       const fileName = await this.minioService.uploadFile(file);
+
+      // TODO: Return uploaded object.
       return `File ${fileName} uploaded successfully`;
     } catch (error) {
       throw new BadRequestException(error.message);
@@ -31,6 +34,7 @@ export class FileController {
   async getFile(@Param('fileName') fileName: string) {
     try {
       const fileUrl = await this.minioService.getFileUrl(fileName);
+
       return fileUrl;
     } catch (error) {
       throw new NotFoundException(error.message);

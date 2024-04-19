@@ -9,12 +9,25 @@ WIP.
 3. Activate corepack (`corepack enable`) to enable pnpm or install it manually: `npm i pnpm@latest -g`.
 4. Clone this repository - `git clone https://github.com/Radency/internship-2024-doctoo`.
 5. Install all project dependencies - `pnpm i -r`.
+6. Install `Prisma` extension, extension id in extensions store: `Prisma.prisma`.
+7. Install `ESLint` extension, extension id in extensions store: `dbaeumer.vscode-eslint` &
+   `rvest.vs-code-prettier-eslint`.
+8. Install `Prettier` extension, extension id in extensions store: `esbenp.prettier-vscode`.
 
 ## Development
 
 1. Make sure you are in the `development` branch.
 2. Create a new branch from the `development` branch with the name of what you are going to do.
 3. Make the necessary changes and create a PR that will be directed to the `development` branch.
+
+### Backend
+
+1. First of all, you need to generate types for Prisma.
+2. Move to `apps/backend` folder and run this commands:
+
+- `pnpm prisma format` - Format prisma schema if models updated.
+- `pnpm prisma migrate dev` - Generate new migration for new changes.
+- `pnpm prisma generate` - Generate types for Prisma.
 
 ## Docker
 

@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Routes } from 'react-router-dom';
 
 // import page component
 
@@ -18,12 +18,10 @@ import { Route, Routes } from 'react-router-dom'
 
 const PageContainer = () => {
   return (
-    <main className="main-wrapper w-full p-8 overflow-auto flex flex-col gap-6 bg-background">
-      <Routes>
-        {/* <Route path="/path-to-page" Component={Page} /> */}
-      </Routes>
+    <main className='main-wrapper flex w-full flex-col gap-6 overflow-auto bg-background p-8'>
+      <Routes>{/* <Route path="/path-to-page" Component={Page} /> */}</Routes>
     </main>
-  )
-}
+  );
+};
 
-export default PageContainer
+export default PageContainer;
