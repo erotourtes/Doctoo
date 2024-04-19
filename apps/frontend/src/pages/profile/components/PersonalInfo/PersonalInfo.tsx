@@ -1,7 +1,7 @@
 import { useAppSelector } from '@/app/hooks';
 import { Button } from '@/components/UI/Button/Button';
 import Icon from '@/components/icons/Icon';
-import { capitalizeString } from '../../helpers/capitalizeString';
+import { capitalizeString } from '../../../../utils/capitalizeString';
 import PersonalInfoPopup from './PersonalInfoPopup';
 import { useState } from 'react';
 

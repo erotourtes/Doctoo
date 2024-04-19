@@ -2,7 +2,7 @@ import PageHeader from '../PageHeader';
 import StatsCard from './components/StatsCard/StatsCard';
 import { useAppSelector } from '@/app/hooks';
 import PersonalInfo from './components/PersonalInfo/PersonalInfo';
-import { capitalizeString } from './helpers/capitalizeString';
+import { capitalizeString } from '../../utils/capitalizeString';
 import MedicalCondition from './components/MedicalCondition/MedicalCondition';
 import AddressInfo from './components/AddressInfo/AddressInfo';
 import PaymentMethods from './components/PaymentMethods/PaymentMethods';
