@@ -1,12 +1,7 @@
-import React from 'react'
-import Icon from '../icons/Icon'
+import type React from 'react';
 
 const Sidemenu: React.FunctionComponent = () => {
-  return (
-    <nav className="sidemenu bg-main w-72 h-screen shrink-0 max-md:w-20">
-      
-    </nav>
-  )
-}
+  return <nav className='sidemenu h-screen w-72 shrink-0 bg-main max-md:w-20'></nav>;
+};
 
-export default Sidemenu
+export default Sidemenu;

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { cn } from '../../utils/cn';
 import styles from './Counter.module.css';
 import {
   decrement,
@@ -22,20 +22,20 @@ export const Counter = () => {
 
   return (
     <div>
-      <div className={styles.row}>
-        <button className={styles.button} aria-label='Decrement value' onClick={() => dispatch(decrement())}>
+      <div className={cn(styles.row)}>
+        <button className={cn(styles.button)} aria-label='Decrement value' onClick={() => dispatch(decrement())}>
           -
         </button>
-        <span aria-label='Count' className={styles.value}>
+        <span aria-label='Count' className={cn(styles.value)}>
           {count}
         </span>
-        <button className={styles.button} aria-label='Increment value' onClick={() => dispatch(increment())}>
+        <button className={cn(styles.button)} aria-label='Increment value' onClick={() => dispatch(increment())}>
           +
         </button>
       </div>
-      <div className={styles.row}>
+      <div className={cn(styles.row)}>
         <input
-          className={styles.textbox}
+          className={cn(styles.textbox)}
           aria-label='Set increment amount'
           value={incrementAmount}
           type='number'
@@ -43,18 +43,18 @@ export const Counter = () => {
             setIncrementAmount(e.target.value);
           }}
         />
-        <button className={styles.button} onClick={() => dispatch(incrementByAmount(incrementValue))}>
+        <button className={cn(styles.button)} onClick={() => dispatch(incrementByAmount(incrementValue))}>
           Add Amount
         </button>
         <button
-          className={styles.asyncButton}
+          className={cn(styles.asyncButton)}
           disabled={status !== 'idle'}
           onClick={() => dispatch(incrementAsync(incrementValue))}
         >
           Add Async
         </button>
         <button
-          className={styles.button}
+          className={cn(styles.button)}
           onClick={() => {
             dispatch(incrementIfOdd(incrementValue));
           }}

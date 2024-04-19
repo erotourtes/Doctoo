@@ -1,8 +1,7 @@
+import '@/index.css';
 import type { Meta, StoryObj } from '@storybook/react';
-
 import dayjs from 'dayjs';
 import { Calendar } from './Calendar';
-import '@/index.css';
 
 const testMeetings = [
   { date: dayjs('2024-03-9'), status: 'completed' },
@@ -30,7 +29,5 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => (
-    <Calendar meetingsForDay={testMeetings} />
-  ),
+  render: () => <Calendar meetingsForDay={testMeetings} />,
 };

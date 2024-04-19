@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { cn } from '../../utils/cn';
 import styles from './Quotes.module.css';
 import { useGetQuotesQuery } from './quotesApiSlice';
 
@@ -27,10 +28,10 @@ export const Quotes = () => {
 
   if (isSuccess) {
     return (
-      <div className={styles.container}>
+      <div className={cn(styles.container)}>
         <h3>Select the Quantity of Quotes to Fetch:</h3>
         <select
-          className={styles.select}
+          className={cn(styles.select)}
           value={numberOfQuotes}
           onChange={e => {
             setNumberOfQuotes(Number(e.target.value));

@@ -31,7 +31,7 @@ const DoctorCard: React.FC<DoctorCardProps> = ({
           <div className='space-y-3'>
             <div>
               <h1 className='text-xl font-semibold'>{name}</h1>
-              <h2 className='text-main-dark font-semibold'>{specialization}</h2>
+              <h2 className='font-semibold text-main-dark'>{specialization}</h2>
             </div>
 
             <div className='flex space-x-2'>
@@ -40,7 +40,7 @@ const DoctorCard: React.FC<DoctorCardProps> = ({
               ))}
             </div>
 
-            <div className='text-main-medium flex items-center space-x-2'>
+            <div className='flex items-center space-x-2 text-main-medium'>
               <Icon variant='star' />
               <Icon variant='star' />
               <Icon variant='star' />

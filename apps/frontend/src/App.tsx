@@ -7,9 +7,9 @@ import PageContainer from './pages/PageContainer';
 
 const App = () => {
   return (
-    <div className='App w-screen h-screen overflow-hidden flex'>
+    <div className='App flex h-screen w-screen overflow-hidden'>
       <Sidemenu />
-      <PageContainer /> 
+      <PageContainer />
     </div>
   );
 };
