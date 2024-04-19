@@ -30,7 +30,7 @@ const InputSearch: React.FC<InputSearchProps> = ({
     <div className={`relative ${classNameDiv}`}>
       <Icon
         variant='search'
-        className='absolute left-3 top-[21px] size-[22px] -translate-y-1/2 transform text-grey-2'
+        className='absolute left-3 top-[20px] size-[22px] -translate-y-1/2 transform text-grey-2'
       />
       <input
         type='text'

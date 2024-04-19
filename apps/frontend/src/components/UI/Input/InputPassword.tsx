@@ -25,7 +25,7 @@ const InputPassword: React.FC<InputPasswordProps> = ({
   classNameLabel,
   valid,
   error,
-}) => {
+}: InputPasswordProps) => {
   const [inputType, setInputType] = useState('password');
 
   const handleTogglePassword = () => {
@@ -35,7 +35,7 @@ const InputPassword: React.FC<InputPasswordProps> = ({
   return (
     <div className='flex flex-col items-start'>
       {label && (
-        <label htmlFor={id || name} className={`text-md block text-grey-2 ${classNameLabel}`}>
+        <label htmlFor={id || name} className={`text-md block text-grey-2 my-1 ${classNameLabel}`}>
           {label}
         </label>
       )}
@@ -45,17 +45,17 @@ const InputPassword: React.FC<InputPasswordProps> = ({
           name={name}
           type={inputType}
           value={value}
-          className={`h-10 cursor-pointer rounded-lg px-4 py-2 text-base leading-6 text-text bg-background ${!valid && 'border border-error'} hover:${!valid ? 'border border-error' : 'border border-green-border'} focus:${!valid ? 'border border-error' : 'border border-green-border'} focus:outline-none ${className}`}
+          className={`h-10 cursor-pointer rounded-lg bg-background px-4 py-2 text-base leading-6 text-text ${!valid && 'border border-error'} hover:${!valid ? 'border border-error' : 'border border-green-border'} focus:${!valid ? 'border border-error' : 'border border-green-border'} focus:outline-none ${className}`}
           placeholder={placeholder}
         />
         {!valid ? (
-          <React.Fragment>
+          <>
             <Icon
               variant='warning'
               className='absolute right-3 top-[21px] size-[20px] -translate-y-1/2 transform cursor-pointer text-error'
             />
             <p className='my-1 text-left text-error'>{error || 'Validation error'}</p>
-          </React.Fragment>
+          </>
         ) : (
           <button>
             <Icon
