@@ -1,8 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '../prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 
+// TODO: Cover a large area of code with tests.
 describe('UserController', () => {
   let controller: UserController;
   let userId: string;
@@ -16,36 +17,34 @@ describe('UserController', () => {
     controller = module.get<UserController>(UserController);
   });
 
-  it('Should be defined', () => {
-    expect(controller).toBeDefined();
-  });
+  it('Should be defined', () => expect(controller).toBeDefined());
 
   it('Should create a new user', async () => {
     const user = await controller.createUser({
-      first_name: 'First Name',
-      last_name: 'Last Name',
+      firstName: 'First Name',
+      lastName: 'Last Name',
       email: 'example@mail.com',
       phone: '+380501804050',
-      email_verified: true,
-      avatar_key: 'ABCD-DEFG',
+      emailVerified: true,
+      avatarKey: 'ABCD-DEFG',
       password: '$2y$10$rcDPr0lHPIa4iwZeZWunBeamx7ruC.g0hFl9QrEEARRaAQpRX3MhC',
     });
 
     userId = user.id;
 
-    expect(user).toMatchObject({ first_name: 'First Name', last_name: 'Last Name' });
+    expect(user).toMatchObject({ firstName: 'First Name', lastName: 'Last Name' });
   });
 
-  it('Should change first_name to "New First Name"', async () => {
-    const user = await controller.patchUser(userId, { first_name: 'New First Name' });
+  it('Should change firstName to "New First Name"', async () => {
+    const user = await controller.patchUser(userId, { firstName: 'New First Name' });
 
-    expect(user).toMatchObject({ first_name: 'New First Name' });
+    expect(user).toMatchObject({ firstName: 'New First Name' });
   });
 
   it('Should return user object', async () => {
     const user = await controller.getUser(userId);
 
-    expect(Object.keys(user).length).toBe(6);
+    expect(Object.keys(user).length).toBe(8);
   });
 
   it('Should deleted user', async () => {

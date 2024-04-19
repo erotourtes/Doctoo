@@ -1,5 +1,6 @@
 import { useFormContext } from 'react-hook-form';
 import Icon from '@components/icons/Icon';
+import { cn } from '../../../utils/cn';
 
 interface InputProps {
   id: string;
@@ -33,9 +34,14 @@ const Input = ({
   const isDirty = id in dirtyFields;
 
   return (
-    <div className={`${className || ''} grid`}>
+    <div className={cn(className || '', 'grid')}>
+      className=
+      {cn(
+        className,
+        'h-10 cursor-pointer rounded-lg border-green-border px-4 py-2 text-base leading-6 text-text focus:border focus:outline-none',
+      )}
       {label && (
-        <label htmlFor={id} className={`${classNameLabel || ''} text-md my-2 block text-grey-1`}>
+        <label htmlFor={id} className={cn(classNameLabel, 'text-md my-2 block text-grey-1')}>
           {label}
         </label>
       )}
@@ -44,7 +50,10 @@ const Input = ({
           {...register(id)}
           type={type}
           placeholder={placeholder}
-          className={`${classNameInput || ''} col-start-1 row-start-1 w-full rounded-lg bg-background py-2 pl-4 pr-10 text-base text-text hover:border focus:border focus:outline-none ${hasError && 'border border-solid border-error'}`}
+          className={cn(
+            classNameInput || '',
+            `col-start-1 row-start-1 w-full rounded-lg bg-background py-2 pl-4 pr-10 text-base text-text hover:border focus:border focus:outline-none ${hasError && 'border border-solid border-error'}`,
+          )}
           defaultValue={defaultValue}
         />
 
@@ -62,7 +71,6 @@ const Input = ({
           <Icon variant='valid' className='col-start-1 row-start-1 mr-2 self-center justify-self-end text-main' />
         )}
       </div>
-
       {hasError && errorMessage && <p className='mt-2 text-sm font-normal leading-[17px] text-error'>{errorMessage}</p>}
     </div>
   );

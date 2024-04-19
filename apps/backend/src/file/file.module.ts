@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { FileController } from './file.controller';
 import { MinioModule } from '../minio/minio.module';
+import { FileController } from './file.controller';
 
 @Module({
   imports: [MinioModule],

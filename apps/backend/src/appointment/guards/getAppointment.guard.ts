@@ -1,7 +1,8 @@
 import { CanActivate, ExecutionContext, Injectable, NotFoundException } from '@nestjs/common';
 import { Request } from 'express';
-import { PrismaService } from '../../prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 
+// Move guard logic to service
 @Injectable()
 export class GetAppointmentGuard implements CanActivate {
   constructor(private readonly prismaService: PrismaService) {}

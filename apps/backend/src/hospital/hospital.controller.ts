@@ -1,30 +1,30 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { CreateHospitalDto } from './dto/create.dto';
+import { PatchHospitalDto } from './dto/patch.dto';
 import { HospitalService } from './hospital.service';
-import { CreateHospitalDto } from './dto/create-hospital.dto';
-import { UpdateHospitalDto } from './dto/update-hospital.dto';
 
-@Controller('hospitals')
+@Controller('hospital')
 export class HospitalController {
   constructor(private readonly hospitalService: HospitalService) {}
 
   @Post()
-  createHospital(@Body() createHospitalDto: CreateHospitalDto) {
-    return this.hospitalService.createHospital(createHospitalDto);
+  createHospital(@Body() body: CreateHospitalDto) {
+    return this.hospitalService.createHospital(body);
   }
 
   @Get()
-  findManyHospitals() {
-    return this.hospitalService.findManyHospitals();
+  getHospitals() {
+    return this.hospitalService.getHospitals();
   }
 
   @Get(':id')
-  findHospitalById(@Param('id') id: string) {
-    return this.hospitalService.findHospitalById(id);
+  getHospital(@Param('id') id: string) {
+    return this.hospitalService.getHospital(id);
   }
 
   @Patch(':id')
-  updateHospital(@Param('id') id: string, @Body() updateHospitalDto: UpdateHospitalDto) {
-    return this.hospitalService.updateHospital(id, updateHospitalDto);
+  patchHospital(@Param('id') id: string, @Body() body: PatchHospitalDto) {
+    return this.hospitalService.patchHospital(id, body);
   }
 
   @Delete(':id')

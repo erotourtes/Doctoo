@@ -1,8 +1,8 @@
 export const hospitalStub = () => {
   return {
     name: 'test',
-    country: 'test',
     city: 'test',
+    country: 'test',
     street: 'test',
   };
 };

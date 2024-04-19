@@ -11,13 +11,14 @@ const meta = {
   },
   tags: ['autodocs'],
   decorators: [
-    (Story) => (
+    Story => (
       <BrowserRouter>
-        <div className="w-72 p-8 bg-main-medium">
+        <div className='w-72 bg-main-medium p-8'>
           <Story />
         </div>
       </BrowserRouter>
-    )]
+    ),
+  ],
 } satisfies Meta<typeof NavLogo>;
 
 export default meta;
@@ -32,6 +33,6 @@ export const Default: Story = {
 
 export const Small: Story = {
   args: {
-    variant: 'small'
+    variant: 'small',
   },
 };

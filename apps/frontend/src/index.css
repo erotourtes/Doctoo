@@ -1,11 +1,10 @@
 /* Import fonts */
-@import url("https://fonts.googleapis.com/css?family=Inter:regular,500?display=swap");
-@import url("https://fonts.googleapis.com/css?family=Syncopate:regular,700?display=swap");
+@import url('https://fonts.googleapis.com/css?family=Inter:regular,500?display=swap');
+@import url('https://fonts.googleapis.com/css?family=Syncopate:regular,700?display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 
 body {
   margin: 0;
@@ -17,4 +16,32 @@ body {
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+@layer base {
+  h1 {
+    @apply font-inter text-3xl font-medium;
+  }
+
+  h2 {
+    @apply font-inter text-2xl font-medium;
+  }
+
+  h3 {
+    @apply font-inter text-xl font-medium;
+  }
+
+  p {
+    @apply font-inter text-base font-normal;
+  }
+
+  a {
+    @apply font-inter text-base font-normal underline;
+  }
+}
+
+@layer components {
+  .text-helper {
+    @apply font-inter text-sm font-normal;
+  }
 }

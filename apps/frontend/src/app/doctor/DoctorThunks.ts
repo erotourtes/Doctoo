@@ -1,6 +1,6 @@
+import { instance } from '@/api/axios.api';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { setDoctorData } from './DoctorSlice';
-import { instance } from '@/api/axios.api';
 
 export const getDoctorData = createAsyncThunk('doctor', async (_, { dispatch }) => {
   try {

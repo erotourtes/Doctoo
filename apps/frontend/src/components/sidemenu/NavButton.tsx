@@ -1,6 +1,7 @@
-import { Link, Path } from "react-router-dom";
-import Icon from "../icons/Icon";
-import { IconVariant } from "../icons/types";
+import type { Path } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import Icon from '../icons/Icon';
+import type { IconVariant } from '../icons/types';
 
 type NavButtonProps = {
   to: string | Partial<Path>;
@@ -8,16 +9,34 @@ type NavButtonProps = {
   text: string;
   variant?: 'small' | 'large';
   selected?: boolean;
-}
+};
 
-const NavButton: React.FunctionComponent<NavButtonProps> = ({ to, iconVariant, text, variant = 'large', selected = false }) => {
+const NavButton: React.FunctionComponent<NavButtonProps> = ({
+  to,
+  iconVariant,
+  text,
+  variant = 'large',
+  selected = false,
+}) => {
   return (
-    <Link to={to} className={`${variant !== 'small' ? 'w-full flex p-4 rounded-xl' : 'inline-flex p-3 rounded-lg'} relative group gap-2 items-center justify-start ${!selected ? 'text-white' : 'bg-white'} hover:bg-main-dark active:text-white active:bg-white transition-all`}>
-      <Icon variant={iconVariant} className={`size-6 group-hover:text-white group-active:text-main ${selected ? 'text-main' : ''} transition-all`} />
-      {variant !== 'small' && <span className='font-medium group-hover:text-white group-active:text-black'>{text}</span>}
-      {variant === 'small' && <span className='invisible group-hover:visible whitespace-nowrap text-white absolute t-1/2 left-full z-10 ml-1 p-2 bg-main-dark rounded-xl tooltip transition-all'>{text}</span>}
+    <Link
+      to={to}
+      className={`${variant !== 'small' ? 'flex w-full rounded-xl p-4' : 'inline-flex rounded-lg p-3'} group relative items-center justify-start gap-2 ${!selected ? 'text-white' : 'bg-white'} transition-all hover:bg-main-dark active:bg-white active:text-white`}
+    >
+      <Icon
+        variant={iconVariant}
+        className={`size-6 group-hover:text-white group-active:text-main ${selected ? 'text-main' : ''} transition-all`}
+      />
+      {variant !== 'small' && (
+        <span className='font-medium group-hover:text-white group-active:text-black'>{text}</span>
+      )}
+      {variant === 'small' && (
+        <span className='t-1/2 tooltip invisible absolute left-full z-10 ml-1 whitespace-nowrap rounded-xl bg-main-dark p-2 text-white transition-all group-hover:visible'>
+          {text}
+        </span>
+      )}
     </Link>
-  )
-}
+  );
+};
 
-export default NavButton
+export default NavButton;

@@ -1,3 +1,5 @@
+import { cn } from '../../../utils/cn';
+
 interface CheckboxProps {
   text: string;
   disabled?: boolean;
@@ -9,12 +11,10 @@ export const Checkbox = ({ text, disabled = false }: CheckboxProps) => {
       <input
         type='checkbox'
         id='checkbox'
-        className='appearance-none w-6 h-6 grid place-content-center cursor-pointer p-1 border rounded border-solid border-main bg-white hover:(not disabled:border-2) focus:(not disabled:border-2) before:content-[""] before:bg-[url("/assets/checkmark.svg")]  before:w-6 before:h-6 before:transition-[120ms] before:duration-[transform] before:scale-0 checked:bg-main checked:before:scale-100 checked:hover:bg-main-dark checked:hover:border-main-dark checked:disabled:bg-grey-4 disabled:border-grey-4 disabled:cursor-not-allowed'
+        className='hover:(not disabled:border-2) focus:(not disabled:border-2) grid h-6 w-6 cursor-pointer appearance-none place-content-center rounded border border-solid border-main bg-white p-1 before:h-6 before:w-6  before:scale-0 before:bg-[url("/assets/checkmark.svg")] before:transition-[120ms] before:duration-[transform] before:content-[""] checked:bg-main checked:before:scale-100 checked:hover:border-main-dark checked:hover:bg-main-dark disabled:cursor-not-allowed disabled:border-grey-4 checked:disabled:bg-grey-4'
         disabled={disabled}
       />
-      <p className={`text-base font-normal leading-6 ${disabled ? 'text-grey-4' : 'text-text'}`}>
-        {text}
-      </p>
+      <p className={cn('text-base font-normal leading-6', disabled ? 'text-grey-4' : 'text-text')}>{text}</p>
     </div>
   );
 };

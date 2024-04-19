@@ -1,13 +1,13 @@
-import { IsNotEmpty, IsOptional, IsString, IsEnum } from 'class-validator';
 import { AppointmentStatus } from '@prisma/client';
 import { Type } from 'class-transformer';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateAppointmentDto {
   @IsNotEmpty()
-  readonly doctor_id: string;
+  readonly doctorId: string;
 
   @IsNotEmpty()
-  readonly patient_id: string;
+  readonly patientId: string;
 
   @IsNotEmpty()
   @Type(() => Date)
@@ -19,14 +19,13 @@ export class CreateAppointmentDto {
   @IsString()
   notes: string;
 
-  @IsOptional()
-  @IsString({ message: 'Video key must be a string' })
-  readonly video_key?: string;
+  @IsString()
+  assignedAt: string;
 
   @IsNotEmpty()
   @IsString({ message: 'Invoice key must be a string' })
-  readonly invoice_key: string;
+  readonly paymentInvoiceKey: string;
 
   @IsString({ message: 'Receipt key must be a string' })
-  readonly receipt_key: string;
+  readonly paymentReceiptKey: string;
 }
