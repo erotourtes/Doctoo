@@ -9,6 +9,7 @@ import config from 'src/config/config';
 import { UserModule } from './user/user.module';
 import { FavoriteModule } from './favorite/favorite.module';
 import { DoctorModule } from './doctor/doctor.module';
+import { HospitalModule } from './hospital/hospital.module';
 import { FileModule } from './file/file.module';
 import { MinioService } from './minio/minio.service';
 
@@ -20,6 +21,7 @@ import { MinioService } from './minio/minio.service';
     DoctorModule,
     PatientModule,
     AuthModule,
+    HospitalModule,
     FileModule,
   ],
   controllers: [AppController],
