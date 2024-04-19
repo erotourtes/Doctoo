@@ -39,6 +39,7 @@
   },
   "homepage": "https://github.com/Radency/internship-2024-doctoo#readme",
   "devDependencies": {
+    "husky": "9.0.11",
     "prettier": "3.2.5"
   }
 }
