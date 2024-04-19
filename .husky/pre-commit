@@ -1,0 +1,4 @@
+pnpm format
+pnpm lint
+pnpm backend:test
+pnpm frontend:test

@@ -25,7 +25,8 @@
     "frontend:lint": "pnpm -F @internship-2024-doctoo/frontend lint",
     "format": "pnpm -r format",
     "lint": "pnpm -r lint",
-    "build": "pnpm -r build"
+    "build": "pnpm -r build",
+    "prepare": "husky"
   },
   "engines": {
     "node": ">=18"
