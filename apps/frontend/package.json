@@ -14,7 +14,7 @@
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
     "format": "prettier . --write",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix --ignore-path .eslintignore"
   },
   "dependencies": {
     "@reduxjs/toolkit": "2.2.3",
