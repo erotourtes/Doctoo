@@ -2,6 +2,7 @@ import React from "react";
 
 export type IconVariant =
   'logo' |
+  'logo-white' |
   'account' |
   'logout' |
   'appointments' |

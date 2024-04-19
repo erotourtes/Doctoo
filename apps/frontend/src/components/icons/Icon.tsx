@@ -81,11 +81,13 @@ import ShareScreenIcon from '../../../assets/icons/share-screen.svg?react'
 
 // Logo
 import Logo from '../../../assets/logo.svg?react'
+import LogoWhite from '../../../assets/logo-white.svg?react'
 
 export type IconType = React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
 
 const IconVariants = {
   "logo": Logo,
+  "logo-white": LogoWhite,
   "account": AccountIcon,
   "logout": LogoutIcon,
   "appointments": AppointmentsIcon,

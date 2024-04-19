@@ -10,7 +10,9 @@ interface DoctorCardProps {
   reviews: number;
   tags: string[];
   buttons: string[];
+  payrate: number;
   isBookMode: boolean;
+  className?: string;
 }
 
 const DoctorCard: React.FC<DoctorCardProps> = ({
@@ -21,9 +23,11 @@ const DoctorCard: React.FC<DoctorCardProps> = ({
   reviews,
   buttons,
   isBookMode,
+  payrate: price,
+  className,
 }) => {
   return (
-    <div className='flex h-[176px] w-[697px] rounded-xl'>
+    <div className={`${className} flex h-[176px] w-[697px] rounded-xl`}>
       <div className='m-6 flex w-full justify-between'>
         <div className='flex flex-row items-start space-x-2'>
           <img src={avatarUrl} className='h-full rounded-lg' alt='DOCTOR_AVATAR' />
@@ -59,7 +63,7 @@ const DoctorCard: React.FC<DoctorCardProps> = ({
         {!isBookMode && (
           <div className='flex flex-col justify-between'>
             <p className='text-right'>
-              <span className='text-xl font-semibold'>$75</span>/visit
+              <span className='text-xl font-semibold'>${price}</span>/visit
             </p>
 
             <div className='grid grid-cols-2 grid-rows-2 gap-2'>
