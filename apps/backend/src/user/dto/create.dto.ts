@@ -3,10 +3,10 @@ import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
 
 export class CreateUserDto {
   @IsNotEmptyString()
-  readonly first_name: string;
+  readonly firstName: string;
 
   @IsNotEmptyString()
-  readonly last_name: string;
+  readonly lastName: string;
 
   @IsPhoneNumber()
   readonly phone: string;
@@ -15,14 +15,14 @@ export class CreateUserDto {
   readonly email: string;
 
   @IsBoolean()
-  readonly email_verified: boolean;
+  readonly emailVerified: boolean;
 
   @IsOptional()
   password?: string;
 
   @IsOptional()
-  google_id?: string;
+  googleId?: string;
 
   @IsNotEmptyString()
-  avatar_key: string;
+  avatarKey: string;
 }
