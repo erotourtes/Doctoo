@@ -19,14 +19,14 @@ describe<LocalTestContext>('counter reducer', it => {
     context.store = store;
   });
 
-  it('should handle initial state', () => {
+  it('Should handle initial state', () => {
     expect(counterSlice.reducer(undefined, { type: 'unknown' })).toStrictEqual({
       value: 0,
       status: 'idle',
     });
   });
 
-  it('should handle increment', ({ store }) => {
+  it('Should handle increment', ({ store }) => {
     expect(selectCount(store.getState())).toBe(3);
 
     store.dispatch(increment());
@@ -34,7 +34,7 @@ describe<LocalTestContext>('counter reducer', it => {
     expect(selectCount(store.getState())).toBe(4);
   });
 
-  it('should handle decrement', ({ store }) => {
+  it('Should handle decrement', ({ store }) => {
     expect(selectCount(store.getState())).toBe(3);
 
     store.dispatch(decrement());
@@ -42,7 +42,7 @@ describe<LocalTestContext>('counter reducer', it => {
     expect(selectCount(store.getState())).toBe(2);
   });
 
-  it('should handle incrementByAmount', ({ store }) => {
+  it('Should handle incrementByAmount', ({ store }) => {
     expect(selectCount(store.getState())).toBe(3);
 
     store.dispatch(incrementByAmount(2));
