@@ -13,7 +13,7 @@
     "test": "vitest run",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
-    "format": "prettier . --write",
+    "format": "prettier src/ --write",
     "lint": "eslint . --fix --ignore-path .eslintignore"
   },
   "dependencies": {

@@ -1,4 +1,4 @@
-// TODO: USe envalid package for easy evnironment management.
+// TODO: Use envalid package for easy evnironment management.
 export const getOrThrow = (key: string): string => {
   const value = process.env[key];
 
