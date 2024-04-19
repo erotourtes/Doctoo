@@ -6,7 +6,7 @@ type ButtonProps = {
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   disabled?: boolean;
   className?: string;
-  type: ButtonTypes;
+  type: keyof typeof ButtonTypes;
 };
 
 export const Button = ({ children, onClick, disabled = false, className = '', type }: ButtonProps) => {
