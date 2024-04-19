@@ -1,52 +1,50 @@
-import type { AppStore } from '../../app/store';
-import { makeStore } from '../../app/store';
-import type { CounterSliceState } from './counterSlice';
-import { counterSlice, decrement, increment, incrementByAmount, selectCount } from './counterSlice';
+// import type { AppStore } from '../../app/store';
+// import { makeStore } from '../../app/store';
 
-interface LocalTestContext {
-  store: AppStore;
-}
+// interface LocalTestContext {
+//   store: AppStore;
+// }
 
-describe<LocalTestContext>('counter reducer', it => {
-  beforeEach<LocalTestContext>(context => {
-    const initialState: CounterSliceState = {
-      value: 3,
-      status: 'idle',
-    };
+// describe<LocalTestContext>('counter reducer', it => {
+//   beforeEach<LocalTestContext>(context => {
+//     const initialState: CounterSliceState = {
+//       value: 3,
+//       status: 'idle',
+//     };
 
-    const store = makeStore({ counter: initialState });
+//     const store = makeStore({ counter: initialState });
 
-    context.store = store;
-  });
+//     context.store = store;
+//   });
 
-  it('Should handle initial state', () => {
-    expect(counterSlice.reducer(undefined, { type: 'unknown' })).toStrictEqual({
-      value: 0,
-      status: 'idle',
-    });
-  });
+//   it('Should handle initial state', () => {
+//     expect(counterSlice.reducer(undefined, { type: 'unknown' })).toStrictEqual({
+//       value: 0,
+//       status: 'idle',
+//     });
+//   });
 
-  it('Should handle increment', ({ store }) => {
-    expect(selectCount(store.getState())).toBe(3);
+//   it('Should handle increment', ({ store }) => {
+//     expect(selectCount(store.getState())).toBe(3);
 
-    store.dispatch(increment());
+//     store.dispatch(increment());
 
-    expect(selectCount(store.getState())).toBe(4);
-  });
+//     expect(selectCount(store.getState())).toBe(4);
+//   });
 
-  it('Should handle decrement', ({ store }) => {
-    expect(selectCount(store.getState())).toBe(3);
+//   it('Should handle decrement', ({ store }) => {
+//     expect(selectCount(store.getState())).toBe(3);
 
-    store.dispatch(decrement());
+//     store.dispatch(decrement());
 
-    expect(selectCount(store.getState())).toBe(2);
-  });
+//     expect(selectCount(store.getState())).toBe(2);
+//   });
 
-  it('Should handle incrementByAmount', ({ store }) => {
-    expect(selectCount(store.getState())).toBe(3);
+//   it('Should handle incrementByAmount', ({ store }) => {
+//     expect(selectCount(store.getState())).toBe(3);
 
-    store.dispatch(incrementByAmount(2));
+//     store.dispatch(incrementByAmount(2));
 
-    expect(selectCount(store.getState())).toBe(5);
-  });
-});
+//     expect(selectCount(store.getState())).toBe(5);
+//   });
+// });

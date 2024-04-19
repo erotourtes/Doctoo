@@ -1,21 +1,13 @@
 import { useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { useAppDispatch } from '../../app/hooks';
 import { cn } from '../../utils/cn';
 import styles from './Counter.module.css';
-import {
-  decrement,
-  increment,
-  incrementAsync,
-  incrementByAmount,
-  incrementIfOdd,
-  selectCount,
-  selectStatus,
-} from './counterSlice';
+import { decrement, increment, incrementAsync, incrementByAmount, incrementIfOdd } from './counterSlice';
 
 export const Counter = () => {
   const dispatch = useAppDispatch();
-  const count = useAppSelector(selectCount);
-  const status = useAppSelector(selectStatus);
+  // const count = useAppSelector(selectCount);
+  // const status = useAppSelector(selectStatus);
   const [incrementAmount, setIncrementAmount] = useState('2');
 
   const incrementValue = Number(incrementAmount) || 0;
@@ -27,7 +19,7 @@ export const Counter = () => {
           -
         </button>
         <span aria-label='Count' className={cn(styles.value)}>
-          {count}
+          {/* {count} */}
         </span>
         <button className={cn(styles.button)} aria-label='Increment value' onClick={() => dispatch(increment())}>
           +
