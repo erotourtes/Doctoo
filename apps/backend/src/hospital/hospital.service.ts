@@ -1,46 +1,48 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { CreateHospitalDto } from './dto/create-hospital.dto';
-import { UpdateHospitalDto } from './dto/update-hospital.dto';
-import { PrismaService } from '../prisma.service';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import { HospitalDto } from './dto/hospital.dto';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateHospitalDto } from './dto/create.dto';
+import { PatchHospitalDto } from './dto/patch.dto';
+import { ResponseHospitalDto } from './dto/response.dto';
 
 @Injectable()
 export class HospitalService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
-  async createHospital(createHospitalDto: CreateHospitalDto) {
-    const createdHospiital = await this.prisma.hospital.create({ data: createHospitalDto });
-    return plainToInstance(HospitalDto, createdHospiital);
+  async createHospital(body: CreateHospitalDto): Promise<ResponseHospitalDto> {
+    const hospital = await this.prismaService.hospital.create({ data: body });
+
+    return plainToInstance(ResponseHospitalDto, hospital);
   }
 
-  async findManyHospitals() {
-    const hospitals = this.prisma.hospital.findMany();
-    return plainToInstance(HospitalDto, hospitals);
+  async getHospitals(): Promise<ResponseHospitalDto[]> {
+    const hospitals = this.prismaService.hospital.findMany();
+
+    return plainToInstance(Array<ResponseHospitalDto>, hospitals);
   }
 
-  async findHospitalById(id: string) {
-    const hospital = await this.prisma.hospital.findUnique({ where: { id } });
+  async getHospital(id: string): Promise<ResponseHospitalDto> {
+    const hospital = await this.prismaService.hospital.findUnique({ where: { id } });
+
     if (!hospital) throw new NotFoundException({ message: `Hospital with id ${id} does not exist` });
-    return plainToInstance(HospitalDto, hospital);
+
+    return plainToInstance(ResponseHospitalDto, hospital);
   }
 
-  async updateHospital(id: string, updateHospitalDto: UpdateHospitalDto) {
-    const hospital = await this.findHospitalById(id);
-    const updatedHospital = await this.prisma.hospital.update({
+  async patchHospital(id: string, body: PatchHospitalDto): Promise<ResponseHospitalDto> {
+    const hospital = await this.getHospital(id);
+
+    const patchedHospital = await this.prismaService.hospital.update({
       where: { id: hospital.id },
-      data: updateHospitalDto,
+      data: body,
     });
-    return plainToInstance(HospitalDto, updatedHospital);
+
+    return plainToInstance(ResponseHospitalDto, patchedHospital);
   }
 
   async deleteHospital(id: string) {
-    const hospital = await this.findHospitalById(id);
-    const deleteResult = await this.prisma.hospital.delete({ where: { id: hospital.id } });
-    if (!deleteResult)
-      throw new InternalServerErrorException({
-        message: `Something went wrong during deleting hospital with id ${id}`,
-      });
-    return { message: `Hospital with id ${id} was deleted successfully` };
+    const hospital = await this.getHospital(id);
+
+    await this.prismaService.hospital.delete({ where: { id: hospital.id } });
   }
 }

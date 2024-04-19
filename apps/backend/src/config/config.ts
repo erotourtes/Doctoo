@@ -1,6 +1,6 @@
 import { registerAs } from '@nestjs/config';
-import { getOrThrow } from 'src/config/utils';
+import { getOrThrow } from './utils';
 
 export default registerAs('config', () => ({
-  nodeEnv: getOrThrow('NODE_ENV'),
+  NODE_ENV: getOrThrow('NODE_ENV'),
 }));

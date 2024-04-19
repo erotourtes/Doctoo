@@ -1,12 +1,14 @@
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
+import { MinioService } from '../minio/minio.service';
 import { FileController } from './file.controller';
-import { MinioService } from 'src/minio/minio.service';
 
 describe('FileController', () => {
   let controller: FileController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [ConfigModule.forRoot()],
       controllers: [FileController],
       providers: [MinioService],
     }).compile();

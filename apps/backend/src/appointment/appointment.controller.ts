@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { GetPatientGuard } from '../patient/guards/get.guard';
 import { AppointmentService } from './appointment.service';
-import { CreateAppointmentDto } from './dto/create-appointment.dto';
-import { UpdateAppointmentDto } from './dto/update-appointment.dto';
+import { CreateAppointmentDto } from './dto/create.dto';
+import { PatchAppointmentDto } from './dto/patch.dto';
 import { GetAppointmentGuard } from './guards/getAppointment.guard';
-import { GetPatientGuard } from 'src/patient/guards/get.guard';
 
+// TODO: Recode it.
 @Controller('appointment')
 export class AppointmentController {
   constructor(private readonly appointmentService: AppointmentService) {}
@@ -16,13 +17,13 @@ export class AppointmentController {
 
   @UseGuards(GetPatientGuard)
   @Get('all-by-patient/:id')
-  findAllByPatientId(@Param('id') patient_id: string) {
-    return this.appointmentService.findAllByPatientId(patient_id);
+  findAllByPatientId(@Param('id') id: string) {
+    return this.appointmentService.findAllByPatientId(id);
   }
 
   @Get('all-by-doctor/:id')
-  findAllByDoctorId(@Param('id') doctor_id: string) {
-    return this.appointmentService.findAllByDoctorId(doctor_id);
+  findAllByDoctorId(@Param('id') id: string) {
+    return this.appointmentService.findAllByDoctorId(id);
   }
 
   @UseGuards(GetAppointmentGuard)
@@ -33,7 +34,7 @@ export class AppointmentController {
 
   @UseGuards(GetAppointmentGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() body: UpdateAppointmentDto) {
+  update(@Param('id') id: string, @Body() body: PatchAppointmentDto) {
     return this.appointmentService.update(id, body);
   }
 

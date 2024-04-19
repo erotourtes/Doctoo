@@ -1,12 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import Settings from './settingsPage';
 import { fn } from '@storybook/test';
+import Settings from './settingsPage';
+
 const meta = {
   title: 'Example/Settings',
   component: Settings,
-  
+
   args: {
-    onClick: fn()
+    onClick: fn(),
   },
 } satisfies Meta<typeof Settings>;
 

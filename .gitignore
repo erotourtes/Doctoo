@@ -44,6 +44,3 @@ dist
 .dynamodb/
 .tern-port
 storybook-static/
-
-# Ignore pnpm-lock.yaml during development.
-pnpm-lock.yaml

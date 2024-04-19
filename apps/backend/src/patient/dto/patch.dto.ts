@@ -1,11 +1,10 @@
-import { PartialType } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { OmitType, PartialType } from '@nestjs/swagger';
+import { IsNumber } from 'class-validator';
 import { CreatePatientDto } from './create.dto';
 
-export class PatchPatientDto extends PartialType(CreatePatientDto) {
-  @IsNumber()
-  readonly declaration_id: number;
+class PrePatchPatientDto extends OmitType(CreatePatientDto, ['userId']) {}
 
-  @IsString()
-  readonly identity_card_key: string;
+export class PatchPatientDto extends PartialType(PrePatchPatientDto) {
+  @IsNumber()
+  readonly declarationId: string;
 }

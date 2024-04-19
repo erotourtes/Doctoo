@@ -1,12 +1,14 @@
-import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
-import { AuthService } from 'src/auth/auth.service';
-import { ResponseGoogleSignDto, ResponseSignUpUserDto } from 'src/auth/dto/google-sign-response.dto';
-import { LocalLoginDto } from 'src/auth/dto/local-login.dto';
-import { SignUpDto } from 'src/auth/dto/signup.dto';
-import { GoogleAuthGuard } from 'src/auth/strategies/google-strategy';
-import { LocalAuthGuard } from 'src/auth/strategies/local-strategy';
-import { UserDec } from 'src/auth/user.decorator';
-import { ResponseUserDto } from 'src/user/dto/response.dto';
+import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
+import { Response } from 'express';
+import { ResponseUserDto } from '../user/dto/response.dto';
+import { UserDec } from '../user/user.decorator';
+import { AuthService } from './auth.service';
+import { AuthLocalLoginDto } from './dto/localLogin.dto';
+import { ResponseAuthGoogleSignInDto } from './dto/responseGoogleSignIn.dto';
+import { AuthSignUpDto } from './dto/signUp.dto';
+import { GoogleAuthGuard } from './strategies/google';
+import { LocalAuthGuard } from './strategies/local';
 
 @Controller('auth')
 export class AuthController {
@@ -15,18 +17,20 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async localLogin(
-    @Res({ passthrough: true }) res,
-    @Body() _: LocalLoginDto,
+    @Res({ passthrough: true }) res: Response,
+    @Body() _body: AuthLocalLoginDto,
     @UserDec() user: ResponseUserDto,
-  ): Promise<ResponseSignUpUserDto> {
+  ): Promise<ResponseUserDto> {
     const token = await this.authService.signJwtToken(user.id);
-    this.authService.attachJwtTokenToCookie(res, token.access_token);
-    return user;
+
+    this.authService.attachJwtTokenToCookie(res, token);
+
+    return plainToInstance(ResponseUserDto, user);
   }
 
   @Post('signup')
-  localSignup(@Body() createUserDto: SignUpDto) {
-    return this.authService.signupUser(createUserDto);
+  localSignUp(@Body() body: AuthSignUpDto) {
+    return this.authService.signUpUser(body);
   }
 
   @UseGuards(GoogleAuthGuard)
@@ -36,14 +40,15 @@ export class AuthController {
   @Get('login/google/redirect')
   @UseGuards(GoogleAuthGuard)
   async googleLoginRedirect(
-    @UserDec() data: ResponseGoogleSignDto,
-    @Res({ passthrough: true }) res,
-  ): Promise<ResponseGoogleSignDto> {
+    @UserDec() data: ResponseAuthGoogleSignInDto,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<ResponseAuthGoogleSignInDto> {
     if (data.isSignedUp) {
       const token = await this.authService.signJwtToken(data.user.id);
-      this.authService.attachJwtTokenToCookie(res, token.access_token);
+
+      this.authService.attachJwtTokenToCookie(res, token);
     }
 
-    return data;
+    return plainToInstance(ResponseAuthGoogleSignInDto, data);
   }
 }
