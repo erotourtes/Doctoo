@@ -10,6 +10,8 @@ import { UserModule } from './user/user.module';
 import { FavoriteModule } from './favorite/favorite.module';
 import { DoctorModule } from './doctor/doctor.module';
 import { HospitalModule } from './hospital/hospital.module';
+import { FileModule } from './file/file.module';
+import { MinioService } from './minio/minio.service';
 
 @Module({
   imports: [
@@ -20,8 +22,9 @@ import { HospitalModule } from './hospital/hospital.module';
     PatientModule,
     AuthModule,
     HospitalModule,
+    FileModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, MinioService],
 })
 export class AppModule {}
