@@ -9,9 +9,20 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - postgres_db:/var/lib/postgresql/data
+      - postgres_dev_db:/var/lib/postgresql/data
     ports:
       - ${POSTGRES_PORT}:5432
 
+  adminer:
+    restart: always
+    image: adminer:latest
+    environment:
+      ADMINER_PLUGINS: 'dump-json'
+      ADMINER_DESIGN: 'rm-soft'
+    depends_on:
+      - postgres
+    ports:
+      - ${ADMINER_PORT}:8080
+
 volumes:
-  postgres_db:
+  postgres_dev_db:
