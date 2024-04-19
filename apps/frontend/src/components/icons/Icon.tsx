@@ -80,12 +80,11 @@ import LocationTargetIcon from '../../../assets/icons/location-target.svg?react'
 import ShareScreenIcon from '../../../assets/icons/share-screen.svg?react';
 
 // Logo
-import Logo from '../../../assets/logo.svg?react';
-
 export type IconType = React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
 
 const IconVariants = {
   logo: Logo,
+  // 'logo-white': LogoWhite, // TODO: Enable LogoWhite
   account: AccountIcon,
   logout: LogoutIcon,
   appointments: AppointmentsIcon,
