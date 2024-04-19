@@ -1,4 +1,4 @@
-import type { ChangeEvent, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { cn } from '../../../utils/cn';
 
 interface InputProps {
@@ -7,10 +7,9 @@ interface InputProps {
   placeholder: string;
   className?: string;
   children?: ReactNode;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Input: React.FC<InputProps> = ({ type, label, className, placeholder, children, onChange }) => {
+const Input: React.FC<InputProps> = ({ type, label, className, placeholder, children }) => {
   return (
     <div>
       <label htmlFor={label} className='text-md my-2 block h-6 text-grey-2'>

@@ -53,7 +53,9 @@ const DoctorCard: React.FC<DoctorCardProps> = ({
         </div>
 
         {isBookMode && (
-          <Button type={ButtonTypes.SECONDARY} className='w-28' children='Book' onClick={() => {}} disabled={false} />
+          <Button type={ButtonTypes.SECONDARY} className='w-28' onClick={() => {}} disabled={false}>
+            Book
+          </Button>
         )}
 
         {!isBookMode && (
@@ -64,23 +66,14 @@ const DoctorCard: React.FC<DoctorCardProps> = ({
 
             <div className='grid grid-cols-2 grid-rows-2 gap-2'>
               {buttons.map((button, i) => (
-                <Button
-                  key={i}
-                  type={ButtonTypes.SECONDARY}
-                  className='w-28'
-                  children={button}
-                  onClick={() => {}}
-                  disabled={false}
-                />
+                <Button key={i} type={ButtonTypes.SECONDARY} className='w-28' onClick={() => {}} disabled={false}>
+                  {button}
+                </Button>
               ))}
 
-              <Button
-                type={ButtonTypes.SECONDARY}
-                className='w-28'
-                children='More'
-                onClick={() => {}}
-                disabled={false}
-              />
+              <Button type={ButtonTypes.SECONDARY} className='w-28' onClick={() => {}} disabled={false}>
+                More
+              </Button>
             </div>
           </div>
         )}
