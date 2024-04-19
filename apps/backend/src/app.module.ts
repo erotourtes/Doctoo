@@ -9,8 +9,9 @@ import config from 'src/config/config';
 import { UserModule } from './user/user.module';
 import { FavoriteModule } from './favorite/favorite.module';
 import { DoctorModule } from './doctor/doctor.module';
+import { FileModule } from './file/file.module';
+import { MinioService } from './minio/minio.service';
 import { AppointmentModule } from './appointment/appointment.module';
-
 
 @Module({
   imports: [
@@ -20,9 +21,10 @@ import { AppointmentModule } from './appointment/appointment.module';
     DoctorModule,
     PatientModule,
     AuthModule,
+    FileModule,
     AppointmentModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, MinioService],
 })
 export class AppModule {}
