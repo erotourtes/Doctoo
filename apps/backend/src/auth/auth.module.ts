@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { AuthController } from './auth.controller';
-import { PassportModule } from '@nestjs/passport';
-import { AuthService } from './auth.service';
-import { LocalStrategy } from 'src/auth/strategies/local-strategy';
-import { GoogleStrategy } from 'src/auth/strategies/google-strategy';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
-import { UserModule } from 'src/user/user.module';
-import { PatientModule } from 'src/patient/patient.module';
+import { PassportModule } from '@nestjs/passport';
+import { PatientModule } from '../patient/patient.module';
+import { UserModule } from '../user/user.module';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
+import { GoogleStrategy } from './strategies/google';
+import { LocalStrategy } from './strategies/local';
 
 @Module({
   imports: [
@@ -15,9 +15,9 @@ import { PatientModule } from 'src/patient/patient.module';
     ConfigModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async (conf: ConfigService) => ({
-        secret: conf.getOrThrow('auth-config.jwtSecret'),
-        signOptions: { expiresIn: conf.getOrThrow('auth-config.jwtExpirationDays') },
+      useFactory: async (config: ConfigService) => ({
+        secret: config.getOrThrow('auth.JWT_SECRET'),
+        signOptions: { expiresIn: config.getOrThrow('auth.JWT_EXPIRATION_DAYS') },
       }),
       inject: [ConfigService],
     }),

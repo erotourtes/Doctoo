@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { CreateFavoriteDto } from './dto/create.dto';
 import { FavoriteService } from './favorite.service';
-import { CreateFavoriteDto } from './dto/create-favorite.dto';
 import {
   ApiTags,
   ApiOperation,
@@ -16,7 +16,7 @@ import {
 } from '@nestjs/swagger';
 import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../../utils/errorResponses';
 
-@ApiTags('Favorites')
+@ApiTags('Favorite')
 @Controller('favorite')
 export class FavoriteController {
   constructor(private readonly favoriteService: FavoriteService) {}
@@ -30,21 +30,20 @@ export class FavoriteController {
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
   @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
   @Post()
-  create(@Body() createFavoriteDto: CreateFavoriteDto) {
-    return this.favoriteService.create(createFavoriteDto);
+  createFavorite(@Body() body: CreateFavoriteDto) {
+    return this.favoriteService.createFavorite(body);
   }
 
   @ApiOperation({
-    summary: 'Get favorite doctors by patient ID',
-    description: 'This endpoint retrieves favorite doctors by patient ID.',
+    summary: 'Get favorite doctors',
+    description: 'This endpoint retrieves favorite doctors.',
   })
-  @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
-  @ApiOkResponse({ description: 'Favorite doctors by patient ID' })
+  @ApiOkResponse({ description: 'Favorite doctors' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
   @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
-  @Get('all-by-user/:id')
-  findAllByUserId(@Param('id') id: string) {
-    return this.favoriteService.findAllByPatientId(id);
+  @Get()
+  getFavorites() {
+    return this.favoriteService.getFavorites();
   }
 
   @ApiOperation({
@@ -57,8 +56,8 @@ export class FavoriteController {
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
   @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
   @Get('/:id')
-  findOneById(@Param('id') id: string) {
-    return this.favoriteService.findOneById(id);
+  getFovorite(@Param('id') id: string) {
+    return this.favoriteService.getFavorite(id);
   }
 
   @ApiOperation({

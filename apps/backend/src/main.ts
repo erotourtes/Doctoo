@@ -2,12 +2,13 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { AppModule } from './app.module';
+import { AppModule } from './app/app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+  // TODO: Use setGlobalPrefix.
   app.enableCors();
 
   const configService = app.get<ConfigService>(ConfigService);
@@ -23,4 +24,5 @@ async function bootstrap() {
 
   await app.listen(configService.get('BACKEND_PORT'));
 }
+
 bootstrap();

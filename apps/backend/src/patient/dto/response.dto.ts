@@ -6,7 +6,7 @@ export class ResponsePatientDto {
   readonly id: string;
 
   @ApiProperty({ description: 'The ID of the user associated with the patient' })
-  readonly user_id: string;
+  readonly userId: string;
 
   @ApiProperty({ description: 'The weight of the patient' })
   readonly weight: number;
@@ -18,17 +18,13 @@ export class ResponsePatientDto {
   readonly age: number;
 
   @ApiProperty({ description: 'The blood type of the patient', type: 'enum', enum: BloodType })
-  readonly blood_type: BloodType;
+  readonly bloodType: BloodType;
 
   @ApiProperty({ description: 'The gender of the patient', type: 'enum', enum: Gender })
   readonly gender: Gender;
 
-  @ApiProperty({ description: 'The declaration ID associated with the patient' })
-  readonly declaration_id: number;
-
-  
   @ApiProperty({ description: 'The identity card key of the patient' })
-  readonly identity_card_key: string;
+  readonly identityCardKey: string;
 
   @ApiProperty({ description: 'The country of residence of the patient' })
   readonly country: string;
@@ -46,5 +42,5 @@ export class ResponsePatientDto {
   readonly apartment?: string;
 
   @ApiProperty({ description: 'The zip code of the patient', required: false })
-  readonly zip_zode?: number;
+  readonly zipCode?: number;
 }

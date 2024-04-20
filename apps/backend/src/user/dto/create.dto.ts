@@ -5,11 +5,11 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CreateUserDto {
   @IsNotEmptyString()
   @ApiProperty({ description: 'The first name of the user', example: 'John' })
-  readonly first_name: string;
+  readonly firstName: string;
 
   @IsNotEmptyString()
   @ApiProperty({ description: 'The last name of the user', example: 'Doe' })
-  readonly last_name: string;
+  readonly lastName: string;
 
   @IsPhoneNumber()
   @ApiProperty({ description: 'The phone number of the user', example: '+380980000000' })
@@ -21,7 +21,7 @@ export class CreateUserDto {
 
   @IsBoolean()
   @ApiProperty({ description: 'Indicates whether the email is verified', default: false })
-  readonly email_verified: boolean;
+  readonly emailVerified: boolean;
 
   @IsOptional()
   @ApiProperty({ description: 'The password of the user', nullable: true, example: 'password123' })
@@ -29,9 +29,9 @@ export class CreateUserDto {
 
   @IsOptional()
   @ApiProperty({ description: 'The Google ID of the user', nullable: true, example: 'google123' })
-  google_id?: string;
+  googleId?: string;
 
   @IsNotEmptyString()
   @ApiProperty({ description: 'The avatar key of the user', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333'})
-  avatar_key: string;
+  avatarKey: string;
 }

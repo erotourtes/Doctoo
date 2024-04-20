@@ -48,8 +48,8 @@ export class PatientController {
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
   @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
   @Post()
-  async createPatient(@Body() Body: CreatePatientDto) {
-    return this.patientService.createPatient(Body);
+  async createPatient(@Body() body: CreatePatientDto) {
+    return this.patientService.createPatient(body);
   }
 
   @ApiOperation({
@@ -65,7 +65,7 @@ export class PatientController {
   @UseGuards(GetPatientGuard)
   @Patch(':id')
   async patchPatient(@Param('id') id: string, @Body() body: PatchPatientDto) {
-    return this.patientService.pathPatient(id, body);
+    return this.patientService.patchPatient(id, body);
   }
 
   @ApiOperation({

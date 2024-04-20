@@ -6,7 +6,7 @@ import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
 export class CreatePatientDto {
   @IsNotEmptyString()
   @ApiProperty({ description: 'The ID of the user associated with the patient' })
-  readonly user_id: string;
+  readonly userId: string;
 
   @IsNumber()
   @ApiProperty({ description: 'The weight of the patient' })
@@ -20,9 +20,12 @@ export class CreatePatientDto {
   @ApiProperty({ description: 'The age of the patient' })
   readonly age: number;
 
+  @IsString()
+  readonly identityCardKey: string;
+
   @IsEnum(BloodType)
   @ApiProperty({ description: 'The blood type of the patient', type: 'enum', enum: BloodType })
-  readonly blood_type: BloodType;
+  readonly bloodType: BloodType;
 
   @IsEnum(Gender)
   @ApiProperty({ description: 'The gender of the patient', type: 'enum', enum: Gender })
@@ -48,7 +51,7 @@ export class CreatePatientDto {
   @ApiProperty({ description: 'The apartment number of the patient', required: false })
   readonly apartment?: string;
 
-  @IsOptional()
+  @IsNumber()
   @ApiProperty({ description: 'The zip code of the patient', required: false })
-  readonly zip_code?: number;
+  readonly zipCode?: number;
 }

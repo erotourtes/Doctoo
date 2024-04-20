@@ -1,10 +1,15 @@
-import { Config } from 'tailwindcss';
+import type { Config } from 'tailwindcss';
 
 export default <Config>{
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   darkMode: 'media',
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
+        syncopate: ['Syncopate', 'Inter', 'sans-serif'],
+      },
       spacing: {
         128: '32rem',
       },
@@ -33,7 +38,7 @@ export default <Config>{
       'green-2': '#ACE9C5',
       'green-dark': '#35995F',
       'green-light': '#EFFAF4',
-      'green-border': '#6BC3CD'
+      'green-border': '#6BC3CD',
     },
   },
   variants: {

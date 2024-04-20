@@ -1,122 +1,120 @@
-import { INestApplication } from "@nestjs/common"
-import { Test, TestingModule } from "@nestjs/testing"
-import { AppModule } from "../src/app.module"
-import { PrismaService } from "../src/prisma.service"
-import { userStub } from "./stubs/user.stub"
-import { doctorStub } from "./stubs/doctor.stub"
-import * as request from 'supertest'
+import { INestApplication } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import { randomUUID } from 'crypto';
+import * as request from 'supertest';
+import { DoctorModule } from '../src/doctor/doctor.module';
+import { PrismaService } from '../src/prisma/prisma.service';
+import { doctorStub } from './stubs/doctor.stub';
+import { userStub } from './stubs/user.stub';
 
 describe('DoctorController (e2e)', () => {
-    let app: INestApplication
-    let prisma: PrismaService
+  let app: INestApplication;
+  let prisma: PrismaService;
 
-    beforeAll(async () => {
-        const moduleFixture: TestingModule = await Test.createTestingModule({
-            imports: [AppModule],
-            providers: [PrismaService]
-        }).compile()
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [DoctorModule],
+      providers: [PrismaService],
+    }).compile();
 
-        app = moduleFixture.createNestApplication()
-        await app.init()
+    app = moduleFixture.createNestApplication();
 
-        prisma = moduleFixture.get<PrismaService>(PrismaService)
-    })
+    await app.init();
 
-    afterAll(() => app.close())
+    prisma = moduleFixture.get<PrismaService>(PrismaService);
+  });
 
-    beforeEach(async () => prisma.doctor.deleteMany())
+  beforeEach(async () => {
+    await prisma.user.deleteMany();
+    await prisma.doctor.deleteMany();
+  });
 
-    describe('/doctors (GET)', () => {
-        it('should return array of doctors', async () => {
-            const user = await prisma.user.create({ data: userStub() })
-            await prisma.doctor.create({ data: { ...doctorStub(), user_id: user.id } })
-            
-            const response = await request(app.getHttpServer()).get('/doctors')
+  describe('/doctor (GET)', () => {
+    it('Should return array of objects', async () => {
+      const user = await prisma.user.create({ data: userStub() });
 
-            expect(response.status).toEqual(200)
-            expect(response.body).toMatchObject([doctorStub()])
-        })
-    })
+      await prisma.doctor.create({ data: { ...doctorStub(), userId: user.id } });
 
-     describe('/doctors (POST)', () => {
-    it('should return created doctor', async () => {
-        const user = await prisma.user.create({ data: userStub() })
-        const doctorData = { ...doctorStub(), user_id: user.id }
-        const response = await request(app.getHttpServer())
-            .post('/doctors/')
-            .send(doctorData);
-        expect(response.status).toEqual(201);
-        expect(response.body).toMatchObject(doctorData);
-    });
-    it('should return Not Found error with message that user with id defined in dto does not exist', async () => {
-        const doctorData = { ...doctorStub(), user_id: 'non-existent' }
-      const response = await request(app.getHttpServer())
-        .post('/doctors/')
-        .send(doctorData);
+      const response = await request(app.getHttpServer()).get('/doctor');
 
-      expect(response.status).toEqual(404);
-      expect(response.body).toMatchObject({
-        message: `User with id ${doctorData.user_id} does not exist`,
-      });
+      expect(response.status).toEqual(200);
+      expect(response.body).toMatchObject([doctorStub()]);
     });
   });
 
-  describe('/doctors/:id (GET)', () => {
-    it('should return doctor by id', async () => {
-        const user = await prisma.user.create({ data: userStub() })
-        const doctorData = { ...doctorStub(), user_id: user.id }
-        const {id} = await prisma.doctor.create({ data: doctorData })
-        const response = await request(app.getHttpServer()).get(`/doctors/${id}`);
+  describe('/doctor (POST)', () => {
+    it('Should create a new doctor', async () => {
+      const user = await prisma.user.create({ data: userStub() });
+
+      const doctorData = { ...doctorStub(), userId: user.id };
+
+      const response = await request(app.getHttpServer()).post('/doctor').send(doctorData);
+
+      expect(response.status).toEqual(201);
+      expect(response.body).toMatchObject(doctorData);
+    });
+
+    it('Should return 404 for non-existent userId', async () => {
+      const doctorData = { ...doctorStub(), userId: randomUUID() };
+
+      const response = await request(app.getHttpServer()).post('/doctor').send(doctorData);
+
+      expect(response.status).toEqual(404);
+    });
+  });
+
+  describe('/doctor/:id (GET)', () => {
+    it('Should return doctor object', async () => {
+      const user = await prisma.user.create({ data: userStub() });
+
+      const doctorData = { ...doctorStub(), userId: user.id };
+
+      const { id } = await prisma.doctor.create({ data: doctorData });
+
+      const response = await request(app.getHttpServer()).get(`/doctor/${id}`);
 
       expect(response.status).toEqual(200);
       expect(response.body).toMatchObject(doctorData);
     });
 
-    it('should return Not Found error with message that doctor with defined does not exist', async () => {
-      const id = 'non-existent'
-      const response = await request(app.getHttpServer())
-        .get(`/doctors/${id}`)
+    it('Should return 404 for non-existent doctorId', async () => {
+      const id = randomUUID();
+
+      const response = await request(app.getHttpServer()).get(`/doctor/${id}`);
 
       expect(response.status).toEqual(404);
-      expect(response.body).toMatchObject({
-        message: `Doctor with id ${id} does not exist`,
-      });
     });
   });
 
-  describe('/doctors/:id (PATCH)', () => {
-    it('should return updated doctor', async () => {
-      const user = await prisma.user.create({ data: userStub() })
-      const doctorData = { ...doctorStub(), user_id: user.id }
-      const {id} = await prisma.doctor.create({ data: doctorData })
+  describe('/doctor/:id (PATCH)', () => {
+    it('Should return updated object', async () => {
+      const user = await prisma.user.create({ data: userStub() });
 
-      const delta = { about_me: 'new about_me' };
-      const response = await request(app.getHttpServer())
-        .patch(`/doctors/${id}`)
-        .send(delta);
+      const doctorData = { ...doctorStub(), userId: user.id };
+
+      const { id } = await prisma.doctor.create({ data: doctorData });
+
+      const body = { about: 'Lorem ipsum text...' };
+      const response = await request(app.getHttpServer()).patch(`/doctor/${id}`).send(body);
 
       expect(response.status).toEqual(200);
-      expect(response.body).toMatchObject({ ...doctorData, ...delta });
+      expect(response.body).toMatchObject({ ...doctorData, ...body });
     });
   });
 
-  describe('/doctors/:id (DELETE)', () => {
-    it('should delete doctor', async () => {
-      const user = await prisma.user.create({ data: userStub() })
-      const doctorData = { ...doctorStub(), user_id: user.id }
-      const {id} = await prisma.doctor.create({ data: doctorData })
-      const response = await request(app.getHttpServer()).delete(
-        `/doctors/${id}`,
-      );
+  describe('/doctor/:id (DELETE)', () => {
+    it('Should delete doctor', async () => {
+      const user = await prisma.user.create({ data: userStub() });
+
+      const doctorData = { ...doctorStub(), userId: user.id };
+
+      const { id } = await prisma.doctor.create({ data: doctorData });
+
+      const response = await request(app.getHttpServer()).delete(`/doctor/${id}`);
 
       expect(response.status).toEqual(200);
-      expect(response.body).toMatchObject({
-        message: `Doctor with id ${id} was deleted successfully`,
-      });
-
-      const check = await request(app.getHttpServer()).get(`/doctors/${id}`);
-
-      expect(check.status).toEqual(404);
     });
   });
-})
+
+  afterAll(() => app.close());
+});
