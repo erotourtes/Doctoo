@@ -84,6 +84,23 @@ export class AuthService {
     return plainToInstance(ResponseWithoutRelationsUserDto, user);
   }
 
+  /**
+   * Doesn't check if token is valid
+   * @param token Jwt Token
+   * @returns bool if token is close to expire
+   */
+  jwtCloseToExpire(token: string): boolean {
+    const payload = this.jwtService.decode<JwtPayload & { exp: number }>(token);
+    if (!payload || !payload.sub || !payload.exp) return false;
+
+    // payload.exp => seconds
+    const intervalLeft = payload.exp - Date.now() / 1000;
+    if (intervalLeft < 0) return false;
+
+    const isCloseToExpire = intervalLeft < this.authObject.JWT_EXPIRATION_TRESHOLD_SECONDS;
+    return isCloseToExpire;
+  }
+
   private async signUpUserWithPassword(body: AuthSignUpDto): Promise<ResponsePatientDto> {
     const patient = await this.createPatient(body);
 
