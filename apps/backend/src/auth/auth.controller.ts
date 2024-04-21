@@ -8,6 +8,7 @@ import { AuthLocalLoginDto } from './dto/localLogin.dto';
 import { ResponseAuthGoogleSignInDto } from './dto/responseGoogleSignIn.dto';
 import { AuthSignUpDto } from './dto/signUp.dto';
 import { GoogleAuthGuard } from './strategies/google';
+import JWTGuard from './strategies/jwt';
 
 @Controller('auth')
 export class AuthController {
@@ -20,8 +21,8 @@ export class AuthController {
   ): Promise<ResponseUserDto> {
     const user = await this.authService.validateUser(body.email, body.password);
     if (!user) throw new BadRequestException('Invalid email or password');
-    const token = await this.authService.signJwtToken(user.id);
 
+    const token = await this.authService.signJwtToken(user.id);
     this.authService.attachJwtTokenToCookie(res, token);
 
     return plainToInstance(ResponseUserDto, user);
@@ -36,8 +37,8 @@ export class AuthController {
   @Get('login/google')
   googleLogin() {}
 
-  @Get('login/google/redirect')
   @UseGuards(GoogleAuthGuard)
+  @Get('login/google/redirect')
   async googleLoginRedirect(
     @UserDec() data: ResponseAuthGoogleSignInDto,
     @Res({ passthrough: true }) res: Response,
@@ -49,5 +50,11 @@ export class AuthController {
     }
 
     return plainToInstance(ResponseAuthGoogleSignInDto, data);
+  }
+
+  @UseGuards(JWTGuard)
+  @Get('logout')
+  async logout(@Res({ passthrough: true }) res: Response) {
+    this.authService.attachJwtTokenToCookie(res, '');
   }
 }
