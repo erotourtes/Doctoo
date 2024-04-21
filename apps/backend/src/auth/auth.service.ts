@@ -52,7 +52,7 @@ export class AuthService {
   async signJwtToken(userId: string): Promise<string> {
     const payload: JwtPayload = { sub: userId };
 
-    const accessToken = await this.jwtService.signAsync(payload); // TODO: Should we also set expiresIn?
+    const accessToken = await this.jwtService.signAsync(payload);
 
     return accessToken;
   }
@@ -63,12 +63,6 @@ export class AuthService {
     const accessToken = await this.jwtService.signAsync(payload, { expiresIn: '1d' });
 
     return accessToken;
-  }
-
-  private async isValidSignedGoogleId(signedGoogleId: string): Promise<boolean> {
-    const payload = await this.jwtService.verifyAsync(signedGoogleId).catch(() => null);
-
-    return payload !== null;
   }
 
   // TODO: extract to a separate service.
@@ -108,9 +102,10 @@ export class AuthService {
   }
 
   private async signUpUserWithGoogleId(body: AuthSignUpDto): Promise<ResponsePatientDto> {
-    const isValidGoogleId = await this.isValidSignedGoogleId(body.googleId);
+    const { sub } = await this.jwtService.verifyAsync<JwtPayload>(body.googleId);
 
-    if (!isValidGoogleId) throw new BadRequestException('Invalid googleId');
+    if (!sub) throw new BadRequestException('Invalid googleId');
+    body.googleId = sub;
 
     const patient = await this.createPatient(body);
 
