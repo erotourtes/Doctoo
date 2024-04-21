@@ -18,7 +18,7 @@ import { Routes } from 'react-router-dom';
 
 const PageContainer = () => {
   return (
-    <main className='main-wrapper flex w-full flex-col gap-6 overflow-auto bg-background px-8 pt-8'>
+    <main className='main-wrapper flex w-full flex-col gap-6 overflow-auto bg-background p-8'>
       <Routes>{/* <Route path="/path-to-page" Component={Page} /> */}</Routes>
     </main>
   );
