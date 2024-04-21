@@ -39,6 +39,7 @@ export class CreatePatientDto {
   @IsOptional()
   readonly apartment?: string;
 
+  @IsOptional()
   @IsNumber()
   readonly zipCode?: number;
 }
