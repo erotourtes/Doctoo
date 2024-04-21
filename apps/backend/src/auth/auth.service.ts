@@ -11,7 +11,7 @@ import { PatientService } from '../patient/patient.service';
 import { ResponseWithoutRelationsUserDto } from '../user/dto/responseWithoutRelations';
 import { UserService } from '../user/user.service';
 import { AuthSignUpDto } from './dto/signUp.dto';
-import { JwtPayload } from './jwt.pasport';
+import { JwtPayload } from './strategies/jwt';
 
 @Injectable()
 export class AuthService {
