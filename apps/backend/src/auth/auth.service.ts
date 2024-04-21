@@ -114,7 +114,16 @@ export class AuthService {
   private async createPatient(body: AuthSignUpDto): Promise<ResponsePatientDto> {
     const password = body.password && (await this.hashPassword(body.password)); // TODO: hashPassword?
 
-    const user = await this.userService.createUser({ ...body, password });
+    const user = await this.userService.createUser({
+      email: body.email,
+      firstName: body.firstName,
+      lastName: body.lastName,
+      avatarKey: '', // TODO: use file service.
+      phone: '',
+      emailVerified: false, // TODO: google email verified
+      password,
+      googleId: body.googleId,
+    });
 
     // TODO: Can we reduce this code?
     const patient = await this.patientService.createPatient({
@@ -124,13 +133,10 @@ export class AuthService {
       weight: body.weight,
       height: body.height,
       gender: body.gender,
-      identityCardKey: '1',
+      identityCardKey: '',
       city: '',
       country: '',
       street: '',
-      apartment: '',
-      state: '',
-      zipCode: 1,
     });
 
     return plainToInstance(ResponsePatientDto, patient);
