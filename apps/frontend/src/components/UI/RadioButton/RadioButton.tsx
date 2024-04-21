@@ -1,14 +1,15 @@
 import { cn } from '../../../utils/cn';
 
-interface RadioButtonProps {
+export interface RadioButtonProps {
   label: string;
-  checked: boolean;
-  disabled?: boolean;
-  id: string;
+  name: string;
+  selected: boolean;
   onClick: () => void;
+  disabled?: boolean;
+  value?: string;
 }
 
-export const RadioButton = ({ label, checked, onClick, disabled, id }: RadioButtonProps) => {
+export const RadioButton = ({ label, onClick, disabled, name, value, selected }: RadioButtonProps) => {
   return (
     <label
       className={cn(disabled ? 'cursor-not-allowed text-grey-4' : 'cursor-pointer', 'flex cursor-pointer items-center')}
@@ -17,7 +18,7 @@ export const RadioButton = ({ label, checked, onClick, disabled, id }: RadioButt
         className={cn(
           disabled
             ? 'cursor-not-allowed border border-grey-4'
-            : checked
+            : selected
               ? 'border-2 border-main'
               : 'border border-main hover:border-2 hover:border-main focus:border-2 focus:border-main',
           'relative h-6 w-6 cursor-pointer rounded-full',
@@ -25,7 +26,7 @@ export const RadioButton = ({ label, checked, onClick, disabled, id }: RadioButt
       >
         <div
           className={cn(
-            disabled ? 'cursor-not-allowed bg-grey-4 ' : checked ? 'bg-main' : 'bg-white',
+            disabled ? 'cursor-not-allowed bg-grey-4 ' : selected ? 'bg-main' : 'bg-white',
             'cursor-pointer rounded-full',
           )}
           style={{
@@ -39,11 +40,13 @@ export const RadioButton = ({ label, checked, onClick, disabled, id }: RadioButt
         ></div>
         <input
           type='radio'
-          id={id}
+          id={`radiobutton-${label}`}
+          name={name}
+          value={value || label}
           className={cn(disabled ? 'cursor-not-allowed' : '', 'absolute cursor-pointer opacity-0')}
-          checked={checked}
-          onChange={onClick}
+          checked={selected}
           disabled={disabled}
+          onChange={onClick}
         />
       </div>
       <span className={cn(`text-${disabled ? 'grey-4' : 'text'}`, 'ml-2')}>{label}</span>
