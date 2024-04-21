@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { Response } from 'express';
 import { ResponseUserDto } from '../user/dto/response.dto';
@@ -19,6 +19,7 @@ export class AuthController {
     @Body() body: AuthLocalLoginDto,
   ): Promise<ResponseUserDto> {
     const user = await this.authService.validateUser(body.email, body.password);
+    if (!user) throw new BadRequestException('Invalid email or password');
     const token = await this.authService.signJwtToken(user.id);
 
     this.authService.attachJwtTokenToCookie(res, token);

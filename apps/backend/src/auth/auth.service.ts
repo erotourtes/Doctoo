@@ -33,14 +33,16 @@ export class AuthService {
   }
 
   async validateUser(email: string, password: string): Promise<ResponseWithoutRelationsUserDto | null> {
-    const user = await this.userService.getUserByEmail(email);
+    const user = await this.userService.getUserPasswordByEmail(email);
+    if (!user) return null;
+
     const isValidPassword = await this.verifyPassword(password, user.password);
 
     return user && isValidPassword ? plainToInstance(ResponseWithoutRelationsUserDto, user) : null;
   }
 
   async validateGoogleUser(email: string, googleId: string): Promise<ResponseWithoutRelationsUserDto | null> {
-    const user = await this.userService.getUserByEmail(email);
+    const user = await this.userService.getUserPasswordByEmail(email);
 
     if (user && user.googleId === googleId) return plainToInstance(ResponseWithoutRelationsUserDto, user);
 
@@ -112,17 +114,17 @@ export class AuthService {
   }
 
   private async createPatient(body: AuthSignUpDto): Promise<ResponsePatientDto> {
-    const password = body.password && (await this.hashPassword(body.password)); // TODO: hashPassword?
+    const password = body.password && (await this.hashPassword(body.password));
 
     const user = await this.userService.createUser({
       email: body.email,
       firstName: body.firstName,
       lastName: body.lastName,
-      avatarKey: '', // TODO: use file service.
-      phone: '',
-      emailVerified: false, // TODO: google email verified
+      phone: body.phone,
       password,
       googleId: body.googleId,
+      emailVerified: false, // TODO: google email verified
+      avatarKey: '', // TODO: use file service.
     });
 
     // TODO: Can we reduce this code?
@@ -133,10 +135,13 @@ export class AuthService {
       weight: body.weight,
       height: body.height,
       gender: body.gender,
+      city: body.city,
+      country: body.country,
+      street: body.street,
+      apartment: body.apartment,
+      state: body.state,
+      zipCode: body.zipCode,
       identityCardKey: '',
-      city: '',
-      country: '',
-      street: '',
     });
 
     return plainToInstance(ResponsePatientDto, patient);
