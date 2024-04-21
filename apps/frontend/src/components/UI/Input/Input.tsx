@@ -35,11 +35,6 @@ const Input = ({
 
   return (
     <div className={cn(className || '', 'grid')}>
-      className=
-      {cn(
-        className,
-        'h-10 cursor-pointer rounded-lg border-green-border px-4 py-2 text-base leading-6 text-text focus:border focus:outline-none',
-      )}
       {label && (
         <label htmlFor={id} className={cn(classNameLabel, 'text-md my-2 block text-grey-1')}>
           {label}
