@@ -11,9 +11,7 @@ import { PatientService } from '../patient/patient.service';
 import { ResponseWithoutRelationsUserDto } from '../user/dto/responseWithoutRelations';
 import { UserService } from '../user/user.service';
 import { AuthSignUpDto } from './dto/signUp.dto';
-
-// TODO: Maybe we need to create types folder for this?
-type JwtPayload = { sub: string };
+import { JwtPayload } from './jwt.pasport';
 
 @Injectable()
 export class AuthService {
@@ -71,20 +69,15 @@ export class AuthService {
     return payload !== null;
   }
 
+  // TODO: extract to a separate service.
   attachJwtTokenToCookie(res: Response, token: string) {
     const secure = this.configObject.NODE_ENV === 'production';
 
     res.cookie(AuthService.JWT_COOKIE_NAME, token, { httpOnly: true, secure });
   }
 
-  async getUserFromJwtToken(token?: string): Promise<ResponseWithoutRelationsUserDto | null> {
-    if (!token) return null;
-
-    const { sub } = await this.jwtService.verifyAsync<JwtPayload>(token).catch(() => ({ sub: null }));
-
-    if (!sub) return null;
-
-    const user = await this.userService.getUser(sub);
+  async getUser(userId: string): Promise<ResponseWithoutRelationsUserDto | null> {
+    const user = await this.userService.getUser(userId);
 
     return plainToInstance(ResponseWithoutRelationsUserDto, user);
   }
