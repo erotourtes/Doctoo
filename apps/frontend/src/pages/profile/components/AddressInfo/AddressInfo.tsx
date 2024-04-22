@@ -1,7 +1,7 @@
 import { useAppSelector } from '@/app/hooks';
 import AddressInfoPopup from './AddressInfoPopup';
 import { Button } from '@/components/UI/Button/Button';
-import Icon from '@/components/icons/Icon';
+import Icon from '@UI/Icon/Icon';
 import { useState } from 'react';
 
 const AddressInfo = () => {

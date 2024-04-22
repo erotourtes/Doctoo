@@ -1,5 +1,5 @@
 import { useFormContext } from 'react-hook-form';
-import Icon from '@components/icons/Icon';
+import Icon from '@UI/Icon/Icon';
 import { cn } from '../../../utils/cn';
 
 interface InputProps {

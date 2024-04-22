@@ -1,6 +1,6 @@
 import { useAppSelector } from '@/app/hooks';
 import { Button } from '@/components/UI/Button/Button';
-import Icon from '@/components/icons/Icon';
+import Icon from '@UI/Icon/Icon';
 import { capitalizeString } from '../../../../utils/capitalizeString';
 import PersonalInfoPopup from './PersonalInfoPopup';
 import { useState } from 'react';

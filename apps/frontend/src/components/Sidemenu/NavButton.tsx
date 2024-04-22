@@ -1,7 +1,7 @@
 import type { Path } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import Icon from "@UI/Icon/Icon";
-import { IconVariant } from "@UI/Icon/types";
+import type { IconVariant } from "@UI/Icon/types";
 
 type NavButtonProps = {
   to: string | Partial<Path>;

@@ -1,5 +1,5 @@
-import Icon from '@/components/icons/Icon';
-import type { IconVariant } from '@/components/icons/types';
+import Icon from '@UI/Icon/Icon';
+import type { IconVariant } from '@UI/Icon/types';
 import { useState } from 'react';
 
 type StatsCardProps = {

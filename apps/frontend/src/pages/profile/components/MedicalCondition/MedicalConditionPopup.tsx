@@ -1,6 +1,6 @@
 import { Button } from '@/components/UI/Button/Button';
 import Input from '@/components/UI/Input/Input';
-import Icon from '@/components/icons/Icon';
+import Icon from '@UI/Icon/Icon';
 import Popup from 'reactjs-popup';
 
 type MedicalConditionPopupProps = {

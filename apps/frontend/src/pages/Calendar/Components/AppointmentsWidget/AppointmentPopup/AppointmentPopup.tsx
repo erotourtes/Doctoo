@@ -1,4 +1,4 @@
-import Icon from '@/components/icons/Icon';
+import Icon from '@UI/Icon/Icon';
 import { useEffect } from 'react';
 import Popup from 'reactjs-popup';
 import { AppointmentsListItemProps } from '../AppointmentsListItem';

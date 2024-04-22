@@ -5,7 +5,7 @@ import AppointmentsWidget from './Components/AppointmentsWidget/AppointmentsWidg
 import { AppointmentsListItemProps } from './Components/AppointmentsWidget/AppointmentsListItem';
 import { Button } from '@/components/UI/Button/Button';
 import { ButtonTypes } from '@/components/UI/Button/ButtonTypes';
-import Icon from '@/components/icons/Icon';
+import Icon from '@UI/Icon/Icon';
 import dayjs from 'dayjs';
 
 const appointments: AppointmentsListItemProps[] = [

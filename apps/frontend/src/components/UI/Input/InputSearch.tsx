@@ -1,5 +1,5 @@
 import React, { ReactNode, ChangeEvent, useState } from 'react';
-import Icon from '../../icons/Icon';
+import Icon from '@UI/Icon/Icon';
 
 interface InputSearchProps {
   variant: 'white' | 'grey';

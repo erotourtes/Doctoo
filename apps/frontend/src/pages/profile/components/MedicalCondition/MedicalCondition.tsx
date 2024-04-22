@@ -1,7 +1,7 @@
 import { useAppSelector } from '@/app/hooks';
 import MedicalConditionPopup from './MedicalConditionPopup';
 import { useState } from 'react';
-import Icon from '@/components/icons/Icon';
+import Icon from '@UI/Icon/Icon';
 
 const MedicalCondition = () => {
   const patient = useAppSelector(state => state.patient.data);

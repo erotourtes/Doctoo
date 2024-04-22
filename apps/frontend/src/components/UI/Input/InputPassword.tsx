@@ -1,4 +1,4 @@
-import Icon from '@/components/icons/Icon';
+import Icon from '@UI/Icon/Icon';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
