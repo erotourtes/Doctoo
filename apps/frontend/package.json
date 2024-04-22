@@ -17,7 +17,9 @@
     "lint": "eslint . --fix --ignore-path .eslintignore"
   },
   "dependencies": {
+    "@hookform/resolvers": "3.3.4",
     "@reduxjs/toolkit": "2.2.3",
+    "axios": "1.6.8",
     "clsx": "2.1.0",
     "dayjs": "1.11.10",
     "joi": "17.12.3",
@@ -25,8 +27,6 @@
     "react-dom": "18.2.0",
     "react-hook-form": "7.51.3",
     "react-redux": "9.1.1",
-    "@hookform/resolvers": "3.3.4",
-    "axios": "1.6.8",
     "react-router": "6.22.3",
     "react-router-dom": "6.22.3",
     "reactjs-popup": "2.0.6",
@@ -54,6 +54,7 @@
     "@typescript-eslint/parser": "6.0.0",
     "@vitejs/plugin-react": "4.2.1",
     "autoprefixer": "10.4.19",
+    "chromatic": "11.3.0",
     "eslint": "8.42.0",
     "eslint-config-prettier": "9.0.0",
     "eslint-config-react-app": "7.0.1",

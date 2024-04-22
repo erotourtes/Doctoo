@@ -1,8 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { setCurrentAppointments, planAppointment, cancelAppointment, completeAppointment } from './AppointmentSlice';
 import { instance } from '@/api/axios.api';
-import { AxiosResponse } from 'axios';
-import AppointmentModel from './AppointmentModel';
+import type { AxiosResponse } from 'axios';
+import type AppointmentModel from './AppointmentModel';
 
 export const getCurrentAppointments = createAsyncThunk('appointment', async (_, { dispatch }) => {
   try {

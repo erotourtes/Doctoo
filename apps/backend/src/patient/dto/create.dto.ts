@@ -1,6 +1,6 @@
 import { BloodType, Gender } from '@prisma/client';
 import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger'
 import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
 
 export class CreatePatientDto {
