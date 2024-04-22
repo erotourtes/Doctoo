@@ -5,7 +5,7 @@ import { CreateHospitalDto } from '../src/hospital/dto/create.dto';
 import { ResponseHospitalDto } from '../src/hospital/dto/response.dto';
 import { HospitalModule } from '../src/hospital/hospital.module';
 import { PrismaService } from '../src/prisma/prisma.service';
-import { hospitalStub } from './stubs/hospital.stub';
+import { hospitalStub } from '../src/mocks/stubs/hospital.stub';
 
 // TODO: Rewrite this tests.
 describe('HospitalController (e2e)', () => {

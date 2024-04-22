@@ -12,11 +12,14 @@ import { MinioService } from '../minio/minio.service';
 import { PatientModule } from '../patient/patient.module';
 import { UserModule } from '../user/user.module';
 import { SpecializationModule } from '../specialization/specialization.module';
+import mail from '../config/mail';
+import { MailModule } from '../mail/mail.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, load: [auth, config] }),
+    ConfigModule.forRoot({ isGlobal: true, load: [auth, config, mail] }),
     AuthModule,
+    MailModule,
     UserModule,
     FavoriteModule,
     DoctorModule,

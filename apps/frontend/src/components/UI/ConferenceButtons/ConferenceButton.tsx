@@ -1,9 +1,10 @@
-import Icon from "@UI/Icon/Icon";
+import Icon from '@UI/Icon/Icon';
 import type React from 'react';
 import { useState } from 'react';
 import { useOnClickOutside } from './hooks/useOnClickOutside';
 
 export interface Option<T> {
+  id: string;
   label: string;
   value: T;
 }
@@ -54,6 +55,7 @@ export const ConferenceButtons = <T,>({ options, children, onClick, classNames =
           <div className='px-1 py-1' role='menu' aria-orientation='vertical' aria-labelledby='options-menu'>
             {options.map((o: Option<T>) => (
               <button
+                key={o.id}
                 className='text-gray-700 block flex w-full rounded-[12px] px-4  py-2 text-sm text-xs hover:bg-[#202323]'
                 role='menuitem'
                 onClick={() => handleClick(o.value)}

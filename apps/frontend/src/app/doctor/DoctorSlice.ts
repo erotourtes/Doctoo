@@ -1,17 +1,10 @@
 import type { RootState } from '@/app/store';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '../createAppSlice';
-
-interface Doctor {
-  photo: string;
-  name: string;
-  specialization: string;
-  reviews: number;
-  hospital: string;
-}
+import type { IDoctor } from '@/dataTypes/Doctor';
 
 interface DoctorData {
-  data: Doctor;
+  data: IDoctor;
 }
 
 const initialState: DoctorData = {
@@ -28,7 +21,7 @@ export const doctorSlice = createAppSlice({
   name: 'doctor',
   initialState,
   reducers: {
-    setDoctorData: (state, action: PayloadAction<Doctor>) => {
+    setDoctorData: (state, action: PayloadAction<IDoctor>) => {
       state.data = action.payload;
     },
   },
