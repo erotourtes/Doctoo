@@ -51,6 +51,7 @@ export class CreatePatientDto {
   @ApiProperty({ description: 'The apartment number of the patient', required: false })
   readonly apartment?: string;
 
+  @IsOptional()
   @IsNumber()
   @ApiProperty({ description: 'The zip code of the patient', required: false })
   readonly zipCode?: number;
