@@ -6,7 +6,6 @@ import { PatientService } from './patient.service';
 import {
   ApiTags,
   ApiOperation,
-  ApiResponse,
   ApiOkResponse,
   ApiBadRequestResponse,
   ApiInternalServerErrorResponse,
