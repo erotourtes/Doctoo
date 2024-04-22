@@ -1,4 +1,4 @@
-import Icon from '@/components/icons/Icon';
+import Icon from "@UI/Icon/Icon";
 import type React from 'react';
 import { useState } from 'react';
 import { useOnClickOutside } from './hooks/useOnClickOutside';

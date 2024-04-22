@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import Icon from '../../icons/Icon';
+import Icon from '@UI/Icon/Icon';
 
 type PaymentMethodCardProps = {
   card: {

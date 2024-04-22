@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { ConferenceButtons } from './ConferenceButton';
 import '@/index.css';
 import { fn } from '@storybook/test';
-import Icon from '@/components/icons/Icon';
+import Icon from '@UI/Icon/Icon';
 
 const meta: Meta<typeof ConferenceButtons<string>> = {
   title: 'Components/UI/ConferenceButtons',
