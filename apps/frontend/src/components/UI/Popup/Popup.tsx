@@ -1,15 +1,26 @@
-import Icon from '@/components/icons/Icon';
+import Icon from '../Icon/Icon';
 import { useEffect } from 'react';
 import Popup from 'reactjs-popup';
 
 type AppointmentPopupProps = {
   popupIsOpen: boolean;
   closePopup: () => void;
-  bodyClassName: string;
-  bodyChildren: React.ReactNode;
+  backdropClassName?: string;
+  modalFullClassName?: string;
+  modalBodyClassName: string;
+  modalCloseClassName?: string;
+  children: React.ReactNode;
 };
 
-export default function PopupDoctoo({ popupIsOpen, closePopup, bodyClassName, bodyChildren }: AppointmentPopupProps) {
+export default function PopupDoctoo({
+  popupIsOpen,
+  closePopup,
+  modalBodyClassName,
+  children,
+  backdropClassName,
+  modalFullClassName,
+  modalCloseClassName,
+}: AppointmentPopupProps) {
   useEffect(() => {
     if (popupIsOpen) {
       document.body.classList.add('overflow-hidden');
@@ -20,16 +31,18 @@ export default function PopupDoctoo({ popupIsOpen, closePopup, bodyClassName, bo
 
   return (
     <Popup open={popupIsOpen} onClose={closePopup}>
-      <div className='flex h-screen w-screen bg-black opacity-20' onClick={closePopup}></div>
+      <div className={`flex h-screen w-screen bg-black opacity-20 ${backdropClassName}`} onClick={closePopup}></div>
 
-      <article className='absolute left-1/4 top-1/4 flex h-2/4 w-3/4 max-w-[700px] flex-col justify-between rounded-xl bg-white p-12'>
+      <article
+        className={`min-h-2/4 absolute left-1/2 top-1/2 flex w-3/4 max-w-[700px] -translate-x-1/2 -translate-y-1/2 transform flex-col rounded-xl bg-white p-12 ${modalFullClassName}`}
+      >
         {/* Close icon */}
-        <div className='-m-8 self-end'>
+        <div className={`-m-8 mb-2 self-end ${modalCloseClassName}`}>
           <Icon variant='close' onClick={closePopup} className='cursor-pointer  text-grey-1' />
         </div>
 
         {/* Body */}
-        <div className={bodyClassName}>{bodyChildren}</div>
+        <div className={modalBodyClassName}>{children}</div>
       </article>
     </Popup>
   );
