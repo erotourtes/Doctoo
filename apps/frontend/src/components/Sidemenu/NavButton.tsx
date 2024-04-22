@@ -1,7 +1,7 @@
 import type { Path } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import Icon from '@UI/Icon/Icon';
-import type { IconVariant } from '@UI/Icon/types';
+import Icon from "@UI/Icon/Icon";
+import type { IconVariant } from "@UI/Icon/types";
 
 type NavButtonProps = {
   to: string | Partial<Path>;
@@ -21,7 +21,7 @@ const NavButton: React.FunctionComponent<NavButtonProps> = ({
   return (
     <Link
       to={to}
-      className={`${variant !== 'small' ? 'flex w-full rounded-xl p-4' : 'inline-flex rounded-lg p-3'} group relative items-center justify-start gap-2 ${!selected ? 'text-white' : 'bg-white'} no-underline transition-all hover:bg-main-dark active:bg-white active:text-white`}
+      className={`${variant !== 'small' ? 'flex w-full rounded-xl p-4' : 'inline-flex rounded-lg p-3'} group relative items-center justify-start gap-2 ${!selected ? 'text-white' : 'bg-white'} transition-all hover:bg-main-dark active:bg-white active:text-white no-underline`}
     >
       <Icon
         variant={iconVariant}

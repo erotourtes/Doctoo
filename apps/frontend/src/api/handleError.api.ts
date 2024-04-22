@@ -1,5 +1,4 @@
-import type { AxiosError } from 'axios';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 export default function handleError(error: Error | AxiosError) {
   if (axios.isAxiosError(error)) {

@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
-import type { AppointmentsListItemProps } from './AppointmentsListItem';
-import AppointmentsListItem from './AppointmentsListItem';
+import AppointmentsListItem, { AppointmentsListItemProps } from './AppointmentsListItem';
 import AppointmentPopup from './AppointmentPopup/AppointmentPopup';
 import { useEffect, useState } from 'react';
 
@@ -30,7 +29,7 @@ export default function AppointmentsWidget({ appointmentsForDay, selectedDate }:
       <article className='flex h-fit min-h-[308px] w-[300px] min-w-[300px] flex-col gap-y-5 rounded-xl bg-white'>
         <h3 className='px-6 pt-6 text-lg font-normal text-black'>
           {dayjs(selectedDate).isSame(dayjs(), 'date') ? (
-            <span>{"Today's appointments"}</span>
+            <span>Today's appointments</span>
           ) : (
             <time>Appointments on {dayjs(selectedDate).format('MMM, DD')}</time>
           )}

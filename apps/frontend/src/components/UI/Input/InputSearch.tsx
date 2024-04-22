@@ -1,5 +1,4 @@
-import type { ChangeEvent } from 'react';
-import type React from 'react';
+import React, { ReactNode, ChangeEvent, useState } from 'react';
 import Icon from '@UI/Icon/Icon';
 
 interface InputSearchProps {

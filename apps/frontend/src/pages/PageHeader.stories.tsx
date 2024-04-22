@@ -30,7 +30,7 @@ export const Default: Story = {
   },
   render: args => (
     <PageHeader {...args}>
-      <Button type='primary' onClick={() => {}}>
+      <Button type="primary" onClick={() => {}}>
         Test
       </Button>
       <Button type='secondary' onClick={() => {}}>

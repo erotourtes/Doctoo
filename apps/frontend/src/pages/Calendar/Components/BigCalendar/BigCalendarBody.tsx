@@ -1,7 +1,6 @@
-import type { Dayjs } from 'dayjs';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { getMonthDays } from '@/utils/getMonthDays';
-import type { AppointmentsListItemProps } from '../AppointmentsWidget/AppointmentsListItem';
+import { AppointmentsListItemProps } from '../AppointmentsWidget/AppointmentsListItem';
 
 const weeks = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 

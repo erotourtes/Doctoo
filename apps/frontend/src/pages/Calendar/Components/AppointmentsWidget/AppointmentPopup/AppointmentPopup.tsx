@@ -1,7 +1,7 @@
 import Icon from '@UI/Icon/Icon';
 import { useEffect } from 'react';
 import Popup from 'reactjs-popup';
-import type { AppointmentsListItemProps } from '../AppointmentsListItem';
+import { AppointmentsListItemProps } from '../AppointmentsListItem';
 import AppointmentPopupButtons from './AppointmentPopupBtns';
 import AppointmentPopupHeader from './AppointmentPopupHeader';
 import dayjs from 'dayjs';

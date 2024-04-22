@@ -1,4 +1,4 @@
-import type { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 
 type BigCalendarHeaderProps = {
   currentMonth: Dayjs | null;

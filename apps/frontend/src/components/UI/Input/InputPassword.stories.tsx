@@ -10,7 +10,7 @@ const StorybookFormProvider = ({ children }: { children: ReactNode }) => {
   });
   const { handleSubmit } = methods;
 
-  const onSubmit: SubmitHandler<FieldValues> = () => {};
+  const onSubmit: SubmitHandler<FieldValues> = data => {};
 
   return (
     <FormProvider {...methods}>

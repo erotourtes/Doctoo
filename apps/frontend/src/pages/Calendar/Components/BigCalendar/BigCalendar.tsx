@@ -1,11 +1,10 @@
-import type { Dayjs } from 'dayjs';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import weekdayPlugin from 'dayjs/plugin/weekday';
 
 import BigCalendarBody from './BigCalendarBody';
 import BigCalendarHeader from './BigCalendarHeader';
 import { useState } from 'react';
-import type { AppointmentsListItemProps } from '../AppointmentsWidget/AppointmentsListItem';
+import { AppointmentsListItemProps } from '../AppointmentsWidget/AppointmentsListItem';
 
 type BigCalendar = {
   chooseDate: React.Dispatch<React.SetStateAction<Date>>;

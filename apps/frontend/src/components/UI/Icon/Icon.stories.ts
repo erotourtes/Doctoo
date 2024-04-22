@@ -12,7 +12,7 @@ const meta = {
   },
   tags: ['autodocs'],
   args: {
-    onClick: fn(),
+    onClick: fn()
   },
 } satisfies Meta<typeof Icon>;
 
@@ -23,6 +23,6 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     variant: 'account',
-    className: 'text-grey-1 size-10',
+    className: 'text-grey-1 size-10'
   },
 };

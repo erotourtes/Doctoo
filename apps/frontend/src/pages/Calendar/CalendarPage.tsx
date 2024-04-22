@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PageHeader from '../PageHeader';
 import BigCalendar from './Components/BigCalendar/BigCalendar';
 import AppointmentsWidget from './Components/AppointmentsWidget/AppointmentsWidget';
-import type { AppointmentsListItemProps } from './Components/AppointmentsWidget/AppointmentsListItem';
+import { AppointmentsListItemProps } from './Components/AppointmentsWidget/AppointmentsListItem';
 import { Button } from '@/components/UI/Button/Button';
 import { ButtonTypes } from '@/components/UI/Button/ButtonTypes';
 import Icon from '@UI/Icon/Icon';
