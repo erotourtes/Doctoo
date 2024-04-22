@@ -8,6 +8,8 @@ import { PatientService } from '../patient/patient.service';
 import { CreateUserDto } from '../user/dto/create.dto';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
+import * as bcrypt from 'bcrypt';
+import { ConfigType } from '@nestjs/config';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -16,6 +18,7 @@ describe('AuthService', () => {
 
   const userServiceMock: Partial<UserService> = {};
   const patientServiceMock: Partial<PatientService> = {};
+  const authConfig: Partial<ConfigType<typeof auth>> = {};
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -25,7 +28,7 @@ describe('AuthService', () => {
         { provide: UserService, useValue: userServiceMock },
         { provide: PatientService, useValue: patientServiceMock },
         { provide: config.KEY, useValue: config },
-        { provide: auth.KEY, useValue: auth },
+        { provide: auth.KEY, useValue: authConfig },
       ],
     }).compile();
 
@@ -55,56 +58,59 @@ describe('AuthService', () => {
 
     const signedUp = await authService.signUpUser(signUpDto);
 
+    expect.objectContaining({
+      id: '1',
+      password: expect.not.stringMatching(user.password),
+    });
     expect(userServiceMock.createUser).toHaveBeenCalledWith({
       ...user,
       password: expect.not.stringMatching(user.password),
+      avatarKey: expect.any(String),
     });
     expect(patientServiceMock.createPatient).toHaveBeenCalledWith(expect.objectContaining({ ...patient, userId: '1' }));
     expect(signedUp).toEqual({ ...patient, id: '2' });
   });
 
-  // TODO: Fix this test, user does notreturn password.
-  // it('Should validate credentials', async () => {
-  //   const pass = bcrypt.hashSync(user.password, 10);
+  it('Should validate credentials', async () => {
+    const pass = bcrypt.hashSync(user.password, 10);
 
-  //   userServiceMock.getUserByEmail = jest.fn().mockResolvedValue({
-  //     ...user,
-  //     password: pass,
-  //   });
+    userServiceMock.getUserPasswordByEmail = jest.fn().mockResolvedValue({
+      ...user,
+      password: pass,
+    });
 
-  //   userServiceMock.getUserByEmail = jest.fn().mockResolvedValue({
-  //     ...user,
-  //     password: pass,
-  //   });
+    userServiceMock.getUserPasswordByEmail = jest.fn().mockResolvedValue({
+      ...user,
+      password: pass,
+    });
 
-  //   const validated = await authService.validateUser(user.email, user.password);
+    const validated = await authService.validateUser(user.email, user.password);
 
-  //   expect(validated).toEqual({ ...user, password: pass });
-  // });
+    expect(validated).toEqual({ ...user, password: undefined });
+  });
 
-  // it('Should fail credentials validation', async () => {
-  //   userServiceMock.getUserByEmail = jest.fn().mockResolvedValue(user);
+  it('Should fail credentials validation', async () => {
+    userServiceMock.getUserPasswordByEmail = jest.fn().mockResolvedValue(user);
 
-  //   const validated = await authService.validateUser(user.email, 'invalid_password');
+    const validated = await authService.validateUser(user.email, 'invalid_password');
 
-  //   expect(validated).toBeNull();
-  // });
+    expect(validated).toBeNull();
+  });
 
-  // TODO: Fix this test, user does notreturn password.
-  // it('Should validate Google', async () => {
-  //   user = { ...user, googleId: 'googleId' };
+  it('Should validate Google', async () => {
+    user = { ...user, googleId: 'googleId' };
 
-  //   userServiceMock.getUserByEmail = jest.fn().mockResolvedValue(user);
+    userServiceMock.getUserPasswordByEmail = jest.fn().mockResolvedValue(user);
 
-  //   const validated = await authService.validateGoogleUser(user.email, 'googleId');
+    const validated = await authService.validateGoogleUser(user.email, 'googleId');
 
-  //   expect(validated).toEqual(user);
-  // });
+    expect(validated).toEqual({ ...user, password: undefined });
+  });
 
   it('Should fail Google validation', async () => {
     user = { ...user, googleId: 'googleId' };
 
-    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue(user);
+    userServiceMock.getUserPasswordByEmail = jest.fn().mockResolvedValue(user);
 
     const validated = await authService.validateGoogleUser(user.email, 'invalid_googleId');
 
@@ -137,5 +143,21 @@ describe('AuthService', () => {
     authService.attachJwtTokenToCookie(res, 'token');
 
     expect(res.cookie).toHaveBeenCalledWith(AuthService.JWT_COOKIE_NAME, 'token', expect.any(Object));
+  });
+
+  it("Shouldn't prolong token's life", async () => {
+    authConfig.JWT_EXPIRATION_TRESHOLD_SECONDS = 60 * 60 * 24 + 10; // more than 1 day
+    authConfig.JWT_EXPIRATION_DAYS = '1d';
+    const token = await authService.signJwtToken('1');
+    const result = authService.jwtCloseToExpire(token);
+    expect(result).toBeFalsy();
+  });
+
+  it("Should prolong token's life", async () => {
+    authConfig.JWT_EXPIRATION_TRESHOLD_SECONDS = 0;
+    authConfig.JWT_EXPIRATION_DAYS = '1d';
+    const token = await authService.signJwtToken('1');
+    const result = authService.jwtCloseToExpire(token);
+    expect(result).toBeFalsy();
   });
 });
