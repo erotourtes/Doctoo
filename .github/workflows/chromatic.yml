@@ -4,14 +4,28 @@ on: push
 jobs:
   chromatic:
     runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        node-version: [18]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
+      - name: Setup Node.js and PNPM
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
       - name: Install dependencies
-        run: pnpm i
+        run: pnpm install
         working-directory: apps/frontend
 
       - name: Run Chromatic
@@ -20,4 +34,4 @@ jobs:
           projectToken: chpt_37bf1cc1532495a
           # ${{ secrets.CHROMATIC_PROJECT_TOKEN
           exitZeroOnChanges: true
-          workingDir: 'apps/frontend/'
+          workingDir: apps/frontend
