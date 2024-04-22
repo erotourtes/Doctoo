@@ -15,10 +15,12 @@ const meta: Meta<typeof ConferenceButtons<string>> = {
     onClick: fn(),
     options: [
       {
+        id: '1',
         label: 'Record',
         value: 'Record',
       },
       {
+        id: '2',
         label: 'Record sound',
         value: 'Record sound',
       },

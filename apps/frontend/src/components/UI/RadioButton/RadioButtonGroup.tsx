@@ -1,4 +1,5 @@
-import { RadioButton, RadioButtonProps } from './RadioButton';
+import type { RadioButtonProps } from './RadioButton';
+import { RadioButton } from './RadioButton';
 
 interface RadioButtonGroupProps {
   options: Omit<RadioButtonProps, 'name' | 'onClick' | 'selected'>[];
