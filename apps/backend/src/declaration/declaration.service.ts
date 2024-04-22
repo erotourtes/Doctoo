@@ -58,7 +58,7 @@ export class DeclarationService {
     return declaration;
   }
 
-  async remove(id: number) {
+  async delete(id: number) {
     const declaration = await this.prismaService.declaration.findUnique({
       where: { id },
     });
