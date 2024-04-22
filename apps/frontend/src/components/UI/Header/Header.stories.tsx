@@ -16,7 +16,7 @@ const meta = {
   decorators: [
     Story => (
       <BrowserRouter>
-        <div className="w-full">
+        <div className='w-full'>
           <Story />
         </div>
       </BrowserRouter>
@@ -30,12 +30,16 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: null
+    children: null,
   },
 };
 
 export const WithChildren: Story = {
   args: {
-    children: <Button type='primary' className='text-main bg-white' onClick={fn()}>Test</Button>
+    children: (
+      <Button type='primary' className='bg-white text-main' onClick={fn()}>
+        Test
+      </Button>
+    ),
   },
 };
