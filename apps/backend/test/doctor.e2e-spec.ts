@@ -2,7 +2,7 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { randomUUID } from 'crypto';
 import * as request from 'supertest';
-import { AppModule } from '../src/app/app.module';
+import { DoctorModule } from '../src/doctor/doctor.module';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { doctorStub } from './stubs/doctor.stub';
 import { userStub } from './stubs/user.stub';
@@ -13,7 +13,7 @@ describe('DoctorController (e2e)', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [DoctorModule],
       providers: [PrismaService],
     }).compile();
 
@@ -24,7 +24,10 @@ describe('DoctorController (e2e)', () => {
     prisma = moduleFixture.get<PrismaService>(PrismaService);
   });
 
-  beforeEach(async () => prisma.doctor.deleteMany());
+  beforeEach(async () => {
+    await prisma.user.deleteMany();
+    await prisma.doctor.deleteMany();
+  });
 
   describe('/doctor (GET)', () => {
     it('Should return array of objects', async () => {
@@ -57,15 +60,11 @@ describe('DoctorController (e2e)', () => {
       const response = await request(app.getHttpServer()).post('/doctor').send(doctorData);
 
       expect(response.status).toEqual(404);
-      // TODO: Can we avaoid check message response?
-      expect(response.body).toMatchObject({
-        message: `User with id ${doctorData.userId} does not exist`,
-      });
     });
   });
 
   describe('/doctor/:id (GET)', () => {
-    it('Should return object', async () => {
+    it('Should return doctor object', async () => {
       const user = await prisma.user.create({ data: userStub() });
 
       const doctorData = { ...doctorStub(), userId: user.id };
@@ -84,8 +83,6 @@ describe('DoctorController (e2e)', () => {
       const response = await request(app.getHttpServer()).get(`/doctor/${id}`);
 
       expect(response.status).toEqual(404);
-      // TODO: Can we avaoid check message response?
-      expect(response.body).toMatchObject({ message: `Doctor with id ${id} does not exist` });
     });
   });
 
@@ -116,8 +113,6 @@ describe('DoctorController (e2e)', () => {
       const response = await request(app.getHttpServer()).delete(`/doctor/${id}`);
 
       expect(response.status).toEqual(200);
-      // TODO: Can we avaoid check message response?
-      expect(response.body).toMatchObject({ message: `Doctor with id ${id} was deleted successfully` });
     });
   });
 

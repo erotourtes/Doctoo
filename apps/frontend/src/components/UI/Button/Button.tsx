@@ -3,7 +3,7 @@ import { ButtonTypes } from './ButtonTypes';
 
 type ButtonProps = {
   children: React.ReactNode;
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   disabled?: boolean;
   className?: string;
   type: `${ButtonTypes}`;
@@ -18,7 +18,7 @@ export const Button = ({ children, onClick, disabled = false, className = '', ty
     <button
       onClick={onClick}
       disabled={disabled}
-      className={cn(ButtonTypeStyles[ButtonTypes[type]], 'h-10 min-w-[100px] rounded-md px-6', className)}
+      className={cn(ButtonTypeStyles[type], 'h-10 min-w-[100px] rounded-md px-6', className)}
     >
       {children}
     </button>

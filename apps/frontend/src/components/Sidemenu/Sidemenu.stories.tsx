@@ -1,37 +1,36 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import '@/index.css';
 import { BrowserRouter } from 'react-router-dom';
-import NavLogo from './NavLogo';
+import Sidemenu from './Sidemenu';
 
 const meta = {
-  title: 'Components/Sidemenu/NavLogo',
-  component: NavLogo,
+  title: 'Components/Sidemenu/Sidemenu',
+  component: Sidemenu,
   parameters: {
     layout: 'centered',
   },
   tags: ['autodocs'],
   decorators: [
-    (Story) => (
+    Story => (
       <BrowserRouter>
-        <div className="w-72 p-8 bg-main-medium">
+        <div className='h-[768px]'>
           <Story />
         </div>
       </BrowserRouter>
-    )]
-} satisfies Meta<typeof NavLogo>;
+    ),
+  ],
+} satisfies Meta<typeof Sidemenu>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: {
-    variant: 'large',
-  },
+  args: {},
 };
 
 export const Small: Story = {
   args: {
-    variant: 'small'
+    variant: 'small',
   },
 };

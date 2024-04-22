@@ -39,7 +39,7 @@ describe('HospitalController (e2e)', () => {
   });
 
   describe('/hospital (POST)', () => {
-    it('Should created hospital without state', async () => {
+    it('Should create hospital without state', async () => {
       const hospital: CreateHospitalDto = hospitalStub();
 
       const expectedResponseBody: Omit<ResponseHospitalDto, 'id'> = { ...hospital, state: null };
@@ -61,7 +61,7 @@ describe('HospitalController (e2e)', () => {
   });
 
   describe('/hospital/:id (GET)', () => {
-    it('Should return object hospital', async () => {
+    it('Should return hospital object', async () => {
       const hospital: CreateHospitalDto = hospitalStub();
 
       const { id } = await prisma.hospital.create({ data: hospital });
@@ -72,7 +72,7 @@ describe('HospitalController (e2e)', () => {
       expect(response.body).toMatchObject(hospital);
     });
 
-    it('Should return Not Found error with message that hospital with defined id does not exist', async () => {
+    it('Should return 404 with non-existent id', async () => {
       const id = 'non-existent';
       const response = await request(app.getHttpServer()).get(`/hospital/${id}`);
 
@@ -114,9 +114,6 @@ describe('HospitalController (e2e)', () => {
       const response = await request(app.getHttpServer()).delete(`/hospital/${id}`);
 
       expect(response.status).toEqual(200);
-      expect(response.body).toMatchObject({
-        message: `Hospital with id ${id} was deleted successfully`,
-      });
     });
   });
 

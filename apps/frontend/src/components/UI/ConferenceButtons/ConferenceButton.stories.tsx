@@ -2,8 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { ConferenceButtons } from './ConferenceButton';
 import '@/index.css';
 import { fn } from '@storybook/test';
-import Icon from '@/components/icons/Icon';
-
+import Icon from '@UI/Icon/Icon';
 
 const meta: Meta<typeof ConferenceButtons<string>> = {
   title: 'Components/UI/ConferenceButtons',
@@ -14,15 +13,17 @@ const meta: Meta<typeof ConferenceButtons<string>> = {
   tags: ['autodocs'],
   args: {
     onClick: fn(),
-    options: [{
-      label: "Record",
-      value: "Record"
-    },
-    {
-      label: "Record sound",
-      value: "Record sound"
-    }]
-  }
+    options: [
+      {
+        label: 'Record',
+        value: 'Record',
+      },
+      {
+        label: 'Record sound',
+        value: 'Record sound',
+      },
+    ],
+  },
 };
 
 export default meta;
@@ -31,21 +32,23 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: <div className="flex flex-col  justify-center items-center">
-      <Icon variant="chats" className="size-[24px] text-gray-600" />
-      <p>Record</p>
-    </div>,
+    children: (
+      <div className='flex flex-col  items-center justify-center'>
+        <Icon variant='chats' className='text-gray-600 size-[24px]' />
+        <p>Record</p>
+      </div>
+    ),
   },
 };
 
 export const WithBorder: Story = {
   args: {
-    children: <div className="flex flex-col  justify-center items-center">
-      <Icon variant="chats" className="size-[24px] text-gray-600" />
-      <p>Record</p>
-    </div>,
-    classNames: "border border-gray-300"
+    children: (
+      <div className='flex flex-col  items-center justify-center'>
+        <Icon variant='chats' className='text-gray-600 size-[24px]' />
+        <p>Record</p>
+      </div>
+    ),
+    classNames: 'border border-gray-300',
   },
 };
-
-
