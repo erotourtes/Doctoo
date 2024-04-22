@@ -9,8 +9,6 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
-    // TODO: Investigate why this here...
-    actions: { argTypesRegex: '^on.*' },
   },
 };
 

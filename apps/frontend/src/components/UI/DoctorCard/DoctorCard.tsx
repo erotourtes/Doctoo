@@ -1,4 +1,4 @@
-import Icon from '../../icons/Icon';
+import Icon from '@UI/Icon/Icon';
 import { Button } from '../Button/Button';
 import Tag from '../Tag/Tag';
 
@@ -56,7 +56,7 @@ const DoctorCard: React.FC<DoctorCardProps> = ({
         </div>
 
         {isBookMode && (
-          <Button type={'SECONDARY'} className='w-28' onClick={() => {}} disabled={false}>
+          <Button type="secondary" className='w-28' onClick={() => {}} disabled={false}>
             Book
           </Button>
         )}
@@ -69,12 +69,12 @@ const DoctorCard: React.FC<DoctorCardProps> = ({
 
             <div className='grid grid-cols-2 grid-rows-2 gap-2'>
               {buttons.map((button, i) => (
-                <Button key={i} type={'SECONDARY'} className='w-28' onClick={() => {}} disabled={false}>
+                <Button key={i} type="secondary" className='w-28' onClick={() => {}} disabled={false}>
                   {button}
                 </Button>
               ))}
 
-              <Button type={'SECONDARY'} className='w-28' onClick={() => {}} disabled={false}>
+              <Button type="secondary" className='w-28' onClick={() => {}} disabled={false}>
                 More
               </Button>
             </div>
