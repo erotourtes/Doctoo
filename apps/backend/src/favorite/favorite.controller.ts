@@ -4,7 +4,6 @@ import { FavoriteService } from './favorite.service';
 import {
   ApiTags,
   ApiOperation,
-  ApiResponse,
   ApiOkResponse,
   ApiBadRequestResponse,
   ApiInternalServerErrorResponse,
