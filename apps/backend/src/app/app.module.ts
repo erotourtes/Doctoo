@@ -11,6 +11,7 @@ import { HospitalModule } from '../hospital/hospital.module';
 import { MinioService } from '../minio/minio.service';
 import { PatientModule } from '../patient/patient.module';
 import { UserModule } from '../user/user.module';
+import { DeclarationModule } from '../declaration/declaration.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { UserModule } from '../user/user.module';
     FileModule,
     HospitalModule,
     AppointmentModule,
+    DeclarationModule,
   ],
   providers: [MinioService],
 })
