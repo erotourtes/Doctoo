@@ -1,6 +1,6 @@
 import { AppointmentStatus } from '@prisma/client';
-import { Type } from 'class-transformer';
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsISO8601 } from 'class-validator';
 
 export class CreateAppointmentDto {
   @IsNotEmpty()
@@ -9,18 +9,15 @@ export class CreateAppointmentDto {
   @IsNotEmpty()
   readonly patientId: string;
 
+  @IsISO8601({ strict: true }, { message: 'assignedAt must be a valid ISO8601 date' })
   @IsNotEmpty()
-  @Type(() => Date)
-  date: Date;
+  assignedAt: string;
 
   @IsEnum(AppointmentStatus)
   readonly status: AppointmentStatus;
 
   @IsString()
   notes: string;
-
-  @IsString()
-  assignedAt: string;
 
   @IsNotEmpty()
   @IsString({ message: 'Invoice key must be a string' })

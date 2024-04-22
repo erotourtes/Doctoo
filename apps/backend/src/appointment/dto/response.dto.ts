@@ -4,7 +4,7 @@ export class ResponseAppointmentDto {
   id: string;
   doctorId: string;
   patientId: string;
-  date: Date;
+  assignedAt: Date;
   notes: string;
   status: AppointmentStatus;
   videoRecordKey: string;
