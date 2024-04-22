@@ -1,5 +1,5 @@
-import Icon from '@/components/icons/Icon';
-import React, { FC, PropsWithChildren } from 'react';
+import type { FC, PropsWithChildren } from 'react';
+import Icon from '../../components/UI/Icon/Icon';
 
 export const LogoWithTitle = () => {
   return (
@@ -13,7 +13,7 @@ export const LogoWithTitle = () => {
 export const AuthCreateAccount = () => {
   return (
     <div className='mx-6 flex justify-center gap-1'>
-      <p> Don't have an account?</p>
+      <p>{"Don't have an account?"}</p>
       <p className='text-main'>Create one</p>
     </div>
   );
@@ -31,8 +31,8 @@ export const AuthLogInIntoAccount = () => {
 export const AuthMainContainer: FC<PropsWithChildren> = ({ children }) => {
   return (
     <div className='flex h-svh w-svw justify-center'>
-      <div className='flex max-h-[700px] w-full justify-center overflow-y-auto sm:w-[60%]'>{children}</div>
-      <div className='bg-greeting-bg hidden h-full w-[40%] bg-cover bg-no-repeat sm:block '> </div>
+      <div className='m-auto flex max-h-[700px] w-full justify-center overflow-y-auto sm:w-[60%]'>{children}</div>
+      <div className='hidden h-full w-[40%] bg-greeting-bg bg-cover bg-no-repeat sm:block '> </div>
     </div>
   );
 };
