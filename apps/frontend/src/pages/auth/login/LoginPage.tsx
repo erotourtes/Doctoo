@@ -1,5 +1,4 @@
 import { Button } from '@/components/UI/Button/Button';
-import { ButtonTypes } from '@/components/UI/Button/ButtonTypes';
 import Input from '@/components/UI/Input/Input';
 import { LogoWithTitle, AuthMainContainer, AuthCreateAccount, Separator } from '@/pages/auth/auth-components';
 import { joiResolver } from '@hookform/resolvers/joi';
