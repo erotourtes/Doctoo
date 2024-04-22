@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import NavLogo from './NavLogo';
 
 const meta = {
-  title: 'Components/Sidemenu/NavLogo',
+  title: 'Components/UI/NavLogo',
   component: NavLogo,
   parameters: {
     layout: 'centered',
