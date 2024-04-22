@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigType } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { PatientModule } from '../patient/patient.module';
@@ -8,6 +8,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { GoogleStrategy } from './strategies/google';
 import { LocalStrategy } from './strategies/local';
+import auth from '../config/auth';
 
 @Module({
   imports: [
@@ -15,11 +16,11 @@ import { LocalStrategy } from './strategies/local';
     ConfigModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async (config: ConfigService) => ({
-        secret: config.getOrThrow('auth.JWT_SECRET'),
-        signOptions: { expiresIn: config.getOrThrow('auth.JWT_EXPIRATION_DAYS') },
+      useFactory: async (config: ConfigType<typeof auth>) => ({
+        secret: config.JWT_SECRET,
+        signOptions: { expiresIn: config.JWT_EXPIRATION_DAYS },
       }),
-      inject: [ConfigService],
+      inject: [auth.KEY],
     }),
     UserModule,
     PatientModule,

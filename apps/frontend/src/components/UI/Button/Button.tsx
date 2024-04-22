@@ -3,7 +3,7 @@ import { ButtonTypes } from './ButtonTypes';
 
 type ButtonProps = {
   children: React.ReactNode;
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   disabled?: boolean;
   className?: string;
   type: `${ButtonTypes}`;

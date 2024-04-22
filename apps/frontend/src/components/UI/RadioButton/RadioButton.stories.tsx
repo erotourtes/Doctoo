@@ -12,10 +12,10 @@ const meta = {
   },
   tags: ['autodocs'],
   argTypes: {
-    checked: {
+    disabled: {
       control: 'boolean',
     },
-    disabled: {
+    selected: {
       control: 'boolean',
     },
   },
@@ -28,18 +28,18 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    checked: false,
     label: 'radiobutton',
     disabled: false,
-    id: 'radiobutton',
+    name: 'radiobutton',
+    selected: false,
   },
   render: function Render(args) {
-    const [{ isChecked, disabled }, updateArgs] = useArgs();
+    const [{ selected, disabled }, updateArgs] = useArgs();
 
     function onClick() {
-      updateArgs({ isChecked: !isChecked });
+      updateArgs({ selected: !selected });
     }
 
-    return <RadioButton {...args} onClick={onClick} checked={isChecked} disabled={disabled} />;
+    return <RadioButton {...args} onClick={onClick} disabled={disabled} />;
   },
 };
