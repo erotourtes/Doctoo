@@ -10,7 +10,14 @@ type ButtonProps = {
   btnType: React.ButtonHTMLAttributes<HTMLButtonElement>['type'];
 };
 
-export const Button = ({ children, onClick, disabled = false, className = '', type, btnType }: ButtonProps) => {
+export const Button = ({
+  children,
+  onClick,
+  disabled = false,
+  className = '',
+  type,
+  btnType = 'button',
+}: ButtonProps) => {
   const ButtonTypeStyles = {
     [ButtonTypes.PRIMARY]: `text-white ${disabled ? 'bg-grey-3' : 'bg-main hover:bg-main-dark active:bg-main-darker'}`,
     [ButtonTypes.SECONDARY]: `bg-transparent border-2 ${disabled ? 'border-grey-3 text-grey-3' : 'border-main text-main hover:border-main-dark hover:text-main-dark active:border-main-darker active:text-main-darker'}`,
