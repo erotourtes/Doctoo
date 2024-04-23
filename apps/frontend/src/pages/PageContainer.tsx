@@ -1,5 +1,10 @@
 import { Route, Routes } from 'react-router-dom';
 import ProfilePage from './profile/ProfilePage';
+import SignUpPage from './auth/signup/SignUpPage';
+import LoginPage from './auth/login/LoginPage';
+import LoginPageAuthenticate from './auth/login/LoginPageAuthenticate';
+import SignUpPatientPage from './auth/signup/SignUpPatientPage';
+import Sidemenu from '../components/Sidemenu/Sidemenu';
 
 // import page component
 
@@ -28,4 +33,25 @@ const PageContainer = () => {
   );
 };
 
-export default PageContainer;
+const Navigation = () => {
+  return (
+    <Routes>
+      <Route
+        path='/'
+        element={
+          <div className='flex h-screen w-screen overflow-hidden'>
+            <Sidemenu />
+            <PageContainer />
+          </div>
+        }
+      />
+
+      <Route path='/signup' Component={SignUpPage} />
+      <Route path='/signup/patient' Component={SignUpPatientPage} />
+      <Route path='/login/authenticate' Component={LoginPageAuthenticate} />
+      <Route path='/login' Component={LoginPage} />
+    </Routes>
+  );
+};
+
+export default Navigation;
