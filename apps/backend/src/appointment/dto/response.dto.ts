@@ -12,9 +12,8 @@ export class ResponseAppointmentDto {
   patientId: string;
    
   @ApiProperty({ description: 'assingedAt for the appointment' })
-  @IsISO8601({ strict: true }, { message: 'assignedAt must be a valid ISO8601 date' })
   @IsNotEmpty()
-  assignedAt: string;
+  assignedAt: Date;
 
   @ApiProperty({ description: 'Notes for the appointment' })
   notes: string;
