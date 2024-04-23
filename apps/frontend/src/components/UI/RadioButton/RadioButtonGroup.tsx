@@ -1,11 +1,13 @@
-import { RadioButton, RadioButtonProps } from './RadioButton';
+import type { RadioButtonProps } from './RadioButton';
+import { RadioButton } from './RadioButton';
 
 interface RadioButtonGroupProps {
   options: Omit<RadioButtonProps, 'name' | 'onClick' | 'selected'>[];
   className?: string;
   groupName: string;
-  selected: string | null; // Add this line
-  setSelected: (value: string | null) => void; // Add this line
+  id: string;
+  selected: string | null;
+  setSelected: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 export default function RadioButtonGroup({
@@ -14,11 +16,13 @@ export default function RadioButtonGroup({
   groupName,
   selected,
   setSelected,
+  id,
 }: RadioButtonGroupProps) {
   return (
     <fieldset className={className}>
       {options.map((option, index) => (
         <RadioButton
+          id={id}
           key={`${groupName}-${index}`}
           label={option.label}
           name={groupName}

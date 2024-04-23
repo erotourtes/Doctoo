@@ -1,31 +1,27 @@
 import type { RootState } from '@/app/store';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '../createAppSlice';
-
-export enum AppointmentStatus {
-  PLANNED = 'Planned',
-  COMPLETED = 'Completed',
-  CANCELLED = 'Cancelled',
-}
-
-export interface IAppointment {
-  id: string;
-  doctorId: string;
-  patientId: string;
-  date: string;
-  notes: string;
-  status: AppointmentStatus;
-  videoRecordKey: string;
-  paymentInvoiceKey: string;
-  paymentReceiptKey: string;
-}
+import { AppointmentStatus } from '@/dataTypes/Appointment';
+import type { IAppointment } from '@/dataTypes/Appointment';
 
 type AppointmentData = {
   appointments: IAppointment[];
 };
 
 const initialState: AppointmentData = {
-  appointments: [],
+  appointments: [
+    {
+      id: '0',
+      doctorId: '0',
+      patientId: '0',
+      date: 'date',
+      notes: 'without status',
+      status: AppointmentStatus.PLANNED,
+      videoRecordKey: 'string',
+      paymentInvoiceKey: 'string',
+      paymentReceiptKey: 'string',
+    },
+  ],
 };
 
 export const appointmentSlice = createAppSlice({

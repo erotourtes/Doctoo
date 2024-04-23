@@ -4,8 +4,8 @@ import { randomUUID } from 'crypto';
 import * as request from 'supertest';
 import { DoctorModule } from '../src/doctor/doctor.module';
 import { PrismaService } from '../src/prisma/prisma.service';
-import { doctorStub } from './stubs/doctor.stub';
-import { userStub } from './stubs/user.stub';
+import { doctorStub } from '../src/mocks/stubs/doctor.stub';
+import { userStub } from '../src/mocks/stubs/user.stub';
 
 describe('DoctorController (e2e)', () => {
   let app: INestApplication;
