@@ -153,7 +153,6 @@ export class AuthService {
       apartment: body.apartment,
       state: body.state,
       zipCode: body.zipCode,
-      identityCardKey: '',
     });
 
     return plainToInstance(ResponsePatientDto, patient);
