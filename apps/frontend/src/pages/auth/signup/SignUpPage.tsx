@@ -8,6 +8,7 @@ import Joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import PopupDoctoo from '../../../components/UI/Popup/Popup';
 import { useState } from 'react';
+import { instance } from '../../../api/axios.api';
 
 type SignUpType = {
   email: string;
@@ -28,11 +29,18 @@ const SignUpPage = () => {
     resolver: joiResolver(userSignUpSchema),
   });
   const errors = form.formState.errors;
-
   const [open, setOpen] = useState(false);
 
-  const onSubmit = (data: SignUpType) => {
-    console.log(data);
+  const onSubmit = async (data: SignUpType) => {
+    const res = await instance.post('/auth/signup', {
+      firstName: data.fullName.split(' ')[0],
+      lastName: data.fullName.split(' ')[1],
+      email: data.email,
+      password: data.password,
+      phone: '+380995698142',
+    });
+    console.log(res);
+
     setOpen(true);
   };
 
