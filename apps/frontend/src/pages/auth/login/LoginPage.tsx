@@ -6,6 +6,8 @@ import Joi from 'joi';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { FieldValues, SubmitHandler } from 'react-hook-form';
 import Icon from '../../../components/UI/Icon/Icon';
+import { API_URL, instance } from '../../../api/axios.api';
+import { useNavigate } from 'react-router';
 
 type SignInType = {
   email: string;
@@ -24,12 +26,18 @@ const LoginPage = () => {
     resolver: joiResolver(userLogInSchema),
   });
   const errors = form.formState.errors;
+  const navigate = useNavigate();
 
-  const onLogin: SubmitHandler<FieldValues> = credentials => {
-    console.log(credentials);
+  const onLogin: SubmitHandler<FieldValues> = async credentials => {
+    const res = await instance.post('/auth/login/patient', credentials);
+    if (res.status === 201) {
+      navigate('/');
+    }
   };
 
-  const onGoogleLogin = () => {};
+  const onGoogleLogin = () => {
+    window.open(`${API_URL}/auth/login/google`, '_self');
+  };
   const onFacebookLogin = () => {};
 
   return (
