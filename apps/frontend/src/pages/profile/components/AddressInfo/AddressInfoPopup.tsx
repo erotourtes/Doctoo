@@ -1,33 +1,72 @@
+import { useAppDispatch } from '@/app/hooks';
+import { type Patient } from '@/app/patient/PatientSlice';
+import { patchPatientData } from '@/app/patient/PatientThunks';
 import { Button } from '@/components/UI/Button/Button';
 import Input from '@/components/UI/Input/Input';
-import Icon from '@UI/Icon/Icon';
-import Popup from 'reactjs-popup';
+import PopupDoctoo from '@/components/UI/Popup/Popup';
+import { joiResolver } from '@hookform/resolvers/joi';
+import Joi from 'joi';
+import { type FieldValues, FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
 
 type AddressInfoPopupProps = {
   isOpen: boolean;
   onClose: () => void;
 };
 
+interface FormData {
+  country: string;
+  city: string;
+  street: string;
+  apartment: string;
+  zipCode?: string;
+}
+
+const schema = Joi.object({
+  country: Joi.string().min(3).max(30).required(),
+  city: Joi.string().min(3).max(30).required(),
+  street: Joi.string().min(3).max(30).required(),
+  zipCode: Joi.string().alphanum().min(3).max(30).required(),
+  apartment: Joi.string().alphanum().max(30).optional(),
+});
+
 const AddressInfoPopup = ({ isOpen, onClose }: AddressInfoPopupProps) => {
+  const methods = useForm({
+    mode: 'onChange',
+    resolver: joiResolver(schema),
+  });
+
+  const dispatch = useAppDispatch();
+
+  const { handleSubmit } = methods;
+
+  function onSubmit(data: FormData): void {
+    console.log(data);
+    const patientData: Partial<Patient> = {
+      ...data,
+    };
+    dispatch(patchPatientData(patientData));
+  }
+
   return (
-    <Popup open={isOpen} onClose={onClose} modal>
-      <div className='pointer-events-none fixed left-0 top-0 z-10 h-screen w-screen bg-black/20' />
-      <div className='p- relative z-20 flex h-full min-w-[500px] flex-col gap-7 rounded-xl bg-white p-12'>
-        <Icon variant='close' className='absolute right-4 top-4 cursor-pointer' onClick={onClose} />
-
-        <p className='text-2xl font-medium text-black'>Add a new address</p>
-        <form onSubmit={e => e.preventDefault()} className='flex w-full flex-col gap-7'>
+    <PopupDoctoo
+      popupIsOpen={isOpen}
+      closePopup={onClose}
+      modalBodyClassName=' relative z-20 flex h-full min-w-[500px] flex-col gap-7 rounded-xl bg-white'
+    >
+      <p className='text-2xl font-medium text-black'>Add a new address</p>
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmit as SubmitHandler<FieldValues>)} className='flex w-full flex-col gap-7'>
           <div className='w-full'>
-            <Input label='Country' placeholder='' type='text' className='w-full' />
+            <Input id='country' label='Country' type='text' className='w-full' />
 
-            <Input label='City' placeholder='' type='text' className='w-full' />
+            <Input id='city' label='City' type='text' className='w-full' />
 
-            <Input label='Street' placeholder='' type='text' className='w-full' />
+            <Input id='street' label='Street' type='text' className='w-full' />
 
             <div className='flex w-full gap-4'>
-              <Input label='Apartment (optional)' placeholder='' type='text' className='w-full' />
+              <Input id='apartment' label='Apartment (optional)' type='text' className='w-full' />
 
-              <Input label='Zip code' placeholder='' type='text' className='w-full' />
+              <Input id='zipCode' label='Zip code' type='text' className='w-full' />
             </div>
           </div>
 
@@ -40,8 +79,8 @@ const AddressInfoPopup = ({ isOpen, onClose }: AddressInfoPopupProps) => {
             </Button>
           </div>
         </form>
-      </div>
-    </Popup>
+      </FormProvider>
+    </PopupDoctoo>
   );
 };
 

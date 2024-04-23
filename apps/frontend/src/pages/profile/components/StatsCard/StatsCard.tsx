@@ -1,31 +1,105 @@
+// import { useAppDispatch } from '@/app/hooks';
+// import { updatePatientData } from '@/app/patient/PatientSlice';
+// import { BloodType, Gender } from '@/dataTypes/Patient';
+import { useAppDispatch } from '@/app/hooks';
+import { updatePatientData } from '@/app/patient/PatientSlice';
+import { BloodType, Gender } from '@/dataTypes/Patient';
+import { capitalizeString } from '@/utils/capitalizeString';
 import Icon from '@UI/Icon/Icon';
 import type { IconVariant } from '@UI/Icon/types';
 import { useState } from 'react';
 
 type StatsCardProps = {
-  title: string;
-  value: string;
   iconVariant: IconVariant;
-};
+  value: string;
+} & (
+  | { variant: 'input'; title: 'Height,cm' | 'Weight,kg' | 'Age'; options?: never }
+  | { variant: 'select'; title: 'Gender' | 'Blood type'; options: string[] }
+);
 
-const StatsCard = ({ title, value, iconVariant }: StatsCardProps) => {
+const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardProps) => {
   const [isEditing, setIsEditing] = useState(false);
-
   const [inputValue, setInputValue] = useState(value);
+  const dispatch = useAppDispatch();
 
   return (
     <div className='flex w-full justify-between gap-4 rounded-lg bg-white p-7 pb-4 text-start'>
       <div className='flex flex-col gap-4'>
         <p className='w-full text-grey-1'>{title}</p>
         <p className='group flex w-fit items-center  text-black'>
-          <input
-            className={`w-fit bg-white font-medium outline-none`}
-            disabled={isEditing}
-            defaultValue={value}
-            size={1}
-            value={inputValue}
-            onChange={e => setInputValue(e.target.value)}
-          />
+          <form
+            onSubmit={e => {
+              e.preventDefault();
+              console.log('submit');
+            }}
+          >
+            {variant === 'input' && (
+              <input
+                className={`w-fit bg-white font-medium outline-none`}
+                disabled={!isEditing}
+                defaultValue={value}
+                size={1}
+                onChange={e => setInputValue(e.target.value)}
+              />
+            )}
+            {variant === 'select' && (
+              <form>
+                <select
+                  onChange={e => {
+                    setInputValue(e.target.value);
+                    setIsEditing(false);
+                    switch (title) {
+                      case 'Gender':
+                        const gender = inputValue;
+                        if (gender.toLowerCase() === Gender.FEMALE) {
+                          dispatch(updatePatientData({ gender: Gender.FEMALE }));
+                        }
+                        if (gender.toLowerCase() === Gender.MALE) {
+                          dispatch(updatePatientData({ gender: Gender.MALE }));
+                        }
+                        break;
+                      case 'Blood type':
+                        const bloodType = inputValue;
+                        switch (bloodType) {
+                          case BloodType.AB_MINUS:
+                            dispatch(updatePatientData({ bloodType: BloodType.AB_MINUS }));
+                            break;
+                          case BloodType.AB_PLUS:
+                            dispatch(updatePatientData({ bloodType: BloodType.AB_PLUS }));
+                            break;
+                          case BloodType.A_MINUS:
+                            dispatch(updatePatientData({ bloodType: BloodType.A_MINUS }));
+                            break;
+                          case BloodType.A_PLUS:
+                            dispatch(updatePatientData({ bloodType: BloodType.A_PLUS }));
+                            break;
+                          case BloodType.B_MINUS:
+                            dispatch(updatePatientData({ bloodType: BloodType.B_MINUS }));
+                            break;
+                          case BloodType.B_PLUS:
+                            dispatch(updatePatientData({ bloodType: BloodType.B_PLUS }));
+                            break;
+                          case BloodType.O_MINUS:
+                            dispatch(updatePatientData({ bloodType: BloodType.O_MINUS }));
+                            break;
+                          case BloodType.O_PLUS:
+                            dispatch(updatePatientData({ bloodType: BloodType.O_PLUS }));
+                            break;
+                        }
+                        break;
+                    }
+                  }}
+                  className={`${isEditing ? 'pointer-events-auto' : 'pointer-events-none'} appearance-none outline-none`}
+                >
+                  {options.map((option, index) => (
+                    <option key={index} value={option}>
+                      {capitalizeString(option)}
+                    </option>
+                  ))}
+                </select>
+              </form>
+            )}
+          </form>
           <Icon
             onClick={() => setIsEditing(!isEditing)}
             variant='edit'

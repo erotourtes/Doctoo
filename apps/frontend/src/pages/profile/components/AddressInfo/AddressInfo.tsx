@@ -10,24 +10,26 @@ const AddressInfo = () => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div className='flex h-full flex-col justify-between gap-4 rounded-xl bg-white p-7'>
-      <div className='flex justify-between'>
+      <div className='flex items-center justify-between'>
         <div>
           <p className='text-lg font-medium'>Address</p>
-          {patient.country && (
-            <div>
-              {patient.country && patient.country + ','} {patient.state && patient.state + ','}{' '}
-              {patient.city && patient.city + ','} {patient.street && patient.street + ','}
-              {patient.apartment && patient.apartment + ','}
-            </div>
-          )}
         </div>
         <Button type='secondary' onClick={() => setIsOpen(!isOpen)} className='flex items-center'>
           <Icon variant='plus' />
           Add
         </Button>
-
-        <AddressInfoPopup isOpen={isOpen} onClose={() => setIsOpen(false)} />
       </div>
+      {patient.country && (
+        <div>
+          {patient.country && patient.country}
+          {patient.state && ', ' + patient.state}
+          {patient.city && ', ' + patient.city}
+          {patient.street && ', ' + patient.street}
+          {patient.apartment && ', ' + patient.apartment}
+        </div>
+      )}
+
+      <AddressInfoPopup isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </div>
   );
 };
