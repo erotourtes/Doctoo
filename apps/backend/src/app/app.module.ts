@@ -12,6 +12,7 @@ import { MinioService } from '../minio/minio.service';
 import { PatientModule } from '../patient/patient.module';
 import { UserModule } from '../user/user.module';
 import { DeclarationModule } from '../declaration/declaration.module';
+import { SpecializationModule } from '../specialization/specialization.module';
 import mail from '../config/mail';
 import { MailModule } from '../mail/mail.module';
 
@@ -28,6 +29,7 @@ import { MailModule } from '../mail/mail.module';
     HospitalModule,
     AppointmentModule,
     DeclarationModule,
+    SpecializationModule,
   ],
   providers: [MinioService],
 })

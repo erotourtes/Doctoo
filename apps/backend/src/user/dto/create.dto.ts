@@ -32,6 +32,6 @@ export class CreateUserDto {
   googleId?: string;
 
   @IsNotEmptyString()
-  @ApiProperty({ description: 'The avatar key of the user', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333'})
+  @ApiProperty({ description: 'The avatar key of the user', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   avatarKey: string;
 }

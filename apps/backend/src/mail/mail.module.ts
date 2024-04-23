@@ -15,7 +15,7 @@ import config from '../config/config';
       useFactory: async (mailConfig: ConfigType<typeof mail>, configObject: ConfigType<typeof config>) => ({
         transport: {
           host: mailConfig.MAIL_HOST,
-          port: 587,
+          port: mailConfig.MAIL_PORT,
           secure: configObject.NODE_ENV === 'production',
           auth: {
             user: mailConfig.MAIL_USER,

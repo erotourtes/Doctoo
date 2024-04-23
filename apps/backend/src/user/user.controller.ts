@@ -6,7 +6,6 @@ import { UserService } from './user.service';
 import {
   ApiTags,
   ApiOperation,
-  ApiResponse,
   ApiOkResponse,
   ApiBadRequestResponse,
   ApiInternalServerErrorResponse,
@@ -18,7 +17,6 @@ import {
 } from '@nestjs/swagger';
 import { ResponseUserDto } from './dto/response.dto';
 import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../../utils/errorResponses';
-
 
 @ApiTags('User')
 @Controller('user')

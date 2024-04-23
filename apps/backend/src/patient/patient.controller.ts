@@ -1,23 +1,22 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
-import { CreatePatientDto } from './dto/create.dto';
-import { PatchPatientDto } from './dto/patch.dto';
-import { GetPatientGuard } from './guards/get.guard';
-import { PatientService } from './patient.service';
 import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiOkResponse,
   ApiBadRequestResponse,
-  ApiInternalServerErrorResponse,
-  ApiNotFoundResponse,
-  ApiParam,
   ApiBody,
   ApiCreatedResponse,
+  ApiInternalServerErrorResponse,
   ApiNoContentResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
 } from '@nestjs/swagger';
-import { ResponsePatientDto } from './dto/response.dto';
 import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../../utils/errorResponses';
+import { CreatePatientDto } from './dto/create.dto';
+import { PatchPatientDto } from './dto/patch.dto';
+import { ResponsePatientDto } from './dto/response.dto';
+import { GetPatientGuard } from './guards/get.guard';
+import { PatientService } from './patient.service';
 
 @ApiTags('Patient')
 @Controller('patient')
