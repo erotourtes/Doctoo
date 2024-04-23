@@ -1,8 +1,5 @@
-// import { useAppDispatch } from '@/app/hooks';
-// import { updatePatientData } from '@/app/patient/PatientSlice';
-// import { BloodType, Gender } from '@/dataTypes/Patient';
 import { useAppDispatch } from '@/app/hooks';
-import { updatePatientData } from '@/app/patient/PatientSlice';
+import { patchPatientData } from '@/app/patient/PatientThunks';
 import { BloodType, Gender } from '@/dataTypes/Patient';
 import { capitalizeString } from '@/utils/capitalizeString';
 import Icon from '@UI/Icon/Icon';
@@ -52,38 +49,38 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
                       case 'Gender':
                         const gender = inputValue;
                         if (gender.toLowerCase() === Gender.FEMALE) {
-                          dispatch(updatePatientData({ gender: Gender.FEMALE }));
+                          dispatch(patchPatientData({ gender: Gender.FEMALE }));
                         }
                         if (gender.toLowerCase() === Gender.MALE) {
-                          dispatch(updatePatientData({ gender: Gender.MALE }));
+                          dispatch(patchPatientData({ gender: Gender.MALE }));
                         }
                         break;
                       case 'Blood type':
                         const bloodType = inputValue;
                         switch (bloodType) {
                           case BloodType.AB_MINUS:
-                            dispatch(updatePatientData({ bloodType: BloodType.AB_MINUS }));
+                            dispatch(patchPatientData({ bloodType: BloodType.AB_MINUS }));
                             break;
                           case BloodType.AB_PLUS:
-                            dispatch(updatePatientData({ bloodType: BloodType.AB_PLUS }));
+                            dispatch(patchPatientData({ bloodType: BloodType.AB_PLUS }));
                             break;
                           case BloodType.A_MINUS:
-                            dispatch(updatePatientData({ bloodType: BloodType.A_MINUS }));
+                            dispatch(patchPatientData({ bloodType: BloodType.A_MINUS }));
                             break;
                           case BloodType.A_PLUS:
-                            dispatch(updatePatientData({ bloodType: BloodType.A_PLUS }));
+                            dispatch(patchPatientData({ bloodType: BloodType.A_PLUS }));
                             break;
                           case BloodType.B_MINUS:
-                            dispatch(updatePatientData({ bloodType: BloodType.B_MINUS }));
+                            dispatch(patchPatientData({ bloodType: BloodType.B_MINUS }));
                             break;
                           case BloodType.B_PLUS:
-                            dispatch(updatePatientData({ bloodType: BloodType.B_PLUS }));
+                            dispatch(patchPatientData({ bloodType: BloodType.B_PLUS }));
                             break;
                           case BloodType.O_MINUS:
-                            dispatch(updatePatientData({ bloodType: BloodType.O_MINUS }));
+                            dispatch(patchPatientData({ bloodType: BloodType.O_MINUS }));
                             break;
                           case BloodType.O_PLUS:
-                            dispatch(updatePatientData({ bloodType: BloodType.O_PLUS }));
+                            dispatch(patchPatientData({ bloodType: BloodType.O_PLUS }));
                             break;
                         }
                         break;
