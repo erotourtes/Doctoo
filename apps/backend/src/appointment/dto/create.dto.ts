@@ -13,7 +13,6 @@ export class CreateAppointmentDto {
   readonly patientId: string;
 
   @IsISO8601({ strict: true }, { message: 'assignedAt must be a valid ISO8601 date' })
-
   @ApiProperty({
     type: 'Date string in ISO8601 format',
     description: 'The date and time of the appointment in ISO8601 fromat',
