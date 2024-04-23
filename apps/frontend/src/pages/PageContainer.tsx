@@ -37,7 +37,7 @@ const Navigation = () => {
   return (
     <Routes>
       <Route
-        path='/'
+        path='*'
         element={
           <div className='flex h-screen w-screen overflow-hidden'>
             <Sidemenu />
