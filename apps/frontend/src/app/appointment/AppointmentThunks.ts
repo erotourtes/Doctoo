@@ -7,7 +7,7 @@ import {
 } from './AppointmentSlice';
 import { instance } from '@/api/axios.api';
 import type { AxiosResponse } from 'axios';
-import { IAppointment } from '@/dataTypes/Appointment';
+import type { IAppointment } from '@/dataTypes/Appointment';
 import handleError from '@/api/handleError.api';
 
 export const getAppointmentsByPatientId = createAsyncThunk(
