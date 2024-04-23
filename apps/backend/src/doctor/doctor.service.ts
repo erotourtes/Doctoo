@@ -4,12 +4,14 @@ import { UserService } from '../user/user.service';
 import { CreateDoctorDto } from './dto/create.dto';
 import { PatchDoctorDto } from './dto/patch.dto';
 import { ResponseDoctorDto } from './dto/response.dto';
+import { HospitalService } from '../hospital/hospital.service';
 
 @Injectable()
 export class DoctorService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly userService: UserService,
+    private readonly hospitalService: HospitalService,
   ) {}
 
   async createDoctor(body: CreateDoctorDto): Promise<ResponseDoctorDto> {
@@ -23,14 +25,32 @@ export class DoctorService {
       throw new BadRequestException({ message: `Doctor associated with user with id ${body.userId} already exists` });
     }
 
-    const doctor = this.prismaService.doctor.create({ data: body });
+    const { hospitalIds, userId, ...doctorData } = body;
+    const existingHospitalIds = [];
+    for (const hospitalId of hospitalIds) {
+      const hospital = await this.hospitalService.getHospital(hospitalId);
+      existingHospitalIds.push(hospital.id);
+    }
+
+    const doctor = await this.prismaService.doctor.create({
+      data: {
+        ...doctorData,
+        user: { connect: { id: userId } },
+        hospitals: {
+          create: existingHospitalIds.map(id => ({ hospital: { connect: { id } } })),
+        },
+      },
+    });
 
     return doctor;
   }
 
   async getDoctors(): Promise<ResponseDoctorDto[]> {
-    const doctors = this.prismaService.doctor.findMany({
-      include: { user: { select: { firstName: true, lastName: true } } },
+    const doctors = await this.prismaService.doctor.findMany({
+      include: {
+        user: { select: { firstName: true, lastName: true } },
+        hospitals: { select: { hospital: { select: { id: true, name: true } } } },
+      },
     });
 
     return doctors;
@@ -39,7 +59,10 @@ export class DoctorService {
   async getDoctor(id: string): Promise<ResponseDoctorDto> {
     const doctor = await this.prismaService.doctor.findUnique({
       where: { id },
-      include: { user: { select: { firstName: true, lastName: true } } },
+      include: {
+        user: { select: { firstName: true, lastName: true } },
+        hospitals: { select: { hospital: true } },
+      },
     });
 
     if (!doctor) throw new NotFoundException({ message: `Doctor with id ${id} does not exist` });
