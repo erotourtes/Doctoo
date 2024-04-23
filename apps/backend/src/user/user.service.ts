@@ -15,10 +15,10 @@ export class UserService {
     return plainToInstance(ResponseWithoutRelationsUserDto, user);
   }
 
-  async getUserByEmail(email: string): Promise<ResponseWithoutRelationsUserDto> {
+  async getUserPasswordByEmail(email: string): Promise<ResponseWithoutRelationsUserDto> {
     const user = await this.prismaService.user.findUnique({ where: { email } });
 
-    return plainToInstance(ResponseWithoutRelationsUserDto, user);
+    return user;
   }
 
   async createUser(body: CreateUserDto): Promise<ResponseWithoutRelationsUserDto> {

@@ -4,12 +4,13 @@ export interface RadioButtonProps {
   label: string;
   name: string;
   selected: boolean;
-  onClick: () => void;
+  onClick: React.ChangeEventHandler<HTMLInputElement> | undefined;
+  id: string;
   disabled?: boolean;
   value?: string;
 }
 
-export const RadioButton = ({ label, onClick, disabled, name, value, selected }: RadioButtonProps) => {
+export const RadioButton = ({ label, onClick, disabled, name, value, selected, id }: RadioButtonProps) => {
   return (
     <label
       className={cn(disabled ? 'cursor-not-allowed text-grey-4' : 'cursor-pointer', 'flex cursor-pointer items-center')}
@@ -40,7 +41,7 @@ export const RadioButton = ({ label, onClick, disabled, name, value, selected }:
         ></div>
         <input
           type='radio'
-          id={`radiobutton-${label}`}
+          id={id}
           name={name}
           value={value || label}
           className={cn(disabled ? 'cursor-not-allowed' : '', 'absolute cursor-pointer opacity-0')}

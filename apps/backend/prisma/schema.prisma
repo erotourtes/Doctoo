@@ -159,8 +159,7 @@ model Patient {
   age             Int
   bloodType       BloodType            @map("blood_type")
   gender          Gender
-  /// TODO: Should we make this field is optional?
-  identityCardKey String               @map("identity_card_key")
+  identityCardKey String?              @map("identity_card_key")
   user            User                 @relation(fields: [userId], references: [id])
   declaration     Declaration?
   appointments    Appointment[]
