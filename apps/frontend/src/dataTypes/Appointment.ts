@@ -1,4 +1,4 @@
-import { IDoctor } from './Doctor';
+import type { IDoctor } from './Doctor';
 
 export enum AppointmentStatus {
   PLANNED = 'Planned',

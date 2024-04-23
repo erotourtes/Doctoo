@@ -36,7 +36,6 @@ const initialState: PatientData = {
     conditions: [],
     vaccinations: [],
     allergies: [],
-
   },
 };
 
