@@ -9,6 +9,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import PopupDoctoo from '../../../components/UI/Popup/Popup';
 import { useState } from 'react';
 import { API_URL, instance } from '../../../api/axios.api';
+import handleError from '../../../api/handleError.api';
 
 type SignUpType = {
   email: string;
@@ -20,7 +21,12 @@ const userSignUpSchema = Joi.object<SignUpType>({
     .email({ tlds: { allow: false } })
     .required(),
   password: Joi.string().min(6).required(),
-  fullName: Joi.string().min(1).required(),
+  fullName: Joi.string()
+    .regex(/^\w+\s+\w+$/)
+    .required()
+    .messages({
+      'string.pattern.base': 'Please enter your first and last name space separated',
+    }),
 });
 
 const SignUpPage = () => {
@@ -32,14 +38,16 @@ const SignUpPage = () => {
   const [open, setOpen] = useState(false);
 
   const onSubmit = async (data: SignUpType) => {
-    const res = await instance.post('/auth/signup', {
-      firstName: data.fullName.split(' ')[0],
-      lastName: data.fullName.split(' ')[1],
-      email: data.email,
-      password: data.password,
-      phone: '+380995698142',
-    });
-    console.log(res);
+    const [firstName, lastName] = data.fullName.split(' ');
+    await instance
+      .post('/auth/signup', {
+        firstName: firstName,
+        lastName: lastName,
+        email: data.email,
+        password: data.password,
+        phone: '+380995698142',
+      })
+      .catch(handleError);
 
     setOpen(true);
   };
@@ -82,7 +90,13 @@ const SignUpPage = () => {
             </div>
 
             <div className='space-y-4'>
-              <Input type='text' label='Name and Surname' id='fullName' placeholder='John Smith' />
+              <Input
+                type='text'
+                label='Name and Surname'
+                id='fullName'
+                placeholder='John Smith'
+                errorMessage={errors.fullName?.message}
+              />
               <Input
                 type='email'
                 label='Email'
