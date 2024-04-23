@@ -28,7 +28,7 @@ export const appointmentSlice = createAppSlice({
   name: 'appointment',
   initialState,
   reducers: {
-    setCurrentAppointments: (state, action: PayloadAction<IAppointment[]>) => {
+    setAppointments: (state, action: PayloadAction<IAppointment[]>) => {
       state.appointments = action.payload;
     },
 
@@ -56,9 +56,9 @@ export const appointmentSlice = createAppSlice({
   },
 });
 
-export const { setCurrentAppointments, setAppointmentCompleted, setAppointmentCanceled, setNewAppointment } =
+export const { setAppointments, setAppointmentCompleted, setAppointmentCanceled, setNewAppointment } =
   appointmentSlice.actions;
 
-export const appointmentData = (state: RootState) => state.doctor.data;
+export const appointmentData = (state: RootState) => state.appointment.appointments;
 
 export default appointmentSlice.reducer;
