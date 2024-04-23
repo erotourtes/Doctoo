@@ -1,7 +1,7 @@
 import type { AxiosResponse } from 'axios';
 import { instance } from './axios.api';
 import type { IAppointment, ICreateAppointment } from '@/dataTypes/Appointment';
-import { AppointmentStatus } from '@/dataTypes/Appointment';
+import type { AppointmentStatus } from '@/dataTypes/Appointment';
 import handleError from './handleError.api';
 
 /* ========== GET ========== */
