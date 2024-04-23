@@ -5,6 +5,7 @@ import { CreateDoctorDto } from './dto/create.dto';
 import { PatchDoctorDto } from './dto/patch.dto';
 import { ResponseDoctorDto } from './dto/response.dto';
 import { HospitalService } from '../hospital/hospital.service';
+import { GetDoctorsQuery } from './query/get-doctors.query';
 
 @Injectable()
 export class DoctorService {
@@ -45,12 +46,17 @@ export class DoctorService {
     return doctor;
   }
 
-  async getDoctors(): Promise<ResponseDoctorDto[]> {
+  async getDoctors(query?: GetDoctorsQuery): Promise<ResponseDoctorDto[]> {
+    const hospitalFilter: { id?: string; name?: any } = {};
+    const { hospitalId, search } = query;
+    if (hospitalId) hospitalFilter.id = hospitalId;
+    if (search) hospitalFilter.name = { contains: search };
     const doctors = await this.prismaService.doctor.findMany({
       include: {
         user: { select: { firstName: true, lastName: true } },
         hospitals: { select: { hospital: { select: { id: true, name: true } } } },
       },
+      where: { hospitals: { every: { hospital: hospitalFilter } } },
     });
 
     return doctors;
