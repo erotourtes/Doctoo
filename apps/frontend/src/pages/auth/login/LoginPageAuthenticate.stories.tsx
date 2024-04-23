@@ -1,13 +1,13 @@
-import AuthenticateLoginPage from '@/pages/auth/login/AuthenticateLoginPage';
+import LoginPageAuthenticate from '@/pages/auth/login/LoginPageAuthenticate';
 import type { StoryObj } from '@storybook/react';
 
 const meta = {
   title: 'Example/AuthPage/Login-Authenticate',
-  component: AuthenticateLoginPage,
+  component: LoginPageAuthenticate,
 };
 
 export default meta;
-type Story = StoryObj<typeof AuthenticateLoginPage>;
+type Story = StoryObj<typeof LoginPageAuthenticate>;
 
 export const Default: Story = {
   args: {},
