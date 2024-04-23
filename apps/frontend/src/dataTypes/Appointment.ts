@@ -1,4 +1,4 @@
-import { IDoctor } from "./Doctor";
+import { IDoctor } from './Doctor';
 
 export enum AppointmentStatus {
   PLANNED = 'Planned',
@@ -23,4 +23,12 @@ export interface IPlanedAppointment {
   date: string;
   notes: string;
   doctor: IDoctor;
+}
+
+export interface ICreateAppointment {
+  doctorId: string;
+  patientId: string;
+  date: string;
+  status: AppointmentStatus;
+  notes: string;
 }
