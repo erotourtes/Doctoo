@@ -28,11 +28,29 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
           <form
             onSubmit={e => {
               e.preventDefault();
-              console.log('submit');
             }}
           >
             {variant === 'input' && (
               <input
+                onBlur={() => {
+                  switch (title) {
+                    case 'Height,cm':
+                      if (parseInt(inputValue)) {
+                        dispatch(patchPatientData({ id: patient.id, data: { height: parseInt(inputValue) } }));
+                      }
+                      break;
+                    case 'Weight,kg':
+                      if (parseInt(inputValue)) {
+                        dispatch(patchPatientData({ id: patient.id, data: { weight: parseInt(inputValue) } }));
+                      }
+                      break;
+                    case 'Age':
+                      if (parseInt(inputValue)) {
+                        dispatch(patchPatientData({ id: patient.id, data: { age: parseInt(inputValue) } }));
+                      }
+                      break;
+                  }
+                }}
                 className={`w-fit bg-white font-medium outline-none`}
                 disabled={!isEditing}
                 defaultValue={value}
