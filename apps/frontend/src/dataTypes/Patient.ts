@@ -30,6 +30,9 @@ export interface IPatient {
   street: string;
   apartment?: string;
   zipCode?: number;
+  emailNotificationToggle: boolean;
+  twoFactorAuthToggle: boolean;
+  requestBillPaymentApproval: boolean;
 }
 
 export enum Gender {
