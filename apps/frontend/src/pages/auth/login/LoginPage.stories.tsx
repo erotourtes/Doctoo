@@ -2,7 +2,7 @@ import LoginPage from '@/pages/auth/login/LoginPage';
 import type { StoryObj } from '@storybook/react';
 
 const meta = {
-  title: 'Example/AuthPage/Login',
+  title: 'Pages/AuthPage/Login',
   component: LoginPage,
 };
 

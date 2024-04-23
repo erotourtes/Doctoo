@@ -2,7 +2,7 @@ import LoginPageAuthenticate from '@/pages/auth/login/LoginPageAuthenticate';
 import type { StoryObj } from '@storybook/react';
 
 const meta = {
-  title: 'Example/AuthPage/Login-Authenticate',
+  title: 'Pages/AuthPage/Login-Authenticate',
   component: LoginPageAuthenticate,
 };
 
