@@ -18,9 +18,5 @@ export default meta;
 type Stoty = StoryObj<typeof meta>;
 
 export const Height: Stoty = {
-  args: {
-    title: 'Height, cm',
-    value: '174',
-    iconVariant: 'height',
-  },
+  render: () => <StatsCard title='Height,cm' value='174' iconVariant='height' variant='input' />,
 };

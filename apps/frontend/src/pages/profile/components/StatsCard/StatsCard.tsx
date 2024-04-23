@@ -1,4 +1,4 @@
-import { useAppDispatch } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { patchPatientData } from '@/app/patient/PatientThunks';
 import { BloodType, Gender } from '@/dataTypes/Patient';
 import { capitalizeString } from '@/utils/capitalizeString';
@@ -9,14 +9,15 @@ import { useState } from 'react';
 type StatsCardProps = {
   iconVariant: IconVariant;
   value: string;
-} & (
-  | { variant: 'input'; title: 'Height,cm' | 'Weight,kg' | 'Age'; options?: never }
-  | { variant: 'select'; title: 'Gender' | 'Blood type'; options: string[] }
-);
+  variant: 'input' | 'select';
+  title: 'Height,cm' | 'Weight,kg' | 'Age' | 'Gender' | 'Blood type';
+  options?: string[];
+};
 
 const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState(value);
+  const patient = useAppSelector(state => state.patient.data);
   const dispatch = useAppDispatch();
 
   return (
@@ -49,38 +50,38 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
                       case 'Gender':
                         const gender = inputValue;
                         if (gender.toLowerCase() === Gender.FEMALE) {
-                          dispatch(patchPatientData({ gender: Gender.FEMALE }));
+                          dispatch(patchPatientData({ id: patient.id, data: { gender: Gender.FEMALE } }));
                         }
                         if (gender.toLowerCase() === Gender.MALE) {
-                          dispatch(patchPatientData({ gender: Gender.MALE }));
+                          dispatch(patchPatientData({ id: patient.id, data: { gender: Gender.MALE } }));
                         }
                         break;
                       case 'Blood type':
                         const bloodType = inputValue;
                         switch (bloodType) {
                           case BloodType.AB_MINUS:
-                            dispatch(patchPatientData({ bloodType: BloodType.AB_MINUS }));
+                            dispatch(patchPatientData({ id: patient.id, data: { bloodType: BloodType.AB_MINUS } }));
                             break;
                           case BloodType.AB_PLUS:
-                            dispatch(patchPatientData({ bloodType: BloodType.AB_PLUS }));
+                            dispatch(patchPatientData({ id: patient.id, data: { bloodType: BloodType.AB_PLUS } }));
                             break;
                           case BloodType.A_MINUS:
-                            dispatch(patchPatientData({ bloodType: BloodType.A_MINUS }));
+                            dispatch(patchPatientData({ id: patient.id, data: { bloodType: BloodType.A_MINUS } }));
                             break;
                           case BloodType.A_PLUS:
-                            dispatch(patchPatientData({ bloodType: BloodType.A_PLUS }));
+                            dispatch(patchPatientData({ id: patient.id, data: { bloodType: BloodType.A_PLUS } }));
                             break;
                           case BloodType.B_MINUS:
-                            dispatch(patchPatientData({ bloodType: BloodType.B_MINUS }));
+                            dispatch(patchPatientData({ id: patient.id, data: { bloodType: BloodType.B_MINUS } }));
                             break;
                           case BloodType.B_PLUS:
-                            dispatch(patchPatientData({ bloodType: BloodType.B_PLUS }));
+                            dispatch(patchPatientData({ id: patient.id, data: { bloodType: BloodType.B_PLUS } }));
                             break;
                           case BloodType.O_MINUS:
-                            dispatch(patchPatientData({ bloodType: BloodType.O_MINUS }));
+                            dispatch(patchPatientData({ id: patient.id, data: { bloodType: BloodType.O_MINUS } }));
                             break;
                           case BloodType.O_PLUS:
-                            dispatch(patchPatientData({ bloodType: BloodType.O_PLUS }));
+                            dispatch(patchPatientData({ id: patient.id, data: { bloodType: BloodType.O_PLUS } }));
                             break;
                         }
                         break;
@@ -88,11 +89,12 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
                   }}
                   className={`${isEditing ? 'pointer-events-auto' : 'pointer-events-none'} appearance-none outline-none`}
                 >
-                  {options.map((option, index) => (
-                    <option key={index} value={option}>
-                      {capitalizeString(option)}
-                    </option>
-                  ))}
+                  {options &&
+                    options.map((option, index) => (
+                      <option key={index} value={option}>
+                        {capitalizeString(option)}
+                      </option>
+                    ))}
                 </select>
               </form>
             )}

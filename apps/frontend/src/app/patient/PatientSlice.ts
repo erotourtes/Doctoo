@@ -4,14 +4,15 @@ import type { IUSer } from '@/dataTypes/User';
 import { createAppSlice } from '../createAppSlice';
 import { BloodType, Gender, type IPatient } from '@/dataTypes/Patient';
 
-export type Patient = Omit<IPatient, 'userId'> & IUSer;
+export type Patient = IPatient & IUSer;
 interface PatientData {
   data: Patient;
 }
 
 const initialState: PatientData = {
   data: {
-    id: '0',
+    id: '78a3a566-f274-432f-8b7b-6969ad3a8438',
+    userId: '411625f4-c7c6-4916-a287-a3173ec060e4',
     firstName: '',
     lastName: '',
     phone: '',

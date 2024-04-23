@@ -1,4 +1,4 @@
-export type IUSer = {
+export interface IUSer {
   id: string;
   firstName: string;
   lastName: string;
@@ -8,4 +8,4 @@ export type IUSer = {
   emailVerified: boolean;
   googleId: string;
   avatarKey: string;
-};
+}

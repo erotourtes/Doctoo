@@ -1,9 +1,9 @@
-import { useAppDispatch } from '@/app/hooks';
-import { type Patient } from '@/app/patient/PatientSlice';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { patchPatientData } from '@/app/patient/PatientThunks';
 import { Button } from '@/components/UI/Button/Button';
 import Input from '@/components/UI/Input/Input';
 import PopupDoctoo from '@/components/UI/Popup/Popup';
+import type { IPatient } from '@/dataTypes/Patient';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Joi from 'joi';
 import { type FieldValues, FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
@@ -26,10 +26,12 @@ const schema = Joi.object({
   city: Joi.string().min(3).max(30).required(),
   street: Joi.string().min(3).max(30).required(),
   zipCode: Joi.string().alphanum().min(3).max(30).required(),
-  apartment: Joi.string().alphanum().max(30).optional(),
+  apartment: Joi.string().max(30).optional(),
 });
 
 const AddressInfoPopup = ({ isOpen, onClose }: AddressInfoPopupProps) => {
+  const patient = useAppSelector(state => state.patient.data);
+
   const methods = useForm({
     mode: 'onChange',
     resolver: joiResolver(schema),
@@ -41,10 +43,10 @@ const AddressInfoPopup = ({ isOpen, onClose }: AddressInfoPopupProps) => {
 
   function onSubmit(data: FormData): void {
     console.log(data);
-    const patientData: Partial<Patient> = {
+    const patientData: Partial<IPatient> = {
       ...data,
     };
-    dispatch(patchPatientData(patientData));
+    dispatch(patchPatientData({ id: patient.id, data: patientData }));
   }
 
   return (
@@ -71,10 +73,10 @@ const AddressInfoPopup = ({ isOpen, onClose }: AddressInfoPopupProps) => {
           </div>
 
           <div className='flex w-full gap-4'>
-            <Button type='secondary' onClick={() => {}} className='w-1/2'>
+            <Button btnType='reset' type='secondary' onClick={() => {}} className='w-1/2'>
               Cancel
             </Button>
-            <Button type='primary' onClick={() => {}} className='w-1/2'>
+            <Button btnType='submit' type='primary' onClick={() => {}} className='w-1/2'>
               Save
             </Button>
           </div>

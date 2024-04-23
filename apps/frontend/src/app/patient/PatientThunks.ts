@@ -25,9 +25,9 @@ export const getPatientData = createAsyncThunk('patient', async (id: string, { d
 
 export const patchPatientData = createAsyncThunk(
   'patient',
-  async (data: Partial<Omit<IPatient, 'userId'>>, { dispatch }) => {
+  async ({ id, data }: { id: string; data: Partial<Omit<IPatient, 'userId'>> }, { dispatch }) => {
     try {
-      const response: AxiosResponse<IPatient> = await instance.patch(`/patient`, data);
+      const response: AxiosResponse<IPatient> = await instance.patch(`/patient/${id}`, data);
       if (response.status === 200) {
         dispatch(updatePatientData(response.data));
       }
@@ -38,17 +38,21 @@ export const patchPatientData = createAsyncThunk(
   },
 );
 
-export const patchUserData = createAsyncThunk('patient', async (data: Partial<IUSer>, { dispatch }) => {
-  try {
-    const response: AxiosResponse<IUSer> = await instance.patch(`/user`, data);
-    if (response.status === 200) {
-      dispatch(updatePatientData(response.data));
+export const patchUserData = createAsyncThunk(
+  'patient',
+  async ({ id, data }: { id: string; data: Partial<IUSer> }, { dispatch }) => {
+    console.log(data, id);
+    try {
+      const response: AxiosResponse<IUSer> = await instance.patch(`/user/${id}`, data);
+      if (response.status === 200) {
+        dispatch(updatePatientData(response.data));
+      }
+    } catch (e) {
+      const error = e as Error;
+      throw error;
     }
-  } catch (e) {
-    const error = e as Error;
-    throw error;
-  }
-});
+  },
+);
 
 export const deletePatient = createAsyncThunk('patient', async (id: string) => {
   try {

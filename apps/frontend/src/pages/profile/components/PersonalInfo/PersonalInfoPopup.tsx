@@ -1,9 +1,9 @@
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { type Patient } from '@/app/patient/PatientSlice';
-import { patchPatientData } from '@/app/patient/PatientThunks';
+import { patchUserData } from '@/app/patient/PatientThunks';
 import { Button } from '@/components/UI/Button/Button';
 import Input from '@/components/UI/Input/Input';
 import PopupDoctoo from '@/components/UI/Popup/Popup';
+import type { IUSer } from '@/dataTypes/User';
 import Icon from '@UI/Icon/Icon';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Joi from 'joi';
@@ -44,15 +44,15 @@ const PersonalInfoPopup = ({ isOpen, onClose }: PersonalInfoPopupProps) => {
     const [firstName, lastName] = data.fullname.split(' ');
     const phone = data.countryIndex + data.phone;
     const { email } = data;
-    const patienData: Partial<Patient> = {
+    const userData: Partial<IUSer> = {
       email,
       phone,
       firstName,
       lastName,
     };
 
-    console.log(patienData);
-    dispatch(patchPatientData(patienData));
+    console.log(userData);
+    dispatch(patchUserData({ id: patient.userId, data: userData }));
   }
   return (
     <PopupDoctoo
@@ -109,22 +109,22 @@ const PersonalInfoPopup = ({ isOpen, onClose }: PersonalInfoPopupProps) => {
                     {...methods.register('countryIndex')}
                     className='flex w-full appearance-none items-center  justify-center rounded-md border border-transparent bg-background px-4 py-2 text-grey-1 outline-none focus:border-text'
                   >
-                    <option className='flex w-full items-center justify-center' value='1' selected>
+                    <option className='flex w-full items-center justify-center' value='+1' selected>
                       🇺🇸 +1
                     </option>
-                    <option className='flex w-full items-center justify-center' value='38'>
+                    <option className='flex w-full items-center justify-center' value='+38'>
                       🇺🇦 +38
                     </option>
-                    <option className='flex w-full items-center justify-center' value='44'>
+                    <option className='flex w-full items-center justify-center' value='+44'>
                       🇬🇧 +44
                     </option>
-                    <option className='flex w-full items-center justify-center' value='49'>
+                    <option className='flex w-full items-center justify-center' value='+49'>
                       🇩🇪 +49
                     </option>
-                    <option className='flex w-full items-center justify-center' value='48'>
+                    <option className='flex w-full items-center justify-center' value='+48'>
                       🇵🇱 +48
                     </option>
-                    <option className='flex w-full items-center justify-center' value='33'>
+                    <option className='flex w-full items-center justify-center' value='+33'>
                       🇫🇷 +33
                     </option>
                   </select>
