@@ -12,7 +12,6 @@ export class ResponseAppointmentDto {
   patientId: string;
    
   @ApiProperty({ description: 'assingedAt for the appointment' })
-  @IsNotEmpty()
   assignedAt: Date;
 
   @ApiProperty({ description: 'Notes for the appointment' })
