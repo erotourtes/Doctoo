@@ -1,22 +1,33 @@
 import { Toggle } from '@/components/UI/Toggle';
 import Icon from '@UI/Icon/Icon';
 import { useState } from 'react';
+import SettingsPopup from '../settingsPopup/settingsPopup';
+import { useAppSelector } from '@/app/hooks';
 
 const Settings = () => {
-  const [emailNotificationToggle, setEmailNotificationToggle] = useState(false);
-  const [twoFactorAuthToggle, setTwoFactorAuthToggle] = useState(false);
-  const [billPaymentToggle, setBillPaymentToggle] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+
+  const [patient, setPatient] = useState(useAppSelector(state => state.patient.data));
 
   const handleEmailNotificationToggleChange = () => {
-    setEmailNotificationToggle(!emailNotificationToggle);
+    setPatient(prevPatient => ({
+      ...prevPatient,
+      emailNotificationToggle: !prevPatient.emailNotificationToggle,
+    }));
   };
 
   const handleTwoFactorAuthToggleChange = () => {
-    setTwoFactorAuthToggle(!twoFactorAuthToggle);
+    setPatient(prevPatient => ({
+      ...prevPatient,
+      twoFactorAuthToggle: !prevPatient.twoFactorAuthToggle,
+    }));
   };
 
   const handleBillPaymentToggleChange = () => {
-    setBillPaymentToggle(!billPaymentToggle);
+    setPatient(prevPatient => ({
+      ...prevPatient,
+      requestBillPaymentApproval: !prevPatient.requestBillPaymentApproval,
+    }));
   };
 
   return (
@@ -30,13 +41,13 @@ const Settings = () => {
           <div className='for-password h-[88px] w-11/12 rounded-lg bg-white'>
             <div className='settings__header flex items-center justify-between gap-2 p-8'>
               <span className='text-lg font-medium text-grey-1'>Password</span>
-              <a href='#' className='text-lg font-medium text-main '>
+              <a href='#' className='text-lg font-medium text-main ' onClick={() => setShowPopup(true)}>
                 Change password
               </a>
             </div>
           </div>
         </section>
-
+        {showPopup && <SettingsPopup handleClosePopup={() => setShowPopup(false)} />}
         <section className='flex items-center justify-center'>
           <div className='for-password h-[226px] w-11/12 rounded-lg bg-white max-sm:h-[240px] '>
             <div className='pl-6 pr-6 pt-7'>
@@ -45,7 +56,7 @@ const Settings = () => {
                   <span className='text-lg font-medium text-grey-1'>Send e-mail notifications</span>
                   <a href='#' className='text-lg text-main '>
                     <Toggle
-                      selected={emailNotificationToggle}
+                      selected={patient.emailNotificationToggle}
                       onSelectedChange={handleEmailNotificationToggleChange}
                       label=''
                       id='emailNotificationToggle'
@@ -60,7 +71,7 @@ const Settings = () => {
                   <span className='text-lg font-medium text-grey-1'>Turn on two-factor authentication</span>
                   <a href='#' className='text-lg text-main '>
                     <Toggle
-                      selected={twoFactorAuthToggle}
+                      selected={patient.twoFactorAuthToggle}
                       onSelectedChange={handleTwoFactorAuthToggleChange}
                       label=''
                       id='twoFactorAuthToggle'
@@ -75,7 +86,7 @@ const Settings = () => {
                   <span className='text-lg font-medium text-grey-1'>Request approval for bill payment</span>
                   <a href='#' className='text-lg text-main '>
                     <Toggle
-                      selected={billPaymentToggle}
+                      selected={patient.requestBillPaymentApproval}
                       onSelectedChange={handleBillPaymentToggleChange}
                       label=''
                       id='billPaymentToggle'

@@ -27,6 +27,7 @@ export interface IPatient {
   conditions: Condition[];
   vaccinations: Vaccination[];
   allergies: Allergy[];
+
 }
 
 export enum Gender {

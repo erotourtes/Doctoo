@@ -44,7 +44,9 @@ const InputPassword = ({
         <input
           {...register(id)}
           type={inputType}
-          className={`${classNameInput || ''} col-start-1 row-start-1 w-full rounded-lg bg-background py-2 pl-4 pr-10 text-base text-text hover:border focus:border focus:outline-none ${hasError && 'border border-solid border-error'}`}
+          className={`${classNameInput || ''} col-start-1 row-start-1 
+          w-full rounded-lg bg-background py-2 pl-4 pr-10 text-base text-text 
+          focus:outline-none ${hasError && 'border border-solid border-error'}`}
           placeholder={placeholder}
         />
 
