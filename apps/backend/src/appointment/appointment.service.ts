@@ -2,17 +2,19 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateAppointmentDto } from './dto/create.dto';
 import { PatchAppointmentDto } from './dto/patch.dto';
+import { ResponseAppointmentDto } from './dto/response.dto';
 
 @Injectable()
 export class AppointmentService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(body: CreateAppointmentDto) {
+  async create(body: CreateAppointmentDto): Promise<ResponseAppointmentDto> {
     const appointment = await this.prismaService.appointment.create({ data: body });
+
     return appointment;
   }
 
-  async findAllByPatientId(id: string) {
+  async findAllByPatientId(id: string): Promise<ResponseAppointmentDto[]> {
     const appointments = await this.prismaService.appointment.findMany({
       where: { patientId: id },
       include: { doctor: true },
@@ -20,7 +22,7 @@ export class AppointmentService {
     return appointments;
   }
 
-  async findAllByDoctorId(id: string) {
+  async findAllByDoctorId(id: string): Promise<ResponseAppointmentDto[]> {
     const doctor = await this.prismaService.doctor.findUnique({ where: { id } });
     if (!doctor) throw new NotFoundException({ message: `Doctor with ID ${id} does not exist` });
 
@@ -32,12 +34,12 @@ export class AppointmentService {
     return appointments;
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<ResponseAppointmentDto> {
     const appointment = await this.prismaService.appointment.findUnique({ where: { id } });
     return appointment;
   }
 
-  async update(id: string, body: PatchAppointmentDto) {
+  async update(id: string, body: PatchAppointmentDto): Promise<ResponseAppointmentDto> {
     const appointment = await this.prismaService.appointment.update({ where: { id }, data: body });
 
     return appointment;
