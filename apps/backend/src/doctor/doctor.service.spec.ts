@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { DoctorService } from './doctor.service';
 import { CreateDoctorDto } from './dto/create.dto';
 import { PatchDoctorDto } from './dto/patch.dto';
-import { userStub } from '../../test/stubs/user.stub';
+import { userStub } from '../mocks/stubs/user.stub';
 import { UserModule } from '../user/user.module';
 
 describe('DoctorService', () => {
