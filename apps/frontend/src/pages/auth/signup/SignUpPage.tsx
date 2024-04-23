@@ -40,13 +40,19 @@ const SignUpPage = () => {
   const onSubmit = async (data: SignUpType) => {
     const [firstName, lastName] = data.fullName.split(' ');
     await instance
-      .post('/auth/signup', {
-        firstName: firstName,
-        lastName: lastName,
-        email: data.email,
-        password: data.password,
-        phone: '+380995698142',
-      })
+      .post(
+        '/auth/signup',
+        {
+          firstName: firstName,
+          lastName: lastName,
+          email: data.email,
+          password: data.password,
+          phone: '+380995698142',
+        },
+        {
+          withCredentials: true,
+        },
+      )
       .catch(handleError);
 
     setOpen(true);

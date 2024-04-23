@@ -17,16 +17,22 @@ const SignUpPageOrig = ({ token }: { token: string }) => {
   const navigate = useNavigate();
 
   const onSubmit = async () => {
-    const res = await instance.post(`/auth/signup/patient/${token}`, {
-      weight: 70,
-      height: 180,
-      age: 20,
-      bloodType: 'O_PLUS',
-      gender: 'MALE',
-      country: 'Ukraine',
-      city: 'Kyiv',
-      street: 'Khreshchatyk',
-    });
+    const res = await instance.post(
+      `/auth/signup/patient/${token}`,
+      {
+        weight: 70,
+        height: 180,
+        age: 20,
+        bloodType: 'O_PLUS',
+        gender: 'MALE',
+        country: 'Ukraine',
+        city: 'Kyiv',
+        street: 'Khreshchatyk',
+      },
+      {
+        withCredentials: true,
+      },
+    );
 
     if (res.status === 201) {
       navigate('/');

@@ -29,7 +29,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const onLogin: SubmitHandler<FieldValues> = async credentials => {
-    const res = await instance.post('/auth/login/patient', credentials);
+    const res = await instance.post('/auth/login/patient', credentials, { withCredentials: true });
     if (res.status === 201) {
       navigate('/');
     }
