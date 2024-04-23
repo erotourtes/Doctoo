@@ -1,5 +1,7 @@
+import { ConfigType } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
+import * as bcrypt from 'bcrypt';
 import { plainToClass, plainToInstance } from 'class-transformer';
 import auth from '../config/auth';
 import config from '../config/config';
@@ -8,8 +10,6 @@ import { PatientService } from '../patient/patient.service';
 import { CreateUserDto } from '../user/dto/create.dto';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
-import * as bcrypt from 'bcrypt';
-import { ConfigType } from '@nestjs/config';
 
 describe('AuthService', () => {
   let authService: AuthService;

@@ -6,15 +6,12 @@ import { ResponseDoctorDto } from './dto/response.dto';
 import {
   ApiTags,
   ApiOperation,
-  ApiResponse,
   ApiOkResponse,
   ApiBadRequestResponse,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiParam,
   ApiBody,
-  ApiCreatedResponse,
-  ApiNoContentResponse,
 } from '@nestjs/swagger';
 import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../../utils/errorResponses';
 
@@ -40,7 +37,7 @@ export class DoctorController {
     summary: 'Get all doctors',
     description: 'This endpoint retrieves all doctors.',
   })
-  @ApiOkResponse({type: ResponseDoctorDto, isArray: true, description: 'All doctors' })
+  @ApiOkResponse({ type: ResponseDoctorDto, isArray: true, description: 'All doctors' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
   @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
   @Get()
@@ -68,7 +65,7 @@ export class DoctorController {
   })
   @ApiParam({ name: 'id', description: 'Doctor ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiBody({ type: PatchDoctorDto })
-  @ApiOkResponse({type: ResponseDoctorDto, description: 'Doctor updated'})
+  @ApiOkResponse({ type: ResponseDoctorDto, description: 'Doctor updated' })
   @ApiNotFoundResponse({ type: NotFoundResponse, description: 'Doctor not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
   @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
@@ -81,7 +78,7 @@ export class DoctorController {
     summary: 'Delete a doctor by ID',
     description: 'This endpoint deletes a doctor object by ID.',
   })
-  @ApiOkResponse({description: 'Doctor deleted' })
+  @ApiOkResponse({ description: 'Doctor deleted' })
   @ApiNotFoundResponse({ type: NotFoundResponse, description: 'Doctor not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
   @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })

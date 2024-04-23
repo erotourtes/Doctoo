@@ -1,6 +1,6 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { BloodType, Gender } from '@prisma/client';
 import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger'
 import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
 
 export class CreatePatientDto {
@@ -19,9 +19,6 @@ export class CreatePatientDto {
   @IsNumber()
   @ApiProperty({ description: 'The age of the patient' })
   readonly age: number;
-
-  @IsString()
-  readonly identityCardKey: string;
 
   @IsEnum(BloodType)
   @ApiProperty({ description: 'The blood type of the patient', type: 'enum', enum: BloodType })

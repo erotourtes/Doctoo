@@ -11,12 +11,35 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MinioService } from '../minio/minio.service';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiConsumes,
+  ApiCreatedResponse,
+  ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../../utils/errorResponses';
 
 // TODO: Use new code-style
+@ApiTags('File')
 @Controller('file')
 export class FileController {
   constructor(private readonly minioService: MinioService) {}
 
+  @ApiOperation({
+    summary: 'Uploading a file',
+    description: 'This endpoint is used for the file uploading.',
+  })
+  @ApiBody({ description: 'Formdata object with a file data' })
+  @ApiConsumes('multipart/form-data')
+  @ApiCreatedResponse({ type: String, description: 'Message: File was uploaded successfully' })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
+  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
@@ -30,6 +53,15 @@ export class FileController {
     }
   }
 
+  @ApiOperation({
+    summary: 'Get a link for a file by name',
+    description: 'This endpoint retrieves a link for a file by name.',
+  })
+  @ApiParam({ name: 'fileName', description: 'File name', example: 'file.pdf' })
+  @ApiOkResponse({ type: String, description: 'The link for the file' })
+  @ApiNotFoundResponse({ type: NotFoundResponse, description: 'File not found' })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
+  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
   @Get(':fileName')
   async getFile(@Param('fileName') fileName: string) {
     try {
@@ -41,6 +73,14 @@ export class FileController {
     }
   }
 
+  @ApiOperation({
+    summary: 'Delete a file by name',
+    description: 'This endpoint deletes a file by name.',
+  })
+  @ApiParam({ name: 'fileName', description: 'File name', example: 'file.pdf' })
+  @ApiNotFoundResponse({ type: NotFoundResponse, description: 'File not found' })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
+  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
   @Delete(':fileName')
   async deleteFile(@Param('fileName') fileName: string) {
     try {
