@@ -26,6 +26,9 @@ const initialState: PatientData = {
     allergies: [],
     city: '',
     street: '',
+    emailNotificationToggle: false,
+    twoFactorAuthToggle: false,
+    requestBillPaymentApproval: false,
   },
 };
 

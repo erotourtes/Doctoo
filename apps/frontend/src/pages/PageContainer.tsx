@@ -5,6 +5,7 @@ import LoginPage from './auth/login/LoginPage';
 import LoginPageAuthenticate from './auth/login/LoginPageAuthenticate';
 import SignUpPatientPage from './auth/signup/SignUpPatientPage';
 import Sidemenu from '../components/Sidemenu/Sidemenu';
+import Settings from './settings/settingsPage/settingsPage';
 
 // import page component
 
@@ -28,6 +29,7 @@ const PageContainer = () => {
       <Routes>
         {/* <Route path="/path-to-page" Component={Page} /> */}
         <Route path='/profile' Component={ProfilePage} />
+        <Route path='/settings' Component={Settings} />
       </Routes>
     </main>
   );
