@@ -47,8 +47,12 @@ describe('DeclarationService', () => {
       userId: userFirst.id,
     };
 
+    const specialization = await prisma.specialization.create({ data: { name: 'test3' } });
+
+
     const doctorData: CreateDoctorDto = {
       ...doctorStub(),
+      specializationId: specialization.id,
       userId: userSecond.id,
     };
 
@@ -160,8 +164,12 @@ describe('DeclarationService', () => {
       userId: userFirst.id,
     };
 
+    const specialization = await prisma.specialization.create({ data: { name: 'test1' } });
+
+
     const doctorData: CreateDoctorDto = {
       ...doctorStub(),
+      specializationId: specialization.id,
       userId: userSecond.id,
     };
 
@@ -205,9 +213,12 @@ describe('DeclarationService', () => {
       gender: Gender.FEMALE,
       userId: userFirst.id,
     };
+    const specialization = await prisma.specialization.create({ data: { name: 'test' } });
+
 
     const doctorData: CreateDoctorDto = {
       ...doctorStub(),
+      specializationId: specialization.id,
       userId: userSecond.id,
     };
 

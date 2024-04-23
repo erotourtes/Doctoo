@@ -21,9 +21,9 @@ export class CreateDoctorDto {
   about: string;
 
   // Add only after realizing specializationId and specialization_conditions entities
-  //  @ApiProperty({ description: 'The ID of the specialization', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
-  //  @IsString()
-  //  specializationId: string;
+   @ApiProperty({ description: 'The ID of the specialization', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
+   @IsString()
+   specializationId: string;
 
 
 }
