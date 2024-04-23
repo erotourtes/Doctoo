@@ -137,6 +137,7 @@ jobs:
           MAIL_PORT=${{ secrets.MAIL_PORT }}
           MINIO_ROOT_USER=${{ secrets.MINIO_ROOT_USER }}
           MINIO_ROOT_PASSWORD=${{ secrets.MINIO_ROOT_PASSWORD }}
+          A=true
           EOF
 
       - name: Run new Docker containers
