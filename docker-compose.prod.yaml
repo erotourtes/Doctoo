@@ -40,6 +40,8 @@ services:
       MAIL_PORT: ${MAIL_PORT}
     depends_on:
       - postgres
+    networks:
+      - caddy
     labels:
       caddy: https://api.doctoo.radency.lwjerri.dev
       caddy.reverse_proxy: '{{upstreams $BACKEND_PORT}}'
@@ -49,6 +51,8 @@ services:
     image: registry.radency.lwjerri.dev/radency/doctoo-frontend:latest
     depends_on:
       - backend
+    networks:
+      - caddy
     labels:
       caddy: https://doctoo.radency.lwjerri.dev
       caddy.reverse_proxy: '{{upstreams 8080}}'
@@ -67,3 +71,7 @@ services:
 volumes:
   postgres_prod_db:
   minio_prod_data:
+
+networks:
+  caddy:
+    external: true
