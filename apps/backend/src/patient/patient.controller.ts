@@ -11,7 +11,7 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../../utils/errorResponses';
+import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../utils/errorResponses';
 import { CreatePatientDto } from './dto/create.dto';
 import { PatchPatientDto } from './dto/patch.dto';
 import { ResponsePatientDto } from './dto/response.dto';

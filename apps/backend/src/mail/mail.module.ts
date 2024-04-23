@@ -1,22 +1,21 @@
 import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigType } from '@nestjs/config';
 import { join } from 'path';
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import { MailService } from './mail.service';
-import mail from '../config/mail';
 import config from '../config/config';
+import mail from '../config/mail';
+import { MailService } from './mail.service';
 
 @Module({
   imports: [
     ConfigModule,
     MailerModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: async (mailConfig: ConfigType<typeof mail>, configObject: ConfigType<typeof config>) => ({
+      useFactory: async (mailConfig: ConfigType<typeof mail>) => ({
         transport: {
           host: mailConfig.MAIL_HOST,
           port: mailConfig.MAIL_PORT,
-          secure: configObject.NODE_ENV === 'production',
+          secure: false,
           auth: {
             user: mailConfig.MAIL_USER,
             pass: mailConfig.MAIL_PASS,

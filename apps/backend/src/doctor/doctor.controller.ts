@@ -1,19 +1,19 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../utils/errorResponses';
 import { DoctorService } from './doctor.service';
 import { CreateDoctorDto } from './dto/create.dto';
 import { PatchDoctorDto } from './dto/patch.dto';
 import { ResponseDoctorDto } from './dto/response.dto';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiOkResponse,
-  ApiBadRequestResponse,
-  ApiInternalServerErrorResponse,
-  ApiNotFoundResponse,
-  ApiParam,
-  ApiBody,
-} from '@nestjs/swagger';
-import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../../utils/errorResponses';
 
 @ApiTags('Doctor')
 @Controller('doctor')

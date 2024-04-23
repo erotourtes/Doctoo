@@ -1,22 +1,22 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
-import { CreateUserDto } from './dto/create.dto';
-import { PatchUserDto } from './dto/patch.dto';
-import { GetUserGuard } from './guards/get.guard';
-import { UserService } from './user.service';
 import {
-  ApiTags,
-  ApiOperation,
-  ApiOkResponse,
   ApiBadRequestResponse,
-  ApiInternalServerErrorResponse,
-  ApiNotFoundResponse,
-  ApiParam,
   ApiBody,
   ApiCreatedResponse,
+  ApiInternalServerErrorResponse,
   ApiNoContentResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
 } from '@nestjs/swagger';
+import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../utils/errorResponses';
+import { CreateUserDto } from './dto/create.dto';
+import { PatchUserDto } from './dto/patch.dto';
 import { ResponseUserDto } from './dto/response.dto';
-import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../../utils/errorResponses';
+import { GetUserGuard } from './guards/get.guard';
+import { UserService } from './user.service';
 
 @ApiTags('User')
 @Controller('user')
