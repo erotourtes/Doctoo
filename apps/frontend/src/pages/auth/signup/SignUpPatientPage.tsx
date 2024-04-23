@@ -31,8 +31,6 @@ const SignUpPageOrig = ({ token }: { token: string }) => {
     if (res.status === 201) {
       navigate('/');
     }
-
-    console.log(res);
   };
 
   return (

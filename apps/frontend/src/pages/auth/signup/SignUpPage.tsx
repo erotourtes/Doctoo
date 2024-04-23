@@ -8,7 +8,7 @@ import Joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import PopupDoctoo from '../../../components/UI/Popup/Popup';
 import { useState } from 'react';
-import { instance } from '../../../api/axios.api';
+import { API_URL, instance } from '../../../api/axios.api';
 
 type SignUpType = {
   email: string;
@@ -44,7 +44,9 @@ const SignUpPage = () => {
     setOpen(true);
   };
 
-  const onGoogleSignUp = () => {};
+  const onGoogleSignUp = async () => {
+    window.open(`${API_URL}/auth/login/google`, '_self');
+  };
   const onFacebookSignUp = () => {};
 
   return (
