@@ -5,18 +5,17 @@ import { join } from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { MailService } from './mail.service';
 import mail from '../config/mail';
-import config from '../config/config';
 
 @Module({
   imports: [
     ConfigModule,
     MailerModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (mailConfig: ConfigType<typeof mail>, configObject: ConfigType<typeof config>) => ({
+      useFactory: async (mailConfig: ConfigType<typeof mail>) => ({
         transport: {
           host: mailConfig.MAIL_HOST,
           port: mailConfig.MAIL_PORT,
-          secure: configObject.NODE_ENV === 'production',
+          secure: mailConfig.MAIL_SECURE,
           auth: {
             user: mailConfig.MAIL_USER,
             pass: mailConfig.MAIL_PASS,
@@ -34,7 +33,7 @@ import config from '../config/config';
           options: { strict: true },
         },
       }),
-      inject: [mail.KEY, config.KEY],
+      inject: [mail.KEY],
     }),
   ],
   providers: [MailService],
