@@ -1,10 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BloodType, Gender } from '@prisma/client';
 import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
-<<<<<<< Updated upstream
-=======
-import { ApiProperty } from '@nestjs/swagger';
->>>>>>> Stashed changes
 import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
 
 export class CreatePatientDto {

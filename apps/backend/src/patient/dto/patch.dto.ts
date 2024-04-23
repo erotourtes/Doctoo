@@ -1,10 +1,6 @@
 import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
 import { CreatePatientDto } from './create.dto';
-<<<<<<< Updated upstream
-=======
-import { ApiProperty } from '@nestjs/swagger';
->>>>>>> Stashed changes
 
 class PrePatchPatientDto extends OmitType(CreatePatientDto, ['userId']) {}
 
