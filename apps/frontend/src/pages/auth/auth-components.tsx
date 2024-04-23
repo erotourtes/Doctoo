@@ -35,8 +35,10 @@ export const AuthLogInIntoAccount = () => {
 
 export const AuthMainContainer: FC<PropsWithChildren> = ({ children }) => {
   return (
-    <div className='flex h-svh w-svw justify-center'>
-      <div className='m-auto flex max-h-[700px] w-full justify-center overflow-y-auto sm:w-[60%]'>{children}</div>
+    <div className='flex h-svh max-h-svh w-svw justify-center '>
+      <div className='flex w-full justify-center overflow-y-auto sm:w-[60%]'>
+        <div className='m-auto flex max-h-[700px]'>{children}</div>
+      </div>
       <div className='hidden h-full w-[40%] bg-greeting-bg bg-cover bg-no-repeat sm:block '> </div>
     </div>
   );
