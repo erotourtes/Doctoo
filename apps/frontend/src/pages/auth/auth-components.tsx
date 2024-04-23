@@ -1,5 +1,6 @@
 import type { FC, PropsWithChildren } from 'react';
 import Icon from '../../components/UI/Icon/Icon';
+import { Link } from 'react-router-dom';
 
 export const LogoWithTitle = () => {
   return (
@@ -14,7 +15,9 @@ export const AuthCreateAccount = () => {
   return (
     <div className='mx-6 flex justify-center gap-1'>
       <p>{"Don't have an account?"}</p>
-      <p className='text-main'>Create one</p>
+      <Link to='/signup' className='text-main'>
+        Create one
+      </Link>
     </div>
   );
 };
@@ -23,7 +26,9 @@ export const AuthLogInIntoAccount = () => {
   return (
     <div className='mx-6 flex justify-center gap-1'>
       <p>Already have an account?</p>
-      <p className='text-main'>Log In</p>
+      <Link to='/login' className='text-main'>
+        Log In
+      </Link>
     </div>
   );
 };
