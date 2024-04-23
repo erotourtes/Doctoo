@@ -3,7 +3,7 @@ name: CI & CD
 on:
   push:
     branches:
-      - 'feat/gcp-ci-cd'
+      - 'development'
 
 jobs:
   ci-job:
