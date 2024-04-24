@@ -39,6 +39,17 @@ export class AppointmentController {
   }
 
   @ApiOperation({
+    summary: 'Get a list of all appointments',
+    description: 'This endpoint retrieves a list of all appointment objects.',
+  })
+  @ApiOkResponse({ type: ResponseAppointmentDto, description: 'Appointments exist' })
+  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internalserver error' })
+  @Get()
+  findAll() {
+    return this.appointmentService.findAll();
+  }
+
+  @ApiOperation({
     summary: 'Get a list of appointments of the patient',
     description: "This endpoint retrieves a list of appointment objects of the patient by it's ID.",
   })

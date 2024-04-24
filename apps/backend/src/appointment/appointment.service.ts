@@ -14,11 +14,30 @@ export class AppointmentService {
     return appointment;
   }
 
+  async findAll(): Promise<ResponseAppointmentDto[]> {
+    const appointments = await this.prismaService.appointment.findMany();
+
+    return appointments;
+  }
+
   async findAllByPatientId(id: string): Promise<ResponseAppointmentDto[]> {
     const appointments = await this.prismaService.appointment.findMany({
       where: { patientId: id },
-      include: { doctor: true },
+      include: {
+        doctor: {
+          include: {
+            user: {
+              select: { firstName: true, lastName: true, avatarKey: true, phone: true, email: true },
+            },
+          },
+        },
+      },
     });
+
+
+  
+
+
     return appointments;
   }
 
@@ -36,6 +55,7 @@ export class AppointmentService {
 
   async findOne(id: string): Promise<ResponseAppointmentDto> {
     const appointment = await this.prismaService.appointment.findUnique({ where: { id } });
+
     return appointment;
   }
 
