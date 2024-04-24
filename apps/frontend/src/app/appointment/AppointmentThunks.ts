@@ -1,13 +1,13 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import {
-  setAppointments,
-  setNewAppointment,
-  setAppointmentCompleted,
-  setAppointmentCanceled,
-} from './AppointmentSlice';
 import { instance } from '@/api/axios.api';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { AxiosResponse } from 'axios';
 import type { IAppointment } from '../../dataTypes/Appointment';
+import {
+  setAppointmentCanceled,
+  setAppointmentCompleted,
+  setAppointments,
+  setNewAppointment,
+} from './AppointmentSlice';
 
 export const getCurrentAppointments = createAsyncThunk('appointment', async (_, { dispatch }) => {
   try {
@@ -57,7 +57,7 @@ export const completeAppointmentById = createAsyncThunk('appointment', async (ap
   }
 });
 
-export const deleteAppointmentById = createAsyncThunk('appointment', async (appointment_id: string, {}) => {
+export const deleteAppointmentById = createAsyncThunk('appointment', async (appointment_id: string) => {
   try {
     await instance.delete(`/appointment/${appointment_id}`);
   } catch (e) {
