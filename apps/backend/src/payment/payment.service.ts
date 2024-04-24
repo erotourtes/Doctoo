@@ -1,14 +1,14 @@
 import Stripe from 'stripe';
+import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
 import { CreatePaymentDto } from './dto/create-payment.dto';
-import { getOrThrow } from '../config/utils';
 
 @Injectable()
 export class PaymentService {
   private stripe;
 
-  constructor() {
-    this.stripe = new Stripe(getOrThrow('STRIPE_API_KEY'), {
+  constructor(private readonly configService: ConfigService) {
+    this.stripe = new Stripe(this.configService.get('STRIPE_API_KEY'), {
       apiVersion: '2024-04-10',
     });
   }
