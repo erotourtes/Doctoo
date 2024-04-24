@@ -7,7 +7,7 @@ type ButtonProps = {
   disabled?: boolean;
   className?: string;
   type: `${ButtonTypes}`;
-  btnType: React.ButtonHTMLAttributes<HTMLButtonElement>['type'];
+  btnType?: React.ButtonHTMLAttributes<HTMLButtonElement>['type'];
 };
 
 export const Button = ({

@@ -17,6 +17,7 @@
     "lint": "eslint \"{src,test}/**/*.ts\" --fix"
   },
   "dependencies": {
+    "@brakebein/nestjs-redoc": "2.4.0",
     "@nestjs-modules/mailer": "1.11.2",
     "@nestjs/common": "10.3.7",
     "@nestjs/config": "3.2.2",
