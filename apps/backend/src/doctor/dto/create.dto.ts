@@ -27,4 +27,5 @@ export class CreateDoctorDto {
   @ApiProperty({ description: 'An array of IDs for hospitals the Doctor is associated with' })
   @IsUUID(4, { each: true, message: 'each hospitalId should be a UUID' })
   hospitalIds: string[];
+
 }
