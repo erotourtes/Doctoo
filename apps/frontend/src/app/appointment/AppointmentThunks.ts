@@ -11,9 +11,22 @@ import {
 
 export const getAppointmentsByPatientId = createAsyncThunk('appointment', async (patient_id: string, { dispatch }) => {
   try {
-    const response: AxiosResponse<IAppointment[]> = await instance.get(`/appointment/all-by-patient/${patient_id}`);
+    const response: AxiosResponse<any[]> = await instance.get(`/appointment/all-by-patient/${patient_id}`);
     if (response.status === 200) {
-      dispatch(setAppointments(response.data));
+      const data: IAppointment[] = response.data.map(appointment => {
+        const { user, ...doctorWithoutUser } = appointment.doctor;
+        delete doctorWithoutUser.id;
+
+        return {
+          ...appointment,
+          doctor: {
+            ...doctorWithoutUser,
+            ...user,
+          },
+        };
+      });
+
+      dispatch(setAppointments(data));
     }
   } catch (e) {
     const error = e as Error;
