@@ -32,6 +32,7 @@ export const Default: Story = {
     disabled: false,
     name: 'radiobutton',
     selected: false,
+    id: 'radiobutton',
   },
   render: function Render(args) {
     const [{ selected, disabled }, updateArgs] = useArgs();
