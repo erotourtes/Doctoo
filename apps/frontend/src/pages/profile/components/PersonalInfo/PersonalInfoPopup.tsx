@@ -99,6 +99,7 @@ const PersonalInfoPopup = ({ isOpen, onClose }: PersonalInfoPopupProps) => {
             <Input id='fullname' label='Name and surname' placeholder='John Smith' type='text' className='w-full' />
 
             <Input id='email' label='Email' placeholder='john.smith@gmail.com' type='text' className='w-full' />
+            <Input id='email' label='Email' placeholder='john.smith@gmail.com' type='text' className='w-full' />
 
             <div className='flex w-full flex-col'>
               {/* TODO: Add select input after it's ready */}

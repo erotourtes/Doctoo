@@ -14,6 +14,7 @@
     "backend:test:e2e": "pnpm -F @internship-2024-doctoo/backend test:e2e",
     "backend:format": "pnpm -F @internship-2024-doctoo/backend format",
     "backend:lint": "pnpm -F @internship-2024-doctoo/backend lint",
+    "backend:prebuild": "pnpm -F @internship-2024-doctoo/backend prebuild",
     "frontend:dev": "pnpm -F @internship-2024-doctoo/frontend dev",
     "frontend:build": "pnpm -F @internship-2024-doctoo/frontend build",
     "frontend:start": "pnpm -F @internship-2024-doctoo/frontend start",

@@ -10,7 +10,7 @@ export interface IAppointment {
   id: string;
   doctorId: string;
   patientId: string;
-  date: string;
+  assignedAt: string;
   notes: string;
   status: AppointmentStatus;
   videoRecordKey: string;
@@ -18,7 +18,7 @@ export interface IAppointment {
   paymentReceiptKey: string;
 }
 
-export interface IPlanedAppointment {
+export interface IPlannedAppointment {
   id: string;
   date: string;
   notes: string;

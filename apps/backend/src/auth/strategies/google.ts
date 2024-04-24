@@ -1,7 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { AuthGuard, PassportStrategy } from '@nestjs/passport';
-import { plainToInstance } from 'class-transformer';
 import { Profile, Strategy } from 'passport-google-oauth20';
 import auth from '../../config/auth';
 import { AuthService } from '../auth.service';
@@ -29,21 +28,29 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
 
     if (!user) {
       const { name, id, photos } = profile;
-      const googleId = await this.authService.signGoogleId(id);
+      const newUser = await this.authService
+        .signUpUserWithGoogle({
+          lastName: name.familyName,
+          firstName: name.givenName,
+          email: email.value,
+          googleId: id,
+          phone: '', // TODO: Add phone to GoogleStrategy.
+          avatarImgUrl: photos[0].value,
+        })
+        .catch(() => {
+          throw new BadRequestException('Error while creating user. Maybe user with this email already exists.');
+        });
 
-      const user = {
-        lastName: name.familyName,
-        firstName: name.givenName,
-        email: email.value,
-        emailVerified: email.verified, // TODO: We should manually verify email through our service.
-        googleId,
-        avatarKey: photos[0].value, // TODO: This picture must be loaded to out storage, only object key required.
+      return {
+        isLoggedIn: false,
+        user: newUser,
       };
-
-      return plainToInstance(ResponseAuthGoogleSignInDto, { isSignedUp: false, userSignUpData: user });
     }
 
-    return plainToInstance(ResponseAuthGoogleSignInDto, { isSignedUp: true, user });
+    return {
+      isLoggedIn: true,
+      user,
+    };
   }
 }
 

@@ -9,26 +9,14 @@ type AppointmentData = {
 };
 
 const initialState: AppointmentData = {
-  appointments: [
-    {
-      id: '0',
-      doctorId: '0',
-      patientId: '0',
-      date: 'date',
-      notes: 'without status',
-      status: AppointmentStatus.PLANNED,
-      videoRecordKey: 'string',
-      paymentInvoiceKey: 'string',
-      paymentReceiptKey: 'string',
-    },
-  ],
+  appointments: [],
 };
 
 export const appointmentSlice = createAppSlice({
   name: 'appointment',
   initialState,
   reducers: {
-    setCurrentAppointments: (state, action: PayloadAction<IAppointment[]>) => {
+    setAppointments: (state, action: PayloadAction<IAppointment[]>) => {
       state.appointments = action.payload;
     },
 
@@ -56,8 +44,13 @@ export const appointmentSlice = createAppSlice({
   },
 });
 
-export const { setCurrentAppointments, setAppointmentCompleted, setAppointmentCanceled, setNewAppointment } =
-  appointmentSlice.actions;
+export const {
+  setAppointments,
+  setAppointmentCompleted,
+  setAppointmentCanceled,
+  setNewAppointment,
+  deleteAppointment,
+} = appointmentSlice.actions;
 
 export const appointmentData = (state: RootState) => state.doctor.data;
 

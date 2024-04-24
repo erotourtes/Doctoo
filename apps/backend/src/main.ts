@@ -1,9 +1,10 @@
+import { RedocModule } from '@brakebein/nestjs-redoc';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { AppModule } from './app/app.module';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
+import { AppModule } from './app/app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -17,12 +18,16 @@ async function bootstrap() {
           property: error.property,
           message: error.constraints[Object.keys(error.constraints)[0]],
         }));
+
         return new BadRequestException({ message: 'Validation failed', errors: formattedErrors });
       },
     }),
   );
   // TODO: Use setGlobalPrefix.
-  app.enableCors();
+  app.enableCors({
+    origin: true,
+    credentials: true,
+  });
   app.use(cookieParser());
 
   const configService = app.get<ConfigService>(ConfigService);
@@ -34,7 +39,8 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('api', app, document);
+
+  RedocModule.setup('/', app, document, {});
 
   await app.listen(configService.get('BACKEND_PORT'));
 }
