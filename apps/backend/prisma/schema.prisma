@@ -152,30 +152,33 @@ model DoctorSpecialization {
 }
 
 model Patient {
-  id              String               @id @default(uuid())
-  userId          String               @unique @map("user_id")
-  weight          Int
-  height          Int
-  age             Int
-  bloodType       BloodType            @map("blood_type")
-  gender          Gender
-  identityCardKey String?              @map("identity_card_key")
-  user            User                 @relation(fields: [userId], references: [id])
-  declaration     Declaration?
-  appointments    Appointment[]
-  chats           Chat[]
-  conditions      PatientCondition[]
-  allergies       PatientAllergy[]
-  vaccinations    PatientVaccination[]
-  country         String
-  state           String?
-  city            String
-  street          String
-  apartment       String?
-  zipCode         Int?                 @map("zip_code")
-  favorites       Favorite[]
-  reviews         Review[]
-  notifications   Notification[]
+  id                         String               @id @default(uuid())
+  userId                     String               @unique @map("user_id")
+  weight                     Int
+  height                     Int
+  age                        Int
+  bloodType                  BloodType            @map("blood_type")
+  gender                     Gender
+  identityCardKey            String?              @map("identity_card_key")
+  user                       User                 @relation(fields: [userId], references: [id])
+  declaration                Declaration?
+  appointments               Appointment[]
+  chats                      Chat[]
+  conditions                 PatientCondition[]
+  allergies                  PatientAllergy[]
+  vaccinations               PatientVaccination[]
+  country                    String
+  state                      String?
+  city                       String
+  street                     String
+  apartment                  String?
+  zipCode                    Int?                 @map("zip_code")
+  favorites                  Favorite[]
+  reviews                    Review[]
+  notifications              Notification[]
+  emailNotificationToggle    Boolean              @default(false) @map("email_notification_toggle")
+  twoFactorAuthToggle        Boolean              @default(false) @map("two_factor_auth_toggle")
+  requestBillPaymentApproval Boolean              @default(false) @map("request_bill_payment_approval")
 
   @@map("patients")
 }

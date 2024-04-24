@@ -43,4 +43,13 @@ export class ResponsePatientDto {
 
   @ApiProperty({ description: 'The zip code of the patient', required: false })
   readonly zipCode?: number;
+
+  @ApiProperty({ description: 'The email notification toggle of the patient' })
+  emailNotificationToggle: boolean;
+
+  @ApiProperty({ description: 'The sms notification toggle of the patient' })
+  twoFactorAuthToggle: boolean;
+
+  @ApiProperty({ description: 'The two factor authentication toggle of the patient' })
+  requestBillPaymentApproval: boolean;
 }
