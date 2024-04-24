@@ -23,8 +23,11 @@ async function bootstrap() {
       },
     }),
   );
-
-  app.enableCors();
+  // TODO: Use setGlobalPrefix.
+  app.enableCors({
+    origin: true,
+    credentials: true,
+  });
   app.use(cookieParser());
 
   const configService = app.get<ConfigService>(ConfigService);

@@ -9,10 +9,13 @@ import { AuthService } from './auth.service';
 import { GoogleStrategy } from './strategies/google';
 import { JwtStrategy } from './strategies/jwt';
 import auth from '../config/auth';
+import { AuthRequestHelper } from './utils/cookie-helper.service';
+import { MailModule } from '../mail/mail.module';
 
 @Module({
   imports: [
     PassportModule,
+    MailModule,
     ConfigModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -26,6 +29,6 @@ import auth from '../config/auth';
     PatientModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, GoogleStrategy, JwtStrategy],
+  providers: [AuthService, AuthRequestHelper, GoogleStrategy, JwtStrategy],
 })
 export class AuthModule {}

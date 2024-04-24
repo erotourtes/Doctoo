@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import SettingsPopup from './settingsPopup';
-
 const meta = {
   title: 'Example/SettingsPopup',
   component: SettingsPopup,

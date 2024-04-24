@@ -17,7 +17,7 @@ export class MailService {
       template: './patient-sign-up-step',
       context: {
         name,
-        url: `${this.configObject.APP_URL}/auth/patient/signup/${token}`,
+        url: `${this.configObject.FRONTEND_URL}/${this.configObject.FRONTEND_SIGNUP_PATH}?token=${token}`,
       },
     });
   }
