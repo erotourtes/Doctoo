@@ -13,6 +13,7 @@ import { PatientModule } from '../patient/patient.module';
 import { UserModule } from '../user/user.module';
 import mail from '../config/mail';
 import { MailModule } from '../mail/mail.module';
+import { PaymentModule } from '../payment/payment.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { MailModule } from '../mail/mail.module';
     FileModule,
     HospitalModule,
     AppointmentModule,
+    PaymentModule,
   ],
   providers: [MinioService],
 })
