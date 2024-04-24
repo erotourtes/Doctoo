@@ -5,6 +5,7 @@ import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import auth from '../../config/auth';
 import { AuthService } from '../auth.service';
+import { AuthRequestHelper } from '../utils/cookie-helper.service';
 
 const JWT_STRATEGY_NAME = 'jwt';
 
@@ -13,6 +14,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, JWT_STRATEGY_NAME) {
   constructor(
     @Inject(auth.KEY) readonly authObject: ConfigType<typeof auth>,
     private readonly authService: AuthService,
+    private readonly cookieHelper: AuthRequestHelper,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
@@ -31,20 +33,20 @@ export class JwtStrategy extends PassportStrategy(Strategy, JWT_STRATEGY_NAME) {
   }
 
   private async prolongTokenLifeIfNeeded(userId: string, req: Request) {
-    const token = req.cookies[AuthService.JWT_COOKIE_NAME];
+    const token = this.cookieHelper.getJwtTokenFromCookie(req);
     const isCloseToExpire = this.authService.jwtCloseToExpire(token);
     if (!isCloseToExpire) return;
 
     const res = req.res;
     const newToken = await this.authService.signJwtToken(userId);
-    this.authService.attachJwtTokenToCookie(res, newToken);
+    this.cookieHelper.attachJwtTokenToCookie(res, newToken);
   }
 }
 
 const cookieExtractor = (req: Request) => {
   let token = null;
   if (req && req.cookies) {
-    token = req.cookies[AuthService.JWT_COOKIE_NAME];
+    token = req.cookies[AuthRequestHelper.JWT_COOKIE_NAME];
   }
   return token;
 };

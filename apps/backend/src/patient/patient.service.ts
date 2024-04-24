@@ -15,6 +15,15 @@ export class PatientService {
     return plainToInstance(ResponsePatientDto, patient);
   }
 
+  async getPatientByUserId(userId: string): Promise<ResponsePatientDto> {
+    // TODO: only 1 patient for user
+    const patient = await this.prismaService.patient.findFirst({
+      where: { user: { id: userId } },
+    });
+
+    return plainToInstance(ResponsePatientDto, patient);
+  }
+
   // TODO: Does we really need to add adress immediatly?
   async createPatient(body: CreatePatientDto): Promise<ResponsePatientDto> {
     const patient = await this.prismaService.patient.create({ data: body });
