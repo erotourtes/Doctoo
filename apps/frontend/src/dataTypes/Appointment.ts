@@ -16,7 +16,6 @@ export interface IAppointment {
   videoRecordKey: string;
   paymentInvoiceKey: string;
   paymentReceiptKey: string;
-
 }
 
 export interface IPlannedAppointment {

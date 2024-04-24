@@ -18,16 +18,16 @@ const AddressInfoPopup = ({ isOpen, onClose }: AddressInfoPopupProps) => {
         <p className='text-2xl font-medium text-black'>Add a new address</p>
         <form onSubmit={e => e.preventDefault()} className='flex w-full flex-col gap-7'>
           <div className='w-full'>
-            <Input label='Country' placeholder='' type='text' className='w-full' />
+            <Input id='country' label='Country' placeholder='' type='text' className='w-full' />
 
-            <Input label='City' placeholder='' type='text' className='w-full' />
+            <Input id='city' label='City' placeholder='' type='text' className='w-full' />
 
-            <Input label='Street' placeholder='' type='text' className='w-full' />
+            <Input id='street' label='Street' placeholder='' type='text' className='w-full' />
 
             <div className='flex w-full gap-4'>
-              <Input label='Apartment (optional)' placeholder='' type='text' className='w-full' />
+              <Input id='apartment' label='Apartment (optional)' placeholder='' type='text' className='w-full' />
 
-              <Input label='Zip code' placeholder='' type='text' className='w-full' />
+              <Input id='zip' label='Zip code' placeholder='' type='text' className='w-full' />
             </div>
           </div>
 

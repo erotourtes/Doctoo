@@ -17,9 +17,7 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
         <p className='text-2xl font-medium text-black'>Medical condition and allergies </p>
         <form onSubmit={e => e.preventDefault()} className='flex w-full flex-col gap-7'>
           <div className='w-full'>
-            <Input label='Medical condition' placeholder='' type='text' className='w-full' />
-
-            <Input label='Allergies' placeholder='' type='text' className='w-full' />
+            <Input id='allergies' label='Allergies' placeholder='' type='text' className='w-full' />
           </div>
           <div className='flex w-full gap-4'>
             <Button type='secondary' onClick={() => {}} className='w-1/2'>
