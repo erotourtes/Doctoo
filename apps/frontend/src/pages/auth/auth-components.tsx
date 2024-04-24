@@ -44,4 +44,10 @@ export const AuthMainContainer: FC<PropsWithChildren> = ({ children }) => {
   );
 };
 
+export const ErrorMessage: FC<{ message: string | undefined }> = ({ message }) => {
+  if (!message) return null;
+
+  return <p className='mt-2 text-sm font-normal leading-[17px] text-error'>{message}</p>;
+};
+
 export const Separator = () => <div className='my-auto block w-full border-b-[1px]' />;
