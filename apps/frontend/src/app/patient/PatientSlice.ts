@@ -11,8 +11,8 @@ interface PatientData {
 
 const initialState: PatientData = {
   data: {
-    id: '78a3a566-f274-432f-8b7b-6969ad3a8438',
-    userId: '411625f4-c7c6-4916-a287-a3173ec060e4',
+    id: '1',
+    userId: '1',
     firstName: '',
     lastName: '',
     phone: '',
