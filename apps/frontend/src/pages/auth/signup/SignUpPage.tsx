@@ -19,13 +19,21 @@ type SignUpType = {
 const userSignUpSchema = Joi.object<SignUpType>({
   email: Joi.string()
     .email({ tlds: { allow: false } })
+    .messages({
+      'string.email': 'Please enter a valid email',
+      'string.empty': 'Please enter your email',
+    })
     .required(),
-  password: Joi.string().min(6).required(),
+  password: Joi.string().min(6).required().messages({
+    'string.min': 'Password must be at least 6 characters',
+    'string.empty': 'Please enter your password',
+  }),
   fullName: Joi.string()
     .regex(/^\w+\s+\w+$/)
     .required()
     .messages({
       'string.pattern.base': 'Please enter your first and last name space separated',
+      'string.empty': 'Please enter your first and last name',
     }),
 });
 
