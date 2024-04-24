@@ -35,7 +35,7 @@ const InputSearch: React.FC<InputSearchProps> = ({
       />
       <input
         type='text'
-        className={`h-10 cursor-pointer rounded-lg border-green-border px-4 py-2 pl-10 pr-10 text-base leading-6 text-text hover:border focus:border focus:outline-none ${variant === 'white' ? 'bg-white' : 'bg-background'} ${className}`}
+        className={`h-10 cursor-pointer rounded-lg border border-transparent px-4 py-2 pl-10 pr-10 text-base leading-6 text-text hover:border-green-border focus:border-green-border focus:outline-none ${variant === 'white' ? 'bg-white' : 'bg-background'} ${className}`}
         placeholder={placeholder}
         value={value}
         onChange={e => handleInputChange(e)}

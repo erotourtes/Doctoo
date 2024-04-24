@@ -47,7 +47,7 @@ const Input = ({
           placeholder={placeholder}
           className={cn(
             classNameInput || '',
-            `col-start-1 row-start-1 w-full rounded-lg bg-background py-2 pl-4 pr-10 text-base text-text hover:border focus:border focus:outline-none ${hasError && 'border border-solid border-error'}`,
+            `col-start-1 row-start-1 w-full rounded-lg border border-transparent bg-background py-2 pl-4 pr-10 text-base text-text hover:border-text focus:border-text focus:outline-none ${hasError && 'border border-solid border-error'}`,
           )}
           defaultValue={defaultValue}
         />

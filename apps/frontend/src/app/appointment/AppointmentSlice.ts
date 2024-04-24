@@ -44,8 +44,13 @@ export const appointmentSlice = createAppSlice({
   },
 });
 
-export const { setAppointments, setAppointmentCompleted, setAppointmentCanceled, setNewAppointment } =
-  appointmentSlice.actions;
+export const {
+  setAppointments,
+  setAppointmentCompleted,
+  setAppointmentCanceled,
+  setNewAppointment,
+  deleteAppointment,
+} = appointmentSlice.actions;
 
 export const appointmentData = (state: RootState) => state.appointment.appointments;
 

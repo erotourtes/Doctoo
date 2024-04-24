@@ -10,7 +10,7 @@ export interface IAppointment {
   id: string;
   doctorId: string;
   patientId: string;
-  date: string;
+  assignedAt: string;
   notes: string;
   status: AppointmentStatus;
   appointmentDuration: number;

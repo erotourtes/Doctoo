@@ -40,6 +40,9 @@ export default <Config>{
       'green-light': '#EFFAF4',
       'green-border': '#6BC3CD',
     },
+    backgroundImage: {
+      'greeting-bg': "url('/assets/images/greeting-bg.svg')",
+    },
   },
   variants: {
     extend: {},
