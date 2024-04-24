@@ -1,6 +1,6 @@
-import { Button } from './UI/Button/Button';
-import Icon from './UI/Icon/Icon';
-import PopupDoctoo from './UI/Popup/Popup';
+import { Button } from '../UI/Button/Button';
+import Icon from '../UI/Icon/Icon';
+import PopupDoctoo from '../UI/Popup/Popup';
 
 interface PaymentPopupProps {
   isOpenModal: boolean;
@@ -14,7 +14,7 @@ export const PaymentPopup = ({ isOpenModal, setIsOpenModal, isSuccessfulPayment,
     <PopupDoctoo
       popupIsOpen={isOpenModal}
       closePopup={() => setIsOpenModal(false)}
-      modalFullClassName='max-w-[522px] p-10'
+      modalFullClassName='!max-w-[522px] p-10'
       modalBodyClassName=''
     >
       <div className='grid justify-items-start gap-4'>
