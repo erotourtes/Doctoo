@@ -143,10 +143,11 @@ model Declaration {
 }
 
 model DoctorSpecialization {
-  id               String @id @default(uuid())
-  doctorId         String @map("doctor_id")
-  specializationId String @map("specialization_id")
-  doctor           Doctor @relation(fields: [doctorId], references: [id])
+  id               String         @id @default(uuid())
+  doctorId         String         @map("doctor_id")
+  specializationId String         @map("specialization_id")
+  doctor           Doctor         @relation(fields: [doctorId], references: [id])
+  specialization   Specialization @relation(fields: [specializationId], references: [id])
 
   @@map("doctor_specializations")
 }
@@ -246,9 +247,10 @@ model SpecializationCondition {
 }
 
 model Specialization {
-  id         String                    @id @default(uuid())
-  name       String
-  conditions SpecializationCondition[]
+  id                   String                    @id @default(uuid())
+  name                 String
+  conditions           SpecializationCondition[]
+  DoctorSpecialization DoctorSpecialization[]
 
   @@map("specializations")
 }
