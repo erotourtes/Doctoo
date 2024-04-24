@@ -16,7 +16,7 @@ export const PaymentMethodCard = ({ card, editable, onClickEdit }: PaymentMethod
   return (
     <div className='flex w-full items-center space-x-2 p-2'>
       <Icon variant='credit-card' className='h-10 w-10 rounded-[6px] bg-main-light p-2 text-main-dark' />
-      <div>
+      <div className='w-full'>
         <p className='font-medium'>{hashCreditCardNumber(card.number)}</p>
         <span className='font-normal text-grey-1'>Expires {formatDateToMonthDay(card.expiresAt)}</span>
       </div>
