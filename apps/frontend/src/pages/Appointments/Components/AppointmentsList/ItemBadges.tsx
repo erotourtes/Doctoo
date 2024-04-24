@@ -1,5 +1,4 @@
 import AppointmentBadge from '../AppointmentBadge';
-import { IAppointment } from '@/dataTypes/Appointment';
 
 type StatusColors = {
   [key: string]: {
