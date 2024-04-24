@@ -20,9 +20,11 @@ export class CreateDoctorDto {
   @IsString()
   about: string;
 
+  @ApiProperty({ description: 'An array of IDs for specializations of the Doctor' })
   @IsUUID(4, { each: true, message: 'each specializationlId should be a UUID' })
   specializationIds: string[];
 
+  @ApiProperty({ description: 'An array of IDs for hospitals the Doctor is associated with' })
   @IsUUID(4, { each: true, message: 'each hospitalId should be a UUID' })
   hospitalIds: string[];
 }
