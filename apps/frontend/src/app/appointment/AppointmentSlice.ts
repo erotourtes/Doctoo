@@ -9,19 +9,7 @@ type AppointmentData = {
 };
 
 const initialState: AppointmentData = {
-  appointments: [
-    {
-      id: '0',
-      doctorId: '0',
-      patientId: '0',
-      date: 'date',
-      notes: 'without status',
-      status: AppointmentStatus.PLANNED,
-      videoRecordKey: 'string',
-      paymentInvoiceKey: 'string',
-      paymentReceiptKey: 'string',
-    },
-  ],
+  appointments: [],
 };
 
 export const appointmentSlice = createAppSlice({
