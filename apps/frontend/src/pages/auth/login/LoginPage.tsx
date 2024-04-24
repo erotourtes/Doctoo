@@ -95,7 +95,7 @@ const LoginPage = () => {
                 type='password'
                 label='Password'
                 placeholder=''
-                errorMessage={errors.email?.message}
+                errorMessage={errors.password?.message}
               />
             </div>
           </div>
