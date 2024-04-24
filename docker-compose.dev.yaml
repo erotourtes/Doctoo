@@ -32,7 +32,7 @@ services:
       MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
     ports:
       - '9000:9000'
-      - '10000:10000'
+      - '9001:9001'
     volumes:
       - 'minio_data:/data'
   mailhog:
