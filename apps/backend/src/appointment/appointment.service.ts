@@ -34,10 +34,6 @@ export class AppointmentService {
       },
     });
 
-
-  
-
-
     return appointments;
   }
 

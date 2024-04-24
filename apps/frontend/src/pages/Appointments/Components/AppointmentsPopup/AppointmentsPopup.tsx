@@ -1,4 +1,4 @@
-import { IAppointment } from '@/dataTypes/Appointment';
+import type { IAppointment } from '@/dataTypes/Appointment';
 import PopupBody from './PopupBody';
 import PopupHeader from './PopupHeader';
 import AppointmentButtons from '../AppointmentsList/ItemButtons';
