@@ -6,5 +6,9 @@ export class GetDoctorsQuery {
   readonly hospitalId?: string;
 
   @IsOptional()
+  @IsUUID(4, { message: 'specializationId should be a UUID' })
+  readonly specializationId?: string;
+
+  @IsOptional()
   readonly search?: string;
 }
