@@ -8,6 +8,7 @@ import { ResponseDoctorDto } from '../doctor/dto/response.dto';
 import { userStub } from '../mocks/stubs/user.stub';
 import { patientStub } from '../mocks/stubs/patient.stub';
 import { doctorStub } from '../mocks/stubs/doctor.stub';
+import { hospitalStub } from '../mocks/stubs/hospital.stub';
 describe('DeclarationService', () => {
   let service: DeclarationService;
   let prisma: PrismaService;
@@ -49,9 +50,13 @@ describe('DeclarationService', () => {
 
     const specialization = await prisma.specialization.create({ data: { name: 'test3' } });
 
+    const hospitalIds = await prisma.hospital.create({ data: hospitalStub() });
+
     const doctorData: CreateDoctorDto = {
       ...doctorStub(),
-      specializationId: specialization.id,
+      hospitalIds: [hospitalIds.id],
+      specializationIds: [specialization.id],
+
       userId: userSecond.id,
     };
 
@@ -163,11 +168,15 @@ describe('DeclarationService', () => {
       userId: userFirst.id,
     };
 
-    const specialization = await prisma.specialization.create({ data: { name: 'test1' } });
+    const specialization = await prisma.specialization.create({ data: { name: 'test3' } });
+
+    const hospitalIds = await prisma.hospital.create({ data: hospitalStub() });
 
     const doctorData: CreateDoctorDto = {
       ...doctorStub(),
-      specializationId: specialization.id,
+      hospitalIds: [hospitalIds.id],
+      specializationIds: [specialization.id],
+
       userId: userSecond.id,
     };
 
@@ -211,11 +220,16 @@ describe('DeclarationService', () => {
       gender: Gender.FEMALE,
       userId: userFirst.id,
     };
-    const specialization = await prisma.specialization.create({ data: { name: 'test' } });
+
+    const specialization = await prisma.specialization.create({ data: { name: 'test3' } });
+
+    const hospitalIds = await prisma.hospital.create({ data: hospitalStub() });
 
     const doctorData: CreateDoctorDto = {
       ...doctorStub(),
-      specializationId: specialization.id,
+      hospitalIds: [hospitalIds.id],
+      specializationIds: [specialization.id],
+
       userId: userSecond.id,
     };
 
