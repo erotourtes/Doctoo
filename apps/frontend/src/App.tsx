@@ -1,13 +1,7 @@
-import Sidemenu from '@components/Sidemenu/Sidemenu';
-import PageContainer from './pages/PageContainer';
+import Navigation from './pages/PageContainer';
 
 const App = () => {
-  return (
-    <div className='flex h-screen w-screen overflow-hidden'>
-      <Sidemenu />
-      <PageContainer />
-    </div>
-  );
+  return <Navigation />;
 };
 
 export default App;
