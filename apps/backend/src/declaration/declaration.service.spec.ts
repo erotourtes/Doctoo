@@ -49,7 +49,6 @@ describe('DeclarationService', () => {
 
     const specialization = await prisma.specialization.create({ data: { name: 'test3' } });
 
-
     const doctorData: CreateDoctorDto = {
       ...doctorStub(),
       specializationId: specialization.id,
@@ -166,7 +165,6 @@ describe('DeclarationService', () => {
 
     const specialization = await prisma.specialization.create({ data: { name: 'test1' } });
 
-
     const doctorData: CreateDoctorDto = {
       ...doctorStub(),
       specializationId: specialization.id,
@@ -214,7 +212,6 @@ describe('DeclarationService', () => {
       userId: userFirst.id,
     };
     const specialization = await prisma.specialization.create({ data: { name: 'test' } });
-
 
     const doctorData: CreateDoctorDto = {
       ...doctorStub(),
