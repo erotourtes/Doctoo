@@ -37,12 +37,12 @@ const LoginPageAuthenticate = () => {
         <div>
           <p>
             It may take a minute to receive your code. Haven’t received it?{' '}
-            <span className='text-main'>Resend a new code</span>
+            <a className='text-main'>Resend a new code</a>
           </p>
         </div>
 
         <div className='space-y-6'>
-          <div className='flex justify-around'>
+          <div className='flex justify-between'>
             <Button btnType='button' onClick={onBack} type='secondary' className='w-[150px]'>
               Back
             </Button>
