@@ -36,6 +36,9 @@ const initialState: PatientData = {
     conditions: [],
     vaccinations: [],
     allergies: [],
+    emailNotificationToggle: false,
+    twoFactorAuthToggle: false,
+    requestBillPaymentApproval: false,
   },
 };
 

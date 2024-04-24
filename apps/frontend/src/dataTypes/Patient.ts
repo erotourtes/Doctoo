@@ -27,6 +27,9 @@ export interface IPatient {
   conditions: Condition[];
   vaccinations: Vaccination[];
   allergies: Allergy[];
+  emailNotificationToggle: boolean;
+  twoFactorAuthToggle: boolean;
+  requestBillPaymentApproval: boolean;
 }
 
 export enum Gender {
