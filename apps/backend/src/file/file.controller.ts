@@ -10,7 +10,6 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { MinioService } from '../minio/minio.service';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -23,7 +22,8 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../../utils/errorResponses';
+import { MinioService } from '../minio/minio.service';
+import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../utils/errorResponses';
 
 // TODO: Use new code-style
 @ApiTags('File')

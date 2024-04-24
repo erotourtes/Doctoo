@@ -1,19 +1,20 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../utils/errorResponses';
 import { DoctorService } from './doctor.service';
 import { CreateDoctorDto } from './dto/create.dto';
 import { PatchDoctorDto } from './dto/patch.dto';
 import { ResponseDoctorDto } from './dto/response.dto';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiOkResponse,
-  ApiBadRequestResponse,
-  ApiInternalServerErrorResponse,
-  ApiNotFoundResponse,
-  ApiParam,
-  ApiBody,
-} from '@nestjs/swagger';
-import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../../utils/errorResponses';
+import { GetDoctorsQuery } from './query/get-doctors.query';
 
 @ApiTags('Doctor')
 @Controller('doctor')
@@ -41,8 +42,8 @@ export class DoctorController {
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
   @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
   @Get()
-  getDoctors() {
-    return this.doctorService.getDoctors();
+  getDoctors(@Query() query: GetDoctorsQuery) {
+    return this.doctorService.getDoctors(query);
   }
 
   @ApiOperation({

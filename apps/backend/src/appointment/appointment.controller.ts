@@ -1,9 +1,4 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
-import { GetPatientGuard } from '../patient/guards/get.guard';
-import { AppointmentService } from './appointment.service';
-import { CreateAppointmentDto } from './dto/create.dto';
-import { PatchAppointmentDto } from './dto/patch.dto';
-import { GetAppointmentGuard } from './guards/getAppointment.guard';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -16,8 +11,13 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
+import { GetPatientGuard } from '../patient/guards/get.guard';
+import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../utils/errorResponses';
+import { AppointmentService } from './appointment.service';
+import { CreateAppointmentDto } from './dto/create.dto';
+import { PatchAppointmentDto } from './dto/patch.dto';
 import { ResponseAppointmentDto } from './dto/response.dto';
-import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../../utils/errorResponses';
+import { GetAppointmentGuard } from './guards/getAppointment.guard';
 
 // TODO: Recode it.
 @ApiTags('Appointment')
