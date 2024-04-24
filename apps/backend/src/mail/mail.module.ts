@@ -3,7 +3,6 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigType } from '@nestjs/config';
 import { join } from 'path';
-import config from '../config/config';
 import mail from '../config/mail';
 import { MailService } from './mail.service';
 
@@ -11,11 +10,12 @@ import { MailService } from './mail.service';
   imports: [
     ConfigModule,
     MailerModule.forRootAsync({
+      imports: [ConfigModule],
       useFactory: async (mailConfig: ConfigType<typeof mail>) => ({
         transport: {
           host: mailConfig.MAIL_HOST,
           port: mailConfig.MAIL_PORT,
-          secure: false,
+          secure: mailConfig.MAIL_SECURE,
           auth: {
             user: mailConfig.MAIL_USER,
             pass: mailConfig.MAIL_PASS,
@@ -33,7 +33,7 @@ import { MailService } from './mail.service';
           options: { strict: true },
         },
       }),
-      inject: [mail.KEY, config.KEY],
+      inject: [mail.KEY],
     }),
   ],
   providers: [MailService],

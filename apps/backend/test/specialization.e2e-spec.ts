@@ -4,7 +4,7 @@ import { randomUUID } from 'crypto';
 import * as request from 'supertest';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { SpecializationModule } from '../src/specialization/specialization.module';
-import { specializationStub } from './stubs/specialization.stub';
+import { specializationStub } from '../src/mocks/stubs/specialization.stub';
 import { UpdateSpecializationDto } from '../src/specialization/dto/update.dto';
 
 describe('SpecializationController (e2e)', () => {

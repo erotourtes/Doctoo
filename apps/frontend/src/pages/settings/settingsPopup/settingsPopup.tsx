@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import { passwordRulesList } from '@/constants/passwordRulesList';
 import { Button } from '@/components/UI/Button/Button';
 import { ButtonTypes } from '@/components/UI/Button/ButtonTypes';
