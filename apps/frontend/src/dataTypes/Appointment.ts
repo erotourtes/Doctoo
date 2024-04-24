@@ -13,12 +13,13 @@ export interface IAppointment {
   date: string;
   notes: string;
   status: AppointmentStatus;
+  appointmentDuration: number;
   videoRecordKey: string;
   paymentInvoiceKey: string;
   paymentReceiptKey: string;
 }
 
-export interface IPlanedAppointment {
+export interface IPlannedAppointment {
   id: string;
   date: string;
   notes: string;
