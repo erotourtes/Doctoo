@@ -109,18 +109,26 @@ jobs:
           cd ${{ secrets.PROJECT_DIR }}
 
           cat << EOF > .env
+          # DATABASE
           POSTGRES_USER=${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+
+          # MINIO
+          MINIO_ROOT_USER=${{ secrets.MINIO_ROOT_USER }}
+          MINIO_ROOT_PASSWORD=${{ secrets.MINIO_ROOT_PASSWORD }}
+
+          # BACKEND
           APP_NAME=${{ secrets.APP_NAME }}
           BACKEND_PORT=${{ secrets.BACKEND_PORT }}
           BACKEND_URL=${{ secrets.BACKEND_URL }}
+          FRONTEND_URL=${{ secrets.FRONTEND_URL }}
           DATABASE_URL=postgres://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@postgres/${{ secrets.POSTGRES_DB }}?schema=public
+          NODE_ENV=${{ secrets.NODE_ENV }}
           JWT_SECRET=${{ secrets.JWT_SECRET }}
           JWT_EXPIRATION_DAYS=${{ secrets.JWT_EXPIRATION_DAYS }}
           JWT_EXPIRATION_TRESHOLD_SECONDS=${{ secrets.JWT_EXPIRATION_TRESHOLD_SECONDS }}
           SALT_ROUNDS=${{ secrets.SALT_ROUNDS }}
-          NODE_ENV=${{ secrets.NODE_ENV }}
           GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
           GOOGLE_REDIRECT_URL=${{ secrets.GOOGLE_REDIRECT_URL }}
@@ -135,8 +143,8 @@ jobs:
           MAIL_PASS=${{ secrets.MAIL_PASS }}
           MAIL_FROM=${{ secrets.MAIL_FROM }}
           MAIL_PORT=${{ secrets.MAIL_PORT }}
-          MINIO_ROOT_USER=${{ secrets.MINIO_ROOT_USER }}
-          MINIO_ROOT_PASSWORD=${{ secrets.MINIO_ROOT_PASSWORD }}
+          MAIL_SECURE=${{ secrets.MAIL_SECURE }}
+          FRONTEND_SIGNUP_PATH=${{ secrets.FRONTEND_SIGNUP_PATH }}
           EOF
 
       - name: Run new Docker containers
