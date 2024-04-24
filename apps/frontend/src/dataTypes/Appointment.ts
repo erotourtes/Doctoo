@@ -3,7 +3,7 @@ import type { IDoctor } from './Doctor';
 export enum AppointmentStatus {
   PLANNED = 'Planned',
   COMPLETED = 'Completed',
-  CANCELLED = 'Cancelled',
+  CANCELED = 'Canceled',
 }
 
 export interface IAppointment {
