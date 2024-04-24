@@ -32,7 +32,9 @@ const LoginPageAuthenticate = () => {
           </p>
         </div>
 
-        <InputCode codeLength={EMAIL_VERIFICATION_CODE_LEN} onChange={e => setCode(e.target.value)} />
+        <div className='flex justify-center'>
+          <InputCode codeLength={EMAIL_VERIFICATION_CODE_LEN} onChange={e => setCode(e.target.value)} />
+        </div>
 
         <div>
           <p>
