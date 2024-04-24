@@ -9,9 +9,9 @@ import {
   setNewAppointment,
 } from './AppointmentSlice';
 
-export const getCurrentAppointments = createAsyncThunk('appointment', async (_, { dispatch }) => {
+export const getAppointmentsByPatientId = createAsyncThunk('appointment', async (patient_id: string, { dispatch }) => {
   try {
-    const response: AxiosResponse<IAppointment[]> = await instance.get(`/appointment`);
+    const response: AxiosResponse<IAppointment[]> = await instance.get(`/appointment/all-by-patient/${patient_id}`);
     if (response.status === 200) {
       dispatch(setAppointments(response.data));
     }
