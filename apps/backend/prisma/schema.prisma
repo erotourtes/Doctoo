@@ -143,39 +143,43 @@ model Declaration {
 }
 
 model DoctorSpecialization {
-  id               String @id @default(uuid())
-  doctorId         String @map("doctor_id")
-  specializationId String @map("specialization_id")
-  doctor           Doctor @relation(fields: [doctorId], references: [id])
+  id               String         @id @default(uuid())
+  doctorId         String         @map("doctor_id")
+  specializationId String         @map("specialization_id")
+  doctor           Doctor         @relation(fields: [doctorId], references: [id])
+  specialization   Specialization @relation(fields: [specializationId], references: [id])
 
   @@map("doctor_specializations")
 }
 
 model Patient {
-  id              String               @id @default(uuid())
-  userId          String               @unique @map("user_id")
-  weight          Int
-  height          Int
-  age             Int
-  bloodType       BloodType            @map("blood_type")
-  gender          Gender
-  identityCardKey String?              @map("identity_card_key")
-  user            User                 @relation(fields: [userId], references: [id])
-  declaration     Declaration?
-  appointments    Appointment[]
-  chats           Chat[]
-  conditions      PatientCondition[]
-  allergies       PatientAllergy[]
-  vaccinations    PatientVaccination[]
-  country         String
-  state           String?
-  city            String
-  street          String
-  apartment       String?
-  zipCode         Int?                 @map("zip_code")
-  favorites       Favorite[]
-  reviews         Review[]
-  notifications   Notification[]
+  id                         String               @id @default(uuid())
+  userId                     String               @unique @map("user_id")
+  weight                     Int
+  height                     Int
+  age                        Int
+  bloodType                  BloodType            @map("blood_type")
+  gender                     Gender
+  identityCardKey            String?              @map("identity_card_key")
+  user                       User                 @relation(fields: [userId], references: [id])
+  declaration                Declaration?
+  appointments               Appointment[]
+  chats                      Chat[]
+  conditions                 PatientCondition[]
+  allergies                  PatientAllergy[]
+  vaccinations               PatientVaccination[]
+  country                    String
+  state                      String?
+  city                       String
+  street                     String
+  apartment                  String?
+  zipCode                    Int?                 @map("zip_code")
+  favorites                  Favorite[]
+  reviews                    Review[]
+  notifications              Notification[]
+  emailNotificationToggle    Boolean              @default(false) @map("email_notification_toggle")
+  twoFactorAuthToggle        Boolean              @default(false) @map("two_factor_auth_toggle")
+  requestBillPaymentApproval Boolean              @default(false) @map("request_bill_payment_approval")
 
   @@map("patients")
 }
@@ -246,9 +250,10 @@ model SpecializationCondition {
 }
 
 model Specialization {
-  id         String                    @id @default(uuid())
-  name       String
-  conditions SpecializationCondition[]
+  id                   String                    @id @default(uuid())
+  name                 String
+  conditions           SpecializationCondition[]
+  DoctorSpecialization DoctorSpecialization[]
 
   @@map("specializations")
 }
