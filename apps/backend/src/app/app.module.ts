@@ -15,6 +15,7 @@ import { DeclarationModule } from '../declaration/declaration.module';
 import { SpecializationModule } from '../specialization/specialization.module';
 import mail from '../config/mail';
 import { MailModule } from '../mail/mail.module';
+import { AllergyModule } from 'src/allergy/allergy.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { MailModule } from '../mail/mail.module';
     AppointmentModule,
     DeclarationModule,
     SpecializationModule,
+    AllergyModule,
   ],
   providers: [MinioService],
 })
