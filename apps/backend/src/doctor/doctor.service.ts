@@ -6,6 +6,7 @@ import { PatchDoctorDto } from './dto/patch.dto';
 import { ResponseDoctorDto } from './dto/response.dto';
 import { HospitalService } from '../hospital/hospital.service';
 import { GetDoctorsQuery } from './query/get-doctors.query';
+import { SpecializationService } from '../specialization/specialization.service';
 
 @Injectable()
 export class DoctorService {
@@ -13,6 +14,7 @@ export class DoctorService {
     private readonly prismaService: PrismaService,
     private readonly userService: UserService,
     private readonly hospitalService: HospitalService,
+    private readonly specializationService: SpecializationService,
   ) {}
 
   async createDoctor(body: CreateDoctorDto): Promise<ResponseDoctorDto> {
@@ -26,11 +28,17 @@ export class DoctorService {
       throw new BadRequestException({ message: `Doctor associated with user with id ${body.userId} already exists` });
     }
 
-    const { hospitalIds, userId, ...doctorData } = body;
+    const { hospitalIds, specializationIds, userId, ...doctorData } = body;
     const existingHospitalIds = [];
     for (const hospitalId of hospitalIds) {
       const hospital = await this.hospitalService.getHospital(hospitalId);
       existingHospitalIds.push(hospital.id);
+    }
+
+    const existingSpecializationIds = [];
+    for (const specializationId of specializationIds) {
+      const specialization = await this.specializationService.getSpecialization(specializationId);
+      existingSpecializationIds.push(specialization.id);
     }
 
     const doctor = await this.prismaService.doctor.create({
@@ -40,6 +48,9 @@ export class DoctorService {
         hospitals: {
           create: existingHospitalIds.map(id => ({ hospital: { connect: { id } } })),
         },
+        specializations: {
+          create: existingSpecializationIds.map(id => ({ specialization: { connect: { id } } })),
+        },
       },
     });
 
@@ -47,16 +58,29 @@ export class DoctorService {
   }
 
   async getDoctors(query?: GetDoctorsQuery): Promise<ResponseDoctorDto[]> {
-    const hospitalFilter: { id?: string; name?: any } = {};
-    const { hospitalId, search } = query;
+    const hospitalFilter: { id?: string } = {};
+    const specializationFilter: { id?: string } = {};
+    const searchFilters = [];
+    const { hospitalId, specializationId, search } = query;
     if (hospitalId) hospitalFilter.id = hospitalId;
-    if (search) hospitalFilter.name = { contains: search };
+    if (specializationId) specializationFilter.id = specializationId;
+    if (search) {
+      searchFilters.push({ hospitals: { every: { hospital: { name: { contains: search } } } } });
+      searchFilters.push({ specializations: { every: { specialization: { name: { contains: search } } } } });
+    }
     const doctors = await this.prismaService.doctor.findMany({
       include: {
         user: { select: { firstName: true, lastName: true } },
         hospitals: { select: { hospital: { select: { id: true, name: true } } } },
+        specializations: { select: { specialization: true } },
       },
-      where: { hospitals: { every: { hospital: hospitalFilter } } },
+      where: {
+        AND: [
+          { hospitals: { every: { hospital: hospitalFilter } } },
+          { specializations: { every: { specialization: specializationFilter } } },
+          searchFilters.length && { OR: searchFilters },
+        ],
+      },
     });
 
     return doctors;
@@ -68,6 +92,7 @@ export class DoctorService {
       include: {
         user: { select: { firstName: true, lastName: true } },
         hospitals: { select: { hospital: true } },
+        specializations: { select: { specialization: true } },
       },
     });
 
