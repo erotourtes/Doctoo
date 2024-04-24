@@ -1,7 +1,4 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-import { CreateHospitalDto } from './dto/create.dto';
-import { PatchHospitalDto } from './dto/patch.dto';
-import { HospitalService } from './hospital.service';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -14,8 +11,11 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
+import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../utils/errorResponses';
+import { CreateHospitalDto } from './dto/create.dto';
+import { PatchHospitalDto } from './dto/patch.dto';
 import { ResponseHospitalDto } from './dto/response.dto';
-import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../../utils/errorResponses';
+import { HospitalService } from './hospital.service';
 
 @ApiTags('Hospital')
 @Controller('hospital')
