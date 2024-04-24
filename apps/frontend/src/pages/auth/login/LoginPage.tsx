@@ -16,8 +16,18 @@ type SignInType = {
 const userLogInSchema = Joi.object<SignInType>({
   email: Joi.string()
     .email({ tlds: { allow: false } })
+    .messages({
+      'string.email': 'Please enter a valid email address',
+      'string.empty': 'Email is required',
+    })
     .required(),
-  password: Joi.string().min(6).required(),
+  password: Joi.string()
+    .min(6)
+    .messages({
+      'string.min': 'Password must be at least 6 characters',
+      'string.empty': 'Password is required',
+    })
+    .required(),
 });
 
 const LoginPage = () => {
