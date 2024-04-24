@@ -64,9 +64,11 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
                   onChange={e => {
                     setInputValue(e.target.value);
                     setIsEditing(false);
+                    let gender;
+                    let bloodType;
                     switch (title) {
                       case 'Gender':
-                        const gender = inputValue;
+                        gender = inputValue;
                         if (gender.toLowerCase() === Gender.FEMALE) {
                           dispatch(patchPatientData({ id: patient.id, data: { gender: Gender.FEMALE } }));
                         }
@@ -75,7 +77,7 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
                         }
                         break;
                       case 'Blood type':
-                        const bloodType = inputValue;
+                        bloodType = inputValue;
                         switch (bloodType) {
                           case BloodType.AB_MINUS:
                             dispatch(patchPatientData({ id: patient.id, data: { bloodType: BloodType.AB_MINUS } }));
