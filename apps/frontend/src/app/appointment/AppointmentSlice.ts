@@ -27,7 +27,7 @@ export const appointmentSlice = createAppSlice({
     setAppointmentCanceled: (state, action: PayloadAction<string>) => {
       const appointment = state.appointments.find(appointment => appointment.id === action.payload);
       if (appointment) {
-        appointment.status = AppointmentStatus.CANCELLED;
+        appointment.status = AppointmentStatus.CANCELED;
       }
     },
 
