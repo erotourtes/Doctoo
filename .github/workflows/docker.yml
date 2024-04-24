@@ -152,5 +152,5 @@ jobs:
         run: |
           cd ${{ secrets.PROJECT_DIR }}
 
-          sudo docker compose pull
-          sudo docker compose up -d --remove-orphans
+          docker compose pull
+          docker compose up -d --remove-orphans
