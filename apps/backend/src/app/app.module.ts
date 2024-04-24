@@ -15,6 +15,7 @@ import { DeclarationModule } from '../declaration/declaration.module';
 import { SpecializationModule } from '../specialization/specialization.module';
 import mail from '../config/mail';
 import { MailModule } from '../mail/mail.module';
+import { ConditionModule } from 'src/condition/condition.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { MailModule } from '../mail/mail.module';
     AppointmentModule,
     DeclarationModule,
     SpecializationModule,
+    ConditionModule,
   ],
   providers: [MinioService],
 })
