@@ -21,6 +21,8 @@
     "@hookform/resolvers": "3.3.4",
     "@react-pdf/renderer": "3.4.3",
     "@reduxjs/toolkit": "2.2.3",
+    "@stripe/react-stripe-js": "2.7.0",
+    "@stripe/stripe-js": "3.3.0",
     "axios": "1.6.8",
     "clsx": "2.1.0",
     "dayjs": "1.11.10",

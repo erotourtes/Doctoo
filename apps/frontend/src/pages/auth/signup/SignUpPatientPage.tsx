@@ -1,12 +1,11 @@
 import { useLocation, useNavigate } from 'react-router';
-import { Button } from '../../../components/UI/Button/Button';
-import { instance } from '../../../api/axios.api';
+import { instance } from '@/api/axios.api';
 import Joi from 'joi';
-import { FormProvider, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import Input from '../../../components/UI/Input/Input';
-import { cn } from '../../../utils/cn';
+import { FormProvider, useForm } from 'react-hook-form';
+import { cn } from '@/utils/cn';
 import { ErrorMessage } from '../auth-components';
+import { Button, Input } from '@/components/UI';
 
 const SignUpPatientPage = () => {
   const { search } = useLocation();

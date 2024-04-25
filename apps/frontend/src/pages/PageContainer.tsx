@@ -9,6 +9,7 @@ import AppointmentsPage from './Appointments/AppointmentsPage';
 import CalendarPage from './Calendar/CalendarPage';
 import Sidemenu from '@components/Sidemenu/Sidemenu';
 import Header from '@components/UI/Header/Header';
+import { PaymentPage } from './PaymentPage/PaymentPage';
 
 // import page component
 
@@ -33,8 +34,7 @@ const PageContainer = () => {
         {/* <Route path="/path-to-page" Component={Page} /> */}
         <Route path='/profile' Component={ProfilePage} />
         <Route path='/settings' Component={Settings} />
-        <Route path='/appointments' Component={AppointmentsPage} />
-        <Route path='/calendar' Component={CalendarPage} />
+        <Route path='/payment' Component={PaymentPage} />
       </Routes>
     </main>
   );

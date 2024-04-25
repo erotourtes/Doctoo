@@ -1,12 +1,10 @@
+import dayjs from 'dayjs';
 import { useState } from 'react';
 import PageHeader from '../PageHeader';
 import BigCalendar from './Components/BigCalendar/BigCalendar';
 import AppointmentsWidget from './Components/AppointmentsWidget/AppointmentsWidget';
 import type { AppointmentsListItemProps } from './Components/AppointmentsWidget/AppointmentsListItem';
-import { Button } from '@/components/UI/Button/Button';
-import { ButtonTypes } from '@/components/UI/Button/ButtonTypes';
-import Icon from '@UI/Icon/Icon';
-import dayjs from 'dayjs';
+import { Button, Icon } from '@/components/UI';
 
 const appointments: AppointmentsListItemProps[] = [
   {
@@ -74,16 +72,12 @@ export default function CalendarPage() {
   return (
     <div className='overflow-hidden'>
       <PageHeader iconVariant='date' title='Calendar'>
-        <Button
-          className='flex items-center justify-center bg-white'
-          onClick={exportSchedule}
-          type={ButtonTypes.SECONDARY}
-        >
+        <Button className='flex items-center justify-center bg-white' onClick={exportSchedule} type='secondary'>
           <Icon variant='download' className='mr-2 items-center justify-center' />
           Export
         </Button>
 
-        <Button onClick={findDoctor} type={ButtonTypes.PRIMARY}>
+        <Button onClick={findDoctor} type='primary'>
           Find a doctor
         </Button>
       </PageHeader>

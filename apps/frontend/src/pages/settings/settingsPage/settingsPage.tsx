@@ -1,8 +1,7 @@
-import { Toggle } from '@/components/UI/Toggle';
-import Icon from '@UI/Icon/Icon';
 import { useState } from 'react';
 import SettingsPopup from '../settingsPopup/settingsPopup';
 import { useAppSelector } from '@/app/hooks';
+import { Icon, Toggle } from '@/components/UI';
 
 const Settings = () => {
   const [showPopup, setShowPopup] = useState(false);
