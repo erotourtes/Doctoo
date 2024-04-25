@@ -1,3 +1,5 @@
+import { ICondition } from './Condition';
+
 export enum BloodType {
   O_PLUS = 'O+',
   O_MINUS = 'O-',
@@ -24,7 +26,7 @@ export interface IPatient {
   street: string;
   apartment?: string;
   zipCode?: string;
-  conditions: Condition[];
+  conditions: ICondition[];
   vaccinations: Vaccination[];
   allergies: Allergy[];
   emailNotificationToggle: boolean;
@@ -38,11 +40,6 @@ export enum Gender {
 }
 
 export type Vaccination = {
-  id: string;
-  name: string;
-};
-
-export type Condition = {
   id: string;
   name: string;
 };
