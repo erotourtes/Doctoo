@@ -1,7 +1,7 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { MinioService } from './minio.service';
 import { mockConfigService } from '../mocks/config.mock';
+import { MinioService } from './minio.service';
 
 describe('MinioService', () => {
   let service: MinioService;
