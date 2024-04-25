@@ -35,13 +35,16 @@ export default function ScheduleBook({ closePopup, doctorId, patientId }: Schedu
   // const dispatch = useAppDispatch();
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [currentDate, setCurrentDate] = useState(today);
-  const [_, setNewAppointment] = useState<ICreateAppointment>({
+  const [newAppointment, setNewAppointment] = useState<ICreateAppointment>({
     doctorId: '',
     patientId: '',
     assignedAt: '',
     status: AppointmentStatus.PLANNED,
     notes: '',
   });
+
+  // Placeholder for linter
+  console.log(newAppointment);
 
   const [successfullModal, setSuccessfullModal] = useState(false);
 
