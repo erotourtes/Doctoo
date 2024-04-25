@@ -1,15 +1,30 @@
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import { useAppSelector } from '@/app/hooks';
 import { Button } from '../UI/Button/Button';
-import Icon from '../UI/Icon/Icon';
+import { ReceiptPDF } from './ReceiptPDF';
 import PopupDoctoo from '../UI/Popup/Popup';
+import Icon from '../UI/Icon/Icon';
 
 interface PaymentPopupProps {
   isOpenModal: boolean;
   setIsOpenModal: (arg0: boolean) => void;
   isSuccessfulPayment: boolean;
   navigateBack: () => void;
+  paymentDetails: {
+    id: string;
+    created: number;
+  };
 }
 
-export const PaymentPopup = ({ isOpenModal, setIsOpenModal, isSuccessfulPayment, navigateBack }: PaymentPopupProps) => {
+export const PaymentPopup = ({
+  isOpenModal,
+  setIsOpenModal,
+  isSuccessfulPayment,
+  navigateBack,
+  paymentDetails,
+}: PaymentPopupProps) => {
+  const { doctorName, appointmentDuration, pricePerHour } = useAppSelector(state => state.payment.data);
+
   return (
     <PopupDoctoo
       popupIsOpen={isOpenModal}
@@ -23,14 +38,28 @@ export const PaymentPopup = ({ isOpenModal, setIsOpenModal, isSuccessfulPayment,
             <h2 className='text-black'>Success!</h2>
             <p>Your appointment have been successfully paid.</p>
             <div className='flex flex-col items-start gap-4 md:flex-row md:items-center'>
-              <Button
-                type='secondary'
-                btnType='button'
-                className='flex items-center justify-center gap-1 px-3 md:gap-2 md:px-6'
+              <PDFDownloadLink
+                document={
+                  <ReceiptPDF
+                    id={paymentDetails.id}
+                    date={paymentDetails.created}
+                    doctorName={doctorName}
+                    appointmentDuration={appointmentDuration}
+                    pricePerHour={pricePerHour}
+                  />
+                }
+                fileName='document.pdf'
+                className='no-underline'
               >
-                <Icon variant='download' />
-                Download receipt
-              </Button>
+                <Button
+                  type='secondary'
+                  btnType='button'
+                  className='flex items-center justify-center gap-1 px-3 md:gap-2 md:px-6'
+                >
+                  <Icon variant='download' />
+                  Download receipt
+                </Button>
+              </PDFDownloadLink>
               <Button type='primary' btnType='button' className='w-full md:w-fit' onClick={navigateBack}>
                 Go to Dashboard
               </Button>

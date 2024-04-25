@@ -16,6 +16,8 @@ import { Checkout } from '@/components/payment/Checkout';
 export const PaymentForm = () => {
   const [isSuccessfulPayment, setIsSuccessfulPayment] = useState<boolean>(false);
   const { date, appointmentDuration, pricePerHour } = useAppSelector(state => state.payment.data);
+  const [paymentDetails, setPaymentDetails] = useState({ id: '', created: 0 });
+
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const stripe = useStripe();
@@ -71,6 +73,8 @@ export const PaymentForm = () => {
         setIsSuccessfulPayment(false);
         setIsOpenModal(true);
       } else {
+        const { id, created } = confirmPayment.paymentIntent;
+        setPaymentDetails({ id, created });
         setIsSuccessfulPayment(true);
         setIsOpenModal(true);
       }
@@ -145,6 +149,7 @@ export const PaymentForm = () => {
           setIsOpenModal={setIsOpenModal}
           isSuccessfulPayment={isSuccessfulPayment}
           navigateBack={navigateBack}
+          paymentDetails={paymentDetails}
         />
       )}
     </>
