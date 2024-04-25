@@ -1,7 +1,7 @@
 name: Chromatic
 on:
   pull_request:
-    paths: 'apps/frontend/**'
+    paths: ['apps/frontend/src/somponents/**', 'apps/frontend/src/pages/**']
 
 jobs:
   chromatic:
