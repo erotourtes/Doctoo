@@ -9,6 +9,7 @@ import { userStub } from '../mocks/stubs/user.stub';
 import { patientStub } from '../mocks/stubs/patient.stub';
 import { doctorStub } from '../mocks/stubs/doctor.stub';
 import { hospitalStub } from '../mocks/stubs/hospital.stub';
+import { plainToInstance } from 'class-transformer';
 describe('DeclarationService', () => {
   let service: DeclarationService;
   let prisma: PrismaService;
@@ -91,7 +92,7 @@ describe('DeclarationService', () => {
 
     const doctor = await prisma.doctor.create({ data: { ...doctorStub(), userId: user.id } });
 
-    testDoctor = doctor;
+    testDoctor = plainToInstance(ResponseDoctorDto, doctor);
 
     const declarationData = {
       patientId: 'non-existent-id',
