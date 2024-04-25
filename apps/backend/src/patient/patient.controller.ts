@@ -17,6 +17,9 @@ import { PatchPatientDto } from './dto/patch.dto';
 import { ResponsePatientDto } from './dto/response.dto';
 import { GetPatientGuard } from './guards/get.guard';
 import { PatientService } from './patient.service';
+import { ResponsePatientConditionDto } from './dto/responsePatientCondition.dto';
+import { CreatePatientConditionDto } from './dto/createPatientCondition.dto';
+import { ResponseCondtionDto } from './dto/responseCondition.dto';
 
 @ApiTags('Patient')
 @Controller('patient')
@@ -80,5 +83,32 @@ export class PatientController {
   @Delete(':id')
   async deletePatient(@Param('id') id: string) {
     return this.patientService.deletePatient(id);
+  }
+
+  @ApiOperation({
+    summary: 'Create a new patient condition',
+    description: 'This endpoint creates a new patient condition.',
+  })
+  @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
+  @ApiOkResponse({ type: ResponsePatientConditionDto, description: 'Patient condition created' })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
+  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiBody({ type: CreatePatientConditionDto })
+  @Post(':id/condition')
+  async createPatientCondition(@Param('id') patientId: string, @Body('conditionId') conditionId: string) {
+    return this.patientService.createPatientCondition(patientId, conditionId);
+  }
+
+  @ApiOperation({
+    summary: 'Get conditions by patient ID',
+    description: 'This endpoint retrieves conditions by patient ID.',
+  })
+  @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
+  @ApiOkResponse({ type: ResponseCondtionDto, isArray: true, description: 'Patient conditions exist' })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
+  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @Get(':id/condition')
+  async getConditionsByPatientId(@Param('id') patientId: string) {
+    return this.patientService.findConditionsByPatientId(patientId);
   }
 }

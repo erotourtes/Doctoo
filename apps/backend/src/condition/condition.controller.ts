@@ -14,39 +14,33 @@ export class ConditionController {
   @ApiOkResponse({ type: ResponseCondtionDto, description: 'Condition created' })
   @Post()
   create(@Body() body: CreateConditionDto) {
-    return this.conditionService.create(body);
+    return this.conditionService.createCondition(body);
   }
 
   @ApiOkResponse({ type: ResponseCondtionDto, isArray: true, description: 'Return conditions list' })
   @Get()
   findAll() {
-    return this.conditionService.findAll();
+    return this.conditionService.findAllConditions();
   }
 
   @ApiOkResponse({ type: ResponseCondtionDto, description: 'Return condition by id' })
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.conditionService.findOne(id);
-  }
-
-  @ApiOkResponse({ type: ResponseCondtionDto, isArray: true, description: 'Return conditions list by patient id' })
-  @Get('by-patient/:id')
-  findConditionsByPatientId(@Param('id') id: string) {
-    return this.conditionService.findConditionsByPatientId(id);
+    return this.conditionService.findCondition(id);
   }
 
   @ApiBody({ type: UpdateConditionDto })
   @ApiOkResponse({ type: ResponseCondtionDto, description: 'Condition updated' })
   @ApiParam({ name: 'id', description: 'Condition id', example: '1' })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateConditionDto: UpdateConditionDto) {
-    return this.conditionService.update(id, updateConditionDto);
+  update(@Param('id') id: string, @Body() body: UpdateConditionDto) {
+    return this.conditionService.updateCondition(id, body);
   }
 
   @ApiOkResponse({ type: ResponseCondtionDto, description: 'Condition deleted' })
   @ApiParam({ name: 'id', description: 'Condition id', example: '1' })
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.conditionService.remove(id);
+    return this.conditionService.removeCondition(id);
   }
 }

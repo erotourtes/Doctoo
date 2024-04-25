@@ -40,4 +40,30 @@ export class PatientService {
   async deletePatient(id: string) {
     await this.prismaService.patient.delete({ where: { id } });
   }
+
+  async createPatientCondition(patientId: string, conditionId: string) {
+    const patientCondtion = await this.prismaService.patientCondition.create({
+      data: {
+        patientId,
+        conditionId,
+      },
+    });
+
+    return patientCondtion;
+  }
+
+  async findConditionsByPatientId(patientId: string) {
+    const rawConditions = await this.prismaService.patientCondition.findMany({
+      where: { patientId },
+      select: {
+        condition: {
+          select: { id: true, name: true },
+        },
+      },
+    });
+
+    const conditions = rawConditions.map(c => c.condition);
+
+    return conditions;
+  }
 }
