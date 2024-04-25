@@ -25,7 +25,7 @@ export const PaymentForm = () => {
   const elements = useElements();
 
   const dispatch = useAppDispatch();
-  const { date, appointmentDuration, pricePerHour } = useAppSelector(state => state.payment.data);
+  const { appointmentDuration, pricePerHour } = useAppSelector(state => state.payment.data);
 
   const [isSuccessfulPayment, setIsSuccessfulPayment] = useState<boolean>(false);
   const [paymentDetails, setPaymentDetails] = useState({ id: '', created: 0 });
@@ -64,9 +64,6 @@ export const PaymentForm = () => {
     }
 
     const postData = {
-      userId: '1',
-      doctorId: '1',
-      date: date,
       appointmentDuration: appointmentDuration,
       pricePerHour: pricePerHour,
     };
