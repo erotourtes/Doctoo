@@ -5,8 +5,6 @@ import LoginPage from './auth/login/LoginPage';
 import LoginPageAuthenticate from './auth/login/LoginPageAuthenticate';
 import SignUpPatientPage from './auth/signup/SignUpPatientPage';
 import Settings from './settings/settingsPage/settingsPage';
-import AppointmentsPage from './Appointments/AppointmentsPage';
-import CalendarPage from './Calendar/CalendarPage';
 import Sidemenu from '@components/Sidemenu/Sidemenu';
 import Header from '@components/UI/Header/Header';
 import { PaymentPage } from './PaymentPage/PaymentPage';
