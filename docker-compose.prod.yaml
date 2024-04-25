@@ -1,6 +1,18 @@
 version: '3.8'
 
 services:
+  adminer:
+    restart: always
+    image: adminer:latest
+    networks:
+      - caddy
+      - doctoo
+    labels:
+      caddy: adminer.doctoo.org
+      caddy.reverse_proxy: '{{upstreams 8080}}'
+      caddy.basicauth: '*'
+      caddy.basicauth.radency: '$ADMINER_PASSWORD'
+
   postgres:
     restart: always
     image: postgres:14.5
@@ -31,7 +43,6 @@ services:
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       GOOGLE_REDIRECT_URL: ${GOOGLE_REDIRECT_URL}
       MINIO_ENDPOINT: ${MINIO_ENDPOINT}
-      MINIO_PORT: ${MINIO_PORT}
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       MINIO_USE_SSL: ${MINIO_USE_SSL}
@@ -64,28 +75,8 @@ services:
       caddy: https://doctoo.org
       caddy.reverse_proxy: '{{upstreams 8080}}'
 
-  minio:
-    image: bitnami/minio:latest
-    environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-    depends_on:
-      - backend
-    networks:
-      - doctoo
-    volumes:
-      - minio_prod_data:/data
-
-  mailhog:
-    image: mailhog/mailhog
-    depends_on:
-      - backend
-    networks:
-      - doctoo
-
 volumes:
   postgres_prod_db:
-  minio_prod_data:
 
 networks:
   doctoo:
