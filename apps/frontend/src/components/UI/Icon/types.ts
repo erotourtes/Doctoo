@@ -20,6 +20,7 @@ export type IconVariant =
   | 'file'
   | 'search'
   | 'star'
+  | 'star-half'
   | 'blood-type'
   | 'height'
   | 'weight'

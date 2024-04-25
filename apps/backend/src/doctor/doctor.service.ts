@@ -7,6 +7,7 @@ import { ResponseDoctorDto } from './dto/response.dto';
 import { HospitalService } from '../hospital/hospital.service';
 import { GetDoctorsQuery } from './query/get-doctors.query';
 import { SpecializationService } from '../specialization/specialization.service';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class DoctorService {
@@ -54,9 +55,10 @@ export class DoctorService {
       },
     });
 
-    return doctor;
+    return plainToInstance(ResponseDoctorDto, doctor);
   }
 
+  // TODO: refactor, extracting filter mapping logic into separate function/s
   async getDoctors(query?: GetDoctorsQuery): Promise<ResponseDoctorDto[]> {
     const hospitalFilter: { id?: string } = {};
     const specializationFilter: { id?: string } = {};
@@ -70,7 +72,7 @@ export class DoctorService {
     }
     const doctors = await this.prismaService.doctor.findMany({
       include: {
-        user: { select: { firstName: true, lastName: true } },
+        user: { select: { firstName: true, lastName: true, avatarKey: true } },
         hospitals: { select: { hospital: { select: { id: true, name: true } } } },
         specializations: { select: { specialization: true } },
       },
@@ -78,39 +80,74 @@ export class DoctorService {
         AND: [
           { hospitals: { every: { hospital: hospitalFilter } } },
           { specializations: { every: { specialization: specializationFilter } } },
-          searchFilters.length && { OR: searchFilters },
+          searchFilters.length ? { OR: searchFilters } : {},
         ],
       },
     });
 
-    return doctors;
+    return plainToInstance(ResponseDoctorDto, doctors);
   }
 
   async getDoctor(id: string): Promise<ResponseDoctorDto> {
     const doctor = await this.prismaService.doctor.findUnique({
       where: { id },
       include: {
-        user: { select: { firstName: true, lastName: true } },
+        user: { select: { firstName: true, lastName: true, avatarKey: true } },
         hospitals: { select: { hospital: true } },
         specializations: { select: { specialization: true } },
       },
     });
 
     if (!doctor) throw new NotFoundException({ message: `Doctor with id ${id} does not exist` });
-
-    return doctor;
+    return plainToInstance(ResponseDoctorDto, doctor);
   }
 
+  // TODO: refactor, extracting logic for updating hospitals and specializations into separate functions
   async patchDoctor(id: string, body: PatchDoctorDto): Promise<ResponseDoctorDto> {
     await this.getDoctor(id);
-
+    const { about, payrate, hospitalIds, specializationIds } = body;
+    const addedExistingHospitalIds = [];
+    if (hospitalIds?.added?.length) {
+      for (const hospitalId of hospitalIds.added) {
+        const hospital = await this.hospitalService.getHospital(hospitalId);
+        addedExistingHospitalIds.push(hospital.id);
+      }
+    }
+    const addedExistingSpecializationIds = [];
+    if (specializationIds?.added?.length) {
+      for (const specializationId of specializationIds.added) {
+        const specialization = await this.specializationService.getSpecialization(specializationId);
+        addedExistingSpecializationIds.push(specialization.id);
+      }
+    }
     const patchedDoctor = await this.prismaService.doctor.update({
       where: { id },
-      data: body,
-      include: { user: { select: { firstName: true, lastName: true } } },
+      data: {
+        about,
+        payrate,
+        hospitals: {
+          createMany: addedExistingHospitalIds.length
+            ? { data: addedExistingHospitalIds.map(id => ({ hospitalId: id })) }
+            : undefined,
+          deleteMany: hospitalIds?.deleted?.length ? { hospitalId: { in: hospitalIds.deleted } } : undefined,
+        },
+        specializations: {
+          createMany: addedExistingSpecializationIds.length
+            ? { data: addedExistingSpecializationIds.map(id => ({ specializationId: id })) }
+            : undefined,
+          deleteMany: hospitalIds?.deleted?.length
+            ? { specializationId: { in: specializationIds.deleted } }
+            : undefined,
+        },
+      },
+      include: {
+        user: { select: { firstName: true, lastName: true, avatarKey: true } },
+        hospitals: { include: { hospital: true } },
+        specializations: { include: { specialization: true } },
+      },
     });
 
-    return patchedDoctor;
+    return plainToInstance(ResponseDoctorDto, patchedDoctor, { exposeUnsetFields: false });
   }
 
   async deleteDoctor(id: string) {

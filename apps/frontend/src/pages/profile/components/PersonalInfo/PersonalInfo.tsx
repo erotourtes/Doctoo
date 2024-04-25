@@ -1,9 +1,8 @@
-import { useAppSelector } from '@/app/hooks';
-import { Button } from '@/components/UI/Button/Button';
-import Icon from '@UI/Icon/Icon';
-import { capitalizeString } from '../../../../utils/capitalizeString';
-import PersonalInfoPopup from './PersonalInfoPopup';
 import { useState } from 'react';
+import { useAppSelector } from '@/app/hooks';
+import { capitalizeString } from '@/utils/capitalizeString';
+import { Icon, Button } from '@/components/UI';
+import PersonalInfoPopup from './PersonalInfoPopup';
 
 const PersonalInfo = () => {
   const patient = useAppSelector(state => state.patient.data);
@@ -30,7 +29,7 @@ const PersonalInfo = () => {
           Edit
         </button>
         <div>
-          <Button type='secondary' onClick={() => {}} className='flex items-center'>
+          <Button btnType='button' type='secondary' onClick={() => {}} className='flex items-center'>
             <Icon variant='plus' />
             Add a document
           </Button>

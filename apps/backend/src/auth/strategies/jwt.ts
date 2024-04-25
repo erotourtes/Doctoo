@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { AuthGuard, PassportStrategy } from '@nestjs/passport';
+import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import auth from '../../config/auth';
+import { UserService } from '../../user/user.service';
+import { JWT_STRATEGY_NAME } from '../../utils/constants';
 import { AuthService } from '../auth.service';
 import { AuthRequestHelper } from '../utils/cookie-helper.service';
-
-const JWT_STRATEGY_NAME = 'jwt';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, JWT_STRATEGY_NAME) {
@@ -15,6 +15,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, JWT_STRATEGY_NAME) {
     @Inject(auth.KEY) readonly authObject: ConfigType<typeof auth>,
     private readonly authService: AuthService,
     private readonly cookieHelper: AuthRequestHelper,
+    private readonly userService: UserService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
@@ -26,7 +27,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, JWT_STRATEGY_NAME) {
 
   async validate(req: Request, payload: JwtPayload) {
     if (!payload || payload.sub == undefined) return null;
-    const user = await this.authService.getUser(payload.sub);
+    const user = await this.userService.getUser(payload.sub);
     if (user) await this.prolongTokenLifeIfNeeded(user.id, req);
 
     return user;
@@ -52,6 +53,3 @@ const cookieExtractor = (req: Request) => {
 };
 
 export type JwtPayload = { sub?: string };
-
-@Injectable()
-export default class JWTGuard extends AuthGuard(JWT_STRATEGY_NAME) {}

@@ -1,21 +1,18 @@
-import { Button } from '@/components/UI/Button/Button';
-import Input from '@/components/UI/Input/Input';
-import { AuthMainContainer, LogoWithTitle, Separator, AuthLogInIntoAccount } from '@/pages/auth/auth-components';
-import Icon from '../../../components/UI/Icon/Icon';
-import InputPassword from '../../../components/UI/Input/InputPassword';
+import { useState } from 'react';
+import { API_URL, instance } from '@/api/axios.api';
+import handleError from '@/api/handleError.api';
 import { FormProvider, useForm } from 'react-hook-form';
 import Joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
-import PopupDoctoo from '../../../components/UI/Popup/Popup';
-import { useState } from 'react';
-import { API_URL, instance } from '../../../api/axios.api';
-import handleError from '../../../api/handleError.api';
+import { AuthMainContainer, LogoWithTitle, Separator, AuthLogInIntoAccount } from '@/pages/auth/auth-components';
+import { Button, Icon, Input, InputPassword, PopupDoctoo } from '@/components/UI';
 
 type SignUpType = {
   email: string;
   password: string;
   fullName: string;
 };
+
 const userSignUpSchema = Joi.object<SignUpType>({
   email: Joi.string()
     .email({ tlds: { allow: false } })

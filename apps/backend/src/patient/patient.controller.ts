@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -15,7 +15,6 @@ import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } fro
 import { CreatePatientDto } from './dto/create.dto';
 import { PatchPatientDto } from './dto/patch.dto';
 import { ResponsePatientDto } from './dto/response.dto';
-import { GetPatientGuard } from './guards/get.guard';
 import { PatientService } from './patient.service';
 import { ResponsePatientConditionDto } from './dto/responsePatientCondition.dto';
 import { CreatePatientConditionDto } from './dto/createPatientCondition.dto';
@@ -35,7 +34,6 @@ export class PatientController {
   @ApiNotFoundResponse({ type: NotFoundResponse, description: 'Patient not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
   @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
-  @UseGuards(GetPatientGuard)
   @Get(':id')
   async getPatient(@Param('id') id: string) {
     return this.patientService.getPatient(id);
@@ -64,7 +62,6 @@ export class PatientController {
   @ApiNotFoundResponse({ type: NotFoundResponse, description: 'Patient not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
   @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
-  @UseGuards(GetPatientGuard)
   @Patch(':id')
   async patchPatient(@Param('id') id: string, @Body() body: PatchPatientDto) {
     return this.patientService.patchPatient(id, body);
@@ -79,7 +76,6 @@ export class PatientController {
   @ApiNotFoundResponse({ type: NotFoundResponse, description: 'Patient not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
   @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
-  @UseGuards(GetPatientGuard)
   @Delete(':id')
   async deletePatient(@Param('id') id: string) {
     return this.patientService.deletePatient(id);
