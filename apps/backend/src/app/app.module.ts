@@ -11,6 +11,8 @@ import { HospitalModule } from '../hospital/hospital.module';
 import { MinioService } from '../minio/minio.service';
 import { PatientModule } from '../patient/patient.module';
 import { UserModule } from '../user/user.module';
+import { DeclarationModule } from '../declaration/declaration.module';
+import { SpecializationModule } from '../specialization/specialization.module';
 import mail from '../config/mail';
 import { MailModule } from '../mail/mail.module';
 import { PaymentModule } from '../payment/payment.module';
@@ -27,6 +29,8 @@ import { PaymentModule } from '../payment/payment.module';
     FileModule,
     HospitalModule,
     AppointmentModule,
+    DeclarationModule,
+    SpecializationModule,
     PaymentModule,
   ],
   providers: [MinioService],

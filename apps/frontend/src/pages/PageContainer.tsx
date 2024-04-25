@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import ProfilePage from './profile/ProfilePage';
+import Settings from './settings/settingsPage/settingsPage';
 
 // import page component
 
@@ -23,6 +24,7 @@ const PageContainer = () => {
       <Routes>
         {/* <Route path="/path-to-page" Component={Page} /> */}
         <Route path='/profile' Component={ProfilePage} />
+        <Route path='/settings' Component={Settings} />
       </Routes>
     </main>
   );

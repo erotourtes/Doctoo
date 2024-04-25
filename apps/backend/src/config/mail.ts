@@ -7,4 +7,5 @@ export default registerAs('mail', () => ({
   MAIL_USER: getOrThrow('MAIL_USER'),
   MAIL_PASS: getOrThrow('MAIL_PASS'),
   MAIL_FROM: getOrThrow('MAIL_FROM'),
+  MAIL_SECURE: getOrThrow('MAIL_SECURE') === 'true',
 }));

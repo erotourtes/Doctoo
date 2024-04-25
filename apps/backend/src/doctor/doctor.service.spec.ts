@@ -5,6 +5,9 @@ import { CreateDoctorDto } from './dto/create.dto';
 import { PatchDoctorDto } from './dto/patch.dto';
 import { userStub } from '../mocks/stubs/user.stub';
 import { UserModule } from '../user/user.module';
+import { hospitalStub } from '../mocks/stubs/hospital.stub';
+import { HospitalModule } from '../hospital/hospital.module';
+import { SpecializationModule } from '../specialization/specialization.module';
 
 describe('DoctorService', () => {
   let doctorService: DoctorService;
@@ -12,7 +15,7 @@ describe('DoctorService', () => {
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
-      imports: [UserModule],
+      imports: [UserModule, HospitalModule, SpecializationModule],
       providers: [DoctorService, PrismaService],
     }).compile();
 
@@ -32,15 +35,19 @@ describe('DoctorService', () => {
   it('should create doctor', async () => {
     const user = await prisma.user.create({ data: userStub() });
     const specialization = await prisma.specialization.create({ data: { name: 'test' } });
+    const hospital = await prisma.hospital.create({ data: hospitalStub() });
 
-    const doctorDto: CreateDoctorDto = {
+    const doctorDto: Partial<CreateDoctorDto> = {
       about: 'test',
       payrate: 50,
-      specializationId: specialization.id,
       userId: user.id,
     };
 
-    const createdDoctor = await doctorService.createDoctor(doctorDto);
+    const createdDoctor = await doctorService.createDoctor({
+      ...doctorDto,
+      specializationIds: [specialization.id],
+      hospitalIds: [hospital.id],
+    } as CreateDoctorDto);
 
     expect(createdDoctor).toMatchObject(doctorDto);
     expect(createdDoctor.id).toBeDefined();
@@ -49,15 +56,21 @@ describe('DoctorService', () => {
   it('should return doctor by id', async () => {
     const user = await prisma.user.create({ data: userStub() });
     const specialization = await prisma.specialization.create({ data: { name: 'test' } });
+    const hospital = await prisma.hospital.create({ data: hospitalStub() });
 
-    const doctorDto: CreateDoctorDto = {
+    const doctorDto: Partial<CreateDoctorDto> = {
       about: 'test',
       payrate: 50,
-      specializationId: specialization.id,
       userId: user.id,
     };
 
-    const { id } = await prisma.doctor.create({ data: doctorDto });
+    const { id } = await prisma.doctor.create({
+      data: {
+        ...doctorDto,
+        specializations: { create: { specialization: { connect: { id: specialization.id } } } },
+        hospitals: { create: { hospital: { connect: { id: hospital.id } } } },
+      } as CreateDoctorDto,
+    });
 
     const doctor = await doctorService.getDoctor(id);
 
@@ -67,15 +80,21 @@ describe('DoctorService', () => {
   it('should update doctor', async () => {
     const user = await prisma.user.create({ data: userStub() });
     const specialization = await prisma.specialization.create({ data: { name: 'test' } });
+    const hospital = await prisma.hospital.create({ data: hospitalStub() });
 
-    const doctorDto: CreateDoctorDto = {
+    const doctorDto: Partial<CreateDoctorDto> = {
       about: 'test',
       payrate: 50,
-      specializationId: specialization.id,
       userId: user.id,
     };
 
-    const { id } = await prisma.doctor.create({ data: doctorDto });
+    const { id } = await prisma.doctor.create({
+      data: {
+        ...doctorDto,
+        specializations: { create: { specialization: { connect: { id: specialization.id } } } },
+        hospitals: { create: { hospital: { connect: { id: hospital.id } } } },
+      } as CreateDoctorDto,
+    });
 
     const delta: PatchDoctorDto = { about: 'updated-about', payrate: 25 };
 
@@ -87,15 +106,21 @@ describe('DoctorService', () => {
   it('should delete doctor', async () => {
     const user = await prisma.user.create({ data: userStub() });
     const specialization = await prisma.specialization.create({ data: { name: 'test' } });
+    const hospital = await prisma.hospital.create({ data: hospitalStub() });
 
-    const doctorDto: CreateDoctorDto = {
+    const doctorDto: Partial<CreateDoctorDto> = {
       about: 'test',
       payrate: 50,
-      specializationId: specialization.id,
       userId: user.id,
     };
 
-    const { id } = await prisma.doctor.create({ data: doctorDto });
+    const { id } = await prisma.doctor.create({
+      data: {
+        ...doctorDto,
+        specializations: { create: { specialization: { connect: { id: specialization.id } } } },
+        hospitals: { create: { hospital: { connect: { id: hospital.id } } } },
+      } as CreateDoctorDto,
+    });
 
     const deleteResult = await doctorService.deleteDoctor(id);
 

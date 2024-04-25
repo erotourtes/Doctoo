@@ -1,14 +1,4 @@
 import { BadRequestException, Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
-import { plainToInstance } from 'class-transformer';
-import { Response } from 'express';
-import { ResponseUserDto } from '../user/dto/response.dto';
-import { UserDec } from '../user/user.decorator';
-import { AuthService } from './auth.service';
-import { AuthLocalLoginDto } from './dto/localLogin.dto';
-import { ResponseAuthGoogleSignInDto } from './dto/responseGoogleSignIn.dto';
-import { AuthSignUpDto } from './dto/signUp.dto';
-import { GoogleAuthGuard } from './strategies/google';
-import JWTGuard from './strategies/jwt';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -17,8 +7,18 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { BadRequestResponse, InternalServerErrorResponse } from '../../utils/errorResponses';
+import { plainToInstance } from 'class-transformer';
+import { Response } from 'express';
 import { ResponsePatientDto } from '../patient/dto/response.dto';
+import { ResponseUserDto } from '../user/dto/response.dto';
+import { UserDec } from '../user/user.decorator';
+import { BadRequestResponse, InternalServerErrorResponse } from '../utils/errorResponses';
+import { AuthService } from './auth.service';
+import { AuthLocalLoginDto } from './dto/localLogin.dto';
+import { ResponseAuthGoogleSignInDto } from './dto/responseGoogleSignIn.dto';
+import { AuthSignUpDto } from './dto/signUp.dto';
+import { GoogleAuthGuard } from './strategies/google';
+import JWTGuard from './strategies/jwt';
 
 @ApiTags('Auth')
 @Controller('auth')
