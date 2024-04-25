@@ -31,7 +31,7 @@ const NavButton: React.FunctionComponent<NavButtonProps> = ({
         <span className='font-medium group-hover:text-white group-active:text-black'>{text}</span>
       )}
       {variant === 'small' && (
-        <span className='t-1/2 tooltip invisible absolute left-full z-10 ml-1 whitespace-nowrap rounded-xl bg-main-dark p-2 text-white transition-all group-hover:visible'>
+        <span className='t-1/2 invisible absolute left-full z-10 ml-1 whitespace-nowrap rounded-xl bg-main-dark p-2 text-white transition-all group-hover:visible'>
           {text}
         </span>
       )}

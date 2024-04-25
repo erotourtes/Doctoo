@@ -24,17 +24,29 @@ const ProfilePage = () => {
           <AddressInfo />
         </div>
 
-        <div className='w-full   gap-7 lg:flex lg:max-w-[200px] lg:flex-col'>
-          <StatsCard title='Height,cm' value={patient.height.toString()} iconVariant='height' />
+        <div className='flex w-full flex-col gap-7 lg:max-w-[200px]'>
+          <StatsCard variant='input' title='Height,cm' value={patient.height.toString()} iconVariant='height' />
 
-          <StatsCard title='Weight,kg' value={patient.weight.toString()} iconVariant='weight' />
+          <StatsCard variant='input' title='Weight,kg' value={patient.weight.toString()} iconVariant='weight' />
 
           {/*TODO: Add age icon when presen */}
-          <StatsCard title='Age' value={patient.age.toString()} iconVariant='weight' />
+          <StatsCard variant='input' title='Age' value={patient.age.toString()} iconVariant='weight' />
 
-          <StatsCard title='Blood type' value={patient.bloodType.toString()} iconVariant='blood-type' />
+          <StatsCard
+            variant='select'
+            options={['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']}
+            title='Blood type'
+            value={patient.bloodType.toString()}
+            iconVariant='blood-type'
+          />
 
-          <StatsCard title='Gender' value={capitalizeString(patient.gender)} iconVariant='gender' />
+          <StatsCard
+            variant='select'
+            title='Gender'
+            value={capitalizeString(patient.gender)}
+            iconVariant='gender'
+            options={['male', 'female']}
+          />
         </div>
       </section>
     </div>

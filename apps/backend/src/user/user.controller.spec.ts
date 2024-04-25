@@ -25,7 +25,6 @@ describe('UserController', () => {
       lastName: 'Last Name',
       email: 'example@mail.com',
       phone: '+380501804050',
-      emailVerified: true,
       avatarKey: 'ABCD-DEFG',
       password: '$2y$10$rcDPr0lHPIa4iwZeZWunBeamx7ruC.g0hFl9QrEEARRaAQpRX3MhC',
     });

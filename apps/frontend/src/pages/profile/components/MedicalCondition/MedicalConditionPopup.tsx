@@ -1,23 +1,50 @@
 import { Button } from '@/components/UI/Button/Button';
 import Input from '@/components/UI/Input/Input';
-import Icon from '@UI/Icon/Icon';
-import Popup from 'reactjs-popup';
+import PopupDoctoo from '@/components/UI/Popup/Popup';
+import { joiResolver } from '@hookform/resolvers/joi';
+import Joi from 'joi';
+import { type FieldValues, FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
 
 type MedicalConditionPopupProps = {
   isOpen: boolean;
   onClose: () => void;
 };
 
+interface FormData {
+  condtion: string;
+  allergies: string;
+}
+
+const schema = Joi.object({
+  condition: Joi.string().alphanum().min(3).max(30).required(),
+  allergies: Joi.string().required(),
+});
+
 const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) => {
+  const methods = useForm({
+    mode: 'onChange',
+    resolver: joiResolver(schema),
+  });
+
+  const { handleSubmit } = methods;
+
+  function onSubmit(data: FormData): void {
+    console.log(data);
+  }
+
   return (
-    <Popup open={isOpen} onClose={onClose} modal>
-      <div className='pointer-events-none fixed left-0 top-0 z-10 h-screen w-screen bg-black/20' />
-      <div className='relative z-20 flex h-full min-w-[600px] flex-col gap-7 rounded-xl bg-white p-12'>
-        <Icon variant='close' className='absolute right-4 top-4 cursor-pointer' onClick={onClose} />
-        <p className='text-2xl font-medium text-black'>Medical condition and allergies </p>
-        <form onSubmit={e => e.preventDefault()} className='flex w-full flex-col gap-7'>
+    <PopupDoctoo
+      popupIsOpen={isOpen}
+      closePopup={onClose}
+      modalBodyClassName='relative z-20 flex h-full min-w-[600px] flex-col gap-7 rounded-xl bg-white'
+    >
+      <p className='text-2xl font-medium text-black'>Medical condition and allergies </p>
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmit as SubmitHandler<FieldValues>)} className='flex w-full flex-col gap-7'>
           <div className='w-full'>
-            <Input id='allergies' label='Allergies' placeholder='' type='text' className='w-full' />
+            <Input id='condition' label='Medical condition' type='text' className='w-full' />
+
+            <Input id='allergies' label='Allergies' type='text' className='w-full' />
           </div>
           <div className='flex w-full gap-4'>
             <Button type='secondary' onClick={() => {}} className='w-1/2'>
@@ -28,8 +55,8 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
             </Button>
           </div>
         </form>
-      </div>
-    </Popup>
+      </FormProvider>
+    </PopupDoctoo>
   );
 };
 
