@@ -1,11 +1,7 @@
 import type React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { passwordRulesList } from '@/constants/passwordRulesList';
-import { InputPassword, Button } from '@/components/UI';
-import { ButtonTypes } from '@/components/UI/Button/ButtonTypes';
-import InputPassword from '../../../components/UI/Input/InputPassword';
-import { FormProvider, useForm } from 'react-hook-form';
-import PopupDoctoo from '@/components/UI/Popup/Popup';
+import { InputPassword, Button, PopupDoctoo } from '@/components/UI';
 
 export interface PopupProps {
   showPopup: boolean;
@@ -65,11 +61,11 @@ const SettingsPopup: React.FC<PopupProps> = ({ showPopup, handleClosePopup }) =>
       </section>
 
       <div className='mt-4 flex flex-col-reverse gap-4 sm:mt-8 sm:flex-row sm:justify-between'>
-        <Button type={ButtonTypes.SECONDARY} onClick={handleClosePopup} className='sm:w-64'>
+        <Button type='secondary' onClick={handleClosePopup} className='sm:w-64'>
           Cancel
         </Button>
 
-        <Button type={ButtonTypes.PRIMARY} onClick={() => {}} className='sm:w-64'>
+        <Button type='primary' onClick={() => {}} className='sm:w-64'>
           Save
         </Button>
       </div>
