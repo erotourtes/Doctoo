@@ -16,9 +16,11 @@ export const getAppointmentsByPatientId = createAsyncThunk('appointment', async 
       const data: IAppointment[] = response.data.map(appointment => {
         const { user, ...doctorWithoutUser } = appointment.doctor;
         delete doctorWithoutUser.id;
+        const status = appointment.status.charAt(0) + appointment.status.slice(1).toLowerCase();
 
         return {
           ...appointment,
+          status,
           doctor: {
             ...doctorWithoutUser,
             ...user,
