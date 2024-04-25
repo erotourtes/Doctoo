@@ -38,7 +38,7 @@ export class MinioService {
       throw new BadRequestException('Invalid file format');
     }
 
-    const fullFileName = `${randomUUID()}.${file.mimetype.split('/').pop()}`;
+    const fullFileName = `${randomUUID()}.${file.originalname.split('.').pop()}`;
 
     await this.minioClient.putObject(this.bucketName, fullFileName, file.buffer);
 
