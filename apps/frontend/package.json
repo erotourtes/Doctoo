@@ -13,6 +13,7 @@
     "test": "vitest run --passWithNoTests",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
+    "api:sync": "openapi-typescript http://localhost:3005/swagger.json -o ./src/api.d.ts",
     "format": "prettier src/ --write",
     "lint": "eslint . --fix --ignore-path .eslintignore && tsc --noemit"
   },
@@ -24,6 +25,8 @@
     "clsx": "2.1.0",
     "dayjs": "1.11.10",
     "joi": "17.12.3",
+    "openapi-fetch": "0.9.4",
+    "openapi-typescript": "6.7.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "7.51.3",
