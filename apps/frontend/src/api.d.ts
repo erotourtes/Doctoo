@@ -180,7 +180,7 @@ export interface paths {
      */
     post: operations['FileController_uploadFile'];
   };
-  '/file/{fileName}': {
+  '/file/{name}': {
     /**
      * Get a link for a file by name
      * @description This endpoint retrieves a link for a file by name.
@@ -243,6 +243,13 @@ export interface paths {
     get: operations['DeclarationController_findOne'];
     delete: operations['DeclarationController_remove'];
     patch: operations['DeclarationController_update'];
+  };
+  '/payment': {
+    /**
+     * Get a payment intent
+     * @description This endpoint return payment intent from stripe api
+     */
+    post: operations['PaymentController_createPayment'];
   };
 }
 
@@ -486,11 +493,6 @@ export interface components {
        */
       email: string;
       /**
-       * @description Indicates whether the email is verified
-       * @default false
-       */
-      emailVerified: boolean;
-      /**
        * @description The password of the user
        * @example password123
        */
@@ -527,11 +529,6 @@ export interface components {
        * @example user@example.com
        */
       email?: string;
-      /**
-       * @description Indicates whether the email is verified
-       * @default false
-       */
-      emailVerified?: boolean;
       /**
        * @description The password of the user
        * @example password123
@@ -735,8 +732,32 @@ export interface components {
       /** @description The zip code of the hospital */
       zipCode?: number;
     };
-    CreateSpecializationDto: Record<string, never>;
-    UpdateSpecializationDto: Record<string, never>;
+    CreateSpecializationDto: {
+      /**
+       * @description Specialization name
+       * @example Surgeon
+       */
+      name: string;
+    };
+    ResponseSpecializationDto: {
+      /**
+       * @description Spesialization id
+       * @example 1
+       */
+      id: string;
+      /**
+       * @description Spesialization name
+       * @example Surgeon
+       */
+      name: string;
+    };
+    UpdateSpecializationDto: {
+      /**
+       * @description Specialization name
+       * @example Surgeon
+       */
+      name?: string;
+    };
     CreateAppointmentDto: {
       /** @description The ID of the doctor the appointment is created with */
       doctorId: string;
@@ -793,8 +814,30 @@ export interface components {
       /** @description Notes for the appointment */
       notes?: string;
     };
-    CreateDeclarationDto: Record<string, never>;
-    UpdateDeclarationDto: Record<string, never>;
+    CreateDeclarationDto: {
+      /**
+       * @description Doctor Id
+       * @example 017b1d31-03e6-4d46-8021-b4e563d3763c
+       */
+      doctorId: string;
+      /**
+       * @description Patient Id
+       * @example af2d6a97-171f-4d33-9f52-f865e3187d44
+       */
+      patientId: string;
+    };
+    CreatePaymentDto: {
+      /**
+       * @description The appointment duration in hour
+       * @example 1
+       */
+      appointmentDuration: number;
+      /**
+       * @description The price per hour
+       * @example 50
+       */
+      pricePerHour: number;
+    };
   };
   responses: never;
   parameters: never;
@@ -1731,8 +1774,11 @@ export interface operations {
   };
   SpecializationController_getSpecializations: {
     responses: {
+      /** @description Return specializations list */
       200: {
-        content: never;
+        content: {
+          'application/json': components['schemas']['ResponseSpecializationDto'][];
+        };
       };
     };
   };
@@ -1743,26 +1789,40 @@ export interface operations {
       };
     };
     responses: {
-      201: {
-        content: never;
+      /** @description Spesialization created */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseSpecializationDto'];
+        };
       };
     };
   };
   SpecializationController_getSpecialization: {
     parameters: {
       path: {
+        /**
+         * @description Spesialization id
+         * @example 1
+         */
         id: string;
       };
     };
     responses: {
+      /** @description Spesialization object */
       200: {
-        content: never;
+        content: {
+          'application/json': components['schemas']['ResponseSpecializationDto'];
+        };
       };
     };
   };
   SpecializationController_deleteSpecialization: {
     parameters: {
       path: {
+        /**
+         * @description Spesialization id
+         * @example 1
+         */
         id: string;
       };
     };
@@ -1775,6 +1835,10 @@ export interface operations {
   SpecializationController_updateSpecialization: {
     parameters: {
       path: {
+        /**
+         * @description Spesialization id
+         * @example 1
+         */
         id: string;
       };
     };
@@ -1784,8 +1848,11 @@ export interface operations {
       };
     };
     responses: {
+      /** @description Spesialization updated */
       200: {
-        content: never;
+        content: {
+          'application/json': components['schemas']['ResponseSpecializationDto'];
+        };
       };
     };
   };
@@ -1832,7 +1899,7 @@ export interface operations {
          * @description File name
          * @example file.pdf
          */
-        fileName: string;
+        name: string;
       };
     };
     responses: {
@@ -1873,7 +1940,7 @@ export interface operations {
          * @description File name
          * @example file.pdf
          */
-        fileName: string;
+        name: string;
       };
     };
     responses: {
@@ -2134,8 +2201,11 @@ export interface operations {
   };
   DeclarationController_findAll: {
     responses: {
+      /** @description Declarations list */
       200: {
-        content: never;
+        content: {
+          'application/json': components['schemas']['CreateDeclarationDto'][];
+        };
       };
     };
   };
@@ -2146,8 +2216,11 @@ export interface operations {
       };
     };
     responses: {
-      201: {
-        content: never;
+      /** @description Declaration created */
+      200: {
+        content: {
+          'application/json': components['schemas']['CreateDeclarationDto'];
+        };
       };
     };
   };
@@ -2158,14 +2231,21 @@ export interface operations {
       };
     };
     responses: {
+      /** @description Get declaration */
       200: {
-        content: never;
+        content: {
+          'application/json': components['schemas']['CreateDeclarationDto'];
+        };
       };
     };
   };
   DeclarationController_remove: {
     parameters: {
       path: {
+        /**
+         * @description Declaration id
+         * @example 1
+         */
         id: string;
       };
     };
@@ -2178,17 +2258,43 @@ export interface operations {
   DeclarationController_update: {
     parameters: {
       path: {
+        /**
+         * @description Declaration id
+         * @example 1
+         */
         id: string;
       };
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['UpdateDeclarationDto'];
+        'application/json': components['schemas']['CreateDeclarationDto'];
       };
     };
     responses: {
+      /** @description Updated declaration */
       200: {
-        content: never;
+        content: {
+          'application/json': components['schemas']['CreateDeclarationDto'][];
+        };
+      };
+    };
+  };
+  /**
+   * Get a payment intent
+   * @description This endpoint return payment intent from stripe api
+   */
+  PaymentController_createPayment: {
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreatePaymentDto'];
+      };
+    };
+    responses: {
+      /** @description Get payment intent */
+      201: {
+        content: {
+          'application/json': components['schemas']['CreatePaymentDto'];
+        };
       };
     };
   };

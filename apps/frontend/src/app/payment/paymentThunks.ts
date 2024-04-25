@@ -1,13 +1,17 @@
-import { instance } from '@/api/axios.api';
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import api from '../api';
 
 export const getPaymentIntent = createAsyncThunk(
   'payment',
   async (data: { appointmentDuration: number; pricePerHour: number }) => {
-    const response = await instance.post('/payment', {
-      appointmentDuration: data.appointmentDuration,
-      pricePerHour: data.pricePerHour,
+    const { appointmentDuration, pricePerHour } = data;
+    const response = await api.POST('/payment', {
+      body: {
+        appointmentDuration,
+        pricePerHour,
+      },
     });
-    return response.data.client_secret;
+
+    return response.data;
   },
 );

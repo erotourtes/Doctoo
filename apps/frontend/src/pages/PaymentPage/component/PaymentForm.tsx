@@ -69,8 +69,8 @@ export const PaymentForm = () => {
     };
 
     try {
-      const actionResult = await dispatch(getPaymentIntent(postData));
-      const clientSecret = actionResult.payload;
+      const response = await dispatch(getPaymentIntent(postData));
+      const { client_secret: clientSecret } = response.payload as { client_secret: string };
 
       const paymentMethod = await stripe.createPaymentMethod({
         type: 'card',
