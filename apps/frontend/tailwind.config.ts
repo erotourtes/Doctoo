@@ -1,10 +1,15 @@
-import { Config } from 'tailwindcss';
+import type { Config } from 'tailwindcss';
 
 export default <Config>{
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   darkMode: 'media',
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
+        syncopate: ['Syncopate', 'Inter', 'sans-serif'],
+      },
       spacing: {
         128: '32rem',
       },
@@ -19,11 +24,13 @@ export default <Config>{
       'grey-3': '#AFBCBD',
       'grey-4': '#CAD7D9',
       'grey-5': '#E5EBEC',
+      'dark-grey': '#454950',
       background: '#F1F6F9',
       main: '#089BAB',
       'main-medium': '#6BC3CD',
       'main-light': '#D9F0F2',
       'main-dark': '#057D8A',
+      'main-darker': '#05616B',
       orange: '#F2A450',
       'orange-light': '#FDF4E7',
       error: '#ED5252',
@@ -32,6 +39,10 @@ export default <Config>{
       'green-2': '#ACE9C5',
       'green-dark': '#35995F',
       'green-light': '#EFFAF4',
+      'green-border': '#6BC3CD',
+    },
+    backgroundImage: {
+      'greeting-bg': "url('/assets/images/greeting-bg.svg')",
     },
   },
   variants: {
