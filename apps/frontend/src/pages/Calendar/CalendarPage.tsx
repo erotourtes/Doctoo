@@ -57,10 +57,24 @@ const appointments: AppointmentsListItemProps[] = [
   },
 ];
 
-export default function CalendarPage() {
+export default function CalendarPageWrapper() {
   const todayAppointment = appointments.filter(appointment => dayjs(appointment.date).isSame(dayjs(), 'day'));
-
   const [selectedDate, setSelectedDate] = useState(new Date());
+
+  return (
+    <CalendarPage todayAppointment={todayAppointment} selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+  );
+}
+
+export function CalendarPage({
+  todayAppointment,
+  selectedDate,
+  setSelectedDate,
+}: {
+  todayAppointment: AppointmentsListItemProps[];
+  selectedDate: Date;
+  setSelectedDate: React.Dispatch<React.SetStateAction<Date>>;
+}) {
   const [appointmentsForDay, setAppointmentsForDay] = useState<AppointmentsListItemProps[]>(todayAppointment);
 
   function exportSchedule() {
