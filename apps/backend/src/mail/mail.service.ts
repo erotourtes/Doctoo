@@ -1,7 +1,7 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Inject, Injectable } from '@nestjs/common';
-import config from '../config/config';
 import { ConfigType } from '@nestjs/config';
+import config from '../config/config';
 
 @Injectable()
 export class MailService {
@@ -17,7 +17,7 @@ export class MailService {
       template: './patient-sign-up-step',
       context: {
         name,
-        url: `${this.configObject.APP_URL}/auth/patient/signup/${token}`,
+        url: `${this.configObject.FRONTEND_URL}/${this.configObject.FRONTEND_SIGNUP_PATH}?token=${token}`,
       },
     });
   }

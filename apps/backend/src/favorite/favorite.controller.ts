@@ -1,19 +1,19 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { CreateFavoriteDto } from './dto/create.dto';
-import { FavoriteService } from './favorite.service';
 import {
-  ApiTags,
-  ApiOperation,
-  ApiOkResponse,
   ApiBadRequestResponse,
-  ApiInternalServerErrorResponse,
-  ApiNotFoundResponse,
-  ApiParam,
   ApiBody,
   ApiCreatedResponse,
+  ApiInternalServerErrorResponse,
   ApiNoContentResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
 } from '@nestjs/swagger';
-import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../../utils/errorResponses';
+import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../utils/errorResponses';
+import { CreateFavoriteDto } from './dto/create.dto';
+import { FavoriteService } from './favorite.service';
 
 @ApiTags('Favorite')
 @Controller('favorite')

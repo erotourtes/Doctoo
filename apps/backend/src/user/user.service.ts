@@ -15,6 +15,12 @@ export class UserService {
     return plainToInstance(ResponseWithoutRelationsUserDto, user);
   }
 
+  async getUserByEmail(email: string): Promise<ResponseWithoutRelationsUserDto> {
+    const user = await this.prismaService.user.findFirst({ where: { email } });
+
+    return plainToInstance(ResponseWithoutRelationsUserDto, user);
+  }
+
   async getUserPasswordByEmail(email: string): Promise<ResponseWithoutRelationsUserDto> {
     const user = await this.prismaService.user.findUnique({ where: { email } });
 

@@ -1,12 +1,10 @@
-import { BadRequestException, Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
-import { plainToInstance } from 'class-transformer';
+import { BadRequestException, Body, Controller, Get, Param, Post, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
-import { ResponseUserDto } from '../user/dto/response.dto';
 import { UserDec } from '../user/user.decorator';
 import { AuthService } from './auth.service';
 import { AuthLocalLoginDto } from './dto/localLogin.dto';
 import { ResponseAuthGoogleSignInDto } from './dto/responseGoogleSignIn.dto';
-import { AuthSignUpDto } from './dto/signUp.dto';
+import { AuthSignUpPatientDto, AuthSignUpUserDto } from './dto/signUp.dto';
 import { GoogleAuthGuard } from './strategies/google';
 import JWTGuard from './strategies/jwt';
 import {
@@ -17,47 +15,64 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { BadRequestResponse, InternalServerErrorResponse } from '../../utils/errorResponses';
 import { ResponsePatientDto } from '../patient/dto/response.dto';
+import { AuthRequestHelper } from './utils/cookie-helper.service';
+import { ResponseWithoutRelationsUserDto } from '../user/dto/responseWithoutRelations';
+import { BadRequestResponse, InternalServerErrorResponse } from '../utils/errorResponses';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly requestHelper: AuthRequestHelper,
+    private readonly authService: AuthService,
+  ) {}
 
   @ApiOperation({
     summary: 'Login with an email and a password',
     description: 'This endpoint is used for logging in with an email and password.',
   })
   @ApiBody({ type: AuthLocalLoginDto })
-  @ApiOkResponse({ type: ResponseUserDto, description: 'User data' })
+  @ApiOkResponse({ type: ResponsePatientDto, description: 'User data' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
   @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
-  @Post('login')
+  @Post('login/patient')
   async localLogin(
     @Res({ passthrough: true }) res: Response,
     @Body() body: AuthLocalLoginDto,
-  ): Promise<ResponseUserDto> {
-    const user = await this.authService.validateUser(body.email, body.password);
+  ): Promise<ResponsePatientDto> {
+    const user = await this.authService.validatePatientByEmail(body.email, body.password);
     if (!user) throw new BadRequestException('Invalid email or password');
 
     const token = await this.authService.signJwtToken(user.id);
-    this.authService.attachJwtTokenToCookie(res, token);
+    this.requestHelper.attachJwtTokenToCookie(res, token);
 
-    return plainToInstance(ResponseUserDto, user);
+    return user;
   }
 
   @ApiOperation({
     summary: 'Local sign up',
     description: 'This endpoint is used for the local sign up.',
   })
-  @ApiBody({ type: AuthSignUpDto })
+  @ApiBody({ type: ResponseWithoutRelationsUserDto })
   @ApiOkResponse({ type: ResponsePatientDto, description: 'Patient data' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
   @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
   @Post('signup')
-  localSignUp(@Body() body: AuthSignUpDto) {
+  signUpFirstStep(@Body() body: AuthSignUpUserDto): Promise<ResponseWithoutRelationsUserDto> {
     return this.authService.signUpUser(body);
+  }
+
+  @Post('signup/patient/:token')
+  async signUpPatientSecondStep(
+    @Res({ passthrough: true }) res: Response,
+    @Body() body: AuthSignUpPatientDto,
+    @Param('token') signUpToken: string,
+  ): Promise<ResponsePatientDto> {
+    const patient = await this.authService.signUpPatient(body, signUpToken);
+    const token = await this.authService.signJwtToken(patient.userId);
+    this.requestHelper.attachJwtTokenToCookie(res, token);
+    return patient;
   }
 
   @UseGuards(GoogleAuthGuard)
@@ -66,17 +81,15 @@ export class AuthController {
 
   @UseGuards(GoogleAuthGuard)
   @Get('login/google/redirect')
-  async googleLoginRedirect(
-    @UserDec() data: ResponseAuthGoogleSignInDto,
-    @Res({ passthrough: true }) res: Response,
-  ): Promise<ResponseAuthGoogleSignInDto> {
-    if (data.isSignedUp) {
+  async googleLoginRedirect(@UserDec() data: ResponseAuthGoogleSignInDto, @Res() res: Response) {
+    if (data.isLoggedIn && data.user) {
       const token = await this.authService.signJwtToken(data.user.id);
-
-      this.authService.attachJwtTokenToCookie(res, token);
+      this.requestHelper.attachJwtTokenToCookie(res, token);
+      this.requestHelper.redirectToFrontendHomePage(res);
+    } else {
+      const token = await this.authService.signGoogleId(data.user.id);
+      this.requestHelper.redirectToFrontendSignUpPage(res, token);
     }
-
-    return plainToInstance(ResponseAuthGoogleSignInDto, data);
   }
 
   @ApiOperation({
@@ -88,6 +101,6 @@ export class AuthController {
   @UseGuards(JWTGuard)
   @Get('logout')
   async logout(@Res({ passthrough: true }) res: Response) {
-    this.authService.attachJwtTokenToCookie(res, '');
+    this.requestHelper.clearJwtTokenFromCookie(res);
   }
 }

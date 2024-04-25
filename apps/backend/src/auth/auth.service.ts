@@ -3,48 +3,62 @@ import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { plainToInstance } from 'class-transformer';
-import { Response } from 'express';
 import auth from '../config/auth';
-import config from '../config/config';
-import { ResponsePatientDto } from '../patient/dto/response.dto';
 import { PatientService } from '../patient/patient.service';
 import { ResponseWithoutRelationsUserDto } from '../user/dto/responseWithoutRelations';
 import { UserService } from '../user/user.service';
-import { AuthSignUpDto } from './dto/signUp.dto';
+import { AuthSignUpPatientDto, AuthSignUpUserDto } from './dto/signUp.dto';
 import { JwtPayload } from './strategies/jwt';
+import { ResponsePatientDto } from '../patient/dto/response.dto';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
+    private readonly mailService: MailService,
     private readonly userService: UserService,
     private readonly patientService: PatientService,
-    @Inject(config.KEY) private readonly configObject: ConfigType<typeof config>,
     @Inject(auth.KEY) private readonly authObject: ConfigType<typeof auth>,
   ) {}
 
-  static readonly JWT_COOKIE_NAME = 'jwt';
+  async signUpPatient(body: AuthSignUpPatientDto, token: string): Promise<ResponsePatientDto> {
+    const verified = await this.jwtService.verifyAsync<JwtPayload>(token).catch(() => {
+      throw new BadRequestException();
+    });
+    return await this.patientService.createPatient({
+      ...body,
+      userId: verified.sub,
+    });
+  }
 
-  async signUpUser(body: AuthSignUpDto): Promise<ResponsePatientDto> {
+  async signUpUser(body: AuthSignUpUserDto): Promise<ResponseWithoutRelationsUserDto> {
     if (body.password) return await this.signUpUserWithPassword(body);
-    else if (body.googleId) return await this.signUpUserWithGoogleId(body);
-
     throw new BadRequestException();
   }
 
-  async validateUser(email: string, password: string): Promise<ResponseWithoutRelationsUserDto | null> {
+  async signUpUserWithGoogle(body: AuthSignUpUserDto): Promise<ResponseWithoutRelationsUserDto> {
+    if (body.googleId) return await this.signUpUserWithGoogleId(body);
+    throw new BadRequestException();
+  }
+
+  async validatePatientByEmail(email: string, password: string): Promise<ResponsePatientDto | null> {
     const user = await this.userService.getUserPasswordByEmail(email);
     if (!user) return null;
-
     const isValidPassword = await this.verifyPassword(password, user.password);
+    if (!isValidPassword) return null;
 
-    return user && isValidPassword ? plainToInstance(ResponseWithoutRelationsUserDto, user) : null;
+    const patient = await this.patientService.getPatientByUserId(user.id);
+
+    return patient;
   }
 
   async validateGoogleUser(email: string, googleId: string): Promise<ResponseWithoutRelationsUserDto | null> {
     const user = await this.userService.getUserPasswordByEmail(email);
+    if (!user) return null;
+    const patient = await this.patientService.getPatientByUserId(user.id);
 
-    if (user && user.googleId === googleId) return plainToInstance(ResponseWithoutRelationsUserDto, user);
+    if (user && patient && user.googleId === googleId) return plainToInstance(ResponseWithoutRelationsUserDto, user);
 
     return null;
   }
@@ -63,13 +77,6 @@ export class AuthService {
     const accessToken = await this.jwtService.signAsync(payload, { expiresIn: '1d' });
 
     return accessToken;
-  }
-
-  // TODO: extract to a separate service.
-  attachJwtTokenToCookie(res: Response, token: string) {
-    const secure = this.configObject.NODE_ENV === 'production';
-
-    res.cookie(AuthService.JWT_COOKIE_NAME, token, { httpOnly: true, secure });
   }
 
   async getUser(userId: string): Promise<ResponseWithoutRelationsUserDto | null> {
@@ -95,21 +102,50 @@ export class AuthService {
     return isCloseToExpire;
   }
 
-  private async signUpUserWithPassword(body: AuthSignUpDto): Promise<ResponsePatientDto> {
-    const patient = await this.createPatient(body);
+  private async signUpUserWithPassword(body: AuthSignUpUserDto): Promise<ResponseWithoutRelationsUserDto> {
+    const existingUser: ResponseWithoutRelationsUserDto | null = await this.userService
+      .getUserByEmail(body.email)
+      .catch(() => null);
+    if (existingUser) throw new BadRequestException('User already exists');
 
-    return plainToInstance(ResponsePatientDto, patient);
+    const password = await this.hashPassword(body.password);
+    const user = await this.userService.createUser({
+      email: body.email,
+      firstName: body.firstName,
+      lastName: body.lastName,
+      phone: body.phone,
+      googleId: body.googleId,
+      emailVerified: false,
+      password,
+      avatarKey: '', // TODO: use file service.
+    });
+
+    const token = await this.jwtService.signAsync({ sub: user.id }, { expiresIn: '1d' });
+    this.mailService.sendPatientSignUpMail(user.email, user.firstName, token);
+
+    return user;
   }
 
-  private async signUpUserWithGoogleId(body: AuthSignUpDto): Promise<ResponsePatientDto> {
-    const { sub } = await this.jwtService.verifyAsync<JwtPayload>(body.googleId);
+  private async signUpUserWithGoogleId(body: AuthSignUpUserDto): Promise<ResponseWithoutRelationsUserDto> {
+    const existingUser: ResponseWithoutRelationsUserDto | null = await this.userService
+      .getUserByEmail(body.email)
+      .catch(() => null);
+    if (existingUser) {
+      if (existingUser.emailVerified) throw new BadRequestException('User already exists');
+      return existingUser;
+    }
 
-    if (!sub) throw new BadRequestException('Invalid googleId');
-    body.googleId = sub;
+    const user = await this.userService.createUser({
+      email: body.email,
+      firstName: body.firstName,
+      lastName: body.lastName,
+      phone: body.phone,
+      googleId: body.googleId,
+      emailVerified: false,
+      avatarKey: '', // TODO: use file service.
+    });
 
-    const patient = await this.createPatient(body);
-
-    return plainToInstance(ResponsePatientDto, patient);
+    return user;
   }
 
   private async hashPassword(password: string): Promise<string> {
@@ -123,38 +159,5 @@ export class AuthService {
     const isValidPassword = await bcrypt.compare(password, hash);
 
     return isValidPassword;
-  }
-
-  private async createPatient(body: AuthSignUpDto): Promise<ResponsePatientDto> {
-    const password = body.password && (await this.hashPassword(body.password));
-
-    const user = await this.userService.createUser({
-      email: body.email,
-      firstName: body.firstName,
-      lastName: body.lastName,
-      phone: body.phone,
-      password,
-      googleId: body.googleId,
-      emailVerified: false, // TODO: google email verified
-      avatarKey: '', // TODO: use file service.
-    });
-
-    // TODO: Can we reduce this code?
-    const patient = await this.patientService.createPatient({
-      userId: user.id,
-      age: body.age,
-      bloodType: body.bloodType,
-      weight: body.weight,
-      height: body.height,
-      gender: body.gender,
-      city: body.city,
-      country: body.country,
-      street: body.street,
-      apartment: body.apartment,
-      state: body.state,
-      zipCode: body.zipCode,
-    });
-
-    return plainToInstance(ResponsePatientDto, patient);
   }
 }

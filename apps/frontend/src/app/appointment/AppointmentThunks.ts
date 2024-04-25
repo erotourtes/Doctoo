@@ -1,14 +1,32 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { setCurrentAppointments, planAppointment, cancelAppointment, completeAppointment } from './AppointmentSlice';
 import { instance } from '@/api/axios.api';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { AxiosResponse } from 'axios';
-import type AppointmentModel from './AppointmentModel';
+import type { IAppointment } from '../../dataTypes/Appointment';
+import {
+  setAppointmentCanceled,
+  setAppointmentCompleted,
+  setAppointments,
+  setNewAppointment,
+} from './AppointmentSlice';
 
-export const getCurrentAppointments = createAsyncThunk('appointment', async (_, { dispatch }) => {
+export const getAppointmentsByPatientId = createAsyncThunk('appointment', async (patient_id: string, { dispatch }) => {
   try {
-    const response: AxiosResponse<AppointmentModel[]> = await instance.get(`/appointment`);
+    const response: AxiosResponse<any[]> = await instance.get(`/appointment/all-by-patient/${patient_id}`);
     if (response.status === 200) {
-      dispatch(setCurrentAppointments(response.data));
+      const data: IAppointment[] = response.data.map(appointment => {
+        const { user, ...doctorWithoutUser } = appointment.doctor;
+        delete doctorWithoutUser.id;
+
+        return {
+          ...appointment,
+          doctor: {
+            ...doctorWithoutUser,
+            ...user,
+          },
+        };
+      });
+
+      dispatch(setAppointments(data));
     }
   } catch (e) {
     const error = e as Error;
@@ -16,26 +34,23 @@ export const getCurrentAppointments = createAsyncThunk('appointment', async (_, 
   }
 });
 
-export const createAppointment = createAsyncThunk(
-  'appointment',
-  async (appointment: AppointmentModel, { dispatch }) => {
-    try {
-      const response: AxiosResponse<AppointmentModel> = await instance.post(`/appointment`, appointment);
-      if (response.status === 201) {
-        dispatch(planAppointment(response.data));
-      }
-    } catch (e) {
-      const error = e as Error;
-      throw error;
+export const createAppointment = createAsyncThunk('appointment', async (appointment: IAppointment, { dispatch }) => {
+  try {
+    const response: AxiosResponse<IAppointment> = await instance.post(`/appointment`, appointment);
+    if (response.status === 201) {
+      dispatch(setNewAppointment(response.data));
     }
-  },
-);
+  } catch (e) {
+    const error = e as Error;
+    throw error;
+  }
+});
 
 export const cancelAppointmentById = createAsyncThunk('appointment', async (appointment_id: string, { dispatch }) => {
   try {
     const response: AxiosResponse<string> = await instance.delete(`/appointment/${appointment_id}`);
     if (response.status === 200) {
-      dispatch(cancelAppointment(appointment_id));
+      dispatch(setAppointmentCanceled(appointment_id));
     }
   } catch (e) {
     const error = e as Error;
@@ -47,7 +62,7 @@ export const completeAppointmentById = createAsyncThunk('appointment', async (ap
   try {
     const response: AxiosResponse<string> = await instance.put(`/appointment/${appointment_id}`);
     if (response.status === 200) {
-      dispatch(completeAppointment(appointment_id));
+      dispatch(setAppointmentCompleted(appointment_id));
     }
   } catch (e) {
     const error = e as Error;
@@ -55,12 +70,9 @@ export const completeAppointmentById = createAsyncThunk('appointment', async (ap
   }
 });
 
-export const deleteAppointmentById = createAsyncThunk('appointment', async (appointment_id: string, { dispatch }) => {
+export const deleteAppointmentById = createAsyncThunk('appointment', async (appointment_id: string) => {
   try {
-    const response: AxiosResponse<string> = await instance.delete(`/appointment/${appointment_id}`);
-    if (response.status === 200) {
-      dispatch(cancelAppointment(appointment_id));
-    }
+    await instance.delete(`/appointment/${appointment_id}`);
   } catch (e) {
     const error = e as Error;
     throw error;

@@ -1,4 +1,4 @@
-import { IDoctor } from "./Doctor";
+import type { IDoctor } from './Doctor';
 
 export enum AppointmentStatus {
   PLANNED = 'Planned',
@@ -10,15 +10,25 @@ export interface IAppointment {
   id: string;
   doctorId: string;
   patientId: string;
-  date: string;
+  assignedAt: string;
   notes: string;
   status: AppointmentStatus;
   videoRecordKey: string;
   paymentInvoiceKey: string;
   paymentReceiptKey: string;
+  doctor: {
+    userId: string;
+    payrate: number;
+    about: string;
+    firstName: string;
+    lastName: string;
+    avatarKey: string;
+    phone: string;
+    email: string;
+  };
 }
 
-export interface IPlanedAppointment {
+export interface IPlannedAppointment {
   id: string;
   date: string;
   notes: string;

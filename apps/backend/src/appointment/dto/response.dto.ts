@@ -10,7 +10,7 @@ export class ResponseAppointmentDto {
 
   @ApiProperty({ description: 'The ID of the patient who created the appointment' })
   patientId: string;
-   
+
   @ApiProperty({ description: 'assingedAt for the appointment' })
   assignedAt: Date;
 

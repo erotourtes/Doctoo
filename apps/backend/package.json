@@ -14,9 +14,10 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "lint": "eslint \"{src,test}/**/*.ts\" --fix"
+    "lint": "eslint \"{src,test}/**/*.ts\" --fix && tsc --noemit"
   },
   "dependencies": {
+    "@brakebein/nestjs-redoc": "2.4.0",
     "@nestjs-modules/mailer": "1.11.2",
     "@nestjs/common": "10.3.7",
     "@nestjs/config": "3.2.2",
