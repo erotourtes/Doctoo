@@ -1,9 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiParam } from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger';
 import { DeclarationService } from './declaration.service';
 import { CreateDeclarationDto } from './dto/create.dto';
 import { UpdateDeclarationDto } from './dto/update.dto';
 
+@ApiTags('Declaration')
 @Controller('declaration')
 export class DeclarationController {
   constructor(private readonly declarationService: DeclarationService) {}
