@@ -11,7 +11,8 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../utils/errorResponses';
+import { BadRequestResponse } from '../utils/BadRequestResponse';
+import { ClassicNestResponse } from '../utils/ClassicNestResponse';
 import { CreatePatientDto } from './dto/create.dto';
 import { PatchPatientDto } from './dto/patch.dto';
 import { ResponsePatientDto } from './dto/response.dto';
@@ -28,9 +29,9 @@ export class PatientController {
   })
   @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiOkResponse({ type: ResponsePatientDto, description: 'Patient exists' })
-  @ApiNotFoundResponse({ type: NotFoundResponse, description: 'Patient not found' })
+  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'Patient not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Get(':id')
   async getPatient(@Param('id') id: string) {
     return this.patientService.getPatient(id);
@@ -43,7 +44,7 @@ export class PatientController {
   @ApiBody({ type: CreatePatientDto })
   @ApiCreatedResponse({ type: ResponsePatientDto, description: 'Patient created' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Post()
   async createPatient(@Body() body: CreatePatientDto) {
     return this.patientService.createPatient(body);
@@ -56,9 +57,9 @@ export class PatientController {
   @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiBody({ type: PatchPatientDto })
   @ApiOkResponse({ type: ResponsePatientDto, description: 'Patient updated' })
-  @ApiNotFoundResponse({ type: NotFoundResponse, description: 'Patient not found' })
+  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'Patient not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Patch(':id')
   async patchPatient(@Param('id') id: string, @Body() body: PatchPatientDto) {
     return this.patientService.patchPatient(id, body);
@@ -70,9 +71,9 @@ export class PatientController {
   })
   @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiNoContentResponse({ description: 'Patient deleted' })
-  @ApiNotFoundResponse({ type: NotFoundResponse, description: 'Patient not found' })
+  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'Patient not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Delete(':id')
   async deletePatient(@Param('id') id: string) {
     return this.patientService.deletePatient(id);

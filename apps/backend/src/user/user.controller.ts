@@ -11,7 +11,8 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../utils/errorResponses';
+import { BadRequestResponse } from '../utils/BadRequestResponse';
+import { ClassicNestResponse } from '../utils/ClassicNestResponse';
 import { CreateUserDto } from './dto/create.dto';
 import { PatchUserDto } from './dto/patch.dto';
 import { ResponseUserDto } from './dto/response.dto';
@@ -28,9 +29,9 @@ export class UserController {
   })
   @ApiParam({ name: 'id', description: 'User ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiOkResponse({ type: ResponseUserDto, description: 'User exists' })
-  @ApiNotFoundResponse({ type: NotFoundResponse, description: 'User not found' })
+  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'User not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Get(':id')
   getUser(@Param('id') id: string) {
     return this.userService.getUser(id);
@@ -43,7 +44,7 @@ export class UserController {
   @ApiBody({ type: CreateUserDto })
   @ApiCreatedResponse({ type: ResponseUserDto, description: 'User created' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Post()
   createUser(@Body() body: CreateUserDto) {
     return this.userService.createUser(body);
@@ -56,9 +57,9 @@ export class UserController {
   @ApiParam({ name: 'id', description: 'User ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiBody({ type: PatchUserDto })
   @ApiOkResponse({ type: ResponseUserDto, description: 'User updated' })
-  @ApiNotFoundResponse({ type: NotFoundResponse, description: 'User not found' })
+  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'User not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Patch(':id')
   patchUser(@Param('id') id: string, @Body() body: PatchUserDto) {
     return this.userService.patchUser(id, body);
@@ -70,9 +71,9 @@ export class UserController {
   })
   @ApiParam({ name: 'id', description: 'User ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiNoContentResponse({ description: 'User deleted' })
-  @ApiNotFoundResponse({ type: NotFoundResponse, description: 'User not found' })
+  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'User not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Delete(':id')
   deleteUser(@Param('id') id: string) {
     return this.userService.deletedUser(id);
