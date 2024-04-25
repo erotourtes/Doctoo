@@ -15,7 +15,7 @@ services:
 
   backend:
     restart: always
-    image: registry.radency.lwjerri.dev/radency/doctoo-backend:latest
+    image: registry.doctoo.org/radency/doctoo-backend:latest
     environment:
       APP_NAME: ${APP_NAME}
       BACKEND_PORT: ${BACKEND_PORT}
@@ -49,19 +49,19 @@ services:
       - caddy
       - doctoo
     labels:
-      caddy: https://api.doctoo.radency.lwjerri.dev
+      caddy: https://api.doctoo.org
       caddy.reverse_proxy: '{{upstreams $BACKEND_PORT}}'
 
   frontend:
     restart: always
-    image: registry.radency.lwjerri.dev/radency/doctoo-frontend:latest
+    image: registry.doctoo.org/radency/doctoo-frontend:latest
     depends_on:
       - backend
     networks:
       - doctoo
       - caddy
     labels:
-      caddy: https://doctoo.radency.lwjerri.dev
+      caddy: https://doctoo.org
       caddy.reverse_proxy: '{{upstreams 8080}}'
 
   minio:

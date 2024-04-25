@@ -28,7 +28,7 @@ import Header from '@components/UI/Header/Header';
 
 const PageContainer = () => {
   return (
-    <main className='main-wrapper flex w-full h-full flex-col gap-6 overflow-auto bg-background p-8'>
+    <main className='main-wrapper flex h-full w-full flex-col gap-6 overflow-auto bg-background p-8'>
       <Routes>
         {/* <Route path="/path-to-page" Component={Page} /> */}
         <Route path='/profile' Component={ProfilePage} />
@@ -67,7 +67,11 @@ const Navigation = () => {
         path='*'
         element={
           <div className={`flex ${!shouldDisplaySidemenu() ? 'flex-col' : ''} h-screen w-screen overflow-hidden`}>
-            {shouldDisplaySidemenu() ? <Sidemenu variant={shouldDispaySmallSideMenu() ? 'small' : 'large'} /> : <Header />}
+            {shouldDisplaySidemenu() ? (
+              <Sidemenu variant={shouldDispaySmallSideMenu() ? 'small' : 'large'} />
+            ) : (
+              <Header />
+            )}
             <PageContainer />
           </div>
         }

@@ -1,8 +1,8 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MinioService } from '../minio/minio.service';
-import { FileController } from './file.controller';
 import { mockConfigService } from '../mocks/config.mock';
+import { FileController } from './file.controller';
 
 describe('FileController', () => {
   let controller: FileController;
