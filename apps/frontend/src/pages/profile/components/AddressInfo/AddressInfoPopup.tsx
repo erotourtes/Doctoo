@@ -1,8 +1,6 @@
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { patchPatientData } from '@/app/patient/PatientThunks';
-import { Button } from '@/components/UI/Button/Button';
-import Input from '@/components/UI/Input/Input';
-import PopupDoctoo from '@/components/UI/Popup/Popup';
+import { PopupDoctoo, Input, Button } from '@/components/UI';
 import type { IPatient } from '@/dataTypes/Patient';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Joi from 'joi';

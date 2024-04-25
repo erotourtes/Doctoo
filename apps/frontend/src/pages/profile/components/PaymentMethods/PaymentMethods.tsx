@@ -1,6 +1,4 @@
-import { Button } from '@/components/UI/Button/Button';
-import { PaymentMethodCard } from '@/components/UI/PaymentMethodCard/PaymentMethodCard';
-import Icon from '@UI/Icon/Icon';
+import { Button, Icon, PaymentMethodCard } from '@/components/UI';
 
 const PaymentMethods = () => {
   return (
