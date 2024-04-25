@@ -1,21 +1,12 @@
-import { Type } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
-import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreatePaymentDto {
-  @IsNotEmptyString()
-  readonly userId: string;
-
-  @IsNotEmptyString()
-  readonly doctorId: string;
-
   @IsNotEmpty()
-  @Type(() => Date)
-  readonly date: Date;
-
-  @IsNotEmpty()
+  @ApiProperty({ description: 'The appointment duration in hour', example: 1 })
   readonly appointmentDuration: number;
 
   @IsNotEmpty()
+  @ApiProperty({ description: 'The price per hour', example: 50 })
   readonly pricePerHour: number;
 }
