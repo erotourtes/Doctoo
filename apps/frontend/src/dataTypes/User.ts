@@ -4,7 +4,6 @@ export interface IUSer {
   lastName: string;
   phone: string;
   email: string;
-  password: string;
   emailVerified: boolean;
   googleId: string;
   avatarKey: string;
