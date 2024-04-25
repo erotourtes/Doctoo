@@ -10,17 +10,13 @@ export const getPaymentIntent = createAsyncThunk(
     appointmentDuration: number;
     pricePerHour: number;
   }) => {
-    try {
-      const response = await instance.post('/payment', {
-        userId: data.userId,
-        doctorId: data.doctorId,
-        date: data.date,
-        appointmentDuration: data.appointmentDuration,
-        pricePerHour: data.pricePerHour,
-      });
-      return response.data.client_secret;
-    } catch (error) {
-      throw error;
-    }
+    const response = await instance.post('/payment', {
+      userId: data.userId,
+      doctorId: data.doctorId,
+      date: data.date,
+      appointmentDuration: data.appointmentDuration,
+      pricePerHour: data.pricePerHour,
+    });
+    return response.data.client_secret;
   },
 );
