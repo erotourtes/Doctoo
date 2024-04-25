@@ -1,5 +1,5 @@
 import type { FC, PropsWithChildren } from 'react';
-import Icon from '../../components/UI/Icon/Icon';
+import { Icon } from '@/components/UI';
 import { Link } from 'react-router-dom';
 
 export const LogoWithTitle = () => {

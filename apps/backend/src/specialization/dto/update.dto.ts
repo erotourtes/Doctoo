@@ -1,7 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { PartialType } from '@nestjs/swagger';
+import { CreateSpecializationDto } from './create.dto';
 
-export class UpdateSpecializationDto {
-  @IsOptional()
-  @IsString({ message: 'name should be a string' })
-  readonly name: string;
-}
+export class UpdateSpecializationDto extends PartialType(CreateSpecializationDto) {}

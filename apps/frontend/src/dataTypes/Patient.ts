@@ -11,25 +11,22 @@ export enum BloodType {
 
 export interface IPatient {
   id: string;
-  firstName: string;
-  lastName: string;
-  phone: string;
-  email: string;
-  avatarKey: string;
+  userId: string;
   weight: number;
   height: number;
   age: number;
   bloodType: BloodType;
   gender: Gender;
-  declarationId: number;
-  conditions: Condition[];
-  allergies: Allergy[];
+  identityCardKey: string;
   country: string;
   state?: string;
   city: string;
   street: string;
   apartment?: string;
-  zipCode?: number;
+  zipCode?: string;
+  conditions: Condition[];
+  vaccinations: Vaccination[];
+  allergies: Allergy[];
   emailNotificationToggle: boolean;
   twoFactorAuthToggle: boolean;
   requestBillPaymentApproval: boolean;
@@ -39,6 +36,11 @@ export enum Gender {
   MALE = 'male',
   FEMALE = ' female',
 }
+
+export type Vaccination = {
+  id: string;
+  name: string;
+};
 
 export type Condition = {
   id: string;

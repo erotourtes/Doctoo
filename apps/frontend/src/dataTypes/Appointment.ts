@@ -3,7 +3,7 @@ import type { IDoctor } from './Doctor';
 export enum AppointmentStatus {
   PLANNED = 'Planned',
   COMPLETED = 'Completed',
-  CANCELLED = 'Cancelled',
+  CANCELED = 'Canceled',
 }
 
 export interface IAppointment {
@@ -13,6 +13,7 @@ export interface IAppointment {
   assignedAt: string;
   notes: string;
   status: AppointmentStatus;
+  appointmentDuration: number;
   videoRecordKey: string;
   paymentInvoiceKey: string;
   paymentReceiptKey: string;
@@ -33,4 +34,12 @@ export interface IPlannedAppointment {
   date: string;
   notes: string;
   doctor: IDoctor;
+}
+
+export interface ICreateAppointment {
+  doctorId: string;
+  patientId: string;
+  date: string;
+  status: AppointmentStatus;
+  notes: string;
 }

@@ -38,7 +38,9 @@
     "passport-jwt": "4.0.1",
     "passport-local": "1.0.0",
     "reflect-metadata": "0.2.2",
-    "rxjs": "7.8.1"
+    "rxjs": "7.8.1",
+    "swagger-stats": "0.99.7",
+    "stripe": "15.3.0"
   },
   "devDependencies": {
     "@nestjs/cli": "10.3.2",
@@ -54,6 +56,7 @@
     "@types/passport-google-oauth2": "0.1.8",
     "@types/passport-local": "1.0.38",
     "@types/supertest": "6.0.2",
+    "@types/swagger-stats": "0.95.11",
     "@typescript-eslint/eslint-plugin": "6.0.0",
     "@typescript-eslint/parser": "6.0.0",
     "eslint": "8.42.0",

@@ -1,9 +1,8 @@
 import type React from 'react';
-import { passwordRulesList } from '@/constants/passwordRulesList';
-import { Button } from '@/components/UI/Button/Button';
-import { ButtonTypes } from '@/components/UI/Button/ButtonTypes';
-import InputPassword from '../../../components/UI/Input/InputPassword';
 import { FormProvider, useForm } from 'react-hook-form';
+import { passwordRulesList } from '@/constants/passwordRulesList';
+import { InputPassword, Button } from '@/components/UI';
+import { ButtonTypes } from '@/components/UI/Button/ButtonTypes';
 
 export interface PopupProps {
   handleClosePopup: () => void;

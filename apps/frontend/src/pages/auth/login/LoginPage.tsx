@@ -1,13 +1,11 @@
-import { Button } from '@/components/UI/Button/Button';
-import Input from '@/components/UI/Input/Input';
-import { LogoWithTitle, AuthMainContainer, AuthCreateAccount, Separator } from '@/pages/auth/auth-components';
+import { useNavigate } from 'react-router';
+import { FormProvider, useForm } from 'react-hook-form';
+import type { SubmitHandler } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Joi from 'joi';
-import { FormProvider, useForm } from 'react-hook-form';
-import type { FieldValues, SubmitHandler } from 'react-hook-form';
-import Icon from '../../../components/UI/Icon/Icon';
-import { API_URL, instance } from '../../../api/axios.api';
-import { useNavigate } from 'react-router';
+import { AuthCreateAccount, AuthMainContainer, LogoWithTitle, Separator } from '@/pages/auth/auth-components';
+import { Button, Icon, Input } from '@/components/UI';
+import api from '@/app/api';
 
 type SignInType = {
   email: string;
@@ -38,16 +36,14 @@ const LoginPage = () => {
   const errors = form.formState.errors;
   const navigate = useNavigate();
 
-  const onLogin: SubmitHandler<FieldValues> = async credentials => {
-    const res = await instance.post('/auth/login/patient', credentials, { withCredentials: true });
-    if (res.status === 201) {
-      navigate('/');
-    }
+  const onLogin: SubmitHandler<{ email: string; password: string }> = async body => {
+    const { data } = await api.POST('/auth/login/patient', { body });
+
+    if (data) return navigate('/');
   };
 
-  const onGoogleLogin = () => {
-    window.open(`${API_URL}/auth/login/google`, '_self');
-  };
+  const onGoogleLogin = () => window.open(`${import.meta.env.VITE_BACKEND_API_URL}/auth/login/google`, '_self');
+
   const onFacebookLogin = () => {};
 
   return (

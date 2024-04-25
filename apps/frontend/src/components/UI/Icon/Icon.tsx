@@ -27,6 +27,7 @@ import DeleteIcon from '@assets/icons/delete.svg?react';
 import FileIcon from '@assets/icons/file.svg?react';
 import SearchIcon from '@assets/icons/search.svg?react';
 import StarIcon from '@assets/icons/star.svg?react';
+import StarHalfIcon from '@assets/icons/star-half.svg?react';
 
 // Medical Icons
 import BloodTypeIcon from '@assets/icons/blood-type.svg?react';
@@ -105,6 +106,7 @@ const IconVariants = {
   file: FileIcon,
   search: SearchIcon,
   star: StarIcon,
+  'star-half': StarHalfIcon,
   'blood-type': BloodTypeIcon,
   height: HeightIcon,
   weight: WeightIcon,
