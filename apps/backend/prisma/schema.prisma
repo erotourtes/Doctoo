@@ -45,7 +45,7 @@ model User {
   lastName      String    @map("last_name")
   phone         String
   email         String    @unique
-  emailVerified Boolean   @default(false) @map("email_verified") // TODO: Remove this field when create user.
+  emailVerified Boolean   @default(false) @map("email_verified")
   password      String?
   googleId      String?   @map("googleId")
   avatarKey     String    @map("avatar_key")

@@ -1,25 +1,28 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { fn } from '@storybook/test';
+
 import '@/index.css';
+import Header from './Header';
 import { BrowserRouter } from 'react-router-dom';
-import NavLogo from './NavLogo';
+import { Button } from '../Button/Button';
 
 const meta = {
-  title: 'Components/Sidemenu/NavLogo',
-  component: NavLogo,
+  title: 'Components/UI/Header',
+  component: Header,
   parameters: {
-    layout: 'centered',
+    layout: 'start',
   },
   tags: ['autodocs'],
   decorators: [
     Story => (
       <BrowserRouter>
-        <div className='w-72 bg-main-medium p-8'>
+        <div className='w-full'>
           <Story />
         </div>
       </BrowserRouter>
     ),
   ],
-} satisfies Meta<typeof NavLogo>;
+} satisfies Meta<typeof Header>;
 
 export default meta;
 
@@ -27,12 +30,16 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    variant: 'large',
+    children: null,
   },
 };
 
-export const Small: Story = {
+export const WithChildren: Story = {
   args: {
-    variant: 'small',
+    children: (
+      <Button type='primary' className='bg-white text-main' onClick={fn()}>
+        Test
+      </Button>
+    ),
   },
 };

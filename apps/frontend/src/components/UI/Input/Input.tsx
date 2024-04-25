@@ -36,7 +36,7 @@ const Input = ({
   return (
     <div className={cn(className || '', 'grid')}>
       {label && (
-        <label htmlFor={id} className={cn(classNameLabel, 'text-md my-2 block text-grey-1')}>
+        <label htmlFor={id} className={cn(classNameLabel, 'text-md mb-2 block text-grey-1')}>
           {label}
         </label>
       )}

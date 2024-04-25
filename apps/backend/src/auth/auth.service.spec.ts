@@ -1,16 +1,16 @@
+import { ConfigType } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
+import * as bcrypt from 'bcrypt';
 import { plainToClass, plainToInstance } from 'class-transformer';
 import auth from '../config/auth';
 import config from '../config/config';
+import { MailService } from '../mail/mail.service';
 import { CreatePatientDto } from '../patient/dto/create.dto';
 import { PatientService } from '../patient/patient.service';
 import { CreateUserDto } from '../user/dto/create.dto';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
-import * as bcrypt from 'bcrypt';
-import { ConfigType } from '@nestjs/config';
-import { MailService } from '../mail/mail.service';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -44,7 +44,6 @@ describe('AuthService', () => {
       firstName: 'First Name',
       lastName: 'Last Name',
       password: 'password',
-      emailVerified: false,
       phone: '+380501804066',
       googleId: null,
     });
@@ -74,12 +73,12 @@ describe('AuthService', () => {
   it('Should validate credentials', async () => {
     const pass = bcrypt.hashSync(user.password, 10);
 
-    userServiceMock.getUserPasswordByEmail = jest.fn().mockResolvedValue({
+    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue({
       ...user,
       password: pass,
     });
 
-    userServiceMock.getUserPasswordByEmail = jest.fn().mockResolvedValue({
+    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue({
       ...user,
       password: pass,
     });
@@ -92,7 +91,7 @@ describe('AuthService', () => {
   });
 
   it('Should fail credentials validation', async () => {
-    userServiceMock.getUserPasswordByEmail = jest.fn().mockResolvedValue(user);
+    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue(user);
     patientServiceMock.getPatientByUserId = jest.fn().mockResolvedValue(patient);
 
     const validated = await authService.validatePatientByEmail(user.email, 'invalid_password');
@@ -103,7 +102,7 @@ describe('AuthService', () => {
   it('Should validate Google', async () => {
     user = { ...user, googleId: 'googleId' };
 
-    userServiceMock.getUserPasswordByEmail = jest.fn().mockResolvedValue(user);
+    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue(user);
     patientServiceMock.getPatientByUserId = jest.fn().mockResolvedValue(patient);
 
     const validated = await authService.validateGoogleUser(user.email, 'googleId');
@@ -114,7 +113,7 @@ describe('AuthService', () => {
   it('Should fail Google validation', async () => {
     user = { ...user, googleId: 'googleId' };
 
-    userServiceMock.getUserPasswordByEmail = jest.fn().mockResolvedValue(user);
+    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue(user);
 
     const validated = await authService.validateGoogleUser(user.email, 'invalid_googleId');
 

@@ -16,6 +16,7 @@ import { SpecializationModule } from '../specialization/specialization.module';
 import mail from '../config/mail';
 import { MailModule } from '../mail/mail.module';
 import { ConditionModule } from 'src/condition/condition.module';
+import { PaymentModule } from '../payment/payment.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { ConditionModule } from 'src/condition/condition.module';
     DeclarationModule,
     SpecializationModule,
     ConditionModule,
+    PaymentModule,
   ],
   providers: [MinioService],
 })
