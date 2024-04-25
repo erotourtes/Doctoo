@@ -9,7 +9,8 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../utils/errorResponses';
+import { BadRequestResponse } from '../utils/BadRequestResponse';
+import { ClassicNestResponse } from '../utils/ClassicNestResponse';
 import { DoctorService } from './doctor.service';
 import { CreateDoctorDto } from './dto/create.dto';
 import { PatchDoctorDto } from './dto/patch.dto';
@@ -28,7 +29,7 @@ export class DoctorController {
   @ApiBody({ type: CreateDoctorDto })
   @ApiOkResponse({ type: ResponseDoctorDto, description: 'Doctor created' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Post()
   createDoctor(@Body() body: CreateDoctorDto) {
     return this.doctorService.createDoctor(body);
@@ -40,7 +41,7 @@ export class DoctorController {
   })
   @ApiOkResponse({ type: ResponseDoctorDto, isArray: true, description: 'All doctors' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Get()
   getDoctors(@Query() query: GetDoctorsQuery) {
     return this.doctorService.getDoctors(query);
@@ -52,9 +53,9 @@ export class DoctorController {
   })
   @ApiParam({ name: 'id', description: 'Doctor ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiOkResponse({ type: ResponseDoctorDto, description: 'A doctor object got by ID' })
-  @ApiNotFoundResponse({ type: NotFoundResponse, description: 'Doctor not found' })
+  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'Doctor not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Get(':id')
   getDoctor(@Param('id') id: string) {
     return this.doctorService.getDoctor(id);
@@ -67,9 +68,9 @@ export class DoctorController {
   @ApiParam({ name: 'id', description: 'Doctor ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiBody({ type: PatchDoctorDto })
   @ApiOkResponse({ type: ResponseDoctorDto, description: 'Doctor updated' })
-  @ApiNotFoundResponse({ type: NotFoundResponse, description: 'Doctor not found' })
+  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'Doctor not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Patch(':id')
   patchDoctor(@Param('id') id: string, @Body() body: PatchDoctorDto) {
     return this.doctorService.patchDoctor(id, body);
@@ -80,9 +81,9 @@ export class DoctorController {
     description: 'This endpoint deletes a doctor object by ID.',
   })
   @ApiOkResponse({ description: 'Doctor deleted' })
-  @ApiNotFoundResponse({ type: NotFoundResponse, description: 'Doctor not found' })
+  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'Doctor not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @ApiParam({ name: 'id', description: 'Doctor ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @Delete(':id')
   deleteDoctor(@Param('id') id: string) {

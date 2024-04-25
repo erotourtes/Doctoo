@@ -11,7 +11,8 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../utils/errorResponses';
+import { BadRequestResponse } from '../utils/BadRequestResponse';
+import { ClassicNestResponse } from '../utils/ClassicNestResponse';
 import { CreateHospitalDto } from './dto/create.dto';
 import { PatchHospitalDto } from './dto/patch.dto';
 import { ResponseHospitalDto } from './dto/response.dto';
@@ -29,7 +30,7 @@ export class HospitalController {
   @ApiBody({ type: CreateHospitalDto })
   @ApiCreatedResponse({ type: ResponseHospitalDto, description: 'Hospital created' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Post()
   createHospital(@Body() body: CreateHospitalDto) {
     return this.hospitalService.createHospital(body);
@@ -40,7 +41,7 @@ export class HospitalController {
     description: 'This endpoint retrieves a list of hospital objects.',
   })
   @ApiOkResponse({ type: ResponseHospitalDto, description: 'Hospitals exist' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Get()
   getHospitals() {
     return this.hospitalService.getHospitals();
@@ -52,9 +53,9 @@ export class HospitalController {
   })
   @ApiParam({ name: 'id', description: 'Hospital ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiOkResponse({ type: ResponseHospitalDto, description: 'Hospital exists' })
-  @ApiNotFoundResponse({ type: NotFoundResponse, description: 'Hospital not found' })
+  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'Hospital not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Get(':id')
   getHospital(@Param('id') id: string) {
     return this.hospitalService.getHospital(id);
@@ -67,9 +68,9 @@ export class HospitalController {
   @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiBody({ type: PatchHospitalDto })
   @ApiOkResponse({ type: ResponseHospitalDto, description: 'Hospital updated' })
-  @ApiNotFoundResponse({ type: NotFoundResponse, description: 'Hospital not found' })
+  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'Hospital not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Patch(':id')
   patchHospital(@Param('id') id: string, @Body() body: PatchHospitalDto) {
     return this.hospitalService.patchHospital(id, body);
@@ -81,9 +82,9 @@ export class HospitalController {
   })
   @ApiParam({ name: 'id', description: 'Hospital ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiNoContentResponse({ description: 'Hospital deleted' })
-  @ApiNotFoundResponse({ type: NotFoundResponse, description: 'Hospital not found' })
+  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'Hospital not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Delete(':id')
   deleteHospital(@Param('id') id: string) {
     return this.hospitalService.deleteHospital(id);

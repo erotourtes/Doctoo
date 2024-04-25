@@ -11,7 +11,8 @@ import { Response } from 'express';
 import { ResponsePatientDto } from '../patient/dto/response.dto';
 import { ResponseWithoutRelationsUserDto } from '../user/dto/responseWithoutRelations';
 import { UserDec } from '../user/user.decorator';
-import { BadRequestResponse, InternalServerErrorResponse } from '../utils/errorResponses';
+import { BadRequestResponse } from '../utils/BadRequestResponse';
+import { ClassicNestResponse } from '../utils/ClassicNestResponse';
 import { AuthService } from './auth.service';
 import { AuthLocalLoginDto } from './dto/localLogin.dto';
 import { ResponseAuthGoogleSignInDto } from './dto/responseGoogleSignIn.dto';
@@ -35,7 +36,7 @@ export class AuthController {
   @ApiBody({ type: AuthLocalLoginDto })
   @ApiOkResponse({ type: ResponsePatientDto, description: 'User data' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Post('login/patient')
   async localLogin(
     @Res({ passthrough: true }) res: Response,
@@ -57,7 +58,7 @@ export class AuthController {
   @ApiBody({ type: ResponseWithoutRelationsUserDto })
   @ApiOkResponse({ type: ResponsePatientDto, description: 'Patient data' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Post('signup')
   signUpFirstStep(@Body() body: AuthSignUpUserDto): Promise<ResponseWithoutRelationsUserDto> {
     return this.authService.signUpUser(body);
@@ -97,7 +98,7 @@ export class AuthController {
     description: 'This endpoint is used for logging out.',
   })
   @ApiBody({ type: AuthLocalLoginDto })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @UseGuards(JWTGuard)
   @Get('logout')
   async logout(@Res({ passthrough: true }) res: Response) {
