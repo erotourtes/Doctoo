@@ -13,7 +13,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { MinioService } from '../minio/minio.service';
-import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../utils/errorResponses';
+import { BadRequestResponse } from '../utils/BadRequestResponse';
+import { ClassicNestResponse } from '../utils/ClassicNestResponse';
 
 @ApiTags('File')
 @Controller('file')
@@ -28,7 +29,7 @@ export class FileController {
   @ApiConsumes('multipart/form-data')
   @ApiCreatedResponse({ type: String, description: 'Message: File was uploaded successfully' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
@@ -43,9 +44,9 @@ export class FileController {
   })
   @ApiParam({ name: 'name', description: 'File name', example: 'file.pdf' })
   @ApiOkResponse({ type: String, description: 'The link for the file' })
-  @ApiNotFoundResponse({ type: NotFoundResponse, description: 'File not found' })
+  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'File not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Get(':name')
   async getFile(@Param('name') name: string) {
     const response = await this.minioService.getFileByName(name);
@@ -58,9 +59,9 @@ export class FileController {
     description: 'This endpoint deletes a file by name.',
   })
   @ApiParam({ name: 'name', description: 'File name', example: 'file.pdf' })
-  @ApiNotFoundResponse({ type: NotFoundResponse, description: 'File not found' })
+  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'File not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Delete(':name')
   async deleteFile(@Param('name') name: string) {
     return await this.minioService.deleteFileByName(name);

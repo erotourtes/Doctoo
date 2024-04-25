@@ -11,7 +11,8 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../utils/errorResponses';
+import { BadRequestResponse } from '../utils/BadRequestResponse';
+import { ClassicNestResponse } from '../utils/ClassicNestResponse';
 import { AppointmentService } from './appointment.service';
 import { CreateAppointmentDto } from './dto/create.dto';
 import { PatchAppointmentDto } from './dto/patch.dto';
@@ -30,7 +31,7 @@ export class AppointmentController {
   @ApiBody({ type: CreateAppointmentDto })
   @ApiCreatedResponse({ type: ResponseAppointmentDto, description: 'Appointment created' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Post()
   create(@Body() body: CreateAppointmentDto) {
     return this.appointmentService.create(body);
@@ -41,7 +42,7 @@ export class AppointmentController {
     description: 'This endpoint retrieves a list of all appointment objects.',
   })
   @ApiOkResponse({ type: ResponseAppointmentDto, description: 'Appointments exist' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internalserver error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internalserver error' })
   @Get()
   findAll() {
     return this.appointmentService.findAll();
@@ -52,8 +53,8 @@ export class AppointmentController {
     description: "This endpoint retrieves a list of appointment objects of the patient by it's ID.",
   })
   @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
-  @ApiOkResponse({ type: ResponseAppointmentDto, isArray: true, description: 'Appointments exist' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiOkResponse({ type: ResponseAppointmentDto, description: 'Appointments exist' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Get('all-by-patient/:id')
   findAllByPatientId(@Param('id') id: string) {
     return this.appointmentService.findAllByPatientId(id);
@@ -65,7 +66,7 @@ export class AppointmentController {
   })
   @ApiParam({ name: 'id', description: 'Doctor ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiOkResponse({ type: ResponseAppointmentDto, description: 'Appointments exist' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Get('all-by-doctor/:id')
   findAllByDoctorId(@Param('id') id: string) {
     return this.appointmentService.findAllByDoctorId(id);
@@ -77,9 +78,9 @@ export class AppointmentController {
   })
   @ApiParam({ name: 'id', description: 'Appointment ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiOkResponse({ type: ResponseAppointmentDto, description: 'Appointment exists' })
-  @ApiNotFoundResponse({ type: NotFoundResponse, description: 'Appointment not found' })
+  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'Appointment not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.appointmentService.findOne(id);
@@ -92,9 +93,9 @@ export class AppointmentController {
   @ApiParam({ name: 'id', description: 'Appointment ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiBody({ type: PatchAppointmentDto })
   @ApiOkResponse({ type: ResponseAppointmentDto, description: 'Appointment updated' })
-  @ApiNotFoundResponse({ type: NotFoundResponse, description: 'Appointment not found' })
+  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'Appointment not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Patch(':id')
   update(@Param('id') id: string, @Body() body: PatchAppointmentDto) {
     return this.appointmentService.update(id, body);
@@ -106,9 +107,9 @@ export class AppointmentController {
   })
   @ApiParam({ name: 'id', description: 'Appointment ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiNoContentResponse({ description: 'Appointment deleted' })
-  @ApiNotFoundResponse({ type: NotFoundResponse, description: 'Appointment not found' })
+  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'Appointment not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.appointmentService.remove(id);

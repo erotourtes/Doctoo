@@ -11,7 +11,8 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../utils/errorResponses';
+import { BadRequestResponse } from '../utils/BadRequestResponse';
+import { ClassicNestResponse } from '../utils/ClassicNestResponse';
 import { CreateFavoriteDto } from './dto/create.dto';
 import { FavoriteService } from './favorite.service';
 
@@ -27,7 +28,7 @@ export class FavoriteController {
   @ApiBody({ type: CreateFavoriteDto })
   @ApiCreatedResponse({ description: 'Doctor is added to favorite doctors.' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Post()
   createFavorite(@Body() body: CreateFavoriteDto) {
     return this.favoriteService.createFavorite(body);
@@ -39,7 +40,7 @@ export class FavoriteController {
   })
   @ApiOkResponse({ description: 'Favorite doctors' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Get()
   getFavorites() {
     return this.favoriteService.getFavorites();
@@ -51,9 +52,9 @@ export class FavoriteController {
   })
   @ApiParam({ name: 'id', description: 'Doctor ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiOkResponse({ description: 'Favorite doctor by ID exists' })
-  @ApiNotFoundResponse({ type: NotFoundResponse, description: 'Favorite doctor not found' })
+  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'Favorite doctor not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Get('/:id')
   getFovorite(@Param('id') id: string) {
     return this.favoriteService.getFavorite(id);
@@ -66,7 +67,7 @@ export class FavoriteController {
   @ApiParam({ name: 'id', description: 'Doctor ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiNoContentResponse({ description: 'Doctor removed from favorites' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Delete(':id')
   deleteFavorite(@Param('id') id: string) {
     return this.favoriteService.deleteFavorite(id);

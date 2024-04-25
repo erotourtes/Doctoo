@@ -7,9 +7,17 @@ import { BloodType, Gender, type IPatient } from '@/dataTypes/Patient';
 export type Patient = IPatient & IUSer;
 interface PatientData {
   data: Patient;
+  state: {
+    isLoading: boolean;
+    isFetched: boolean;
+  };
 }
 
 const initialState: PatientData = {
+  state: {
+    isLoading: false,
+    isFetched: false,
+  },
   data: {
     id: '1',
     userId: '1',
@@ -17,7 +25,6 @@ const initialState: PatientData = {
     lastName: '',
     phone: '',
     email: '',
-    password: '',
     emailVerified: false,
     googleId: '',
     avatarKey: '',
@@ -52,10 +59,13 @@ export const patientSlice = createAppSlice({
     updatePatientData: (state, action: PayloadAction<Partial<Patient>>) => {
       state.data = { ...state.data, ...action.payload };
     },
+    setPatientState: (state, action: PayloadAction<Partial<PatientData['state']>>) => {
+      state.state = { ...state.state, ...action.payload };
+    },
   },
 });
 
-export const { setPatientData, updatePatientData } = patientSlice.actions;
+export const { setPatientData, updatePatientData, setPatientState } = patientSlice.actions;
 
 export const doctorData = (state: RootState) => state.doctor.data;
 
