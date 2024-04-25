@@ -1,18 +1,21 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { AuthGuard, PassportStrategy } from '@nestjs/passport';
+import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import auth from '../../config/auth';
+import { UserService } from '../../user/user.service';
+import { JWT_STRATEGY_NAME } from '../../utils/constants';
 import { AuthService } from '../auth.service';
-
-const JWT_STRATEGY_NAME = 'jwt';
+import { AuthRequestHelper } from '../utils/cookie-helper.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, JWT_STRATEGY_NAME) {
   constructor(
     @Inject(auth.KEY) readonly authObject: ConfigType<typeof auth>,
     private readonly authService: AuthService,
+    private readonly cookieHelper: AuthRequestHelper,
+    private readonly userService: UserService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
@@ -24,32 +27,29 @@ export class JwtStrategy extends PassportStrategy(Strategy, JWT_STRATEGY_NAME) {
 
   async validate(req: Request, payload: JwtPayload) {
     if (!payload || payload.sub == undefined) return null;
-    const user = await this.authService.getUser(payload.sub);
+    const user = await this.userService.getUser(payload.sub);
     if (user) await this.prolongTokenLifeIfNeeded(user.id, req);
 
     return user;
   }
 
   private async prolongTokenLifeIfNeeded(userId: string, req: Request) {
-    const token = req.cookies[AuthService.JWT_COOKIE_NAME];
+    const token = this.cookieHelper.getJwtTokenFromCookie(req);
     const isCloseToExpire = this.authService.jwtCloseToExpire(token);
     if (!isCloseToExpire) return;
 
     const res = req.res;
     const newToken = await this.authService.signJwtToken(userId);
-    this.authService.attachJwtTokenToCookie(res, newToken);
+    this.cookieHelper.attachJwtTokenToCookie(res, newToken);
   }
 }
 
 const cookieExtractor = (req: Request) => {
   let token = null;
   if (req && req.cookies) {
-    token = req.cookies[AuthService.JWT_COOKIE_NAME];
+    token = req.cookies[AuthRequestHelper.JWT_COOKIE_NAME];
   }
   return token;
 };
 
 export type JwtPayload = { sub?: string };
-
-@Injectable()
-export default class JWTGuard extends AuthGuard(JWT_STRATEGY_NAME) {}

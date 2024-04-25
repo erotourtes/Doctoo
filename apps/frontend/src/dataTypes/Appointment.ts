@@ -16,7 +16,16 @@ export interface IAppointment {
   videoRecordKey: string;
   paymentInvoiceKey: string;
   paymentReceiptKey: string;
-
+  doctor: {
+    userId: string;
+    payrate: number;
+    about: string;
+    firstName: string;
+    lastName: string;
+    avatarKey: string;
+    phone: string;
+    email: string;
+  };
 }
 
 export interface IPlannedAppointment {

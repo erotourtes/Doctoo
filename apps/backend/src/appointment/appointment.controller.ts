@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -11,13 +11,11 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { GetPatientGuard } from '../patient/guards/get.guard';
 import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from '../utils/errorResponses';
 import { AppointmentService } from './appointment.service';
 import { CreateAppointmentDto } from './dto/create.dto';
 import { PatchAppointmentDto } from './dto/patch.dto';
 import { ResponseAppointmentDto } from './dto/response.dto';
-import { GetAppointmentGuard } from './guards/getAppointment.guard';
 
 // TODO: Recode it.
 @ApiTags('Appointment')
@@ -39,13 +37,23 @@ export class AppointmentController {
   }
 
   @ApiOperation({
+    summary: 'Get a list of all appointments',
+    description: 'This endpoint retrieves a list of all appointment objects.',
+  })
+  @ApiOkResponse({ type: ResponseAppointmentDto, description: 'Appointments exist' })
+  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internalserver error' })
+  @Get()
+  findAll() {
+    return this.appointmentService.findAll();
+  }
+
+  @ApiOperation({
     summary: 'Get a list of appointments of the patient',
     description: "This endpoint retrieves a list of appointment objects of the patient by it's ID.",
   })
   @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
-  @ApiOkResponse({ type: ResponseAppointmentDto, description: 'Appointments exist' })
+  @ApiOkResponse({ type: ResponseAppointmentDto, isArray: true, description: 'Appointments exist' })
   @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
-  @UseGuards(GetPatientGuard)
   @Get('all-by-patient/:id')
   findAllByPatientId(@Param('id') id: string) {
     return this.appointmentService.findAllByPatientId(id);
@@ -72,7 +80,6 @@ export class AppointmentController {
   @ApiNotFoundResponse({ type: NotFoundResponse, description: 'Appointment not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
   @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
-  @UseGuards(GetAppointmentGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.appointmentService.findOne(id);
@@ -88,7 +95,6 @@ export class AppointmentController {
   @ApiNotFoundResponse({ type: NotFoundResponse, description: 'Appointment not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
   @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
-  @UseGuards(GetAppointmentGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() body: PatchAppointmentDto) {
     return this.appointmentService.update(id, body);
@@ -103,7 +109,6 @@ export class AppointmentController {
   @ApiNotFoundResponse({ type: NotFoundResponse, description: 'Appointment not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
   @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
-  @UseGuards(GetAppointmentGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.appointmentService.remove(id);

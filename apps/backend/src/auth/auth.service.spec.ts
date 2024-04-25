@@ -5,6 +5,7 @@ import * as bcrypt from 'bcrypt';
 import { plainToClass, plainToInstance } from 'class-transformer';
 import auth from '../config/auth';
 import config from '../config/config';
+import { MailService } from '../mail/mail.service';
 import { CreatePatientDto } from '../patient/dto/create.dto';
 import { PatientService } from '../patient/patient.service';
 import { CreateUserDto } from '../user/dto/create.dto';
@@ -19,6 +20,7 @@ describe('AuthService', () => {
   const userServiceMock: Partial<UserService> = {};
   const patientServiceMock: Partial<PatientService> = {};
   const authConfig: Partial<ConfigType<typeof auth>> = {};
+  const mailServiceMock: Partial<MailService> = {};
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -29,10 +31,12 @@ describe('AuthService', () => {
         { provide: PatientService, useValue: patientServiceMock },
         { provide: config.KEY, useValue: config },
         { provide: auth.KEY, useValue: authConfig },
+        { provide: MailService, useValue: mailServiceMock },
       ],
     }).compile();
 
     authService = moduleRef.get<AuthService>(AuthService);
+    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue(null);
 
     user = plainToInstance(CreateUserDto, {
       avatarKey: 'key',
@@ -40,7 +44,6 @@ describe('AuthService', () => {
       firstName: 'First Name',
       lastName: 'Last Name',
       password: 'password',
-      emailVerified: false,
       phone: '+380501804066',
       googleId: null,
     });
@@ -50,49 +53,48 @@ describe('AuthService', () => {
 
   it('Should be defined', () => expect(authService).toBeDefined());
 
-  it('Should signup', async () => {
+  it('Should signup user', async () => {
     userServiceMock.createUser = jest.fn().mockResolvedValue({ ...user, id: '1' });
     patientServiceMock.createPatient = jest.fn().mockResolvedValue({ ...patient, id: '2' });
+    mailServiceMock.sendPatientSignUpMail = jest.fn().mockReturnThis();
 
-    const signUpDto = { ...user, ...patient };
+    const signUpDto = { ...user };
 
     const signedUp = await authService.signUpUser(signUpDto);
 
-    expect.objectContaining({
-      id: '1',
-      password: expect.not.stringMatching(user.password),
-    });
+    expect(signedUp).toEqual(expect.objectContaining({ id: '1', ...user }));
     expect(userServiceMock.createUser).toHaveBeenCalledWith({
       ...user,
       password: expect.not.stringMatching(user.password),
       avatarKey: expect.any(String),
     });
-    expect(patientServiceMock.createPatient).toHaveBeenCalledWith(expect.objectContaining({ ...patient, userId: '1' }));
-    expect(signedUp).toEqual({ ...patient, id: '2' });
   });
 
   it('Should validate credentials', async () => {
     const pass = bcrypt.hashSync(user.password, 10);
 
-    userServiceMock.getUserPasswordByEmail = jest.fn().mockResolvedValue({
+    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue({
       ...user,
       password: pass,
     });
 
-    userServiceMock.getUserPasswordByEmail = jest.fn().mockResolvedValue({
+    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue({
       ...user,
       password: pass,
     });
 
-    const validated = await authService.validateUser(user.email, user.password);
+    patientServiceMock.getPatientByUserId = jest.fn().mockResolvedValue(patient);
 
-    expect(validated).toEqual({ ...user, password: undefined });
+    const validated = await authService.validatePatientByEmail(user.email, user.password);
+
+    expect(validated).not.toBeNull();
   });
 
   it('Should fail credentials validation', async () => {
-    userServiceMock.getUserPasswordByEmail = jest.fn().mockResolvedValue(user);
+    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue(user);
+    patientServiceMock.getPatientByUserId = jest.fn().mockResolvedValue(patient);
 
-    const validated = await authService.validateUser(user.email, 'invalid_password');
+    const validated = await authService.validatePatientByEmail(user.email, 'invalid_password');
 
     expect(validated).toBeNull();
   });
@@ -100,7 +102,8 @@ describe('AuthService', () => {
   it('Should validate Google', async () => {
     user = { ...user, googleId: 'googleId' };
 
-    userServiceMock.getUserPasswordByEmail = jest.fn().mockResolvedValue(user);
+    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue(user);
+    patientServiceMock.getPatientByUserId = jest.fn().mockResolvedValue(patient);
 
     const validated = await authService.validateGoogleUser(user.email, 'googleId');
 
@@ -110,39 +113,26 @@ describe('AuthService', () => {
   it('Should fail Google validation', async () => {
     user = { ...user, googleId: 'googleId' };
 
-    userServiceMock.getUserPasswordByEmail = jest.fn().mockResolvedValue(user);
+    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue(user);
 
     const validated = await authService.validateGoogleUser(user.email, 'invalid_googleId');
 
     expect(validated).toBeNull();
   });
 
-  it('Should signup with valid googleId', async () => {
-    userServiceMock.createUser = jest.fn().mockResolvedValue(user);
-    patientServiceMock.createPatient = jest.fn().mockResolvedValue(patient);
+  it('Should signup user with valid googleId', async () => {
+    const newUser = { ...user, googleId: 'googleId', password: null };
+    userServiceMock.createUser = jest.fn().mockResolvedValue(newUser);
 
-    const googleId = await authService.signGoogleId('googleId');
-
-    const newUser = { ...user, googleId, password: null };
-    const signUpDto = { ...newUser, ...patient };
-
-    expect(authService.signUpUser(signUpDto)).resolves.toEqual({ ...patient });
+    expect(authService.signUpUserWithGoogle({ ...newUser })).resolves.toEqual({ ...newUser });
   });
 
   it('Should fail signup without valid googleId', async () => {
-    user = { ...user, googleId: 'googleId', password: null };
+    user = { ...user, googleId: null, password: null };
 
     const signUpDto = { ...user, ...patient };
 
-    expect(authService.signUpUser(signUpDto)).rejects.toThrow();
-  });
-
-  it('Should attach JWT token to cookie', () => {
-    const res = { cookie: jest.fn() } as any; // TODO: Remove any.
-
-    authService.attachJwtTokenToCookie(res, 'token');
-
-    expect(res.cookie).toHaveBeenCalledWith(AuthService.JWT_COOKIE_NAME, 'token', expect.any(Object));
+    expect(authService.signUpUserWithGoogle(signUpDto)).rejects.toThrow();
   });
 
   it("Shouldn't prolong token's life", async () => {

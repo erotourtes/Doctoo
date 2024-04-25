@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import StatsCard from './StatsCard';
+import { Provider } from 'react-redux';
+import { store } from '@/app/store';
 
 const meta: Meta<typeof StatsCard> = {
   title: 'Pages/ProfilePage/StatsCard',
@@ -7,7 +9,9 @@ const meta: Meta<typeof StatsCard> = {
   decorators: [
     Story => (
       <div className='h-screen bg-background p-8'>
-        <Story />
+        <Provider store={store}>
+          <Story />
+        </Provider>
       </div>
     ),
   ],
@@ -18,9 +22,5 @@ export default meta;
 type Stoty = StoryObj<typeof meta>;
 
 export const Height: Stoty = {
-  args: {
-    title: 'Height, cm',
-    value: '174',
-    iconVariant: 'height',
-  },
+  render: () => <StatsCard title='Height,cm' value='174' iconVariant='height' variant='input' />,
 };

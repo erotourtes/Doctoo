@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { AppointmentStatus } from '@prisma/client';
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { IsISO8601 } from 'class-validator';
+import { IsEnum, IsISO8601, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateAppointmentDto {
   @ApiProperty({ description: 'The ID of the doctor the appointment is created with' })

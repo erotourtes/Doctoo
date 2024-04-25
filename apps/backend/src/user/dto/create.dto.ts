@@ -1,6 +1,6 @@
-import { IsBoolean, IsEmail, IsOptional, IsPhoneNumber } from 'class-validator';
-import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsOptional, IsPhoneNumber } from 'class-validator';
+import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
 
 export class CreateUserDto {
   @IsNotEmptyString()
@@ -18,10 +18,6 @@ export class CreateUserDto {
   @IsEmail()
   @ApiProperty({ description: 'The email address of the user', example: 'user@example.com' })
   readonly email: string;
-
-  @IsBoolean()
-  @ApiProperty({ description: 'Indicates whether the email is verified', default: false })
-  readonly emailVerified: boolean;
 
   @IsOptional()
   @ApiProperty({ description: 'The password of the user', nullable: true, example: 'password123' })
