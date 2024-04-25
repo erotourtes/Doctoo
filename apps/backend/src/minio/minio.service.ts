@@ -19,6 +19,7 @@ export class MinioService {
 
   private minioClient: Client;
   private bucketName: string;
+  private isProductionMode = this.configService.get('NODE_ENV') === 'production';
 
   private async createBucketIfNotExists() {
     const bucketExists = await this.minioClient.bucketExists(this.bucketName);
@@ -51,7 +52,9 @@ export class MinioService {
     try {
       await this.minioClient.statObject(this.bucketName, name);
 
-      const url = await this.minioClient.presignedGetObject(this.bucketName, name);
+      const presignedUrl = await this.minioClient.presignedGetObject(this.bucketName, name);
+
+      const url = this.isProductionMode ? presignedUrl.split('?')[0] : presignedUrl;
 
       return { url };
     } catch (err) {
