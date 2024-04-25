@@ -37,13 +37,13 @@ const Select: React.FC<SelectProps> = ({ options, defaultOption, label, id, clas
       </button>
 
       {isOpen && (
-        <div className='absolute w-[412px] rounded-md bg-grey-5 mt-0.5'>
+        <div className='absolute mt-0.5 w-[412px] rounded-md bg-grey-5'>
           {options.map(option => (
             <div
               key={option}
               onClick={() => handleOptionClick(option)}
-              className={`mb-1 first:mt-2 w-full cursor-pointer rounded-md bg-grey-5 p-1
-                pl-3 text-left text-${selectedOption === option ? 'main' : 'grey-1'} text-sm hover:bg-grey-4 hover:text-main
+              className={`mb-1 w-full cursor-pointer rounded-md bg-grey-5 p-1 pl-3
+                text-left first:mt-2 text-${selectedOption === option ? 'main' : 'grey-1'} text-sm hover:bg-grey-4 hover:text-main
               `}
             >
               {option}
