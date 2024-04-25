@@ -4,7 +4,7 @@ import Icon from '../Icon/Icon';
 import { Checkbox } from '../Checkbox/Checkbox';
 import type { FieldValues, SubmitHandler } from 'react-hook-form';
 import { FormProvider, useForm } from 'react-hook-form';
-import './OptionalSelect.css';
+import './SelectOptions.css';
 
 interface SelectProps {
   options: { id: string; name: string }[];

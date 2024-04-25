@@ -2,7 +2,7 @@ import '@/index.css';
 
 import type { Meta, StoryObj } from '@storybook/react';
 import { useEffect, useState } from 'react';
-import OptionalSelect from './SelectOptions';
+import OptionalSelect from './OptionalSelect';
 
 const meta: Meta<typeof OptionalSelect> = {
   title: 'Components/UI/OptionalSelect',
