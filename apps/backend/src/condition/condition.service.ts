@@ -36,7 +36,7 @@ export class ConditionService {
   }
 
   async findConditionsByPatientId(id: string) {
-    const conditions = await this.prismaService.patientCondition.findMany({
+    const rawConditions = await this.prismaService.patientCondition.findMany({
       where: { patientId: id },
       select: {
         condition: {
@@ -44,6 +44,8 @@ export class ConditionService {
         },
       },
     });
+
+    const conditions = rawConditions.map(c => c.condition);
 
     return conditions;
   }
