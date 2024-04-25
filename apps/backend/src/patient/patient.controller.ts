@@ -89,7 +89,7 @@ export class PatientController {
   @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiOkResponse({ type: ResponsePatientConditionDto, description: 'Patient condition created' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @ApiBody({ type: CreatePatientConditionDto })
   @Post(':id/condition')
   async createPatientCondition(@Param('id') patientId: string, @Body('conditionId') conditionId: string) {
@@ -103,7 +103,7 @@ export class PatientController {
   @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiOkResponse({ type: ResponseCondtionDto, isArray: true, description: 'Patient conditions exist' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Get(':id/condition')
   async getConditionsByPatientId(@Param('id') patientId: string) {
     return this.patientService.findConditionsByPatientId(patientId);
