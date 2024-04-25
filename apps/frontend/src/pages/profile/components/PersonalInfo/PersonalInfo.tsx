@@ -30,7 +30,7 @@ const PersonalInfo = () => {
           Edit
         </button>
         <div>
-          <Button type='secondary' onClick={() => {}} className='flex items-center'>
+          <Button btnType='button' type='secondary' onClick={() => {}} className='flex items-center'>
             <Icon variant='plus' />
             Add a document
           </Button>
