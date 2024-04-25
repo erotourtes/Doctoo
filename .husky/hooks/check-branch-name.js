@@ -3,7 +3,7 @@ import path from 'path'
 
 const branchName = getCurrentBranchName();
 
-const isValidBranchName = /^((fix|hot-fix|main|development|feat|ci)\/[a-zA-Z0-9\-]+)$/gm.test(branchName);
+const isValidBranchName = /^((fix|hot-fix|main|development|feat|refactor|ci)\/[a-zA-Z0-9\-]+)$/gm.test(branchName);
 
 if (!isValidBranchName) {
   console.error('Error: Branch name should start with "fix/", "hot-fix/", "main/", "development/", "feat/", "refactor/", "ci/".');
