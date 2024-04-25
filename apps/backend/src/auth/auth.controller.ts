@@ -1,12 +1,4 @@
 import { BadRequestException, Body, Controller, Get, Param, Post, Res, UseGuards } from '@nestjs/common';
-import { Response } from 'express';
-import { UserDec } from '../user/user.decorator';
-import { AuthService } from './auth.service';
-import { AuthLocalLoginDto } from './dto/localLogin.dto';
-import { ResponseAuthGoogleSignInDto } from './dto/responseGoogleSignIn.dto';
-import { AuthSignUpPatientDto, AuthSignUpUserDto } from './dto/signUp.dto';
-import { GoogleAuthGuard } from './strategies/google';
-import JWTGuard from './strategies/jwt';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -15,10 +7,18 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { Response } from 'express';
 import { ResponsePatientDto } from '../patient/dto/response.dto';
-import { AuthRequestHelper } from './utils/cookie-helper.service';
 import { ResponseWithoutRelationsUserDto } from '../user/dto/responseWithoutRelations';
+import { UserDec } from '../user/user.decorator';
 import { BadRequestResponse, InternalServerErrorResponse } from '../utils/errorResponses';
+import { AuthService } from './auth.service';
+import { AuthLocalLoginDto } from './dto/localLogin.dto';
+import { ResponseAuthGoogleSignInDto } from './dto/responseGoogleSignIn.dto';
+import { AuthSignUpPatientDto, AuthSignUpUserDto } from './dto/signUp.dto';
+import JWTGuard from './gaurds/jwt.guard';
+import { GoogleAuthGuard } from './strategies/google';
+import { AuthRequestHelper } from './utils/cookie-helper.service';
 
 @ApiTags('Auth')
 @Controller('auth')
