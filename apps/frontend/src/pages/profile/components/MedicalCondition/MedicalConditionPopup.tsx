@@ -1,6 +1,4 @@
-import { Button } from '@/components/UI/Button/Button';
-import Input from '@/components/UI/Input/Input';
-import PopupDoctoo from '@/components/UI/Popup/Popup';
+import { PopupDoctoo, Input, Button } from '@/components/UI';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Joi from 'joi';
 import { type FieldValues, FormProvider, type SubmitHandler, useForm } from 'react-hook-form';

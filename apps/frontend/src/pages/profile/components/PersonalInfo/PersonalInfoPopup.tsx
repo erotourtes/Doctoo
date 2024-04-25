@@ -1,10 +1,7 @@
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { patchUserData } from '@/app/patient/PatientThunks';
-import { Button } from '@/components/UI/Button/Button';
-import Input from '@/components/UI/Input/Input';
-import PopupDoctoo from '@/components/UI/Popup/Popup';
+import { PopupDoctoo, Icon, Input, Button } from '@/components/UI';
 import type { IUSer } from '@/dataTypes/User';
-import Icon from '@UI/Icon/Icon';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Joi from 'joi';
 import { type FieldValues, FormProvider, type SubmitHandler, useForm } from 'react-hook-form';

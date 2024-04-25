@@ -1,8 +1,7 @@
-import { useAppSelector } from '@/app/hooks';
-import AddressInfoPopup from './AddressInfoPopup';
-import { Button } from '@/components/UI/Button/Button';
-import Icon from '@UI/Icon/Icon';
 import { useState } from 'react';
+import { useAppSelector } from '@/app/hooks';
+import { Button, Icon } from '@/components/UI';
+import AddressInfoPopup from './AddressInfoPopup';
 
 const AddressInfo = () => {
   const patient = useAppSelector(state => state.patient.data);

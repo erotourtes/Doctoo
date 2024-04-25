@@ -1,13 +1,10 @@
-import { Button } from '@/components/UI/Button/Button';
-import Input from '@/components/UI/Input/Input';
-import { AuthCreateAccount, AuthMainContainer, LogoWithTitle, Separator } from '@/pages/auth/auth-components';
+import { useNavigate } from 'react-router';
+import { FormProvider, useForm } from 'react-hook-form';
+import type { SubmitHandler } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Joi from 'joi';
-import type { SubmitHandler } from 'react-hook-form';
-import { FormProvider, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router';
-import api from '../../../app/api';
-import Icon from '../../../components/UI/Icon/Icon';
+import { AuthCreateAccount, AuthMainContainer, LogoWithTitle, Separator } from '@/pages/auth/auth-components';
+import { Button, Icon, Input } from '@/components/UI';
 
 type SignInType = {
   email: string;

@@ -1,7 +1,6 @@
-import { Button } from '@/components/UI/Button/Button';
-import { LogoWithTitle, AuthMainContainer, AuthCreateAccount } from '@/pages/auth/auth-components';
-import InputCode from '../../../components/UI/Input/InputCode';
 import { useEffect, useState } from 'react';
+import { LogoWithTitle, AuthMainContainer, AuthCreateAccount } from '@/pages/auth/auth-components';
+import { Button, InputCode } from '@/components/UI';
 
 const EMAIL_VERIFICATION_CODE_LEN = 6;
 
