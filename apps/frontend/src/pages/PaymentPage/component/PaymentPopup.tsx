@@ -1,9 +1,9 @@
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { useAppSelector } from '@/app/hooks';
-import { Button } from '../UI/Button/Button';
 import { ReceiptPDF } from './ReceiptPDF';
-import PopupDoctoo from '../UI/Popup/Popup';
-import Icon from '../UI/Icon/Icon';
+import { Button } from '@/components/UI/Button/Button';
+import Icon from '@/components/UI/Icon/Icon';
+import PopupDoctoo from '@/components/UI/Popup/Popup';
 
 interface PaymentPopupProps {
   isOpenModal: boolean;

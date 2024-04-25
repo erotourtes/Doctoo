@@ -7,13 +7,13 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import { CardCvcElement, CardExpiryElement, CardNumberElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { getPaymentIntent } from '@/app/payment/paymentThunks';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { NewPaymentCardForm } from '@/components/payment/NewPaymentCardForm';
+import { NewPaymentCardForm } from '@/pages/PaymentPage/component/NewPaymentCardForm';
 import { Button } from '@/components/UI/Button/Button';
 import { Checkbox } from '@/components/UI/Checkbox/Checkbox';
 import Icon from '@/components/UI/Icon/Icon';
 import { RadioButton } from '@/components/UI/RadioButton/RadioButton';
-import { PaymentPopup } from '@/components/payment/PaymentPopup';
-import { Checkout } from '@/components/payment/Checkout';
+import { PaymentPopup } from '@/pages/PaymentPage/component/PaymentPopup';
+import { Checkout } from '@/pages/PaymentPage/component/Checkout';
 
 const schema = Joi.object({
   cardholderName: Joi.string().min(3).max(100).required(),

@@ -1,5 +1,5 @@
+import Input from '@/components/UI/Input/Input';
 import { CardCvcElement, CardExpiryElement, CardNumberElement } from '@stripe/react-stripe-js';
-import Input from '../UI/Input/Input';
 
 export const NewPaymentCardForm = () => {
   const inputFieldClass =

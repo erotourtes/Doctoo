@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { useAppSelector } from '@/app/hooks';
-import Icon from '../UI/Icon/Icon';
-import Tag from '../UI/Tag/Tag';
+import Icon from '@/components/UI/Icon/Icon';
+import Tag from '@/components/UI/Tag/Tag';
 
 export const Checkout = () => {
   const { date, doctorSpecialization, doctorName, appointmentDuration, pricePerHour } = useAppSelector(

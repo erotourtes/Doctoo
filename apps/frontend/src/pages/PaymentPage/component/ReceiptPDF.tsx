@@ -1,5 +1,5 @@
+import { CreatePDF } from '@/components/UI/CreatePDF/CreatePDF';
 import { Text, View, StyleSheet } from '@react-pdf/renderer';
-import { CreatePDF } from '../UI/CreatePDF/CreatePDF';
 
 interface ReceiptPDFProps {
   id: string;
