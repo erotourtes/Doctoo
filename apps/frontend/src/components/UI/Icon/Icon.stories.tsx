@@ -5,7 +5,7 @@ import Icon from './Icon';
 import '@/index.css';
 
 const meta = {
-  title: 'Components/Icons',
+  title: 'Components/UI/Icons',
   component: Icon,
   parameters: {
     layout: 'centered',
