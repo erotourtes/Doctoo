@@ -39,7 +39,7 @@ export const AuthMainContainer: FC<PropsWithChildren> = ({ children }) => {
       <div className='flex w-full justify-center overflow-y-auto sm:w-[60%]'>
         <div className='m-auto flex max-h-[700px]'>{children}</div>
       </div>
-      <div className='bg-greeting-bg hidden h-full w-[40%] bg-cover bg-no-repeat sm:block '> </div>
+      <div className='hidden h-full w-[40%] bg-greeting-bg bg-cover bg-no-repeat sm:block '> </div>
     </div>
   );
 };
