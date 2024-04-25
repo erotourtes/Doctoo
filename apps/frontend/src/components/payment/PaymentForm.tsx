@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import type { SubmitHandler, FieldValues } from 'react-hook-form';
 import { useForm, FormProvider } from 'react-hook-form';
-import { CardNumberElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import Joi from 'joi';
+import { joiResolver } from '@hookform/resolvers/joi';
+import { CardCvcElement, CardExpiryElement, CardNumberElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { getPaymentIntent } from '@/app/payment/paymentThunks';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { NewPaymentCardForm } from '@/components/payment/NewPaymentCardForm';
@@ -13,18 +15,32 @@ import { RadioButton } from '@/components/UI/RadioButton/RadioButton';
 import { PaymentPopup } from '@/components/payment/PaymentPopup';
 import { Checkout } from '@/components/payment/Checkout';
 
-export const PaymentForm = () => {
-  const [isSuccessfulPayment, setIsSuccessfulPayment] = useState<boolean>(false);
-  const { date, appointmentDuration, pricePerHour } = useAppSelector(state => state.payment.data);
-  const [paymentDetails, setPaymentDetails] = useState({ id: '', created: 0 });
+const schema = Joi.object({
+  cardholderName: Joi.string().min(3).max(100).required(),
+  agreedToTerms: Joi.boolean().valid(true).required(),
+});
 
-  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const dispatch = useAppDispatch();
+export const PaymentForm = () => {
   const stripe = useStripe();
   const elements = useElements();
+
+  const dispatch = useAppDispatch();
+  const { date, appointmentDuration, pricePerHour } = useAppSelector(state => state.payment.data);
+
+  const [isSuccessfulPayment, setIsSuccessfulPayment] = useState<boolean>(false);
+  const [paymentDetails, setPaymentDetails] = useState({ id: '', created: 0 });
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+
   const methods = useForm({
     mode: 'onChange',
+    resolver: joiResolver(schema),
   });
+
+  const {
+    reset,
+    setValue,
+    formState: { isDirty, isValid },
+  } = methods;
 
   const [status, setStatus] = useState<string>('new-card');
   const navigate = useNavigate();
@@ -38,7 +54,10 @@ export const PaymentForm = () => {
     if (!elements || !stripe) {
       return;
     }
+
     const cardElement = elements?.getElement(CardNumberElement);
+    const cardExpiry = elements?.getElement(CardExpiryElement);
+    const cardCVC = elements?.getElement(CardCvcElement);
 
     if (!cardElement || !stripe) {
       return;
@@ -76,6 +95,11 @@ export const PaymentForm = () => {
         const { id, created } = confirmPayment.paymentIntent;
         setPaymentDetails({ id, created });
         setIsSuccessfulPayment(true);
+        reset();
+        setValue('agreedToTerms', false);
+        cardElement.clear();
+        cardExpiry?.clear();
+        cardCVC?.clear();
         setIsOpenModal(true);
       }
     } catch (error) {
@@ -87,7 +111,7 @@ export const PaymentForm = () => {
   return (
     <>
       <FormProvider {...methods}>
-        <section className='flex w-full max-w-[941px] flex-col items-center gap-6 md:flex-row md:items-start'>
+        <section className='mx-auto my-0 flex w-full max-w-[941px] flex-col items-center gap-6 md:flex-row md:items-start'>
           <div className='w-full max-w-[381px] md:max-w-[600px]'>
             <button
               type='button'
@@ -123,7 +147,7 @@ export const PaymentForm = () => {
             <Checkout />
 
             <form id='payment' onSubmit={e => e.preventDefault()} className='grid gap-4'>
-              <Checkbox id='confirm' className='self-start' errorMessage='Please check the checkbox'>
+              <Checkbox id='agreedToTerms' className='self-start' errorMessage='Please check the checkbox'>
                 <p>
                   By clicking Pay now button, I confirm that I have read and accept{' '}
                   <span className='underline'>General Terms and Conditions</span>, and{' '}
@@ -136,6 +160,7 @@ export const PaymentForm = () => {
                 className='w-full'
                 onClick={methods.handleSubmit(onSubmit as SubmitHandler<FieldValues>)}
                 btnType='submit'
+                disabled={!isDirty || !isValid}
               >
                 Pay now
               </Button>
