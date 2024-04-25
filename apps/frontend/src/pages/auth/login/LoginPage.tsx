@@ -5,6 +5,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import Joi from 'joi';
 import { AuthCreateAccount, AuthMainContainer, LogoWithTitle, Separator } from '@/pages/auth/auth-components';
 import { Button, Icon, Input } from '@/components/UI';
+import api from '@/app/api';
 
 type SignInType = {
   email: string;
