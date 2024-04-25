@@ -7,6 +7,7 @@ import SignUpPatientPage from './auth/signup/SignUpPatientPage';
 import Settings from './settings/settingsPage/settingsPage';
 import Sidemenu from '@components/Sidemenu/Sidemenu';
 import Header from '@components/UI/Header/Header';
+import { PaymentPage } from './PaymentPage/PaymentPage';
 
 // import page component
 
@@ -26,11 +27,12 @@ import Header from '@components/UI/Header/Header';
 
 const PageContainer = () => {
   return (
-    <main className='main-wrapper flex w-full h-full flex-col gap-6 overflow-auto bg-background p-8'>
+    <main className='main-wrapper flex h-full w-full flex-col gap-6 overflow-auto bg-background p-8'>
       <Routes>
         {/* <Route path="/path-to-page" Component={Page} /> */}
         <Route path='/profile' Component={ProfilePage} />
         <Route path='/settings' Component={Settings} />
+        <Route path='/payment' Component={PaymentPage} />
       </Routes>
     </main>
   );
@@ -63,7 +65,11 @@ const Navigation = () => {
         path='*'
         element={
           <div className={`flex ${!shouldDisplaySidemenu() ? 'flex-col' : ''} h-screen w-screen overflow-hidden`}>
-            {shouldDisplaySidemenu() ? <Sidemenu variant={shouldDispaySmallSideMenu() ? 'small' : 'large'} /> : <Header />}
+            {shouldDisplaySidemenu() ? (
+              <Sidemenu variant={shouldDispaySmallSideMenu() ? 'small' : 'large'} />
+            ) : (
+              <Header />
+            )}
             <PageContainer />
           </div>
         }
