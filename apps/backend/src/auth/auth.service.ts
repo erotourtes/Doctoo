@@ -4,13 +4,13 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { plainToInstance } from 'class-transformer';
 import auth from '../config/auth';
+import { MailService } from '../mail/mail.service';
+import { ResponsePatientDto } from '../patient/dto/response.dto';
 import { PatientService } from '../patient/patient.service';
 import { ResponseWithoutRelationsUserDto } from '../user/dto/responseWithoutRelations';
 import { UserService } from '../user/user.service';
 import { AuthSignUpPatientDto, AuthSignUpUserDto } from './dto/signUp.dto';
 import { JwtPayload } from './strategies/jwt';
-import { ResponsePatientDto } from '../patient/dto/response.dto';
-import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class AuthService {
@@ -43,7 +43,7 @@ export class AuthService {
   }
 
   async validatePatientByEmail(email: string, password: string): Promise<ResponsePatientDto | null> {
-    const user = await this.userService.getUserPasswordByEmail(email);
+    const user = await this.userService.getUserByEmail(email);
     if (!user) return null;
     const isValidPassword = await this.verifyPassword(password, user.password);
     if (!isValidPassword) return null;
@@ -54,7 +54,7 @@ export class AuthService {
   }
 
   async validateGoogleUser(email: string, googleId: string): Promise<ResponseWithoutRelationsUserDto | null> {
-    const user = await this.userService.getUserPasswordByEmail(email);
+    const user = await this.userService.getUserByEmail(email);
     if (!user) return null;
     const patient = await this.patientService.getPatientByUserId(user.id);
 
@@ -77,12 +77,6 @@ export class AuthService {
     const accessToken = await this.jwtService.signAsync(payload, { expiresIn: '1d' });
 
     return accessToken;
-  }
-
-  async getUser(userId: string): Promise<ResponseWithoutRelationsUserDto | null> {
-    const user = await this.userService.getUser(userId);
-
-    return plainToInstance(ResponseWithoutRelationsUserDto, user);
   }
 
   /**
@@ -109,13 +103,14 @@ export class AuthService {
     if (existingUser) throw new BadRequestException('User already exists');
 
     const password = await this.hashPassword(body.password);
+
+    // TODO: Create private function for this.
     const user = await this.userService.createUser({
       email: body.email,
       firstName: body.firstName,
       lastName: body.lastName,
       phone: body.phone,
       googleId: body.googleId,
-      emailVerified: false,
       password,
       avatarKey: '', // TODO: use file service.
     });
@@ -135,13 +130,13 @@ export class AuthService {
       return existingUser;
     }
 
+    // TODO: Create private function for this.
     const user = await this.userService.createUser({
       email: body.email,
       firstName: body.firstName,
       lastName: body.lastName,
       phone: body.phone,
       googleId: body.googleId,
-      emailVerified: false,
       avatarKey: '', // TODO: use file service.
     });
 

@@ -1,6 +1,7 @@
-import { Doctor, Patient } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
+import { ResponseDoctorDto } from '../../doctor/dto/response.dto';
+import { ResponsePatientDto } from '../../patient/dto/response.dto';
 
 export class ResponseUserDto {
   @ApiProperty({ description: 'The ID of the user', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
@@ -31,8 +32,8 @@ export class ResponseUserDto {
   readonly avatarKey: string;
 
   @ApiProperty({ description: 'The list of doctors associated with the user', example: [] })
-  readonly doctors: Doctor[]; // TODO: Use Doctor dto instead of prisma model.
+  readonly doctors: ResponseDoctorDto[];
 
   @ApiProperty({ description: 'The list of patients associated with the user', example: [] })
-  readonly patients: Patient[]; // TODO: use Patient dto instead of prisma model.
+  readonly patients: ResponsePatientDto[];
 }

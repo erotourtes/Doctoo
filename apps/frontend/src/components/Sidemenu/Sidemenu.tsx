@@ -2,7 +2,7 @@ import useWindowWide from '@/hooks/useWindowWide';
 import type React from 'react';
 import { useLocation } from 'react-router-dom';
 import NavButton from './NavButton';
-import NavLogo from './NavLogo';
+import NavLogo from '@UI/NavLogo/NavLogo';
 
 type SidemenuProps = {
   variant?: 'small' | 'large';

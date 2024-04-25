@@ -22,6 +22,7 @@
     "frontend:test": "pnpm -F @internship-2024-doctoo/frontend test",
     "frontend:storybook": "pnpm -F @internship-2024-doctoo/frontend storybook",
     "frontend:storybook:build": "pnpm -F @internship-2024-doctoo/frontend storybook:build",
+    "frontend:api:sync": "pnpm -F @internship-2024-doctoo/frontend api:sync",
     "frontend:format": "pnpm -F @internship-2024-doctoo/frontend format",
     "frontend:lint": "pnpm -F @internship-2024-doctoo/frontend lint",
     "format": "pnpm -r format",
