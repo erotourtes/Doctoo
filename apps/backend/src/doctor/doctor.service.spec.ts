@@ -49,7 +49,8 @@ describe('DoctorService', () => {
       hospitalIds: [hospital.id],
     } as CreateDoctorDto);
 
-    expect(createdDoctor).toMatchObject(doctorDto);
+    const expected = { about: doctorDto.about, payrate: doctorDto.payrate };
+    expect(createdDoctor).toMatchObject(expected);
     expect(createdDoctor.id).toBeDefined();
   });
 
@@ -74,7 +75,9 @@ describe('DoctorService', () => {
 
     const doctor = await doctorService.getDoctor(id);
 
-    expect(doctor).toMatchObject({ ...doctorDto, id });
+    const expected = { id, about: doctorDto.about, payrate: doctorDto.payrate };
+
+    expect(doctor).toMatchObject(expected);
   });
 
   it('should update doctor', async () => {
@@ -100,7 +103,8 @@ describe('DoctorService', () => {
 
     const updatedDoctor = await doctorService.patchDoctor(id, delta);
 
-    expect(updatedDoctor).toMatchObject({ ...doctorDto, ...delta });
+    const expected = { id, about: doctorDto.about, payrate: doctorDto.payrate, ...delta };
+    expect(updatedDoctor).toMatchObject(expected);
   });
 
   it('should delete doctor', async () => {

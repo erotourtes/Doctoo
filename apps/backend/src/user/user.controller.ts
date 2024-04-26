@@ -14,7 +14,7 @@ import {
 import { BadRequestResponse } from '../utils/BadRequestResponse';
 import { ClassicNestResponse } from '../utils/ClassicNestResponse';
 import { CreateUserDto } from './dto/create.dto';
-import { PatchUserDto } from './dto/patch.dto';
+import { PatchUserWithoutCredentialsDto } from './dto/patch.dto';
 import { ResponseUserDto } from './dto/response.dto';
 import { UserService } from './user.service';
 
@@ -55,13 +55,13 @@ export class UserController {
     description: 'This endpoint updates a user object by ID.',
   })
   @ApiParam({ name: 'id', description: 'User ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
-  @ApiBody({ type: PatchUserDto })
+  @ApiBody({ type: PatchUserWithoutCredentialsDto })
   @ApiOkResponse({ type: ResponseUserDto, description: 'User updated' })
   @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'User not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Patch(':id')
-  patchUser(@Param('id') id: string, @Body() body: PatchUserDto) {
+  patchUser(@Param('id') id: string, @Body() body: PatchUserWithoutCredentialsDto) {
     return this.userService.patchUser(id, body);
   }
 

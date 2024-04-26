@@ -26,6 +26,12 @@ export class UserService {
   }
 
   async getUserByEmail(email: string): Promise<ResponseWithoutRelationsUserDto> {
+    const user = await this.prismaService.user.findFirst({ where: { email } });
+
+    return plainToInstance(ResponseWithoutRelationsUserDto, user);
+  }
+
+  async getUserWithSecretsByEmail(email: string): Promise<ResponseWithoutRelationsUserDto> {
     const user = await this.prismaService.user.findUnique({ where: { email } });
 
     return user;
@@ -37,12 +43,25 @@ export class UserService {
     return plainToInstance(ResponseWithoutRelationsUserDto, user);
   }
 
+  async set2faCode(id: string, code: string | null) {
+    await this.prismaService.user.update({ where: { id }, data: { secretCode: code } });
+  }
+
   async patchUser(id: string, body: PatchUserDto): Promise<ResponseWithoutRelationsUserDto> {
     await this.isUserExists(id);
 
     const user = await this.prismaService.user.update({ where: { id }, data: body });
 
     return plainToInstance(ResponseWithoutRelationsUserDto, user);
+  }
+
+  /**
+   * Sets user email to verified; Indicates whether the user completed 2 stages of registration
+   * @param id User ID
+   * @param verified Indicates whether the user email is verified
+   */
+  async setVerified(id: string, verified: boolean) {
+    await this.prismaService.user.update({ where: { id }, data: { emailVerified: verified } });
   }
 
   async deletedUser(id: string) {

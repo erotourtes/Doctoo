@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { AppointmentStatus } from '@prisma/client';
-import { IsEnum, IsISO8601, IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsISO8601, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateAppointmentDto {
   @ApiProperty({ description: 'The ID of the doctor the appointment is created with' })
@@ -33,4 +33,14 @@ export class CreateAppointmentDto {
 
   @IsString({ message: 'Receipt key must be a string' })
   readonly paymentReceiptKey: string;
+
+  @IsISO8601({ strict: true }, { message: 'Started at must be a valid ISO8601 date' })
+  @IsOptional()
+  @IsString({ message: 'Started at must be a string' })
+  readonly startedAt?: string;
+
+  @IsISO8601({ strict: true }, { message: 'Ended at must be a valid ISO8601 date' })
+  @IsOptional()
+  @IsString({ message: 'Ended at must be a string' })
+  readonly endedAt?: string;
 }

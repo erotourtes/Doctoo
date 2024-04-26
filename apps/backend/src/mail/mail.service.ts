@@ -21,4 +21,16 @@ export class MailService {
       },
     });
   }
+
+  async send2faCode(to: string, name: string, code: string): Promise<void> {
+    await this.mailerService.sendMail({
+      to,
+      subject: '2FA code',
+      template: './2fa-code',
+      context: {
+        name,
+        code,
+      },
+    });
+  }
 }

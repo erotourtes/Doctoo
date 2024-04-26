@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import CalendarPage from './CalendarPage';
+import { CalendarPage } from './CalendarPage';
 import '@/index.css';
 
 const meta: Meta<typeof CalendarPage> = {
@@ -7,6 +7,11 @@ const meta: Meta<typeof CalendarPage> = {
   component: CalendarPage,
   parameters: {
     layout: 'fullscreen',
+  },
+  args: {
+    selectedDate: new Date('2024-01-01T00:00:00.000Z'),
+    setSelectedDate: () => {},
+    todayAppointment: [],
   },
   decorators: [
     Story => (

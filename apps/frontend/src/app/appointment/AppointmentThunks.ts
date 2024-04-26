@@ -1,8 +1,9 @@
 import { instance } from '@/api/axios.api';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { AxiosResponse } from 'axios';
-import type { IAppointment } from '../../dataTypes/Appointment';
+import type { IAppointment, ICreateAppointment } from '../../dataTypes/Appointment';
 import {
+  deleteAppointment,
   setAppointmentCanceled,
   setAppointmentCompleted,
   setAppointments,
@@ -36,21 +37,24 @@ export const getAppointmentsByPatientId = createAsyncThunk('appointment', async 
   }
 });
 
-export const createAppointment = createAsyncThunk('appointment', async (appointment: IAppointment, { dispatch }) => {
-  try {
-    const response: AxiosResponse<IAppointment> = await instance.post(`/appointment`, appointment);
-    if (response.status === 201) {
-      dispatch(setNewAppointment(response.data));
+export const createAppointment = createAsyncThunk(
+  'appointment',
+  async (appointment: ICreateAppointment, { dispatch }) => {
+    try {
+      const response: AxiosResponse<IAppointment> = await instance.post(`/appointment`, appointment);
+      if (response.status === 201) {
+        dispatch(setNewAppointment(response.data));
+      }
+    } catch (e) {
+      const error = e as Error;
+      throw error;
     }
-  } catch (e) {
-    const error = e as Error;
-    throw error;
-  }
-});
+  },
+);
 
 export const cancelAppointmentById = createAsyncThunk('appointment', async (appointment_id: string, { dispatch }) => {
   try {
-    const response: AxiosResponse<string> = await instance.delete(`/appointment/${appointment_id}`);
+    const response: AxiosResponse<string> = await instance.patch(`/appointment/${appointment_id}`);
     if (response.status === 200) {
       dispatch(setAppointmentCanceled(appointment_id));
     }
@@ -62,7 +66,7 @@ export const cancelAppointmentById = createAsyncThunk('appointment', async (appo
 
 export const completeAppointmentById = createAsyncThunk('appointment', async (appointment_id: string, { dispatch }) => {
   try {
-    const response: AxiosResponse<string> = await instance.put(`/appointment/${appointment_id}`);
+    const response: AxiosResponse<string> = await instance.patch(`/appointment/${appointment_id}`);
     if (response.status === 200) {
       dispatch(setAppointmentCompleted(appointment_id));
     }
@@ -72,9 +76,12 @@ export const completeAppointmentById = createAsyncThunk('appointment', async (ap
   }
 });
 
-export const deleteAppointmentById = createAsyncThunk('appointment', async (appointment_id: string) => {
+export const deleteAppointmentById = createAsyncThunk('appointment', async (appointment_id: string, { dispatch }) => {
   try {
-    await instance.delete(`/appointment/${appointment_id}`);
+    const response = await instance.delete(`/appointment/${appointment_id}`);
+    if (response.status === 204) {
+      dispatch(deleteAppointment(appointment_id));
+    }
   } catch (e) {
     const error = e as Error;
     throw error;

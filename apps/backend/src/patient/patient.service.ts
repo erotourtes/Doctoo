@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePatientDto } from './dto/create.dto';
@@ -35,6 +35,10 @@ export class PatientService {
   }
 
   async createPatient(body: CreatePatientDto): Promise<ResponsePatientDto> {
+    const exists = await this.prismaService.patient.findFirst({
+      where: { user: { id: body.userId } },
+    });
+    if (exists) throw new BadRequestException('Patient already exists');
     const patient = await this.prismaService.patient.create({ data: body });
 
     return plainToInstance(ResponsePatientDto, patient);
@@ -65,7 +69,7 @@ export class PatientService {
     return patientCondtion;
   }
 
-  async findConditionsByPatientId(patientId: string) {
+  async getPatientConditions(patientId: string) {
     const rawConditions = await this.prismaService.patientCondition.findMany({
       where: { patientId },
       select: {
@@ -78,5 +82,20 @@ export class PatientService {
     const conditions = rawConditions.map(c => c.condition);
 
     return conditions;
+    
+  async createPatientAllergy(patientId: string, allergyId: string) {
+    const allergy = await this.prismaService.patientAllergy.create({ data: { patientId, allergyId } });
+
+    return allergy;
+  }
+
+  async getPatientAllergies(patientId: string) {
+    const rawAllergies = await this.prismaService.patientAllergy.findMany({
+      where: { patientId },
+      select: { allergy: { select: { name: true, id: true } } },
+    });
+    const allergies = rawAllergies.map(a => a.allergy);
+
+    return allergies;
   }
 }
