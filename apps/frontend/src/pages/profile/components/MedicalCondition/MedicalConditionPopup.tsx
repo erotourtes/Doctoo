@@ -34,21 +34,22 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
     <PopupDoctoo
       popupIsOpen={isOpen}
       closePopup={onClose}
-      modalBodyClassName='relative z-20 flex h-full min-w-[600px] flex-col gap-7 rounded-xl bg-white'
+      modalFullClassName='max-w-[612px]'
+      modalBodyClassName='relative z-20 flex h-full max-w-[516px] flex-col gap-7 rounded-xl bg-white'
     >
       <p className='text-2xl font-medium text-black'>Medical condition and allergies </p>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit as SubmitHandler<FieldValues>)} className='flex w-full flex-col gap-7'>
-          <div className='w-full'>
+          <div className='grid w-full gap-2 sm:gap-6'>
             <Input id='condition' label='Medical condition' type='text' className='w-full' />
 
             <Input id='allergies' label='Allergies' type='text' className='w-full' />
           </div>
-          <div className='flex w-full gap-4'>
-            <Button type='secondary' onClick={() => {}} className='w-1/2'>
+          <div className='flex w-full flex-col-reverse gap-4 sm:flex-row'>
+            <Button type='secondary' onClick={() => {}} className='w-full sm:w-1/2'>
               Cancel
             </Button>
-            <Button type='primary' onClick={() => {}} className='w-1/2'>
+            <Button type='primary' onClick={() => {}} className='w full sm:w-1/2'>
               Save
             </Button>
           </div>
