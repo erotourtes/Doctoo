@@ -52,9 +52,9 @@ export default function AppointmentsWidget({ appointmentsForDay, selectedDate }:
             })}
           </ul>
         ) : (
-          <text className='px-6 pb-6 text-grey-1'>
+          <span className='px-6 pb-6 text-grey-1'>
             No appointments for this date. Try to book one or select another day
-          </text>
+          </span>
         )}
       </article>
 
