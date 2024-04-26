@@ -36,4 +36,11 @@ export class ResponseUserDto {
 
   @ApiProperty({ description: 'The list of patients associated with the user', example: [] })
   readonly patients: ResponsePatientDto[];
+
+  @Exclude()
+  @ApiProperty({ description: 'Is two-factor authentication enabled', example: true })
+  readonly twoFactorAuthToggle: boolean;
+
+  @Exclude()
+  readonly secretCode: string;
 }

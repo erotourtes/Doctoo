@@ -40,17 +40,19 @@ enum NotificationAction {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  firstName     String    @map("first_name")
-  lastName      String    @map("last_name")
-  phone         String
-  email         String    @unique
-  emailVerified Boolean   @default(false) @map("email_verified")
-  password      String?
-  googleId      String?   @map("googleId")
-  avatarKey     String    @map("avatar_key")
-  doctors       Doctor[]
-  patients      Patient[]
+  id                  String    @id @default(uuid())
+  firstName           String    @map("first_name")
+  lastName            String    @map("last_name")
+  phone               String
+  email               String    @unique
+  emailVerified       Boolean   @default(false) @map("email_verified")
+  twoFactorAuthToggle Boolean   @default(false) @map("two_factor_auth_toggle")
+  secretCode          String?   @map("secret_code")
+  password            String?
+  googleId            String?   @map("googleId")
+  avatarKey           String    @map("avatar_key")
+  doctors             Doctor[]
+  patients            Patient[]
 
   @@map("users")
 }
@@ -178,7 +180,6 @@ model Patient {
   reviews                    Review[]
   notifications              Notification[]
   emailNotificationToggle    Boolean              @default(false) @map("email_notification_toggle")
-  twoFactorAuthToggle        Boolean              @default(false) @map("two_factor_auth_toggle")
   requestBillPaymentApproval Boolean              @default(false) @map("request_bill_payment_approval")
 
   @@map("patients")

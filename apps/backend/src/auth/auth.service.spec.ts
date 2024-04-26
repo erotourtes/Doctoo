@@ -1,16 +1,17 @@
-import { ConfigType } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
-import * as bcrypt from 'bcrypt';
 import { plainToClass, plainToInstance } from 'class-transformer';
 import auth from '../config/auth';
 import config from '../config/config';
-import { MailService } from '../mail/mail.service';
 import { CreatePatientDto } from '../patient/dto/create.dto';
 import { PatientService } from '../patient/patient.service';
 import { CreateUserDto } from '../user/dto/create.dto';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
+import * as bcrypt from 'bcrypt';
+import { ConfigType } from '@nestjs/config';
+import { MailService } from '../mail/mail.service';
+import { ResponseWithoutRelationsUserDto } from '../user/dto/responseWithoutRelations';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -73,12 +74,12 @@ describe('AuthService', () => {
   it('Should validate credentials', async () => {
     const pass = bcrypt.hashSync(user.password, 10);
 
-    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue({
+    userServiceMock.getUserWithSecretsByEmail = jest.fn().mockResolvedValue({
       ...user,
       password: pass,
     });
 
-    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue({
+    userServiceMock.getUserWithSecretsByEmail = jest.fn().mockResolvedValue({
       ...user,
       password: pass,
     });
@@ -91,18 +92,18 @@ describe('AuthService', () => {
   });
 
   it('Should fail credentials validation', async () => {
-    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue(user);
+    userServiceMock.getUserWithSecretsByEmail = jest.fn().mockResolvedValue(user);
     patientServiceMock.getPatientByUserId = jest.fn().mockResolvedValue(patient);
 
     const validated = await authService.validatePatientByEmail(user.email, 'invalid_password');
 
-    expect(validated).toBeNull();
+    expect(validated.patient).toBeNull();
   });
 
   it('Should validate Google', async () => {
     user = { ...user, googleId: 'googleId' };
 
-    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue(user);
+    userServiceMock.getUserWithSecretsByEmail = jest.fn().mockResolvedValue(user);
     patientServiceMock.getPatientByUserId = jest.fn().mockResolvedValue(patient);
 
     const validated = await authService.validateGoogleUser(user.email, 'googleId');
@@ -113,7 +114,7 @@ describe('AuthService', () => {
   it('Should fail Google validation', async () => {
     user = { ...user, googleId: 'googleId' };
 
-    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue(user);
+    userServiceMock.getUserWithSecretsByEmail = jest.fn().mockResolvedValue(user);
 
     const validated = await authService.validateGoogleUser(user.email, 'invalid_googleId');
 
@@ -149,5 +150,43 @@ describe('AuthService', () => {
     const token = await authService.signJwtToken('1');
     const result = authService.jwtCloseToExpire(token);
     expect(result).toBeFalsy();
+  });
+
+  it('Should not login patient with 2fa', async () => {
+    const password = bcrypt.hashSync(user.password, 10);
+    const newUser: Partial<ResponseWithoutRelationsUserDto> = {
+      id: '1',
+      ...user,
+      password,
+      twoFactorAuthToggle: true,
+    };
+    userServiceMock.getUserWithSecretsByEmail = jest.fn().mockResolvedValue(newUser);
+    patientServiceMock.getPatientByUserId = jest.fn().mockResolvedValue(patient);
+    userServiceMock.set2faCode = jest.fn().mockReturnThis();
+    mailServiceMock.send2faCode = jest.fn().mockReturnThis();
+
+    const result = await authService.validatePatientByEmail(user.email, user.password);
+
+    expect(result.is2faEnabled).toBeTruthy();
+    expect(userServiceMock.set2faCode).toHaveBeenCalledWith(expect.any(String), expect.stringMatching(/.{7,}/));
+    expect(mailServiceMock.send2faCode).toHaveBeenCalled();
+  });
+
+  it('Should not change password', async () => {
+    const password = bcrypt.hashSync(user.password, 10);
+    const newUser: Partial<ResponseWithoutRelationsUserDto> = {
+      id: '1',
+      ...user,
+      password,
+    };
+    userServiceMock.getUserWithSecretsByEmail = jest.fn().mockResolvedValue(newUser);
+    userServiceMock.patchUser = jest.fn().mockReturnThis();
+
+    await expect(async () => {
+      await authService.changePassword(newUser as ResponseWithoutRelationsUserDto, {
+        oldPassword: 'wrong_password',
+        newPassword: 'new_password',
+      });
+    }).rejects.toThrow();
   });
 });

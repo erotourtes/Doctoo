@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePatientDto } from './dto/create.dto';
@@ -35,6 +35,10 @@ export class PatientService {
   }
 
   async createPatient(body: CreatePatientDto): Promise<ResponsePatientDto> {
+    const exists = await this.prismaService.patient.findFirst({
+      where: { user: { id: body.userId } },
+    });
+    if (exists) throw new BadRequestException('Patient already exists');
     const patient = await this.prismaService.patient.create({ data: body });
 
     return plainToInstance(ResponsePatientDto, patient);
