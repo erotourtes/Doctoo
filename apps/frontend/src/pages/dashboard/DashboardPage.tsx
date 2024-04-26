@@ -6,7 +6,8 @@ import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { getPatientDoctorData } from '@/app/doctor/DoctorThunks';
 import { useEffect } from 'react';
 import NotificationsComponent from './components/NotificationsComponent/NotificationsComponent';
-import type { IAppointment } from '@/dataTypes/Appointment';
+import { AppointmentStatus, type IAppointment } from '@/dataTypes/Appointment';
+import dayjs from 'dayjs';
 
 const DashboardPage = () => {
   const dispatch = useAppDispatch();
@@ -16,13 +17,25 @@ const DashboardPage = () => {
   }, []);
   const doctors = useAppSelector(state => state.doctor.doctors);
   const appointments = useAppSelector(state => state.appointment.appointments);
-
+  const nearestAppointments = appointments
+    .filter((appointment: IAppointment) => {
+      const appointmentDate = dayjs(appointment.assignedAt);
+      const nextSevenDays = dayjs().add(7, 'day');
+      return (
+        appointmentDate.isBefore(nextSevenDays) ||
+        (appointmentDate.isSame(nextSevenDays, 'day') && appointment.status == AppointmentStatus.PLANNED)
+      );
+    })
+    .sort((a: IAppointment, b: IAppointment) => {
+      return dayjs(a.assignedAt).diff(dayjs(b.assignedAt));
+    })
+    .slice(0, 5);
   return (
     <div>
       <PageHeader iconVariant={'dashboard'} title='Dashboard' />
       <div className='flex flex-row'>
         <section className='flex w-full min-w-[694px] flex-col  overflow-y-auto bg-background pt-7'>
-          <NearestAppointmentsComponent appointments={appointments} />
+          <NearestAppointmentsComponent appointments={nearestAppointments} />
           <NotificationsComponent />
         </section>
         <section className='flex flex-col pt-7'>
