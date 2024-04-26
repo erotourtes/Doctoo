@@ -69,13 +69,15 @@ model Favorite {
 }
 
 model Review {
-  id        String  @id @default(uuid())
-  text      String
+  id        String   @id @default(uuid())
+  text      String?
   rate      Int
-  doctorId  String  @map("doctor_id")
-  patientId String  @map("patient_id")
-  doctor    Doctor  @relation(fields: [doctorId], references: [id])
-  patient   Patient @relation(fields: [patientId], references: [id])
+  doctorId  String   @map("doctor_id")
+  patientId String   @map("patient_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  doctor    Doctor   @relation(fields: [doctorId], references: [id])
+  patient   Patient  @relation(fields: [patientId], references: [id])
 
   @@map("reviews")
 }

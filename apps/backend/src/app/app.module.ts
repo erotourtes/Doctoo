@@ -15,6 +15,8 @@ import { DeclarationModule } from '../declaration/declaration.module';
 import { SpecializationModule } from '../specialization/specialization.module';
 import mail from '../config/mail';
 import { MailModule } from '../mail/mail.module';
+import { ReviewModule } from '../review/review.module';
+
 import { AllergyModule } from 'src/allergy/allergy.module';
 import { PaymentModule } from '../payment/payment.module';
 
@@ -32,6 +34,7 @@ import { PaymentModule } from '../payment/payment.module';
     AppointmentModule,
     DeclarationModule,
     SpecializationModule,
+    ReviewModule,
     AllergyModule,
     PaymentModule,
   ],
