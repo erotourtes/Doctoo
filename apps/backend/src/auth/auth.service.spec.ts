@@ -12,6 +12,7 @@ import * as bcrypt from 'bcrypt';
 import { ConfigType } from '@nestjs/config';
 import { MailService } from '../mail/mail.service';
 import { ResponseWithoutRelationsUserDto } from '../user/dto/responseWithoutRelations';
+import { MinioService } from '../minio/minio.service';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -22,6 +23,7 @@ describe('AuthService', () => {
   const patientServiceMock: Partial<PatientService> = {};
   const authConfig: Partial<ConfigType<typeof auth>> = {};
   const mailServiceMock: Partial<MailService> = {};
+  const minioServiceMock: Partial<MinioService> = {};
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -33,6 +35,7 @@ describe('AuthService', () => {
         { provide: config.KEY, useValue: config },
         { provide: auth.KEY, useValue: authConfig },
         { provide: MailService, useValue: mailServiceMock },
+        { provide: MinioService, useValue: minioServiceMock },
       ],
     }).compile();
 

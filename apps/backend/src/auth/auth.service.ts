@@ -14,12 +14,14 @@ import { MailService } from '../mail/mail.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { TwoFactorAuthDto } from './dto/localLogin.dto';
 import { GetMePatientResponseDto } from './dto/response.dto';
+import { MinioService } from '../minio/minio.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly mailService: MailService,
+    private readonly minioService: MinioService,
     private readonly userService: UserService,
     private readonly patientService: PatientService,
     @Inject(auth.KEY) private readonly authObject: ConfigType<typeof auth>,
@@ -188,15 +190,23 @@ export class AuthService {
       return existingUser;
     }
 
-    // TODO: Create private function for this.
     const user = await this.userService.createUser({
       email: body.email,
       firstName: body.firstName,
       lastName: body.lastName,
       phone: body.phone,
       googleId: body.googleId,
-      avatarKey: '', // TODO: use file service.
+      avatarKey: '',
     });
+
+    if (body.avatarImgUrl) {
+      this.minioService
+        .uploadByUrl(body.avatarImgUrl)
+        .then(fileName => {
+          this.userService.patchUser(user.id, { avatarKey: fileName });
+        })
+        .catch();
+    }
 
     return user;
   }

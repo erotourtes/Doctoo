@@ -70,4 +70,16 @@ export class MinioService {
       throw new NotFoundException('Request file not found');
     }
   }
+
+  async uploadByUrl(url: string) {
+    const response = await fetch(url).catch(() => {
+      throw new BadRequestException('Invalid file url');
+    });
+    const buffer = Buffer.from(await response.arrayBuffer());
+
+    const fullFileName = `${randomUUID()}`;
+    await this.minioClient.putObject(this.bucketName, fullFileName, buffer);
+
+    return fullFileName;
+  }
 }

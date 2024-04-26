@@ -11,12 +11,14 @@ import { JwtStrategy } from './strategies/jwt';
 import auth from '../config/auth';
 import { AuthRequestHelper } from './utils/cookie-helper.service';
 import { MailModule } from '../mail/mail.module';
+import { MinioModule } from 'src/minio/minio.module';
 
 @Module({
   imports: [
     PassportModule,
     MailModule,
     ConfigModule,
+    MinioModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (config: ConfigType<typeof auth>) => ({
