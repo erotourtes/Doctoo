@@ -11,17 +11,25 @@ export interface paths {
      */
     post: operations['AuthController_localLogin'];
   };
+  '/auth/login/patient/2fa': {
+    post: operations['AuthController_verify2fa'];
+  };
   '/auth/signup': {
     /**
-     * Local sign up
+     * Local sign up (first step)
      * @description This endpoint is used for the local sign up.
      */
     post: operations['AuthController_signUpFirstStep'];
   };
   '/auth/signup/patient/{token}': {
+    /**
+     * Local sign up (second step)
+     * @description This endpoint is used for finishing the local sign up.
+     */
     post: operations['AuthController_signUpPatientSecondStep'];
   };
   '/auth/login/google': {
+    /** Google sign up/login */
     get: operations['AuthController_googleLogin'];
   };
   '/auth/login/google/redirect': {
@@ -33,6 +41,12 @@ export interface paths {
      * @description This endpoint is used for logging out.
      */
     get: operations['AuthController_logout'];
+  };
+  '/auth/change-password': {
+    post: operations['AuthController_changePassword'];
+  };
+  '/auth/getme/patient': {
+    get: operations['AuthController_getPatient'];
   };
   '/user/{id}': {
     /**
@@ -82,6 +96,18 @@ export interface paths {
      */
     post: operations['PatientController_createPatient'];
   };
+  '/patient/{id}/allergy': {
+    /**
+     * Get allergies by patient ID
+     * @description This endpoint retrieves allergies by patient ID.
+     */
+    get: operations['PatientController_getPatientAllergies'];
+    /**
+     * Create a new patient allergy
+     * @description This endpoint creates a new patient allergy.
+     */
+    post: operations['PatientController_createPatientAllergy'];
+  };
   '/favorite': {
     /**
      * Get favorite doctors
@@ -117,6 +143,13 @@ export interface paths {
      * @description Creates a new doctor profile
      */
     post: operations['DoctorController_createDoctor'];
+  };
+  '/doctor/patient-dactors/{id}': {
+    /**
+     * Get all patient doctors
+     * @description This endpoint retrieves all doctors by patient id.
+     */
+    get: operations['DoctorController_getPatientDoctors'];
   };
   '/doctor/{id}': {
     /**
@@ -244,6 +277,35 @@ export interface paths {
     delete: operations['DeclarationController_remove'];
     patch: operations['DeclarationController_update'];
   };
+  '/allergy': {
+    /**
+     * Get all allergies
+     * @description This endpoint retrieves all allergies.
+     */
+    get: operations['AllergyController_findAll'];
+    /**
+     * Create a new allergy
+     * @description This endpoint creates an allergy.
+     */
+    post: operations['AllergyController_create'];
+  };
+  '/allergy/{id}': {
+    /**
+     * Get allergy by ID
+     * @description This endpoint retrieves an allergy by ID.
+     */
+    get: operations['AllergyController_findOne'];
+    /**
+     * Delete an allergy
+     * @description This endpoint deletes an allergy.
+     */
+    delete: operations['AllergyController_remove'];
+    /**
+     * Update an allergy
+     * @description This endpoint updates an allergy.
+     */
+    patch: operations['AllergyController_update'];
+  };
   '/payment': {
     /**
      * Get a payment intent
@@ -269,11 +331,94 @@ export interface components {
        */
       password: string;
     };
-    ResponsePatientDto: {
-      /** @description The ID of the patient */
-      id: string;
-      /** @description The ID of the user associated with the patient */
-      userId: string;
+    LocalLoginResponseDto: Record<string, never>;
+    ErrorObject: {
+      /**
+       * @description Property name
+       * @example name
+       */
+      proparty: string;
+      /**
+       * @description Detailed error message
+       * @example Name is too short
+       */
+      message: string;
+    };
+    BadRequestResponse: {
+      /**
+       * @description Error in numeric format.
+       * @example 404
+       */
+      statusCode: number;
+      /** @description Detailed description of the error. */
+      message: string | string[];
+      /** @description List of errors */
+      errors: components['schemas']['ErrorObject'][];
+    };
+    ClassicNestResponse: {
+      /**
+       * @description Error in numeric format.
+       * @example 404
+       */
+      statusCode: number;
+      /** @description Detailed description of the error. */
+      message: string | string[];
+      /**
+       * @description Brief description of the error.
+       * @example Not Found
+       */
+      error?: string;
+    };
+    TwoFactorAuthDto: {
+      /**
+       * @description Patient email
+       * @example hello@example.com
+       */
+      email: string;
+      /**
+       * @description Patient password
+       * @example password
+       */
+      password: string;
+      /**
+       * @description Verification code
+       * @example 123456
+       */
+      code: string;
+    };
+    AuthSignUpUserDto: {
+      /**
+       * @description The first name of the user
+       * @example John
+       */
+      firstName: string;
+      /**
+       * @description The last name of the user
+       * @example Doe
+       */
+      lastName: string;
+      /**
+       * @description The phone number of the user
+       * @example +380980000000
+       */
+      phone: string;
+      /**
+       * @description The email address of the user
+       * @example user@example.com
+       */
+      email: string;
+      /**
+       * @description The password of the user
+       * @example password123
+       */
+      password: string | null;
+      /**
+       * @description The Google ID of the user
+       * @example google123
+       */
+      googleId: string | null;
+    };
+    AuthSignUpPatientDto: {
       /** @description The weight of the patient */
       weight: number;
       /** @description The height of the patient */
@@ -290,8 +435,6 @@ export interface components {
        * @enum {string}
        */
       gender: 'MALE' | 'FEMALE';
-      /** @description The identity card key of the patient */
-      identityCardKey: string;
       /** @description The country of residence of the patient */
       country: string;
       /** @description The state of residence of the patient */
@@ -304,43 +447,10 @@ export interface components {
       apartment?: string;
       /** @description The zip code of the patient */
       zipCode?: number;
-      /** @description The email notification toggle of the patient */
-      emailNotificationToggle: boolean;
-      /** @description The sms notification toggle of the patient */
-      twoFactorAuthToggle: boolean;
-      /** @description The two factor authentication toggle of the patient */
-      requestBillPaymentApproval: boolean;
     };
-    BadRequestResponse: {
-      /**
-       * @description The error message associated with the response.
-       * @example Invalid request
-       */
-      message: Record<string, never>;
-      /**
-       * @description The error code or status of the response.
-       * @example 400
-       */
-      errorCode: number;
-    };
-    InternalServerErrorResponse: {
-      /**
-       * @description The error message associated with the response.
-       * @example Internal server error
-       */
-      message: Record<string, never>;
-      /**
-       * @description The error code or status of the response.
-       * @example 500
-       */
-      errorCode: number;
-    };
-    ResponseWithoutRelationsUserDto: {
-      /**
-       * @description The ID of the user
-       * @example acde070d-8c4c-4f0d-9d8a-162843c10333
-       */
-      id: string;
+    ChangePasswordDto: Record<string, never>;
+    BadRequestException: Record<string, never>;
+    GetMePatientResponseDto: {
       /**
        * @description The first name of the user
        * @example John
@@ -376,8 +486,11 @@ export interface components {
        * @example acde070d-8c4c-4f0d-9d8a-162843c10333
        */
       avatarKey: string;
-    };
-    AuthSignUpPatientDto: {
+      /**
+       * @description Is two-factor authentication enabled
+       * @example true
+       */
+      twoFactorAuthToggle: boolean;
       /** @description The weight of the patient */
       weight: number;
       /** @description The height of the patient */
@@ -394,6 +507,8 @@ export interface components {
        * @enum {string}
        */
       gender: 'MALE' | 'FEMALE';
+      /** @description The identity card key of the patient */
+      identityCardKey: string;
       /** @description The country of residence of the patient */
       country: string;
       /** @description The state of residence of the patient */
@@ -406,6 +521,14 @@ export interface components {
       apartment?: string;
       /** @description The zip code of the patient */
       zipCode?: number;
+      /** @description The email notification toggle of the patient */
+      emailNotificationToggle: boolean;
+      /** @description The two factor authentication toggle of the patient */
+      requestBillPaymentApproval: boolean;
+      /** @description User id */
+      userId: string;
+      /** @description Patient id */
+      patientId: string;
     };
     ResponseUserDto: {
       /**
@@ -458,18 +581,11 @@ export interface components {
        * @example []
        */
       patients: string[];
-    };
-    NotFoundResponse: {
       /**
-       * @description The error message associated with the response.
-       * @example User not found
+       * @description Is two-factor authentication enabled
+       * @example true
        */
-      message: Record<string, never>;
-      /**
-       * @description The error code or status of the response.
-       * @example 404
-       */
-      errorCode: number;
+      twoFactorAuthToggle: boolean;
     };
     CreateUserDto: {
       /**
@@ -508,7 +624,7 @@ export interface components {
        */
       avatarKey: string;
     };
-    PatchUserDto: {
+    PatchUserWithoutCredentialsDto: {
       /**
        * @description The first name of the user
        * @example John
@@ -530,20 +646,50 @@ export interface components {
        */
       email?: string;
       /**
-       * @description The password of the user
-       * @example password123
-       */
-      password?: string | null;
-      /**
-       * @description The Google ID of the user
-       * @example google123
-       */
-      googleId?: string | null;
-      /**
        * @description The avatar key of the user
        * @example acde070d-8c4c-4f0d-9d8a-162843c10333
        */
       avatarKey?: string;
+    };
+    ResponsePatientDto: {
+      /** @description The ID of the patient */
+      id: string;
+      /** @description The ID of the user associated with the patient */
+      userId: string;
+      /** @description The weight of the patient */
+      weight: number;
+      /** @description The height of the patient */
+      height: number;
+      /** @description The age of the patient */
+      age: number;
+      /**
+       * @description The blood type of the patient
+       * @enum {string}
+       */
+      bloodType: 'O_PLUS' | 'O_MINUS' | 'A_PLUS' | 'A_MINUS' | 'B_PLUS' | 'B_MINUS' | 'AB_PLUS' | 'AB_MINUS';
+      /**
+       * @description The gender of the patient
+       * @enum {string}
+       */
+      gender: 'MALE' | 'FEMALE';
+      /** @description The identity card key of the patient */
+      identityCardKey: string;
+      /** @description The country of residence of the patient */
+      country: string;
+      /** @description The state of residence of the patient */
+      state?: string;
+      /** @description The city of residence of the patient */
+      city: string;
+      /** @description The street address of the patient */
+      street: string;
+      /** @description The apartment number of the patient */
+      apartment?: string;
+      /** @description The zip code of the patient */
+      zipCode?: number;
+      /** @description The email notification toggle of the patient */
+      emailNotificationToggle: boolean;
+      /** @description The two factor authentication toggle of the patient */
+      requestBillPaymentApproval: boolean;
     };
     CreatePatientDto: {
       /** @description The ID of the user associated with the patient */
@@ -617,6 +763,16 @@ export interface components {
       /** @description The two factor authentication toggle of the patient */
       requestBillPaymentApproval: boolean;
     };
+    CreatePatientConditionDto: Record<string, never>;
+    ResponsePatientAllergyDto: {
+      /** @description The ID of the patient allergy */
+      id: string;
+      /** @description The ID of the patient associated with the patient allergy */
+      patientId: string;
+      /** @description The ID of the allergy associated with the patient allergy */
+      allergyId: string;
+    };
+    ResponseAllergyDto: Record<string, never>;
     CreateFavoriteDto: {
       /**
        * @description The ID of the doctor
@@ -650,12 +806,45 @@ export interface components {
       /** @description An array of IDs for hospitals the Doctor is associated with */
       hospitalIds: string[];
     };
+    ResponseHospitalDto: {
+      /** @description The name of the hospital */
+      name: string;
+      /** @description The country where the hospital is situated */
+      country: string;
+      /** @description The state where the hospital is situated */
+      state: string | null;
+      /** @description The city where the hospital is situated */
+      city: string;
+      /** @description The street where the hospital is situated */
+      street: string;
+      /** @description The apartment where the hospital is situated */
+      apartment: string;
+      /** @description The zip code of the hospital */
+      zipCode: number;
+    };
+    ResponseSpecializationDto: {
+      /**
+       * @description Spesialization id
+       * @example 1
+       */
+      id: string;
+      /**
+       * @description Spesialization name
+       * @example Surgeon
+       */
+      name: string;
+    };
     ResponseDoctorDto: {
       /**
        * @description The ID of the doctor
        * @example acde070d-8c4c-4f0d-9d8a-162843c10333
        */
       id: string;
+      /**
+       * @description The ID of the user associated with the doctor
+       * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+       */
+      userId: string;
       /**
        * @description The pay rate of the doctor
        * @example 100
@@ -667,10 +856,34 @@ export interface components {
        */
       about: string;
       /**
-       * @description The ID of the user associated with the doctor
-       * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+       * @description First name of the doctor
+       * @example John
        */
-      userId: string;
+      firstName: string;
+      /**
+       * @description Last name of the doctor
+       * @example Doe
+       */
+      lastName: string;
+      /**
+       * @description Key of the avatar of the doctor
+       * @example acde070d-8c4c-4f0d-9d8a-162843c10333.jpg
+       */
+      avatarKey: string;
+      /**
+       * @description The phone of the doctor
+       * @example +38099561735634
+       */
+      phone: string;
+      /**
+       * @description Email of the doctor
+       * @example johndoe@mail.com
+       */
+      email: string;
+      /** @description An array of hospitals associated with the doctor */
+      hospitals: components['schemas']['ResponseHospitalDto'][];
+      /** @description An array of specializations of the doctor */
+      specializations: components['schemas']['ResponseSpecializationDto'][];
     };
     PatchDoctorDto: {
       /**
@@ -700,22 +913,6 @@ export interface components {
       /** @description The zip code of the hospital */
       zipCode: number;
     };
-    ResponseHospitalDto: {
-      /** @description The name of the hospital */
-      name: string;
-      /** @description The country where the hospital is situated */
-      country: string;
-      /** @description The state where the hospital is situated */
-      state: string | null;
-      /** @description The city where the hospital is situated */
-      city: string;
-      /** @description The street where the hospital is situated */
-      street: string;
-      /** @description The apartment where the hospital is situated */
-      apartment: string;
-      /** @description The zip code of the hospital */
-      zipCode: number;
-    };
     PatchHospitalDto: {
       /** @description The name of the hospital */
       name?: string;
@@ -735,18 +932,6 @@ export interface components {
     CreateSpecializationDto: {
       /**
        * @description Specialization name
-       * @example Surgeon
-       */
-      name: string;
-    };
-    ResponseSpecializationDto: {
-      /**
-       * @description Spesialization id
-       * @example 1
-       */
-      id: string;
-      /**
-       * @description Spesialization name
        * @example Surgeon
        */
       name: string;
@@ -817,15 +1002,17 @@ export interface components {
     CreateDeclarationDto: {
       /**
        * @description Doctor Id
-       * @example 017b1d31-03e6-4d46-8021-b4e563d3763c
+       * @example 738aafcd-0904-44ab-829b-fe6c99eda408
        */
       doctorId: string;
       /**
        * @description Patient Id
-       * @example af2d6a97-171f-4d33-9f52-f865e3187d44
+       * @example 62f61a58-fc0d-4313-97a6-a9089795ed83
        */
       patientId: string;
     };
+    CreateAllergyDto: Record<string, never>;
+    UpdateAllergyDto: Record<string, never>;
     CreatePaymentDto: {
       /**
        * @description The appointment duration in hour
@@ -862,10 +1049,10 @@ export interface operations {
       };
     };
     responses: {
-      /** @description User data */
+      /** @description Returns token in cookie & if client needs to verify (2fa) via email */
       200: {
         content: {
-          'application/json': components['schemas']['ResponsePatientDto'];
+          'application/json': components['schemas']['LocalLoginResponseDto'];
         };
       };
       /** @description Bad request */
@@ -877,27 +1064,38 @@ export interface operations {
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
   };
+  AuthController_verify2fa: {
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TwoFactorAuthDto'];
+      };
+    };
+    responses: {
+      /** @description Returns token in cookie */
+      200: {
+        content: never;
+      };
+    };
+  };
   /**
-   * Local sign up
+   * Local sign up (first step)
    * @description This endpoint is used for the local sign up.
    */
   AuthController_signUpFirstStep: {
     requestBody: {
       content: {
-        'application/json': components['schemas']['ResponseWithoutRelationsUserDto'];
+        'application/json': components['schemas']['AuthSignUpUserDto'];
       };
     };
     responses: {
-      /** @description Patient data */
+      /** @description Sends verification mail for second step */
       200: {
-        content: {
-          'application/json': components['schemas']['ResponsePatientDto'];
-        };
+        content: never;
       };
       /** @description Bad request */
       400: {
@@ -908,11 +1106,15 @@ export interface operations {
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
   };
+  /**
+   * Local sign up (second step)
+   * @description This endpoint is used for finishing the local sign up.
+   */
   AuthController_signUpPatientSecondStep: {
     parameters: {
       path: {
@@ -925,13 +1127,16 @@ export interface operations {
       };
     };
     responses: {
-      201: {
+      /** @description Returns token in cookie */
+      200: {
         content: never;
       };
     };
   };
+  /** Google sign up/login */
   AuthController_googleLogin: {
     responses: {
+      /** @description Returns token in cookie */
       200: {
         content: never;
       };
@@ -958,7 +1163,30 @@ export interface operations {
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  AuthController_changePassword: {
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ChangePasswordDto'];
+      };
+    };
+    responses: {
+      500: {
+        content: {
+          'application/json': components['schemas']['BadRequestException'];
+        };
+      };
+    };
+  };
+  AuthController_getPatient: {
+    responses: {
+      200: {
+        content: {
+          'application/json': components['schemas']['GetMePatientResponseDto'];
         };
       };
     };
@@ -993,13 +1221,13 @@ export interface operations {
       /** @description User not found */
       404: {
         content: {
-          'application/json': components['schemas']['NotFoundResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1032,13 +1260,13 @@ export interface operations {
       /** @description User not found */
       404: {
         content: {
-          'application/json': components['schemas']['NotFoundResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1059,7 +1287,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['PatchUserDto'];
+        'application/json': components['schemas']['PatchUserWithoutCredentialsDto'];
       };
     };
     responses: {
@@ -1078,13 +1306,13 @@ export interface operations {
       /** @description User not found */
       404: {
         content: {
-          'application/json': components['schemas']['NotFoundResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1115,7 +1343,7 @@ export interface operations {
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1150,13 +1378,13 @@ export interface operations {
       /** @description Patient not found */
       404: {
         content: {
-          'application/json': components['schemas']['NotFoundResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1189,13 +1417,13 @@ export interface operations {
       /** @description Patient not found */
       404: {
         content: {
-          'application/json': components['schemas']['NotFoundResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1235,13 +1463,13 @@ export interface operations {
       /** @description Patient not found */
       404: {
         content: {
-          'application/json': components['schemas']['NotFoundResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1272,7 +1500,82 @@ export interface operations {
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /**
+   * Get allergies by patient ID
+   * @description This endpoint retrieves allergies by patient ID.
+   */
+  PatientController_getPatientAllergies: {
+    parameters: {
+      path: {
+        /**
+         * @description Patient ID
+         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+         */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Patient allergy exist */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseAllergyDto'][];
+        };
+      };
+      /** @description Bad request */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /**
+   * Create a new patient allergy
+   * @description This endpoint creates a new patient allergy.
+   */
+  PatientController_createPatientAllergy: {
+    parameters: {
+      path: {
+        /**
+         * @description Patient ID
+         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+         */
+        id: string;
+      };
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreatePatientConditionDto'];
+      };
+    };
+    responses: {
+      /** @description Patient allergy created */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponsePatientAllergyDto'];
+        };
+      };
+      /** @description Bad request */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1296,7 +1599,7 @@ export interface operations {
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1325,7 +1628,7 @@ export interface operations {
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1358,13 +1661,13 @@ export interface operations {
       /** @description Favorite doctor not found */
       404: {
         content: {
-          'application/json': components['schemas']['NotFoundResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1397,7 +1700,7 @@ export interface operations {
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1433,7 +1736,7 @@ export interface operations {
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1464,7 +1767,42 @@ export interface operations {
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /**
+   * Get all patient doctors
+   * @description This endpoint retrieves all doctors by patient id.
+   */
+  DoctorController_getPatientDoctors: {
+    parameters: {
+      path: {
+        /**
+         * @description Patient ID
+         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+         */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description All doctors */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseDoctorDto'][];
+        };
+      };
+      /** @description Bad request */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        content: {
+          'application/json': components['schemas'];
         };
       };
     };
@@ -1499,13 +1837,13 @@ export interface operations {
       /** @description Doctor not found */
       404: {
         content: {
-          'application/json': components['schemas']['NotFoundResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1538,13 +1876,13 @@ export interface operations {
       /** @description Doctor not found */
       404: {
         content: {
-          'application/json': components['schemas']['NotFoundResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1584,13 +1922,13 @@ export interface operations {
       /** @description Doctor not found */
       404: {
         content: {
-          'application/json': components['schemas']['NotFoundResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1610,7 +1948,7 @@ export interface operations {
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1641,7 +1979,7 @@ export interface operations {
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1676,13 +2014,13 @@ export interface operations {
       /** @description Hospital not found */
       404: {
         content: {
-          'application/json': components['schemas']['NotFoundResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1715,13 +2053,13 @@ export interface operations {
       /** @description Hospital not found */
       404: {
         content: {
-          'application/json': components['schemas']['NotFoundResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1761,13 +2099,13 @@ export interface operations {
       /** @description Hospital not found */
       404: {
         content: {
-          'application/json': components['schemas']['NotFoundResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1883,7 +2221,7 @@ export interface operations {
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1918,13 +2256,13 @@ export interface operations {
       /** @description File not found */
       404: {
         content: {
-          'application/json': components['schemas']['NotFoundResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1953,13 +2291,13 @@ export interface operations {
       /** @description File not found */
       404: {
         content: {
-          'application/json': components['schemas']['NotFoundResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1979,7 +2317,7 @@ export interface operations {
       /** @description Internalserver error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2010,7 +2348,7 @@ export interface operations {
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2039,7 +2377,7 @@ export interface operations {
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2068,7 +2406,7 @@ export interface operations {
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2103,13 +2441,13 @@ export interface operations {
       /** @description Appointment not found */
       404: {
         content: {
-          'application/json': components['schemas']['NotFoundResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2142,13 +2480,13 @@ export interface operations {
       /** @description Appointment not found */
       404: {
         content: {
-          'application/json': components['schemas']['NotFoundResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2188,13 +2526,13 @@ export interface operations {
       /** @description Appointment not found */
       404: {
         content: {
-          'application/json': components['schemas']['NotFoundResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
       /** @description Internal server error */
       500: {
         content: {
-          'application/json': components['schemas']['InternalServerErrorResponse'];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2275,6 +2613,183 @@ export interface operations {
       200: {
         content: {
           'application/json': components['schemas']['CreateDeclarationDto'][];
+        };
+      };
+    };
+  };
+  /**
+   * Get all allergies
+   * @description This endpoint retrieves all allergies.
+   */
+  AllergyController_findAll: {
+    responses: {
+      /** @description Allergies found */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseAllergyDto'][];
+        };
+      };
+      /** @description Bad request */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /**
+   * Create a new allergy
+   * @description This endpoint creates an allergy.
+   */
+  AllergyController_create: {
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateAllergyDto'];
+      };
+    };
+    responses: {
+      /** @description Allergy created */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseAllergyDto'];
+        };
+      };
+      /** @description Bad request */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /**
+   * Get allergy by ID
+   * @description This endpoint retrieves an allergy by ID.
+   */
+  AllergyController_findOne: {
+    parameters: {
+      path: {
+        /**
+         * @description Allergy ID
+         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+         */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Allergy found */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseAllergyDto'];
+        };
+      };
+      /** @description Bad request */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /**
+   * Delete an allergy
+   * @description This endpoint deletes an allergy.
+   */
+  AllergyController_remove: {
+    parameters: {
+      path: {
+        /**
+         * @description Allergy ID
+         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+         */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Allergy deleted */
+      200: {
+        content: never;
+      };
+      /** @description Bad request */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Allergy not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /**
+   * Update an allergy
+   * @description This endpoint updates an allergy.
+   */
+  AllergyController_update: {
+    parameters: {
+      path: {
+        /**
+         * @description Allergy ID
+         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+         */
+        id: string;
+      };
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateAllergyDto'];
+      };
+    };
+    responses: {
+      /** @description Allergy updated */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseAllergyDto'];
+        };
+      };
+      /** @description Bad request */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Allergy not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };

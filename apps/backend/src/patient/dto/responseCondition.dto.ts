@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class ResponseCondtionDto {
+export class ResponseConditionDto {
   @ApiProperty({ example: '1', description: 'Condition id' })
   readonly id: string;
 

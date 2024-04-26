@@ -60,22 +60,22 @@ export default function AppointmentPopup({ appointmentModal, closeModal, selecte
               <div className='flex flex-col gap-y-2'>
                 {/* Appointment with */}
                 <div className='flex h-6 flex-row justify-between text-lg'>
-                  <text className='font-medium text-black'>
-                    Appointment with <text className='font-semibold text-main'>{selectedAppointment.doctor.name}</text>
-                  </text>
+                  <span className='font-medium text-black'>
+                    Appointment with <span className='font-semibold text-main'>{selectedAppointment.doctor.name}</span>
+                  </span>
                   {/* Reschedule */}
                   <div className='flex cursor-pointer items-end justify-center gap-x-1'>
                     <Icon variant='edit' className='h-[18px] w-[18px] text-grey-1' />
-                    <text className='h-5 text-sm font-medium text-grey-1'>Reschedule</text>
+                    <span className='h-5 text-sm font-medium text-grey-1'>Reschedule</span>
                   </div>
                 </div>
 
                 {/* Specialization */}
-                <text className='text-base font-medium text-grey-1'>{selectedAppointment.doctor.specialization}</text>
+                <span className='text-base font-medium text-grey-1'>{selectedAppointment.doctor.specialization}</span>
               </div>
 
               <div className='my-4 flex h-fit w-fit items-center justify-center rounded-2xl bg-main-light px-3 py-1 pb-1'>
-                <text className='select-none text-sm font-normal text-main-dark'>Top doctor</text>
+                <span className='select-none text-sm font-normal text-main-dark'>Top doctor</span>
               </div>
 
               <div className='flex items-center gap-x-3'>

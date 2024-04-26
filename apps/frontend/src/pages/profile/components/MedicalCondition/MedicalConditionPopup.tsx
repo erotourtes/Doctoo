@@ -48,15 +48,10 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
   ];
 
   const [allConditions, setAllcondtions] = useState<Condtion[]>(conditions);
-
   const [suggestedCondtions, setSuggestedConditions] = useState<Condtion[]>([]);
-
   const [selectedCondtions, setSelectedConditions] = useState<Condtion[]>([]);
-
   const [allAllergies, setAllAllergies] = useState<Allergy[]>(allergies);
-
   const [suggestedAllergies, setSuggestedAllergies] = useState<Allergy[]>([]);
-
   const [selectedAllergies, setSelectedAllergies] = useState<Allergy[]>([]);
 
   useEffect(() => {
@@ -67,13 +62,14 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
     <PopupDoctoo
       popupIsOpen={isOpen}
       closePopup={onClose}
-      modalBodyClassName='relative z-20 flex h-full min-w-[600px] flex-col gap-7 rounded-xl bg-white'
+      modalFullClassName='max-w-[612px]'
+      modalBodyClassName='flex max-w-[516px] flex-col gap-7'
     >
       <p className='text-2xl font-medium text-black'>Medical condition and allergies </p>
       <form onSubmit={e => e.preventDefault()} className='flex w-full flex-col gap-7'>
-        <div className='w-full'>
+        <div className='grid gap-2 sm:gap-6'>
           <div>
-            <label htmlFor='condtion' className='text-md mb-2 block text-grey-1'>
+            <label htmlFor='condition' className='text-md mb-2 flex text-grey-1'>
               Medical condition
             </label>
             <div className='box-border flex w-full flex-wrap rounded-lg bg-background pl-2 text-base text-text focus:outline-none'>
@@ -106,7 +102,7 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
                   });
                 }}
                 id='condition'
-                className='w-max grow bg-transparent px-4 py-2 outline-none'
+                className='bg-transparent px-4 py-2 outline-none'
               />
             </div>
             {suggestedCondtions.map(condition => (
@@ -125,7 +121,7 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
           </div>
 
           <div>
-            <label htmlFor='allergies' className='text-md mb-2 block text-grey-1'>
+            <label htmlFor='allergies' className='text-md mb-2 flex text-grey-1'>
               Allergies
             </label>
             <div className='box-border flex w-full flex-wrap rounded-lg bg-background pl-2 text-base text-text focus:outline-none'>
@@ -157,8 +153,8 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
                     }
                   });
                 }}
-                id='conditallergiesion'
-                className='w-max grow bg-transparent px-4 py-2 outline-none'
+                id='allergies'
+                className='bg-transparent px-4 py-2 outline-none'
               />
             </div>
             {suggestedAllergies.map(allergy => (
@@ -176,14 +172,14 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
             ))}
           </div>
         </div>
-        <div className='flex w-full gap-4'>
+        <div className='flex w-full flex-col-reverse gap-4 sm:flex-row'>
           <Button
             type='secondary'
             onClick={() => {
               setSelectedConditions([]);
               setSuggestedConditions([]);
             }}
-            className='w-1/2'
+            className='w-full sm:w-1/2'
           >
             Cancel
           </Button>
@@ -199,7 +195,7 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
               //TODO: add fetch when PR is accepted
               console.log('Sent data:', selectedCondtions, selectedAllergies);
             }}
-            className='w-1/2'
+            className='w-full sm:w-1/2'
           >
             Save
           </Button>

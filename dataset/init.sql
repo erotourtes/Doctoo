@@ -1,9 +1,8 @@
-INSERT INTO users (id, first_name, last_name, phone, email, avatar_key)
-VALUES 
-  ('1', 'John', 'Doe', '0966984497', 'john.doe@example.com', 'avatar_1'),
-  ('2', 'Jane', 'Smith', '0966984495', 'jane.smith@example.com', 'avatar_3'),
-  ('3', 'Lara', 'Smith', '0966984496', 'lara.smith@example.com', 'avatar_2'),
-  ('4', 'Sara', 'Connor', '0966984497', 'sara.connor@example.com', 'avatar_4');
+INSERT INTO "users" ("id", "first_name", "last_name", "phone", "email", "email_verified", "password", "avatar_key", "googleId") VALUES
+('1',	'John',	'Doe',	'0966984497',	'john.doe@example.com',	'f',	NULL,	'https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_18.png',	NULL),
+('4',	'Sara',	'Connor',	'0966984497',	'sara.connor@example.com',	'f',	NULL,	'https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_17.png',	NULL),
+('3',	'Lara',	'Smith',	'0966984496',	'lara.smith@example.com',	'f',	NULL,	'https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_16.png',	NULL),
+('2',	'Jane',	'Smith',	'0966984495',	'jane.smith@example.com',	'f',	NULL,	'https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_15.png',	NULL);
 
 INSERT INTO doctors (id, user_id, payrate, about)
 VALUES 

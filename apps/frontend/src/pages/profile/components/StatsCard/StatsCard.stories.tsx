@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import StatsCard from './StatsCard';
 import { Provider } from 'react-redux';
 import { store } from '@/app/store';
+import StatsCard from './StatsCard';
 
 const meta: Meta<typeof StatsCard> = {
   title: 'Pages/ProfilePage/StatsCard',
@@ -19,8 +19,8 @@ const meta: Meta<typeof StatsCard> = {
 
 export default meta;
 
-type Stoty = StoryObj<typeof meta>;
+type Story = StoryObj<typeof meta>;
 
-export const Height: Stoty = {
-  render: () => <StatsCard title='Height,cm' value='174' iconVariant='height' variant='input' />,
+export const Height: Story = {
+  render: () => <StatsCard title='Height, cm' value='174' iconVariant='height' variant='input' />,
 };

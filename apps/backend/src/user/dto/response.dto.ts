@@ -5,42 +5,42 @@ import { ResponsePatientDto } from '../../patient/dto/response.dto';
 
 export class ResponseUserDto {
   @ApiProperty({ description: 'The ID of the user', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
-  readonly id: string;
+  readonly id?: string;
 
   @ApiProperty({ description: 'The first name of the user', example: 'John' })
-  readonly firstName: string;
+  readonly firstName?: string;
 
   @ApiProperty({ description: 'The last name of the user', example: 'Doe' })
-  readonly lastName: string;
+  readonly lastName?: string;
 
   @ApiProperty({ description: 'The phone number of the user', example: '+380980000000' })
-  readonly phone: string;
+  readonly phone?: string;
 
   @ApiProperty({ description: 'The email address of the user', example: 'user@example.com' })
-  readonly email: string;
+  readonly email?: string;
 
   @Exclude()
-  readonly password: string;
+  readonly password?: string;
 
   @ApiProperty({ description: 'Indicates whether the email is verified', example: true })
-  readonly emailVerified: boolean;
+  readonly emailVerified?: boolean;
 
   @ApiProperty({ description: 'The Google ID of the user', example: 'google123' })
-  readonly googleId: string;
+  readonly googleId?: string;
 
   @ApiProperty({ description: 'The avatar key of the user', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
-  readonly avatarKey: string;
+  readonly avatarKey?: string;
 
   @ApiProperty({ description: 'The list of doctors associated with the user', example: [] })
-  readonly doctors: ResponseDoctorDto[];
+  readonly doctors?: ResponseDoctorDto[];
 
   @ApiProperty({ description: 'The list of patients associated with the user', example: [] })
-  readonly patients: ResponsePatientDto[];
+  readonly patients?: ResponsePatientDto[];
 
   @Exclude()
   @ApiProperty({ description: 'Is two-factor authentication enabled', example: true })
-  readonly twoFactorAuthToggle: boolean;
+  readonly twoFactorAuthToggle?: boolean;
 
   @Exclude()
-  readonly secretCode: string;
+  readonly secretCode?: string;
 }

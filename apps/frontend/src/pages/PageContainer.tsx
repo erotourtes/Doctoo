@@ -7,7 +7,10 @@ import SignUpPatientPage from './auth/signup/SignUpPatientPage';
 import Settings from './settings/settingsPage/settingsPage';
 import Sidemenu from '@components/Sidemenu/Sidemenu';
 import Header from '@components/UI/Header/Header';
+import DashboardPage from './dashboard/DashboardPage';
 import { PaymentPage } from './PaymentPage/PaymentPage';
+import CalendarPage from './Calendar/CalendarPage';
+import AppointmentsPage from './Appointments/AppointmentsPage';
 
 // import page component
 
@@ -27,12 +30,15 @@ import { PaymentPage } from './PaymentPage/PaymentPage';
 
 const PageContainer = () => {
   return (
-    <main className='main-wrapper flex h-full w-full flex-col gap-6 overflow-auto bg-background p-8'>
+    <main className='main-wrapper flex h-full w-full flex-col gap-6 overflow-auto bg-background p-8 px-4 sm:px-8'>
       <Routes>
         {/* <Route path="/path-to-page" Component={Page} /> */}
         <Route path='/profile' Component={ProfilePage} />
+        <Route path='/dashboard' Component={DashboardPage} />
         <Route path='/settings' Component={Settings} />
         <Route path='/payment' Component={PaymentPage} />
+        <Route path='/calendar' Component={CalendarPage} />
+        <Route path='/appointments' Component={AppointmentsPage} />
       </Routes>
     </main>
   );

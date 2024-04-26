@@ -19,10 +19,10 @@ import { ResponsePatientDto } from './dto/response.dto';
 import { PatientService } from './patient.service';
 import { ResponsePatientConditionDto } from './dto/responsePatientCondition.dto';
 import { CreatePatientConditionDto } from './dto/createPatientCondition.dto';
-import { ResponseCondtionDto } from './dto/responseCondition.dto';
-import { CreatePatientConditionDto } from './dto/createPatientAllergy.dto';
+import { ResponseConditionDto } from './dto/responseCondition.dto';
 import { ResponseAllergyDto } from './dto/responseAllergy.dto';
 import { ResponsePatientAllergyDto } from './dto/responsePatientAllergy.dto';
+import { CreatePatientAllergyDto } from './dto/createPatientAllergy.dto';
 
 @ApiTags('Patient')
 @Controller('patient')
@@ -104,13 +104,14 @@ export class PatientController {
     description: 'This endpoint retrieves conditions by patient ID.',
   })
   @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
-  @ApiOkResponse({ type: ResponseCondtionDto, isArray: true, description: 'Patient conditions exist' })
+  @ApiOkResponse({ type: ResponseConditionDto, isArray: true, description: 'Patient conditions exist' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Get(':id/condition')
   async getPatientConditions(@Param('id') patientId: string) {
     return this.patientService.getPatientConditions(patientId);
-    
+  }
+
   @ApiOperation({
     summary: 'Create a new patient allergy',
     description: 'This endpoint creates a new patient allergy.',
@@ -118,10 +119,10 @@ export class PatientController {
   @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiOkResponse({ type: ResponsePatientAllergyDto, description: 'Patient allergy created' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
-  @ApiBody({ type: CreatePatientConditionDto })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
+  @ApiBody({ type: CreatePatientAllergyDto })
   @Post(':id/allergy')
-  async createPatientAllergy(@Param('id') patientId: string, @Body() body: CreatePatientConditionDto) {
+  async createPatientAllergy(@Param('id') patientId: string, @Body() body: CreatePatientAllergyDto) {
     return this.patientService.createPatientAllergy(patientId, body.allergyId);
   }
 
@@ -132,7 +133,7 @@ export class PatientController {
   @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiOkResponse({ type: ResponseAllergyDto, isArray: true, description: 'Patient allergy exist' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Get(':id/allergy')
   async getPatientAllergies(@Param('id') patientId: string) {
     return this.patientService.getPatientAllergies(patientId);

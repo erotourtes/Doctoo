@@ -59,14 +59,14 @@ export class PatientService {
   }
 
   async createPatientCondition(patientId: string, conditionId: string) {
-    const patientCondtion = await this.prismaService.patientCondition.create({
+    const patientCondition = await this.prismaService.patientCondition.create({
       data: {
         patientId,
         conditionId,
       },
     });
 
-    return patientCondtion;
+    return patientCondition;
   }
 
   async getPatientConditions(patientId: string) {
@@ -82,7 +82,8 @@ export class PatientService {
     const conditions = rawConditions.map(c => c.condition);
 
     return conditions;
-    
+  }
+
   async createPatientAllergy(patientId: string, allergyId: string) {
     const allergy = await this.prismaService.patientAllergy.create({ data: { patientId, allergyId } });
 

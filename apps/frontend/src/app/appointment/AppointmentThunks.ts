@@ -9,27 +9,15 @@ import {
   setAppointments,
   setNewAppointment,
 } from './AppointmentSlice';
+import api from '../api';
 
 export const getAppointmentsByPatientId = createAsyncThunk('appointment', async (patient_id: string, { dispatch }) => {
   try {
-    const response: AxiosResponse<any[]> = await instance.get(`/appointment/all-by-patient/${patient_id}`);
-    if (response.status === 200) {
-      const data: IAppointment[] = response.data.map(appointment => {
-        const { user, ...doctorWithoutUser } = appointment.doctor;
-        delete doctorWithoutUser.id;
-        const status = appointment.status.charAt(0) + appointment.status.slice(1).toLowerCase();
+    const { error, data } = await api.GET(`/appointment/all-by-patient/{id}`, { params: { path: { id: patient_id } } });
+    if (!error) {
+      const res: IAppointment[] = data;
 
-        return {
-          ...appointment,
-          status,
-          doctor: {
-            ...doctorWithoutUser,
-            ...user,
-          },
-        };
-      });
-
-      dispatch(setAppointments(data));
+      dispatch(setAppointments(res));
     }
   } catch (e) {
     const error = e as Error;

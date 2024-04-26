@@ -1,10 +1,10 @@
 import type { RootState } from '@/app/store';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { IUSer } from '@/dataTypes/User';
+import type { IUser } from '@/dataTypes/User';
 import { createAppSlice } from '../createAppSlice';
 import { BloodType, Gender, type IPatient } from '@/dataTypes/Patient';
 
-export type Patient = IPatient & IUSer;
+export type Patient = IPatient & IUser;
 interface PatientData {
   data: Patient;
   state: {
@@ -21,16 +21,14 @@ const initialState: PatientData = {
   data: {
     id: '1',
     userId: '1',
-    firstName: '',
-    lastName: '',
-    phone: '',
-    email: '',
-    emailVerified: false,
-    googleId: '',
+    firstName: 'John',
+    lastName: 'Doe',
+    phone: '+38098555555',
+    email: 'john.doe@gmail.com',
     avatarKey: '',
-    weight: 0,
-    height: 0,
-    age: 0,
+    weight: 75,
+    height: 175,
+    age: 75,
     bloodType: BloodType.O_PLUS,
     gender: Gender.MALE,
     identityCardKey: '',
@@ -67,6 +65,6 @@ export const patientSlice = createAppSlice({
 
 export const { setPatientData, updatePatientData, setPatientState } = patientSlice.actions;
 
-export const doctorData = (state: RootState) => state.doctor.data;
+export const doctorData = (state: RootState) => state.doctor.doctors;
 
 export default patientSlice.reducer;

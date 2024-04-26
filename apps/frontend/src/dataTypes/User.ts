@@ -1,10 +1,7 @@
-export interface IUSer {
-  id: string;
+export interface IUser {
   firstName: string;
   lastName: string;
   phone: string;
   email: string;
-  emailVerified: boolean;
-  googleId: string;
   avatarKey: string;
 }

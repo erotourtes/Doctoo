@@ -1,6 +1,6 @@
 import { IsString } from 'class-validator';
 
-export class CreatePatientConditionDto {
+export class CreatePatientAllergyDto {
   @IsString()
   readonly allergyId: string;
 }
