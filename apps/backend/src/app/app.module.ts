@@ -18,7 +18,6 @@ import { MailModule } from '../mail/mail.module';
 import { AllergyModule } from 'src/allergy/allergy.module';
 import { PaymentModule } from '../payment/payment.module';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [auth, config, mail] }),

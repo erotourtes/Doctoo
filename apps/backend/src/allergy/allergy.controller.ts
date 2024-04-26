@@ -11,8 +11,9 @@ import {
   ApiOperation,
   ApiParam,
 } from '@nestjs/swagger';
-import { BadRequestResponse, InternalServerErrorResponse, NotFoundResponse } from 'src/utils/errorResponses';
 import { ResponseAllergyDto } from './dto/response.dto';
+import { ClassicNestResponse } from 'src/utils/ClassicNestResponse';
+import { BadRequestResponse } from 'src/utils/BadRequestResponse';
 
 @Controller('allergy')
 export class AllergyController {
@@ -21,7 +22,7 @@ export class AllergyController {
   @ApiOperation({ summary: 'Create a new allergy', description: 'This endpoint creates an allergy.' })
   @ApiOkResponse({ type: ResponseAllergyDto, description: 'Allergy created' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @ApiBody({ type: CreateAllergyDto })
   @Post()
   create(@Body() body: CreateAllergyDto) {
@@ -31,7 +32,7 @@ export class AllergyController {
   @ApiOperation({ summary: 'Get all allergies', description: 'This endpoint retrieves all allergies.' })
   @ApiOkResponse({ type: ResponseAllergyDto, isArray: true, description: 'Allergies found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Get()
   findAll() {
     return this.allergyService.findAll();
@@ -40,7 +41,7 @@ export class AllergyController {
   @ApiOperation({ summary: 'Get allergy by ID', description: 'This endpoint retrieves an allergy by ID.' })
   @ApiOkResponse({ type: ResponseAllergyDto, description: 'Allergy found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @ApiParam({ name: 'id', description: 'Allergy ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -50,9 +51,9 @@ export class AllergyController {
   @ApiOperation({ summary: 'Update an allergy', description: 'This endpoint updates an allergy.' })
   @ApiParam({ name: 'id', description: 'Allergy ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiOkResponse({ type: ResponseAllergyDto, description: 'Allergy updated' })
-  @ApiNotFoundResponse({ type: NotFoundResponse, description: 'Allergy not found' })
+  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'Allergy not found' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @ApiBody({ type: UpdateAllergyDto })
   @Patch(':id')
   update(@Param('id') id: string, @Body() body: UpdateAllergyDto) {
@@ -63,8 +64,8 @@ export class AllergyController {
   @ApiOkResponse({ description: 'Allergy deleted' })
   @ApiParam({ name: 'id', description: 'Allergy ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiNotFoundResponse({ type: NotFoundResponse, description: 'Allergy not found' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'Allergy not found' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.allergyService.remove(id);

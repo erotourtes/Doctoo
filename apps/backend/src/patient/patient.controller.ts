@@ -89,7 +89,7 @@ export class PatientController {
   @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiOkResponse({ type: ResponsePatientAllergyDto, description: 'Patient allergy created' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @ApiBody({ type: CreatePatientConditionDto })
   @Post(':id/allergy')
   async createPatientAllergy(@Param('id') patientId: string, @Body() body: CreatePatientConditionDto) {
@@ -103,7 +103,7 @@ export class PatientController {
   @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   @ApiOkResponse({ type: ResponseAllergyDto, isArray: true, description: 'Patient allergy exist' })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Get(':id/allergy')
   async getPatientAllergies(@Param('id') patientId: string) {
     return this.patientService.getPatientAllergies(patientId);
