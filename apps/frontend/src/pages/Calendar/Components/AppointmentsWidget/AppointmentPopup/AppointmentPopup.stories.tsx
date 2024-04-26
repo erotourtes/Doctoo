@@ -34,7 +34,7 @@ export const Default: Story = {
         reviews: 128,
         specialization: 'Cardiologist',
       },
-      date: new Date(),
+      date: new Date('2024-01-01T00:00:00.000Z'),
       status: 'Planned',
     },
     closeModal: () => console.log('Modal closed'),
