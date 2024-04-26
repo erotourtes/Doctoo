@@ -18,7 +18,6 @@ import { CreateAppointmentDto } from './dto/create.dto';
 import { PatchAppointmentDto } from './dto/patch.dto';
 import { ResponseAppointmentDto } from './dto/response.dto';
 
-// TODO: Recode it.
 @ApiTags('Appointment')
 @Controller('appointment')
 export class AppointmentController {
@@ -53,7 +52,7 @@ export class AppointmentController {
     description: "This endpoint retrieves a list of appointment objects of the patient by it's ID.",
   })
   @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
-  @ApiOkResponse({ type: ResponseAppointmentDto, description: 'Appointments exist' })
+  @ApiOkResponse({ type: ResponseAppointmentDto, isArray: true, description: 'Appointments exist' })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Get('all-by-patient/:id')
   findAllByPatientId(@Param('id') id: string) {

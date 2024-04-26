@@ -8,7 +8,7 @@ type AppointmentPopupProps = { appointment: IAppointment };
 
 export default function AppointmentsPopup({ appointment }: AppointmentPopupProps) {
   const { doctor, assignedAt, status, videoRecordKey, notes } = appointment;
-  const { firstName, lastName, avatarKey } = doctor;
+  const { firstName, lastName, avatarKey } = doctor!;
   const fullName = `Dr. ${firstName} ${lastName}`;
 
   return (

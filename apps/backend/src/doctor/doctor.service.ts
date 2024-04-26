@@ -7,6 +7,7 @@ import { ResponseDoctorDto } from './dto/response.dto';
 import { HospitalService } from '../hospital/hospital.service';
 import { GetDoctorsQuery } from './query/get-doctors.query';
 import { SpecializationService } from '../specialization/specialization.service';
+import { removeDuplicates } from '../utils/arrayUtils';
 import { plainToInstance } from 'class-transformer';
 
 @Injectable()
@@ -154,5 +155,26 @@ export class DoctorService {
     await this.getDoctor(id);
 
     await this.prismaService.doctor.delete({ where: { id } });
+  }
+
+  async getPatientDoctors(id: string): Promise<ResponseDoctorDto[]> {
+    const [appointments, declaration] = await Promise.all([
+      this.prismaService.appointment.findMany({
+        where: { patientId: id },
+        include: { doctor: { include: { user: true } } },
+      }),
+      this.prismaService.declaration.findUnique({
+        where: { patientId: id },
+        include: { doctor: { include: { user: true } } },
+      }),
+    ]);
+
+    const doctorsFromAppointments = appointments.map(appointment => appointment.doctor);
+
+    const allDoctors = declaration ? [declaration.doctor, ...doctorsFromAppointments] : doctorsFromAppointments;
+
+    return removeDuplicates(allDoctors, doctor => doctor.id).map(el => {
+      return plainToInstance(ResponseDoctorDto, el, { exposeUnsetFields: false });
+    });
   }
 }

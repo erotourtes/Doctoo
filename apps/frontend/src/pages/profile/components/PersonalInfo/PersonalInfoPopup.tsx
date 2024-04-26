@@ -1,7 +1,10 @@
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { patchUserData } from '@/app/patient/PatientThunks';
-import { PopupDoctoo, Icon, Input, Button } from '@/components/UI';
-import type { IUSer } from '@/dataTypes/User';
+import { Button } from '@/components/UI/Button/Button';
+import Input from '@/components/UI/Input/Input';
+import PopupDoctoo from '@/components/UI/Popup/Popup';
+import type { IUser } from '@/dataTypes/User';
+import Icon from '@UI/Icon/Icon';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Joi from 'joi';
 import { type FieldValues, FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
@@ -41,7 +44,7 @@ const PersonalInfoPopup = ({ isOpen, onClose }: PersonalInfoPopupProps) => {
     const [firstName, lastName] = data.fullname.split(' ');
     const phone = data.countryIndex + data.phone;
     const { email } = data;
-    const userData: Partial<IUSer> = {
+    const userData: Partial<IUser> = {
       email,
       phone,
       firstName,

@@ -17,6 +17,9 @@ import { CreatePatientDto } from './dto/create.dto';
 import { PatchPatientDto } from './dto/patch.dto';
 import { ResponsePatientDto } from './dto/response.dto';
 import { PatientService } from './patient.service';
+import { CreatePatientConditionDto } from './dto/createPatientAllergy.dto';
+import { ResponseAllergyDto } from './dto/responseAllergy.dto';
+import { ResponsePatientAllergyDto } from './dto/responsePatientAllergy.dto';
 
 @ApiTags('Patient')
 @Controller('patient')
@@ -77,5 +80,32 @@ export class PatientController {
   @Delete(':id')
   async deletePatient(@Param('id') id: string) {
     return this.patientService.deletePatient(id);
+  }
+
+  @ApiOperation({
+    summary: 'Create a new patient allergy',
+    description: 'This endpoint creates a new patient allergy.',
+  })
+  @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
+  @ApiOkResponse({ type: ResponsePatientAllergyDto, description: 'Patient allergy created' })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
+  @ApiBody({ type: CreatePatientConditionDto })
+  @Post(':id/allergy')
+  async createPatientAllergy(@Param('id') patientId: string, @Body() body: CreatePatientConditionDto) {
+    return this.patientService.createPatientAllergy(patientId, body.allergyId);
+  }
+
+  @ApiOperation({
+    summary: 'Get allergies by patient ID',
+    description: 'This endpoint retrieves allergies by patient ID.',
+  })
+  @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
+  @ApiOkResponse({ type: ResponseAllergyDto, isArray: true, description: 'Patient allergy exist' })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
+  @Get(':id/allergy')
+  async getPatientAllergies(@Param('id') patientId: string) {
+    return this.patientService.getPatientAllergies(patientId);
   }
 }

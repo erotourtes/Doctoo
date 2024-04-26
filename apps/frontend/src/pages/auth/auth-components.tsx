@@ -44,7 +44,7 @@ export const AuthMainContainer: FC<PropsWithChildren> = ({ children }) => {
   );
 };
 
-export const ErrorMessage: FC<{ message: string | undefined }> = ({ message }) => {
+export const ErrorMessage: FC<{ message: string | undefined | null }> = ({ message }) => {
   if (!message) return null;
 
   return <p className='mt-2 text-sm font-normal leading-[17px] text-error'>{message}</p>;

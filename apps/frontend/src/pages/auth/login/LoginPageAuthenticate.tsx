@@ -1,17 +1,36 @@
+import { Button } from '@/components/UI/Button/Button';
+import { LogoWithTitle, AuthMainContainer, AuthCreateAccount, ErrorMessage } from '@/pages/auth/auth-components';
+import InputCode from '../../../components/UI/Input/InputCode';
 import { useEffect, useState } from 'react';
-import { LogoWithTitle, AuthMainContainer, AuthCreateAccount } from '@/pages/auth/auth-components';
-import { Button, InputCode } from '@/components/UI';
+import { useLocation, useNavigate } from 'react-router';
+import { instance } from '../../../api/axios.api';
+import handleError from '../../../api/handleError.api';
 
 const EMAIL_VERIFICATION_CODE_LEN = 6;
 
 const LoginPageAuthenticate = () => {
   const [code, setCode] = useState<string>('');
+  const navigate = useNavigate();
+  const location = useLocation();
+  const credentials = location.state?.credentials;
+  const [serverError, setServerError] = useState<string | null>(null);
 
-  const onSubmit = () => {
-    console.log(code);
+  const onSubmit = async () => {
+    await instance
+      .post('/auth/login/patient/2fa', { ...credentials, code }, { withCredentials: true })
+      .then(() => {
+        navigate('/', { replace: true });
+      })
+      .catch(e => {
+        if (e.response) setServerError(e.response.data.message);
+        else setServerError('Something went wrong');
+        handleError(e);
+      });
   };
 
-  const onBack = () => {};
+  const onBack = () => {
+    navigate('/login', { state: credentials });
+  };
 
   useEffect(() => {
     if (code.length === EMAIL_VERIFICATION_CODE_LEN) {
@@ -41,6 +60,8 @@ const LoginPageAuthenticate = () => {
             <a className='text-main'>Resend a new code</a>
           </p>
         </div>
+
+        <ErrorMessage message={serverError} />
 
         <div className='space-y-6'>
           <div className='flex justify-between'>

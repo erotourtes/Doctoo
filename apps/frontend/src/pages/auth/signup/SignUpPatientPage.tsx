@@ -5,6 +5,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import { FormProvider, useForm } from 'react-hook-form';
 import { cn } from '@/utils/cn';
 import { ErrorMessage } from '../auth-components';
+import { useState } from 'react';
 import { Button, Input } from '@/components/UI';
 
 const SignUpPatientPage = () => {
@@ -48,21 +49,26 @@ const SignUpPageOrig = ({ token }: { token: string }) => {
     resolver: joiResolver(patientScheme),
   });
   const errors = form.formState.errors;
+  const [serverError, setServerError] = useState<string | null>(null);
 
   const onSubmit = async (body: Patient) => {
-    const res = await instance.post(`/auth/signup/patient/${token}`, body, {
-      withCredentials: true,
-    });
-
-    if (res.status === 201) {
-      navigate('/');
-    }
+    await instance
+      .post(`/auth/signup/patient/${token}`, body, {
+        withCredentials: true,
+      })
+      .then(() => {
+        navigate('/', { replace: true });
+      })
+      .catch(e => {
+        if (e.response) setServerError(e.response.data.message);
+        else setServerError('Something went wrong');
+      });
   };
 
   return (
     <div className='flex h-svh w-svw justify-center'>
       <FormProvider {...form}>
-        <form {...form} onSubmit={form.handleSubmit(onSubmit)} className='m-auto w-[700px]'>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='m-auto w-[700px]'>
           <h2>Continue your registration</h2>
           <Input id='weight' type='text' errorMessage={errors.weight?.message} label='Weight' />
           <Input id='height' type='text' errorMessage={errors.height?.message} label='Height' />
@@ -71,12 +77,13 @@ const SignUpPageOrig = ({ token }: { token: string }) => {
           <p className={cn('text-md my-2 block text-grey-1')}>Blood type</p>
           <select
             {...form.register('bloodType')}
+            defaultValue=''
             className={cn(
               `w-full rounded-lg bg-background py-2 pl-4 pr-10 text-base text-text hover:border focus:border focus:outline-none`,
               errors.bloodType?.message && 'border border-solid border-error',
             )}
           >
-            <option disabled selected value=''>
+            <option disabled value=''>
               Select blood type
             </option>
             <option value='O_PLUS'>O+</option>
@@ -93,12 +100,13 @@ const SignUpPageOrig = ({ token }: { token: string }) => {
           <p className={cn('text-md my-2 block text-grey-1')}>Gender</p>
           <select
             {...form.register('gender')}
+            defaultValue=''
             className={cn(
               `w-full rounded-lg bg-background py-2 pl-4 pr-10 text-base text-text hover:border focus:border focus:outline-none`,
               errors.bloodType?.message && 'border border-solid border-error',
             )}
           >
-            <option value='' disabled selected>
+            <option value='' disabled>
               Select gender
             </option>
             <option value='MALE'>Male</option>
@@ -109,6 +117,8 @@ const SignUpPageOrig = ({ token }: { token: string }) => {
           <Input id='country' type='text' errorMessage={errors.country?.message} label='Country' />
           <Input id='city' type='text' errorMessage={errors.city?.message} label='City' />
           <Input id='street' type='text' errorMessage={errors.street?.message} label='Street' />
+
+          <ErrorMessage message={serverError} />
 
           <Button btnType='submit' type='primary' className='mt-3'>
             Sign Up

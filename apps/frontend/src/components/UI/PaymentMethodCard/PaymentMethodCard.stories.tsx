@@ -23,7 +23,7 @@ export const Editable: Story = {
   args: {
     card: {
       number: '1111 2222 3333 4444',
-      expiresAt: new Date(),
+      expiresAt: new Date('2024-01-01T00:00:00.000Z'),
     },
     editable: true,
   },
@@ -33,7 +33,7 @@ export const NotEditable: Story = {
   args: {
     card: {
       number: '1111 2222 3333 4444',
-      expiresAt: new Date(),
+      expiresAt: new Date('2024-01-01T00:00:00.000Z'),
     },
   },
 };
