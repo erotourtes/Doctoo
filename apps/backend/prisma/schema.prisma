@@ -267,10 +267,14 @@ model Appointment {
   status            AppointmentStatus
   notes             String
   videoRecordKey    String?           @map("video_record_key")
-  paymentInvoiceKey String            @map("payment_invoice_key")
-  paymentReceiptKey String            @map("payment_receipt_key")
+  paymentInvoiceKey String?            @map("payment_invoice_key")
+  paymentReceiptKey String?            @map("payment_receipt_key")
+  startedAt         String?           @map("started_at")
+  endedAt           String?           @map("ended_at")
   patient           Patient           @relation(fields: [patientId], references: [id])
   doctor            Doctor            @relation(fields: [doctorId], references: [id])
+
+
 
   @@map("appointments")
 }

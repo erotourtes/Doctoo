@@ -16,7 +16,26 @@ export class AppointmentService {
     return true;
   }
 
+  private async isDoctorExists(id: string): Promise<boolean> {
+    const isDoctorExist = await this.prismaService.doctor.findUnique({ where: { id } });
+
+    if (!isDoctorExist) throw new NotFoundException('A doctor with this Id not found.');
+
+    return true;
+  }
+
+  private async isPatientExists(id: string): Promise<boolean> {
+    const isPatientExist = await this.prismaService.patient.findUnique({ where: { id } });
+
+    if (!isPatientExist) throw new NotFoundException('A patient with this Id not found.');
+
+    return true;
+  }
+
   async create(body: CreateAppointmentDto): Promise<ResponseAppointmentDto> {
+    await this.isDoctorExists(body.doctorId);
+    await this.isPatientExists(body.patientId);
+
     const appointment = await this.prismaService.appointment.create({ data: body });
 
     return appointment;
@@ -37,6 +56,8 @@ export class AppointmentService {
             user: {
               select: { firstName: true, lastName: true, avatarKey: true, phone: true, email: true },
             },
+            hospitals: { select: { hospital: { select: { id: true, name: true } } } },
+            specializations: { select: { specialization: true } },
           },
         },
       },
@@ -59,7 +80,6 @@ export class AppointmentService {
 
   async findOne(id: string): Promise<ResponseAppointmentDto> {
     await this.isAppointmentExists(id);
-
     const appointment = await this.prismaService.appointment.findUnique({ where: { id } });
 
     return appointment;
@@ -67,6 +87,8 @@ export class AppointmentService {
 
   async update(id: string, body: PatchAppointmentDto): Promise<ResponseAppointmentDto> {
     await this.isAppointmentExists(id);
+    await this.isDoctorExists(body.doctorId);
+    await this.isPatientExists(body.patientId);
 
     const appointment = await this.prismaService.appointment.update({ where: { id }, data: body });
 
