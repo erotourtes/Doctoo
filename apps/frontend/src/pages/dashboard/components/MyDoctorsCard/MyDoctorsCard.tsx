@@ -9,7 +9,7 @@ type AppointmentCardProps = {
 };
 
 export default function MyDoctorsCard({ doctors }: AppointmentCardProps) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <>
       <aside className='m-w-[302px] mt-[24px] h-[236px] min-h-[236px] w-[302px] rounded-xl bg-[#ffffff] p-[24px]'>
