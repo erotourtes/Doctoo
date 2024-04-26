@@ -31,7 +31,7 @@ export interface IAppointment {
 
 export interface IPlannedAppointment {
   id: string;
-  date: string;
+  assignedAt: string;
   notes: string;
   doctor: IDoctor;
 }
@@ -39,7 +39,7 @@ export interface IPlannedAppointment {
 export interface ICreateAppointment {
   doctorId: string;
   patientId: string;
-  date: string;
+  assignedAt: string;
   status: AppointmentStatus;
   notes: string;
 }
