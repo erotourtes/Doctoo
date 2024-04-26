@@ -7,6 +7,7 @@ import SignUpPatientPage from './auth/signup/SignUpPatientPage';
 import Settings from './settings/settingsPage/settingsPage';
 import Sidemenu from '@components/Sidemenu/Sidemenu';
 import Header from '@components/UI/Header/Header';
+import DashboardPage from './dashboard/DashboardPage';
 import { PaymentPage } from './PaymentPage/PaymentPage';
 
 // import page component
@@ -31,6 +32,7 @@ const PageContainer = () => {
       <Routes>
         {/* <Route path="/path-to-page" Component={Page} /> */}
         <Route path='/profile' Component={ProfilePage} />
+        <Route path='/dashboard' Component={DashboardPage} />
         <Route path='/settings' Component={Settings} />
         <Route path='/payment' Component={PaymentPage} />
       </Routes>

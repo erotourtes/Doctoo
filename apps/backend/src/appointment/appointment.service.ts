@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateAppointmentDto } from './dto/create.dto';
 import { PatchAppointmentDto } from './dto/patch.dto';
 import { ResponseAppointmentDto } from './dto/response.dto';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class AppointmentService {
@@ -63,7 +64,7 @@ export class AppointmentService {
       },
     });
 
-    return appointments;
+    return plainToInstance(ResponseAppointmentDto, appointments);
   }
 
   async findAllByDoctorId(id: string): Promise<ResponseAppointmentDto[]> {

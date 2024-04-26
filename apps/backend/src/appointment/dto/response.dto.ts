@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { AppointmentStatus } from '@prisma/client';
+import { Expose, Transform, plainToInstance } from 'class-transformer';
+import { ResponseDoctorDto } from 'src/doctor/dto/response.dto';
 
 export class ResponseAppointmentDto {
   @ApiProperty({ description: 'The ID of the appointment' })
@@ -27,5 +29,8 @@ export class ResponseAppointmentDto {
   paymentInvoiceKey: string;
 
   @ApiProperty({ description: 'The key of the file with the receipt for payment for the appointment' })
-  paymentReceiptKey: string;
+  paymentReceiptKey?: string;
+  @Expose()
+  @Transform(({ value }) => plainToInstance(ResponseDoctorDto, value))
+  doctor?: ResponseDoctorDto;
 }

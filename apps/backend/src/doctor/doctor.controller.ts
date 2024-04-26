@@ -48,6 +48,19 @@ export class DoctorController {
   }
 
   @ApiOperation({
+    summary: 'Get all patient doctors',
+    description: 'This endpoint retrieves all doctors by patient id.',
+  })
+  @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
+  @ApiOkResponse({ type: ResponseDoctorDto, isArray: true, description: 'All doctors' })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
+  @ApiInternalServerErrorResponse({ type: ApiInternalServerErrorResponse, description: 'Internal server error' })
+  @Get('patient-dactors/:id')
+  async getPatientDoctors(@Param('id') id: string): Promise<ResponseDoctorDto[]> {
+    return await this.doctorService.getPatientDoctors(id);
+  }
+
+  @ApiOperation({
     summary: 'Get a doctor by ID',
     description: 'This endpoint retrieves a doctor by ID.',
   })
