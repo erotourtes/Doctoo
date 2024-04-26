@@ -27,7 +27,7 @@ import { PaymentPage } from './PaymentPage/PaymentPage';
 
 const PageContainer = () => {
   return (
-    <main className='main-wrapper flex h-full w-full flex-col gap-6 overflow-auto bg-background p-8'>
+    <main className='main-wrapper flex h-full w-full flex-col gap-6 overflow-auto bg-background p-8 px-4 sm:px-8'>
       <Routes>
         {/* <Route path="/path-to-page" Component={Page} /> */}
         <Route path='/profile' Component={ProfilePage} />

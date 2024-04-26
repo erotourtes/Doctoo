@@ -19,7 +19,7 @@ const Sidemenu: React.FunctionComponent<SidemenuProps> = ({ variant = 'large' })
 
   return (
     <nav
-      className={`sidemenu relative flex flex-col bg-main p-8 ${variantSize === 'large' ? 'w-72 items-stretch gap-8 p-8 pt-12' : 'w-20 items-center gap-[30px] p-4 pt-11'} h-full shrink-0`}
+      className={`no-scrollbar sidemenu relative flex flex-col overflow-y-auto overflow-x-hidden bg-main ${variantSize === 'large' ? 'w-72 items-stretch gap-8 p-8 pt-12' : 'w-16 items-center gap-[30px] p-4 pt-11 sm:w-20'} h-full shrink-0`}
     >
       <NavLogo variant={variantSize} />
 
