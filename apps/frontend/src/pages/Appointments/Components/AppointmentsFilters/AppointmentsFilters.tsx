@@ -1,9 +1,52 @@
 import OptionalSelect from '@/components/UI/Select/OptionalSelect';
 import type { FilterState, FilterAction } from '../../AppointmentsPage';
+import type { IAppointment } from '@/dataTypes/Appointment';
+import dayjs from 'dayjs';
+import { useMemo } from 'react';
+import AppointmentsSelectButton from './AppointmentsSelectButton';
 
-type AppointmentsFiltersProps = { state: FilterState; dispatch: React.Dispatch<FilterAction> };
+type AppointmentsFiltersProps = {
+  state: FilterState;
+  dispatch: React.Dispatch<FilterAction>;
+  appointments: IAppointment[];
+};
 
-export default function AppointmentsFilters({ state, dispatch }: AppointmentsFiltersProps) {
+type FilterConfig = {
+  [key: string]: {
+    defaultValue: string;
+    getOptions: (appointments: IAppointment[]) => string[];
+  };
+};
+
+const OLDEST_TO_LATEST = 'Oldest to latest';
+const LATEST_TO_OLDEST = 'Latest to oldest';
+
+export const filterConfig: FilterConfig = {
+  time: {
+    defaultValue: 'All time',
+    getOptions: (appointments: IAppointment[]) => [
+      ...new Set(appointments.map(appointment => dayjs.utc(appointment.assignedAt).format('hh:mm a'))),
+    ],
+  },
+  statuses: {
+    defaultValue: 'All statuses',
+    getOptions: (appointments: IAppointment[]) => [...new Set(appointments.map(appointment => appointment.status))],
+  },
+  doctors: {
+    defaultValue: 'All doctors',
+    getOptions: (appointments: IAppointment[]) => [
+      ...new Set(
+        appointments.map(appointment => `Dr. ${appointment.doctor!.firstName} ${appointment.doctor!.lastName}`),
+      ),
+    ],
+  },
+  order: {
+    defaultValue: 'Latest to oldest',
+    getOptions: () => [LATEST_TO_OLDEST, OLDEST_TO_LATEST],
+  },
+};
+
+export default function AppointmentsFilters({ state, dispatch, appointments }: AppointmentsFiltersProps) {
   const filterTypeToActionType: Record<string, FilterAction['type']> = {
     time: 'SET_TIME',
     statuses: 'SET_STATUSES',
@@ -11,59 +54,70 @@ export default function AppointmentsFilters({ state, dispatch }: AppointmentsFil
     order: 'SET_ORDER',
   };
 
-  function handleFilterChange(filterType: string, selectedOptions: string[]) {
+  const optionsForFilterType = useMemo(() => {
+    const options: Record<string, { id: string; name: string }[]> = {};
+
+    for (const filterType of Object.keys(filterTypeToActionType)) {
+      const filterOptions = filterConfig[filterType].getOptions(appointments);
+      options[filterType] = filterOptions.map((option, index) => ({ id: `${filterType}-${index}`, name: option }));
+    }
+
+    return options;
+  }, [appointments]);
+
+  const displayValues = useMemo(() => {
+    const values: Record<string, string> = {};
+
+    for (const filterType of Object.keys(filterTypeToActionType)) {
+      const selectedOptions = state[filterType as keyof FilterState];
+      const allOptions = optionsForFilterType[filterType].map(option => option.name);
+
+      values[filterType] =
+        selectedOptions.length === allOptions.length
+          ? filterConfig[filterType].defaultValue
+          : selectedOptions.length > 1
+            ? 'Hover to view filters'
+            : selectedOptions[0];
+    }
+
+    return values;
+  }, [state, optionsForFilterType]);
+
+  function handleFilterChange(filterType: string, selectedOptionIds: string[]) {
     const actionType = filterTypeToActionType[filterType];
 
     if (actionType) {
-      const payload = selectedOptions.length > 0 ? selectedOptions : [getDefaultOptionForFilterType(filterType)];
+      const selectedOptions = selectedOptionIds.map(id => {
+        const option = optionsForFilterType[filterType].find(option => option.id === id);
+        return option ? option.name : id;
+      });
+      const payload = selectedOptions.length > 0 ? selectedOptions : [filterConfig[filterType].defaultValue];
       dispatch({ type: actionType, payload });
     }
   }
 
-  function getDefaultOptionForFilterType(filterType: string): string {
-    switch (filterType) {
-      case 'time':
-        return 'All time';
-      case 'statuses':
-        return 'All statuses';
-      case 'doctors':
-        return 'All doctors';
-      case 'order':
-        return 'Latest to oldest';
-      default:
-        return '';
-    }
-  }
-  function getOptionsForFilterType(filterType: string): { id: string; name: string }[] {
-    switch (filterType) {
-      case 'time':
-        return ['All time', 'Last week', 'Last month'].map(option => ({ id: option, name: option }));
-      case 'statuses':
-        return ['All statuses', 'Last week', 'Last month'].map(option => ({ id: option, name: option }));
-      case 'doctors':
-        return ['All doctors', 'Last week', 'Last month'].map(option => ({ id: option, name: option }));
-      case 'order':
-        return ['Latest to oldest', 'Oldest to latest'].map(option => ({ id: option, name: option }));
-      default:
-        return [];
-    }
-  }
-
-  function getDisplayValue(filterType: string): string {
-    const selectedOptions = state[filterType as keyof FilterState];
-    return selectedOptions.length > 1 ? 'Hover to view filters' : selectedOptions[0];
-  }
-
   return (
     <div className='flex gap-x-4'>
-      {Object.keys(filterTypeToActionType).map(filterType => (
-        <OptionalSelect
-          key={filterType}
-          options={getOptionsForFilterType(filterType)}
-          defaultOption={getDisplayValue(filterType)}
-          setChosenOptions={selectedOptions => handleFilterChange(filterType, selectedOptions)}
-        />
-      ))}
+      {Object.keys(filterTypeToActionType).map(filterType => {
+        if (filterType === 'order') {
+          return (
+            <AppointmentsSelectButton
+              key={filterType}
+              defaultOption={displayValues[filterType]}
+              setChosenOption={selectedOption => handleFilterChange(filterType, [selectedOption])}
+            />
+          );
+        } else {
+          return (
+            <OptionalSelect
+              key={filterType}
+              options={optionsForFilterType[filterType]}
+              defaultOption={displayValues[filterType]}
+              setChosenOptions={selectedOptions => handleFilterChange(filterType, selectedOptions)}
+            />
+          );
+        }
+      })}
     </div>
   );
 }
