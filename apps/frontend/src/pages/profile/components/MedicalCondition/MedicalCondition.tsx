@@ -11,14 +11,14 @@ const MedicalCondition = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className='flex h-full flex-col justify-between gap-4 rounded-xl bg-white p-7'>
-      <div className='flex w-full items-center justify-between'>
+    <div className='flex h-full flex-col justify-between gap-4 rounded-xl bg-white p-3 md:p-7'>
+      <div className='flex w-full flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between'>
         <p className='text-grey-1'>Declaration number</p>
         {/*TODO"where should be decalration id?? */}
         <div className='rounded-lg bg-main-light  px-4 py-2 font-medium text-black'>{123498}</div>
       </div>
 
-      <div className='flex w-full items-center justify-between'>
+      <div className='flex w-full flex-col items-start justify-between sm:flex-row sm:items-center'>
         <div className='flex flex-col gap-1 text-start'>
           <p className='text-grey-1'>Medical condition</p>
           <p className='font-medium text-text'>
@@ -32,14 +32,17 @@ const MedicalCondition = () => {
               })}
           </p>
         </div>
-        <button className='flex items-center text-sm text-grey-1' onClick={() => setIsOpen(!isOpen)}>
+        <button
+          className='flex items-center self-end text-sm text-grey-1 sm:self-start'
+          onClick={() => setIsOpen(!isOpen)}
+        >
           <Icon variant={'edit'} />
           Edit
         </button>
         <MedicalConditionPopup isOpen={isOpen} onClose={() => setIsOpen(false)} />
       </div>
 
-      <div className='flex w-full items-center justify-between text-start'>
+      <div className='flex w-full flex-col items-start justify-between text-start sm:flex-row sm:items-center'>
         <div className='flex flex-col gap-1'>
           <p className='text-grey-1'>Allergies</p>
           <p className='font-medium text-text'>
