@@ -6,6 +6,7 @@ import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { getPatientDoctorData } from '@/app/doctor/DoctorThunks';
 import { useEffect } from 'react';
 import NotificationsComponent from './components/NotificationsComponent/NotificationsComponent';
+import type { IAppointment } from '@/dataTypes/Appointment';
 
 const DashboardPage = () => {
   const dispatch = useAppDispatch();
@@ -25,7 +26,12 @@ const DashboardPage = () => {
           <NotificationsComponent />
         </section>
         <section className='flex flex-col pt-7'>
-          <Calendar />
+          <Calendar
+            meetingsForDay={appointments.map((appointment: IAppointment) => ({
+              date: new Date(appointment.assignedAt),
+              status: appointment.status,
+            }))}
+          />
           <MyDoctorsCard doctors={doctors} />
         </section>
       </div>
