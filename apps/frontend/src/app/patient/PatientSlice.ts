@@ -25,8 +25,6 @@ const initialState: PatientData = {
     lastName: 'Doe',
     phone: '+38098555555',
     email: 'john.doe@gmail.com',
-    emailVerified: false,
-    googleId: '',
     avatarKey: '',
     weight: 75,
     height: 175,
