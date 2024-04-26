@@ -57,4 +57,20 @@ export class PatientService {
 
     await this.prismaService.patient.delete({ where: { id } });
   }
+
+  async createPatientAllergy(patientId: string, allergyId: string) {
+    const allergy = await this.prismaService.patientAllergy.create({ data: { patientId, allergyId } });
+
+    return allergy;
+  }
+
+  async getPatientAllergies(patientId: string) {
+    const rawAllergies = await this.prismaService.patientAllergy.findMany({
+      where: { patientId },
+      select: { allergy: { select: { name: true, id: true } } },
+    });
+    const allergies = rawAllergies.map(a => a.allergy);
+
+    return allergies;
+  }
 }
