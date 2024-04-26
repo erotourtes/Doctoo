@@ -37,7 +37,7 @@ export const Calendar = ({ meetingsForDay }: CalendarProps) => {
   const days = getMonthDays(currentMonth as Dayjs);
 
   return (
-    <div className='grid w-full max-w-[302px] grid-cols-[repeat(7,1fr)] rounded-xl bg-white p-6'>
+    <div className='grid w-full max-w-[302px] select-none grid-cols-[repeat(7,1fr)] rounded-xl bg-white p-6'>
       <div className='col-[1_/_span_7] mb-5 flex items-center justify-between'>
         <h3 className='text-lg font-medium not-italic leading-6 text-black'>{currentDate}</h3>
         <div className='flex items-center gap-2'>
