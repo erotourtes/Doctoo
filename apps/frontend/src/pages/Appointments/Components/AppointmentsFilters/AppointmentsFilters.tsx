@@ -1,5 +1,5 @@
 import OptionalSelect from '@/components/UI/Select/OptionalSelect';
-import { FilterState, FilterAction } from '../../AppointmentsPage';
+import type { FilterState, FilterAction } from '../../AppointmentsPage';
 
 type AppointmentsFiltersProps = { state: FilterState; dispatch: React.Dispatch<FilterAction> };
 
