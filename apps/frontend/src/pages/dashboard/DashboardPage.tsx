@@ -4,10 +4,11 @@ import { Calendar } from '@/components/UI/Calendar/Calendar';
 import MyDoctorsCard from './components/MyDoctorsCard/MyDoctorsCard';
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { getPatientDoctorData } from '@/app/doctor/DoctorThunks';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import NotificationsComponent from './components/NotificationsComponent/NotificationsComponent';
 import { AppointmentStatus, type IAppointment } from '@/dataTypes/Appointment';
 import dayjs from 'dayjs';
+import { Button, InputSearch } from '@/components/UI';
 
 const DashboardPage = () => {
   const dispatch = useAppDispatch();
@@ -15,6 +16,13 @@ const DashboardPage = () => {
   useEffect(() => {
     dispatch(getPatientDoctorData('8'));
   }, []);
+
+  const [search, setSearch] = useState('');
+
+  function handleSubmit(value: string) {
+    setSearch(value);
+  }
+
   const doctors = useAppSelector(state => state.doctor.doctors);
   const appointments = useAppSelector(state => state.appointment.appointments);
   const nearestAppointments = appointments
@@ -32,7 +40,13 @@ const DashboardPage = () => {
     .slice(0, 5);
   return (
     <div>
-      <PageHeader iconVariant={'dashboard'} title='Dashboard' />
+      <PageHeader iconVariant={'dashboard'} title='Dashboard'>
+        <InputSearch value={search} setValue={handleSubmit} variant='white' placeholder='Search by doctor, symptom' />
+
+        <Button type='primary' btnType='button'>
+          Find a doctor
+        </Button>
+      </PageHeader>
       <div className='flex flex-row'>
         <section className='flex w-full min-w-[694px] flex-col  overflow-y-auto bg-background pt-7'>
           <NearestAppointmentsComponent appointments={nearestAppointments} />
