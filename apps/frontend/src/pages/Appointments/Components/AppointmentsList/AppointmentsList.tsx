@@ -4,8 +4,11 @@ import PopupDoctoo from '@/components/UI/Popup/Popup';
 import { useState } from 'react';
 import AppointmentsPopup from '../AppointmentsPopup/AppointmentsPopup';
 import type { IAppointment } from '@/dataTypes/Appointment';
+import type { FilterState } from '../../AppointmentsPage';
 
-export default function AppointmentsList() {
+type AppointmentsListProps = { filters: FilterState };
+
+export default function AppointmentsList({}: AppointmentsListProps) {
   const appointments = useAppSelector(state => state.appointment.appointments);
   const [modal, setModal] = useState(false);
   const [appointment, setAppointment] = useState<IAppointment>();

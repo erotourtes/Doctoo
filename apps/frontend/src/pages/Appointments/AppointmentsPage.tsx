@@ -2,14 +2,35 @@ import { Button } from '@/components/UI/Button/Button';
 import PageHeader from '../PageHeader';
 import InputSearch from '@/components/UI/Input/InputSearch';
 import { useState, useReducer } from 'react';
-import AppointmentsFilter, { filterReducer } from './Components/AppointmentsFilter/AppointmentsFilter';
 import AppointmentsList from './Components/AppointmentsList/AppointmentsList';
 import { Calendar } from '@/components/UI/Calendar/Calendar';
 import { useAppSelector } from '@/app/hooks';
 import dayjs from 'dayjs';
+import AppointmentsFilters from './Components/AppointmentsFilters/AppointmentsFilters';
+
+export type FilterState = {
+  time: string[];
+  statuses: string[];
+  doctors: string[];
+  order: string[];
+};
+
+export type FilterAction =
+  | { type: 'SET_TIME'; payload: string[] }
+  | { type: 'SET_STATUSES'; payload: string[] }
+  | { type: 'SET_DOCTORS'; payload: string[] }
+  | { type: 'SET_ORDER'; payload: string[] };
+
+const initialFilterState: FilterState = {
+  time: ['All time'],
+  statuses: ['All statuses'],
+  doctors: ['All doctors'],
+  order: ['Latest to oldest'],
+};
 
 export default function AppointmentsPage() {
   const appointments = useAppSelector(state => state.appointment.appointments);
+  const [filterState, dispatchFilterAction] = useReducer(filterReducer, initialFilterState);
 
   const meetingsForDay = appointments.map(appointment => ({
     date: dayjs(appointment.assignedAt),
@@ -17,15 +38,24 @@ export default function AppointmentsPage() {
   }));
 
   const [search, setSearch] = useState('');
-  const [filterState, dispatchFilter] = useReducer(filterReducer, {
-    time: 'All time',
-    statuses: 'All statuses',
-    doctors: 'All doctors',
-    order: 'Latest to oldest',
-  });
 
   function handleSubmit(value: string) {
     setSearch(value);
+  }
+
+  function filterReducer(state: FilterState, action: FilterAction): FilterState {
+    switch (action.type) {
+      case 'SET_TIME':
+        return { ...state, time: action.payload };
+      case 'SET_STATUSES':
+        return { ...state, statuses: action.payload };
+      case 'SET_DOCTORS':
+        return { ...state, doctors: action.payload };
+      case 'SET_ORDER':
+        return { ...state, order: action.payload };
+      default:
+        return state;
+    }
   }
 
   function NoAppointments() {
@@ -55,8 +85,8 @@ export default function AppointmentsPage() {
 
       <section className='flex h-screen justify-between gap-x-5'>
         <div className='flex h-4/5 flex-1 flex-col gap-y-6'>
-          <AppointmentsFilter state={filterState} dispatch={dispatchFilter} />
-          {appointments.length === 0 ? <NoAppointments /> : <AppointmentsList />}
+          <AppointmentsFilters state={filterState} dispatch={dispatchFilterAction} />
+          {appointments.length === 0 ? <NoAppointments /> : <AppointmentsList filters={filterState} />}
         </div>
 
         <div className=''>
