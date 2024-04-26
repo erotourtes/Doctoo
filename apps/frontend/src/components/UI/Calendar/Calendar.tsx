@@ -16,6 +16,8 @@ interface CalendarProps {
 }
 
 export const Calendar = ({ meetingsForDay }: CalendarProps) => {
+  console.log(meetingsForDay);
+  
   dayjs.extend(weekdayPlugin);
   const today = dayjs();
   const [currentMonth, setCurrentMonth] = useState<Dayjs | null>(dayjs());
