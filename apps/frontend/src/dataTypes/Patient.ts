@@ -1,3 +1,5 @@
+import type { IAllergy } from './Allergy';
+
 export enum BloodType {
   O_PLUS = 'O+',
   O_MINUS = 'O-',
@@ -26,7 +28,7 @@ export interface IPatient {
   zipCode?: string;
   conditions: Condition[];
   vaccinations: Vaccination[];
-  allergies: Allergy[];
+  allergies: IAllergy[];
   emailNotificationToggle: boolean;
   twoFactorAuthToggle: boolean;
   requestBillPaymentApproval: boolean;
@@ -43,11 +45,6 @@ export type Vaccination = {
 };
 
 export type Condition = {
-  id: string;
-  name: string;
-};
-
-export type Allergy = {
   id: string;
   name: string;
 };
