@@ -39,6 +39,12 @@ const PageContainer = () => {
         <Route path='/payment' Component={PaymentPage} />
         <Route path='/calendar' Component={CalendarPage} />
         <Route path='/appointments' Component={AppointmentsPage} />
+
+        {/* <Route path='/protected' element={<ProtectPatientRoute />}>
+          <Route path='/protected/1' element={'pr 1'} />
+          <Route path='/protected/2' element={'pr 2'} />
+        </Route>
+        <Route path='/protected/3' element={<ProtectPatientRoute Page={Settings} />} /> */}
       </Routes>
     </main>
   );
