@@ -8,6 +8,7 @@ import { store } from '@/app/store';
 import { useAppDispatch } from '@/app/hooks';
 import { useEffect } from 'react';
 import { getAppointmentsByPatientId } from '@/app/appointment/AppointmentThunks';
+import dayjs from 'dayjs';
 
 const meta = {
   title: 'Components/UI/Schedule/Schedule',
@@ -47,9 +48,10 @@ export const Default: Story = {
     },
     scheduleIsOpen: true,
     closePopup: () => {},
+    currentDay: dayjs(),
   },
 
-  render: function Render({ scheduleInfo }) {
+  render: function Render({ scheduleInfo, currentDay }) {
     const [{ scheduleIsOpen }, updateArgs] = useArgs();
     const dispatch = useAppDispatch();
 
@@ -70,7 +72,12 @@ export const Default: Story = {
         <Button type='primary' onClick={openPopup}>
           Open Schedule Modal
         </Button>
-        <Schedule scheduleInfo={scheduleInfo} scheduleIsOpen={scheduleIsOpen} closePopup={closePopup} />
+        <Schedule
+          currentDay={currentDay}
+          scheduleInfo={scheduleInfo}
+          scheduleIsOpen={scheduleIsOpen}
+          closePopup={closePopup}
+        />
       </>
     );
   },

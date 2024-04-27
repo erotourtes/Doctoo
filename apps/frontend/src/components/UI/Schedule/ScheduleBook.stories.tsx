@@ -6,6 +6,7 @@ import { store } from '@/app/store';
 import { useAppDispatch } from '@/app/hooks';
 import { useEffect } from 'react';
 import { getAppointmentsByPatientId } from '@/app/appointment/AppointmentThunks';
+import dayjs from 'dayjs';
 
 const meta = {
   title: 'Components/UI/Schedule/ScheduleBook',
@@ -34,14 +35,15 @@ export const Default: Story = {
     doctorId: '3',
     patientId: '7',
     closePopup: () => {},
+    currentDay: dayjs(),
   },
-  render: function Render() {
+  render: function Render({ patientId, currentDay }) {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-      dispatch(getAppointmentsByPatientId('7'));
+      dispatch(getAppointmentsByPatientId(patientId));
     }, [dispatch]);
 
-    return <ScheduleBook doctorId='3' patientId='7' closePopup={() => {}} />;
+    return <ScheduleBook currentDay={currentDay} doctorId='3' patientId='7' closePopup={() => {}} />;
   },
 };
