@@ -9,8 +9,7 @@ import Sidemenu from '@components/Sidemenu/Sidemenu';
 import Header from '@components/UI/Header/Header';
 import DashboardPage from './dashboard/DashboardPage';
 import { PaymentPage } from './PaymentPage/PaymentPage';
-import CalendarPage from './Calendar/CalendarPage';
-import AppointmentsPage from './Appointments/AppointmentsPage';
+import MyDoctorsPage from './MyDoctors/MyDoctorsPage';
 
 // import page component
 
@@ -37,6 +36,7 @@ const PageContainer = () => {
         <Route path='/dashboard' Component={DashboardPage} />
         <Route path='/settings' Component={Settings} />
         <Route path='/payment' Component={PaymentPage} />
+        <Route path='/my-doctors' Component={MyDoctorsPage} />
         <Route path='/calendar' Component={CalendarPage} />
         <Route path='/appointments' Component={AppointmentsPage} />
 
