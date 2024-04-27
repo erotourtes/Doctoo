@@ -1,5 +1,6 @@
-import { BloodType, Gender } from '@prisma/client';
+import { BloodType, Gender, User } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude, Expose, Transform } from 'class-transformer';
 
 export class ResponsePatientDto {
   @ApiProperty({ description: 'The ID of the patient' })
@@ -49,4 +50,50 @@ export class ResponsePatientDto {
 
   @ApiProperty({ description: 'The two factor authentication toggle of the patient' })
   requestBillPaymentApproval: boolean;
+
+  @ApiProperty({ description: 'The two factor authentication toggle of the patient' })
+  twoFactorAuthToggle: boolean;
+
+  @Expose()
+  @Transform(({ obj }) => obj.user && obj.user.firstName)
+  @ApiProperty({
+    description: 'First name of the doctor',
+    example: 'John',
+  })
+  readonly firstName: string;
+
+  @Expose()
+  @Transform(({ obj }) => obj.user && obj.user.lastName)
+  @ApiProperty({
+    description: 'Last name of the doctor',
+    example: 'Doe',
+  })
+  readonly lastName: string;
+
+  @Expose()
+  @Transform(({ obj }) => obj.user && obj.user.avatarKey)
+  @ApiProperty({
+    description: 'Key of the avatar of the doctor',
+    example: 'acde070d-8c4c-4f0d-9d8a-162843c10333.jpg',
+  })
+  readonly avatarKey: string;
+
+  @Expose()
+  @Transform(({ obj }) => obj.user && obj.user.phone)
+  @ApiProperty({
+    description: 'The phone of the doctor',
+    example: '+38099561735634',
+  })
+  readonly phone: string;
+
+  @Expose()
+  @Transform(({ obj }) => obj.user && obj.user.email)
+  @ApiProperty({
+    description: 'Email of the doctor',
+    example: 'johndoe@mail.com',
+  })
+  readonly email: string;
+
+  @Exclude()
+  readonly user: User;
 }

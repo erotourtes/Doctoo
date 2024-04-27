@@ -20,13 +20,23 @@ export class PatientService {
   async getPatient(id: string): Promise<ResponsePatientDto> {
     await this.isPatientExists(id);
 
-    const patient = await this.prismaService.patient.findUnique({ where: { id } });
+    const patient = await this.prismaService.patient.findUnique({
+      where: { id },
+      include: {
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            avatarKey: true,
+          },
+        },
+      },
+    });
 
     return plainToInstance(ResponsePatientDto, patient);
   }
 
   async getPatientByUserId(userId: string): Promise<ResponsePatientDto> {
-    // TODO: only 1 patient for user
     const patient = await this.prismaService.patient.findFirst({
       where: { user: { id: userId } },
     });

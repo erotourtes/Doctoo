@@ -183,6 +183,7 @@ model Patient {
   notifications              Notification[]
   emailNotificationToggle    Boolean              @default(false) @map("email_notification_toggle")
   requestBillPaymentApproval Boolean              @default(false) @map("request_bill_payment_approval")
+  twoFactorAuthToggle        Boolean              @default(false) @map("two_factor_auth_toggle")
 
   @@map("patients")
 }
