@@ -9,7 +9,7 @@ import LoginPageAuthenticate from './auth/login/LoginPageAuthenticate';
 import SignUpPage from './auth/signup/SignUpPage';
 import SignUpPatientPage from './auth/signup/SignUpPatientPage';
 import DashboardPage from './dashboard/DashboardPage';
-import ProfilePage from './profile/ProfilePage';
+import ProfilePage from './Profile/ProfilePage';
 import Settings from './settings/settingsPage/settingsPage';
 
 // import page component

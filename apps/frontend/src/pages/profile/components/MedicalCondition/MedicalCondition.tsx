@@ -14,7 +14,7 @@ const MedicalCondition = () => {
     <div className='flex h-full flex-col justify-between gap-4 rounded-xl bg-white p-3 md:p-7'>
       <div className='flex w-full flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between'>
         <p className='text-grey-1'>Declaration number</p>
-        {/*TODO"where should be decalration id?? */}
+        {/*TODO"where should be declaration id?? */}
         <div className='rounded-lg bg-main-light  px-4 py-2 font-medium text-black'>{123498}</div>
       </div>
 
@@ -24,11 +24,11 @@ const MedicalCondition = () => {
           <p className='font-medium text-text'>
             {conditions.length === 0 && '-'}
             {conditions.length !== 0 &&
-              conditions.map((condiiton, index) => {
+              conditions.map((condition, index) => {
                 if (index !== conditions.length - 1) {
-                  return `${condiiton.name}, `;
+                  return `${condition.name}, `;
                 }
-                return condiiton.name;
+                return condition.name;
               })}
           </p>
         </div>
@@ -48,11 +48,11 @@ const MedicalCondition = () => {
           <p className='font-medium text-text'>
             {allergies.length === 0 && '-'}
             {allergies.length !== 0 &&
-              allergies.map((allergie, index) => {
+              allergies.map((allergy, index) => {
                 if (index !== allergies.length - 1) {
-                  return `${allergie.name}, `;
+                  return `${allergy.name}, `;
                 }
-                return allergie.name;
+                return allergy.name;
               })}
           </p>
         </div>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { patchPatientData } from '@/app/patient/PatientThunks';
-import { BloodType, Gender } from '@/dataTypes/Patient';
+import type { BloodType, Gender } from '@/dataTypes/Patient';
 import { capitalizeString } from '@/utils/capitalizeString';
 import Icon from '@UI/Icon/Icon';
 import type { IconVariant } from '@UI/Icon/types';
@@ -64,46 +64,48 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
                   onChange={e => {
                     setInputValue(e.target.value);
                     setIsEditing(false);
-                    let gender;
-                    let bloodType;
+                    let gender: Gender | null = null;
+                    let bloodType: BloodType | null = null;
                     switch (title) {
                       case 'Gender':
-                        gender = inputValue;
-                        if (gender.toLowerCase() === Gender.FEMALE) {
-                          dispatch(patchPatientData({ id: patient.id, data: { gender: Gender.FEMALE } }));
+                        switch (inputValue.toLowerCase()) {
+                          case 'female':
+                            gender = 'FEMALE';
+                            break;
+                          case 'male':
+                            gender = 'MALE';
+                            break;
                         }
-                        if (gender.toLowerCase() === Gender.MALE) {
-                          dispatch(patchPatientData({ id: patient.id, data: { gender: Gender.MALE } }));
-                        }
+                        if (gender) dispatch(patchPatientData({ id: patient.id, data: { gender } }));
                         break;
                       case 'Blood type':
-                        bloodType = inputValue;
-                        switch (bloodType) {
-                          case BloodType.AB_MINUS:
-                            dispatch(patchPatientData({ id: patient.id, data: { bloodType: BloodType.AB_MINUS } }));
+                        switch (inputValue.toLowerCase()) {
+                          case 'ab-':
+                            bloodType = 'AB_MINUS';
                             break;
-                          case BloodType.AB_PLUS:
-                            dispatch(patchPatientData({ id: patient.id, data: { bloodType: BloodType.AB_PLUS } }));
+                          case 'ab+':
+                            bloodType = 'AB_PLUS';
                             break;
-                          case BloodType.A_MINUS:
-                            dispatch(patchPatientData({ id: patient.id, data: { bloodType: BloodType.A_MINUS } }));
+                          case 'a-':
+                            bloodType = 'A_MINUS';
                             break;
-                          case BloodType.A_PLUS:
-                            dispatch(patchPatientData({ id: patient.id, data: { bloodType: BloodType.A_PLUS } }));
+                          case 'a+':
+                            bloodType = 'A_PLUS';
                             break;
-                          case BloodType.B_MINUS:
-                            dispatch(patchPatientData({ id: patient.id, data: { bloodType: BloodType.B_MINUS } }));
+                          case 'b-':
+                            bloodType = 'B_MINUS';
                             break;
-                          case BloodType.B_PLUS:
-                            dispatch(patchPatientData({ id: patient.id, data: { bloodType: BloodType.B_PLUS } }));
+                          case 'b+':
+                            bloodType = 'B_PLUS';
                             break;
-                          case BloodType.O_MINUS:
-                            dispatch(patchPatientData({ id: patient.id, data: { bloodType: BloodType.O_MINUS } }));
+                          case 'o-':
+                            bloodType = 'O_MINUS';
                             break;
-                          case BloodType.O_PLUS:
-                            dispatch(patchPatientData({ id: patient.id, data: { bloodType: BloodType.O_PLUS } }));
+                          case 'o+':
+                            bloodType = 'O_PLUS';
                             break;
                         }
+                        if (bloodType) dispatch(patchPatientData({ id: patient.id, data: { bloodType } }));
                         break;
                     }
                   }}

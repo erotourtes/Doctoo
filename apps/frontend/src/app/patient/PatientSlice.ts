@@ -1,11 +1,12 @@
 import type { RootState } from '@/app/store';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '../createAppSlice';
-import type { TPatient } from '@/dataTypes/Patient';
+import type { Condition, TPatient } from '@/dataTypes/Patient';
 import type { IUser } from '@/dataTypes/User';
+import type { IAllergy } from '@/dataTypes/Allergy';
 
 type Patient = TPatient &
-  IUser & { conditions: string[]; vaccinations: string[]; allergies: string[]; twoFactorAuthToggle: boolean };
+  IUser & { conditions: Condition[]; vaccinations: string[]; allergies: IAllergy[]; twoFactorAuthToggle: boolean };
 
 interface PatientData {
   data: Patient;
