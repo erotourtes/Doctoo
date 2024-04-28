@@ -1,10 +1,10 @@
 import { createAppSlice } from '../createAppSlice';
-import type { ICondition } from '@/dataTypes/Condition';
+import type { TCondition } from '@/dataTypes/Condition';
 import type { RootState } from '../store';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 type ConditionData = {
-  data: ICondition[];
+  data: TCondition[];
 };
 
 const initialState: ConditionData = {
@@ -15,17 +15,17 @@ export const conditionSlice = createAppSlice({
   name: 'condition',
   initialState,
   reducers: {
-    setConditionData: (state, action: PayloadAction<ICondition[]>) => {
+    setConditionData: (state, action: PayloadAction<TCondition[]>) => {
       state.data = action.payload;
       console.log(state.data);
     },
-    addCondtionData: (state, action: PayloadAction<ICondition>) => {
+    addCondition: (state, action: PayloadAction<TCondition>) => {
       state.data.push(action.payload);
     },
   },
 });
 
-export const { setConditionData, addCondtionData } = conditionSlice.actions;
+export const { setConditionData, addCondition } = conditionSlice.actions;
 
 export const conditionData = (data: RootState) => data.condition.data;
 
