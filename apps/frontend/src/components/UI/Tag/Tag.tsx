@@ -1,11 +1,21 @@
+import { cn } from '@/utils/cn';
+
 interface TagProps {
   icon: boolean;
   text: string;
+  className?: string;
+  onClick?: () => void;
 }
 
-const Tag = ({ icon, text }: TagProps) => {
+const Tag = ({ icon, text, className, onClick }: TagProps) => {
   return (
-    <div className='pointer inline-flex items-center gap-1 rounded-full bg-main-light px-3 py-1 text-sm font-normal leading-5 text-main-dark'>
+    <div
+      onClick={onClick ? () => onClick() : undefined}
+      className={cn(
+        className,
+        'pointer inline-flex items-center gap-1 rounded-full bg-main-light px-3 py-1 text-sm font-normal leading-5 text-main-dark',
+      )}
+    >
       {text}{' '}
       {icon && (
         <span className='inline-flex h-6 w-6 items-center justify-center rounded-xl bg-white'>

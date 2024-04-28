@@ -1,32 +1,30 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsNumber, IsOptional } from 'class-validator';
+import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
 
 export class CreateHospitalDto {
-  @ApiProperty({ description: 'The name of the hospital' })
-  @IsString()
+  @ApiProperty({ example: 'Ichilov and Assuta', description: 'The full name of the hospital is.' })
+  @IsNotEmptyString()
   readonly name: string;
 
-  @ApiProperty({ description: 'The country where the hospital is situated' })
-  @IsString()
+  @ApiProperty({ example: 'USA', description: 'The country where the hospital is located.' })
+  @IsNotEmptyString()
   readonly country: string;
 
-  @ApiProperty({ required: false, description: 'The state where the hospital is situated' })
+  @ApiPropertyOptional({ example: 'Oregon', description: 'The address of the state where the hospital is located.' })
   @IsOptional()
+  @IsNotEmptyString()
   readonly state?: string;
 
-  @ApiProperty({ description: 'The city where the hospital is situated' })
-  @IsString()
+  @ApiProperty({ example: 'Salem', description: 'The name of the city where this hospital is located.' })
+  @IsNotEmptyString()
   readonly city: string;
 
-  @ApiProperty({ description: 'The street where the hospital is situated' })
-  @IsString()
+  @ApiProperty({ example: 'St. Big Bells', description: 'The name of the street where this hospital is located.' })
+  @IsNotEmptyString()
   readonly street: string;
 
-  @ApiProperty({ description: 'The apartment where the hospital is situated' })
-  @IsOptional()
-  readonly apartment?: string;
-
-  @ApiProperty({ description: 'The zip code of the hospital' })
+  @ApiProperty({ example: 0o200, description: "The hospital's zip code." })
   @IsNumber()
   readonly zipCode?: number;
 }

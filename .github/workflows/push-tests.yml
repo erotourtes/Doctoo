@@ -1,0 +1,74 @@
+name: Project Build & Tests
+
+on:
+  push:
+    branches-ignore:
+      - 'main'
+      - 'development'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        node-version: [18]
+
+    runs-on: self-hosted
+    name: Build Project
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js and pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm i -r
+
+      - name: Build apps
+        run: pnpm build
+
+  test:
+    strategy:
+      matrix:
+        node-version: [18]
+
+    runs-on: self-hosted
+    name: Test Project
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js and pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm i -r
+
+      - name: Generate @prisma/client
+        run: pnpm run prebuild
+        working-directory: ./apps/backend
+
+      - name: Unit tests for backend
+        run: pnpm run backend:test
+
+      - name: e2e tests for backend
+        run: pnpm run  backend:test:e2e
+
+      - name: Unit tests for frontend
+        run: pnpm run frontend:test

@@ -1,21 +1,24 @@
-name: Chromatic
+name: Chromatic Tests
+
 on:
   pull_request:
     paths: ['apps/frontend/src/somponents/**', 'apps/frontend/src/pages/**']
 
 jobs:
   chromatic:
-    runs-on: ubuntu-20.04
     strategy:
       matrix:
         node-version: [18]
+
+    runs-on: self-hosted
+    name: Chromatic Tests
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js and PNPM
+      - name: Setup Node.js and pnpm
         uses: pnpm/action-setup@v3
         with:
           version: 8
@@ -27,7 +30,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm i -r
         working-directory: apps/frontend
 
       - name: Run Chromatic

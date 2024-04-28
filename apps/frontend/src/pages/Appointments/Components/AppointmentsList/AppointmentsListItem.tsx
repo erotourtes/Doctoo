@@ -12,7 +12,7 @@ type AppointmentsListItemProps = { appointment: IAppointment; openModal: () => v
 
 export default function AppointmentsListItem({ appointment, openModal }: AppointmentsListItemProps) {
   const { doctor, videoRecordKey, notes, status, paymentInvoiceKey, paymentReceiptKey } = appointment;
-  const { firstName, lastName } = doctor;
+  const { firstName, lastName } = doctor!;
   const fullName = `Dr. ${firstName} ${lastName}`;
 
   return (

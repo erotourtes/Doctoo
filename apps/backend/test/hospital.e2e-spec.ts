@@ -4,8 +4,8 @@ import * as request from 'supertest';
 import { CreateHospitalDto } from '../src/hospital/dto/create.dto';
 import { ResponseHospitalDto } from '../src/hospital/dto/response.dto';
 import { HospitalModule } from '../src/hospital/hospital.module';
+import { hospitalStub } from '../src/hospital/hospital.stub';
 import { PrismaService } from '../src/prisma/prisma.service';
-import { hospitalStub } from '../src/mocks/stubs/hospital.stub';
 
 // TODO: Rewrite this tests.
 describe('HospitalController (e2e)', () => {
@@ -77,9 +77,7 @@ describe('HospitalController (e2e)', () => {
       const response = await request(app.getHttpServer()).get(`/hospital/${id}`);
 
       expect(response.status).toEqual(404);
-      expect(response.body).toMatchObject({
-        message: `Hospital with id ${id} does not exist`,
-      });
+      expect(response.body).toMatchObject({ message: 'Hospital with this Id not found.' });
     });
   });
 

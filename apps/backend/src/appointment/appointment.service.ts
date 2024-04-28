@@ -1,4 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
+import { DoctorService } from '../doctor/doctor.service';
+import { PatientService } from '../patient/patient.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateAppointmentDto } from './dto/create.dto';
 import { PatchAppointmentDto } from './dto/patch.dto';
@@ -6,29 +9,40 @@ import { ResponseAppointmentDto } from './dto/response.dto';
 
 @Injectable()
 export class AppointmentService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly doctorService: DoctorService,
+    private readonly patientService: PatientService,
+  ) {}
 
-  private async isAppointmentExists(id: string): Promise<boolean> {
-    const isAppointmentExist = await this.prismaService.appointment.findUnique({ where: { id } });
+  async isAppointmentExists(id: string): Promise<boolean> {
+    const appointment = await this.prismaService.appointment.findUnique({ where: { id } });
 
-    if (!isAppointmentExist) throw new NotFoundException('A appointment with this Id not found.');
+    if (!appointment) throw new NotFoundException('An appointment with this Id not found.');
 
     return true;
   }
 
-  async create(body: CreateAppointmentDto): Promise<ResponseAppointmentDto> {
+  async createAppointment(body: CreateAppointmentDto): Promise<ResponseAppointmentDto> {
+    await this.doctorService.isDoctorByIdExists(body.doctorId);
+    await this.patientService.isPatientByIdExists(body.patientId);
+
     const appointment = await this.prismaService.appointment.create({ data: body });
 
-    return appointment;
+    // TODO: Use event isntead of directly call payment service.
+
+    return plainToInstance(ResponseAppointmentDto, appointment);
   }
 
-  async findAll(): Promise<ResponseAppointmentDto[]> {
+  async getAppointments(): Promise<ResponseAppointmentDto[]> {
     const appointments = await this.prismaService.appointment.findMany();
 
-    return appointments;
+    return plainToInstance(ResponseAppointmentDto, appointments);
   }
 
-  async findAllByPatientId(id: string): Promise<ResponseAppointmentDto[]> {
+  async getAppointmentsByPatientId(id: string): Promise<ResponseAppointmentDto[]> {
+    await this.isAppointmentExists(id);
+
     const appointments = await this.prismaService.appointment.findMany({
       where: { patientId: id },
       include: {
@@ -37,43 +51,46 @@ export class AppointmentService {
             user: {
               select: { firstName: true, lastName: true, avatarKey: true, phone: true, email: true },
             },
+            hospitals: { select: { hospital: { select: { id: true, name: true } } } },
+            specializations: { select: { specialization: true } },
           },
         },
       },
     });
 
-    return appointments;
+    return plainToInstance(ResponseAppointmentDto, appointments);
   }
 
-  async findAllByDoctorId(id: string): Promise<ResponseAppointmentDto[]> {
-    const doctor = await this.prismaService.doctor.findUnique({ where: { id } });
-    if (!doctor) throw new NotFoundException({ message: `Doctor with ID ${id} does not exist` });
+  async getAppointmentsByDoctorId(id: string): Promise<ResponseAppointmentDto[]> {
+    await this.doctorService.isDoctorByIdExists(id);
 
     const appointments = await this.prismaService.appointment.findMany({
       where: { doctorId: id },
       include: { patient: true },
     });
 
-    return appointments;
+    return plainToInstance(ResponseAppointmentDto, appointments);
   }
 
-  async findOne(id: string): Promise<ResponseAppointmentDto> {
+  async getAppointment(id: string): Promise<ResponseAppointmentDto> {
     await this.isAppointmentExists(id);
 
     const appointment = await this.prismaService.appointment.findUnique({ where: { id } });
 
-    return appointment;
+    return plainToInstance(ResponseAppointmentDto, appointment);
   }
 
-  async update(id: string, body: PatchAppointmentDto): Promise<ResponseAppointmentDto> {
+  async patchAppointment(id: string, body: PatchAppointmentDto): Promise<ResponseAppointmentDto> {
     await this.isAppointmentExists(id);
+    await this.doctorService.isDoctorByIdExists(body.doctorId);
+    await this.patientService.isPatientByIdExists(body.patientId);
 
     const appointment = await this.prismaService.appointment.update({ where: { id }, data: body });
 
-    return appointment;
+    return plainToInstance(ResponseAppointmentDto, appointment);
   }
 
-  async remove(id: string) {
+  async deleteAppointment(id: string): Promise<void> {
     await this.isAppointmentExists(id);
 
     await this.prismaService.appointment.delete({ where: { id } });

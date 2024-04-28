@@ -1,55 +1,53 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { BloodType, Gender } from '@prisma/client';
-import { ApiProperty } from '@nestjs/swagger';
+import { randomUUID } from 'crypto';
 
 export class ResponsePatientDto {
-  @ApiProperty({ description: 'The ID of the patient' })
+  @ApiProperty({ example: randomUUID(), description: 'Unique patient id.' })
   readonly id: string;
 
-  @ApiProperty({ description: 'The ID of the user associated with the patient' })
+  @ApiProperty({ example: randomUUID(), description: 'The unique user id of the user to which the patient is bound.' })
   readonly userId: string;
 
-  @ApiProperty({ description: 'The weight of the patient' })
+  @ApiProperty({ example: 65, description: "Patient's weight." })
   readonly weight: number;
 
-  @ApiProperty({ description: 'The height of the patient' })
+  @ApiProperty({ example: 185, description: 'Patient height.' })
   readonly height: number;
 
-  @ApiProperty({ description: 'The age of the patient' })
+  @ApiProperty({ example: 35, description: "Patient's age." })
   readonly age: number;
 
-  @ApiProperty({ description: 'The blood type of the patient', type: 'enum', enum: BloodType })
+  @ApiProperty({ enum: BloodType, example: BloodType.AB_MINUS, description: "The patient's blood type." })
   readonly bloodType: BloodType;
 
-  @ApiProperty({ description: 'The gender of the patient', type: 'enum', enum: Gender })
+  @ApiProperty({ enum: Gender, example: Gender.MALE, description: 'Patient gender.' })
   readonly gender: Gender;
 
-  @ApiProperty({ description: 'The identity card key of the patient' })
+  @ApiProperty({ example: randomUUID(), description: 'A unique key to the patient identification file.' })
   readonly identityCardKey: string;
 
-  @ApiProperty({ description: 'The country of residence of the patient' })
+  @ApiProperty({ example: 'USA', description: 'The country where the hospital is located.' })
   readonly country: string;
 
-  @ApiProperty({ description: 'The state of residence of the patient', required: false })
+  @ApiPropertyOptional({ example: 'Oregon', description: 'The address of the state where the hospital is located.' })
   readonly state?: string;
 
-  @ApiProperty({ description: 'The city of residence of the patient' })
+  @ApiProperty({ example: 'Salem', description: 'The name of the city where this hospital is located.' })
   readonly city: string;
 
-  @ApiProperty({ description: 'The street address of the patient' })
+  @ApiProperty({ example: 'St. Big Bells', description: 'The name of the street where this hospital is located.' })
   readonly street: string;
 
-  @ApiProperty({ description: 'The apartment number of the patient', required: false })
+  @ApiPropertyOptional({ example: '35A', description: "Patient's apartment number." })
   readonly apartment?: string;
 
-  @ApiProperty({ description: 'The zip code of the patient', required: false })
+  @ApiProperty({ example: 0o200, description: "The hospital's zip code." })
   readonly zipCode?: number;
 
-  @ApiProperty({ description: 'The email notification toggle of the patient' })
+  @ApiProperty({ default: false, description: "Status of alerts to the patient's email." })
   emailNotificationToggle: boolean;
 
-  @ApiProperty({ description: 'The sms notification toggle of the patient' })
-  twoFactorAuthToggle: boolean;
-
-  @ApiProperty({ description: 'The two factor authentication toggle of the patient' })
+  @ApiProperty({ example: false, description: 'Whether to request a two-factor confirmation when making a payment.' })
   requestBillPaymentApproval: boolean;
 }

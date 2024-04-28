@@ -3,11 +3,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { randomUUID } from 'crypto';
 import * as request from 'supertest';
 import { DoctorModule } from '../src/doctor/doctor.module';
+import { doctorStub } from '../src/doctor/doctor.stub';
+import { hospitalStub } from '../src/hospital/hospital.stub';
 import { PrismaService } from '../src/prisma/prisma.service';
-import { doctorStub } from '../src/mocks/stubs/doctor.stub';
-import { userStub } from '../src/mocks/stubs/user.stub';
-import { hospitalStub } from '../src/mocks/stubs/hospital.stub';
-import { specializationStub } from '../src/mocks/stubs/specialization.stub';
+import { specializationStub } from '../src/specialization/specialization.stub';
+import { userStub } from '../src/user/user.stub';
 
 describe('DoctorController (e2e)', () => {
   let app: INestApplication;
@@ -79,6 +79,7 @@ describe('DoctorController (e2e)', () => {
     it('Should return 404 for non-existent userId', async () => {
       const specialization = await prisma.specialization.create({ data: specializationStub() });
       const hospital = await prisma.hospital.create({ data: hospitalStub() });
+
       const doctorData = {
         ...doctorStub(),
         userId: randomUUID(),

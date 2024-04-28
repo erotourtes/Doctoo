@@ -1,10 +1,12 @@
+import { AppointmentStatus } from '@/dataTypes/Appointment';
+
 export const getMeetingStatusColor = (status: string) => {
   switch (status) {
-    case 'completed':
+    case AppointmentStatus.COMPLETED:
       return 'bg-main';
-    case 'planned':
+    case AppointmentStatus.PLANNED:
       return 'bg-orange';
-    case 'canceled':
+    case AppointmentStatus.CANCELED:
       return 'bg-error';
     default:
       return 'bg-transparent';

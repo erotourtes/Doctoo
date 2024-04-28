@@ -1,26 +1,25 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { randomUUID } from 'crypto';
 
 export class ResponseHospitalDto {
+  @ApiProperty({ example: randomUUID(), description: "The hospital's unique id." })
   readonly id: string;
 
-  @ApiProperty({ description: 'The name of the hospital' })
+  @ApiProperty({ example: 'Ichilov and Assuta', description: 'The full name of the hospital is.' })
   readonly name: string;
 
-  @ApiProperty({ description: 'The country where the hospital is situated' })
+  @ApiProperty({ example: 'USA', description: 'The country where the hospital is located.' })
   readonly country: string;
 
-  @ApiProperty({ nullable: true, description: 'The state where the hospital is situated' })
+  @ApiPropertyOptional({ example: 'Oregon', description: 'The address of the state where the hospital is located.' })
   readonly state?: string;
 
-  @ApiProperty({ description: 'The city where the hospital is situated' })
+  @ApiProperty({ example: 'Salem', description: 'The name of the city where this hospital is located.' })
   readonly city: string;
 
-  @ApiProperty({ description: 'The street where the hospital is situated' })
+  @ApiProperty({ example: 'St. Big Bells', description: 'The name of the street where this hospital is located.' })
   readonly street: string;
 
-  @ApiProperty({ description: 'The apartment where the hospital is situated' })
-  readonly apartment?: string;
-
-  @ApiProperty({ description: 'The zip code of the hospital' })
+  @ApiProperty({ example: 0o200, description: "The hospital's zip code." })
   readonly zipCode?: number;
 }

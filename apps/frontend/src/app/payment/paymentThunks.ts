@@ -1,11 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../api';
+import axios from 'axios';
 
 export const getPaymentIntent = createAsyncThunk(
   'payment',
   async (data: { appointmentDuration: number; pricePerHour: number }) => {
     const { appointmentDuration, pricePerHour } = data;
-    const response = await api.POST('/payment', {
+    const response = await axios.post('/payment', {
       body: {
         appointmentDuration,
         pricePerHour,

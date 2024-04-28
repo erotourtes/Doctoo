@@ -9,6 +9,14 @@ import { ResponseHospitalDto } from './dto/response.dto';
 export class HospitalService {
   constructor(private readonly prismaService: PrismaService) {}
 
+  async isHospitalExists(id: string): Promise<boolean> {
+    const hospital = await this.prismaService.hospital.findUnique({ where: { id } });
+
+    if (!hospital) throw new NotFoundException({ message: 'Hospital with this Id not found.' });
+
+    return true;
+  }
+
   async createHospital(body: CreateHospitalDto): Promise<ResponseHospitalDto> {
     const hospital = await this.prismaService.hospital.create({ data: body });
 
@@ -22,27 +30,24 @@ export class HospitalService {
   }
 
   async getHospital(id: string): Promise<ResponseHospitalDto> {
-    const hospital = await this.prismaService.hospital.findUnique({ where: { id } });
+    await this.isHospitalExists(id);
 
-    if (!hospital) throw new NotFoundException({ message: `Hospital with id ${id} does not exist` });
+    const hospital = await this.prismaService.hospital.findUnique({ where: { id } });
 
     return plainToInstance(ResponseHospitalDto, hospital);
   }
 
   async patchHospital(id: string, body: PatchHospitalDto): Promise<ResponseHospitalDto> {
-    const hospital = await this.getHospital(id);
+    await this.isHospitalExists(id);
 
-    const patchedHospital = await this.prismaService.hospital.update({
-      where: { id: hospital.id },
-      data: body,
-    });
+    const hospital = await this.prismaService.hospital.update({ where: { id }, data: body });
 
-    return plainToInstance(ResponseHospitalDto, patchedHospital);
+    return plainToInstance(ResponseHospitalDto, hospital);
   }
 
-  async deleteHospital(id: string) {
-    const hospital = await this.getHospital(id);
+  async deleteHospital(id: string): Promise<void> {
+    await this.isHospitalExists(id);
 
-    await this.prismaService.hospital.delete({ where: { id: hospital.id } });
+    await this.prismaService.hospital.delete({ where: { id } });
   }
 }

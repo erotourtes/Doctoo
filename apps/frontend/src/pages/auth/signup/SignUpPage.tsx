@@ -1,10 +1,15 @@
-import { useState } from 'react';
-import { API_URL, instance } from '@/api/axios.api';
-import handleError from '@/api/handleError.api';
+import {
+  AuthMainContainer,
+  LogoWithTitle,
+  Separator,
+  AuthLogInIntoAccount,
+  ErrorMessage,
+} from '@/pages/auth/auth-components';
 import { FormProvider, useForm } from 'react-hook-form';
 import Joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { AuthMainContainer, LogoWithTitle, Separator, AuthLogInIntoAccount } from '@/pages/auth/auth-components';
+import { useState } from 'react';
+import { API_URL, instance } from '../../../api/axios.api';
 import { Button, Icon, Input, InputPassword, PopupDoctoo } from '@/components/UI';
 
 type SignUpType = {
@@ -40,6 +45,7 @@ const SignUpPage = () => {
     resolver: joiResolver(userSignUpSchema),
   });
   const errors = form.formState.errors;
+  const [serverError, setServerError] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
 
   const onSubmit = async (data: SignUpType) => {
@@ -58,9 +64,13 @@ const SignUpPage = () => {
           withCredentials: true,
         },
       )
-      .catch(handleError);
-
-    setOpen(true);
+      .then(() => {
+        setOpen(true);
+      })
+      .catch(e => {
+        if (e.response) setServerError(e.response.data.message);
+        else setServerError('Something went wrong');
+      });
   };
 
   const onGoogleSignUp = async () => {
@@ -118,6 +128,8 @@ const SignUpPage = () => {
               <InputPassword label='Password' id='password' errorMessage={errors.password?.message} />
             </div>
           </div>
+
+          <ErrorMessage message={serverError} />
 
           <div className='space-y-6'>
             <Button btnType='submit' onClick={() => {}} type='primary' className='w-full'>

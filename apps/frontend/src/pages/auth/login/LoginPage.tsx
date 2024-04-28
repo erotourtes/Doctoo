@@ -1,11 +1,18 @@
-import { useNavigate } from 'react-router';
-import { FormProvider, useForm } from 'react-hook-form';
-import type { SubmitHandler } from 'react-hook-form';
+import { Button, Icon, Input } from '@/components/UI';
+import {
+  AuthCreateAccount,
+  AuthMainContainer,
+  ErrorMessage,
+  LogoWithTitle,
+  Separator,
+} from '@/pages/auth/auth-components';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Joi from 'joi';
-import { AuthCreateAccount, AuthMainContainer, LogoWithTitle, Separator } from '@/pages/auth/auth-components';
-import { Button, Icon, Input } from '@/components/UI';
-import api from '@/app/api';
+import { useState } from 'react';
+import type { FieldValues, SubmitHandler } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
+import { useLocation, useNavigate } from 'react-router';
+import { API_URL, instance } from '../../../api/axios.api';
 
 type SignInType = {
   email: string;
@@ -29,21 +36,37 @@ const userLogInSchema = Joi.object<SignInType>({
 });
 
 const LoginPage = () => {
+  const location = useLocation();
+  console.log(location);
   const form = useForm<SignInType>({
     mode: 'onSubmit',
+    defaultValues: {
+      email: location.state?.email || '',
+      password: location.state?.password || '',
+    },
     resolver: joiResolver(userLogInSchema),
   });
   const errors = form.formState.errors;
+  const [serverError, setServerError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const onLogin: SubmitHandler<{ email: string; password: string }> = async body => {
-    const { data } = await api.POST('/auth/login/patient', { body });
-
-    if (data) return navigate('/');
+  const onLogin: SubmitHandler<FieldValues> = async credentials => {
+    await instance
+      .post('/auth/login/patient', credentials, { withCredentials: true })
+      .then(body => {
+        const is2faEnabled: boolean = body.data.is2faEnabled;
+        if (is2faEnabled) navigate(`/login/authenticate`, { state: { credentials } });
+        else navigate('/', { replace: true });
+      })
+      .catch(e => {
+        if (e.response) setServerError(e.response.data.message);
+        else setServerError('Something went wrong');
+      });
   };
 
-  const onGoogleLogin = () => window.open(`${import.meta.env.VITE_BACKEND_API_URL}/auth/login/google`, '_self');
-
+  const onGoogleLogin = () => {
+    window.open(`${API_URL}/auth/login/google`, '_self');
+  };
   const onFacebookLogin = () => {};
 
   return (
@@ -95,6 +118,7 @@ const LoginPage = () => {
               />
             </div>
           </div>
+          <ErrorMessage message={serverError} />
 
           <div className='space-y-6'>
             <Button btnType='submit' type='primary' className='w-full'>
