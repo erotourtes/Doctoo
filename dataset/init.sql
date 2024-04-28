@@ -41,3 +41,13 @@ INSERT INTO notifications (id, patient_id, model_id, created_at, model, action)
 VALUES 
   ('14', '7', '10', '2024-04-01 09:30:00', 'APPOINTMENT', 'TODO'),
   ('15', '8', '11', '2024-04-02 10:30:00', 'APPOINTMENT', 'TODO');
+
+INSERT INTO allergies (id, name)
+VALUES 
+  ('20', 'peanuts')
+  ('21', 'milk')
+  
+INSERT INTO patient_allergies (id, patient_id, allergy_id)
+VALUES 
+  ('22', '7', '20'),
+  ('23', '8', '21');
