@@ -11,12 +11,22 @@ const InputCode = forwardRef<HTMLInputElement, InputCodeProps>(({ codeLength = 6
   const inputs = useRef<HTMLInputElement[]>([]);
 
   const onInputAdd = (e: React.ChangeEvent<HTMLInputElement>, slot: number) => {
-    const value = e.target.value;
+    const value = e.target.value.trim();
     if (isNaN(Number(value))) return;
+    if (value.length > 2) {
+      const newCode = [...code];
+      for (let i = 0; i < value.length; i++) {
+        if (slot + i >= codeLength) break;
+        newCode[slot + i] = value[i];
+        inputs.current[slot + i].focus();
+      }
+      setCode(newCode);
+      return;
+    }
     if (slot < codeLength - 1 && value) inputs.current[slot + 1].focus();
-    if (code[slot].length >= 1) return;
+    if (code[slot].length > 2) return;
     const newCode = [...code];
-    newCode[slot] = value;
+    newCode[slot] = value.at(-1) || '';
     setCode(newCode);
   };
 
@@ -38,7 +48,11 @@ const InputCode = forwardRef<HTMLInputElement, InputCodeProps>(({ codeLength = 6
           {...rest}
           onChange={e => {
             onInputAdd(e, i);
-            rest.onChange?.call(null, { ...e, target: { ...e.target, value: [...code, e.target.value].join('') } });
+            setCode(prev => {
+              const value = prev.join('');
+              rest.onChange?.call(null, { ...e, target: { ...e.target, value } });
+              return prev;
+            });
           }}
           onKeyDown={e => {
             if (e.key === 'Backspace') onInputRemove(i);
