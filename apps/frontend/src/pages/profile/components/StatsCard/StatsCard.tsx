@@ -1,16 +1,16 @@
+import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { patchPatientData } from '@/app/patient/PatientThunks';
 import { BloodType, Gender } from '@/dataTypes/Patient';
 import { capitalizeString } from '@/utils/capitalizeString';
 import Icon from '@UI/Icon/Icon';
 import type { IconVariant } from '@UI/Icon/types';
-import { useState } from 'react';
 
 type StatsCardProps = {
   iconVariant: IconVariant;
   value: string;
   variant: 'input' | 'select';
-  title: 'Height,cm' | 'Weight,kg' | 'Age' | 'Gender' | 'Blood type';
+  title: 'Height, cm' | 'Weight, kg' | 'Age' | 'Gender' | 'Blood type';
   options?: string[];
 };
 
@@ -21,10 +21,10 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
   const dispatch = useAppDispatch();
 
   return (
-    <div className='flex w-full justify-between gap-4 rounded-lg bg-white p-7 pb-4 text-start'>
+    <div className='flex w-full justify-between gap-4 rounded-lg bg-white p-3 pb-4 text-start md:p-7'>
       <div className='flex flex-col gap-4'>
         <p className='w-full text-grey-1'>{title}</p>
-        <p className='group flex w-fit items-center  text-black'>
+        <p className='group flex w-fit items-center text-black'>
           <form
             onSubmit={e => {
               e.preventDefault();
@@ -34,12 +34,12 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
               <input
                 onBlur={() => {
                   switch (title) {
-                    case 'Height,cm':
+                    case 'Height, cm':
                       if (parseInt(inputValue)) {
                         dispatch(patchPatientData({ id: patient.id, data: { height: parseInt(inputValue) } }));
                       }
                       break;
-                    case 'Weight,kg':
+                    case 'Weight, kg':
                       if (parseInt(inputValue)) {
                         dispatch(patchPatientData({ id: patient.id, data: { weight: parseInt(inputValue) } }));
                       }

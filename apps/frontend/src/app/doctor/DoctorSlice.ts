@@ -4,31 +4,25 @@ import { createAppSlice } from '../createAppSlice';
 import type { IDoctor } from '@/dataTypes/Doctor';
 
 interface DoctorData {
-  data: IDoctor;
+  doctors: IDoctor[];
 }
 
 const initialState: DoctorData = {
-  data: {
-    photo: '',
-    name: '',
-    specialization: '',
-    reviews: 0,
-    hospital: '',
-  },
+  doctors: [],
 };
 
 export const doctorSlice = createAppSlice({
   name: 'doctor',
   initialState,
   reducers: {
-    setDoctorData: (state, action: PayloadAction<IDoctor>) => {
-      state.data = action.payload;
+    setDoctorData: (state, action: PayloadAction<IDoctor[]>) => {
+      state.doctors = action.payload;
     },
   },
 });
 
 export const { setDoctorData } = doctorSlice.actions;
 
-export const doctorData = (state: RootState) => state.doctor.data;
+export const doctorData = (state: RootState) => state.doctor.doctors;
 
 export default doctorSlice.reducer;

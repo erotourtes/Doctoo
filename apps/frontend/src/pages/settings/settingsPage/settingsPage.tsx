@@ -59,7 +59,7 @@ const Settings = () => {
         <section className='flex items-center justify-center'>
           <div className='for-password h-[88px] w-11/12 w-full rounded-lg bg-white'>
             <div className='flex flex-col items-center justify-between gap-2 p-2 sm:flex-row sm:p-8'>
-              <span className='text-dark-grey text-base text-lg font-medium'>Password</span>
+              <span className='text-base text-lg font-medium text-dark-grey'>Password</span>
               <a href='#' className='text-lg font-medium text-main ' onClick={() => setShowPopup(true)}>
                 Change password
               </a>
@@ -73,7 +73,7 @@ const Settings = () => {
               <div key={id} className='p-2 sm:px-2 sm:py-0'>
                 <div className={`${id !== 'billPayment' ? ' border-b border-grey-4' : ''}`}>
                   <div className='mb-3 flex items-center justify-between sm:mb-0 sm:px-0 sm:py-4'>
-                    <span className='text-dark-grey text-base text-sm font-medium sm:text-lg'>{label}</span>
+                    <span className='text-base text-sm font-medium text-dark-grey sm:text-lg'>{label}</span>
                     <a href='#' className='text-lg text-main '>
                       <Toggle selected={toggleState} onSelectedChange={toggleHandler} label='' id={id} />
                     </a>

@@ -1,7 +1,10 @@
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { patchUserData } from '@/app/patient/PatientThunks';
-import { PopupDoctoo, Icon, Input, Button } from '@/components/UI';
-import type { IUSer } from '@/dataTypes/User';
+import { Button } from '@/components/UI/Button/Button';
+import Input from '@/components/UI/Input/Input';
+import PopupDoctoo from '@/components/UI/Popup/Popup';
+import type { IUser } from '@/dataTypes/User';
+import Icon from '@UI/Icon/Icon';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Joi from 'joi';
 import { type FieldValues, FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
@@ -41,7 +44,7 @@ const PersonalInfoPopup = ({ isOpen, onClose }: PersonalInfoPopupProps) => {
     const [firstName, lastName] = data.fullname.split(' ');
     const phone = data.countryIndex + data.phone;
     const { email } = data;
-    const userData: Partial<IUSer> = {
+    const userData: Partial<IUser> = {
       email,
       phone,
       firstName,
@@ -55,10 +58,11 @@ const PersonalInfoPopup = ({ isOpen, onClose }: PersonalInfoPopupProps) => {
     <PopupDoctoo
       popupIsOpen={isOpen}
       closePopup={onClose}
-      modalBodyClassName='relative z-20 flex h-full min-w-[500px] flex-col gap-7 rounded-xl bg-white'
+      modalFullClassName='max-w-[508px]'
+      modalBodyClassName='relative z-20 flex h-full max-w-[412px] flex-col gap-6 sm:gap-7 rounded-xl bg-white'
     >
-      <p className='text-2xl font-medium text-black'>Personal info</p>
-      <div className='flex items-center gap-7'>
+      <p className='text-xl font-medium text-black sm:text-2xl'>Personal info</p>
+      <div className='flex flex-col items-center gap-2 sm:flex-row sm:gap-7'>
         {patient.avatarKey && (
           <>
             <img src={patient.avatarKey} alt='avatar' className='h-[92px] w-[92px] rounded-lg' />
@@ -92,20 +96,19 @@ const PersonalInfoPopup = ({ isOpen, onClose }: PersonalInfoPopupProps) => {
       </div>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit as SubmitHandler<FieldValues>)} className='flex w-full flex-col gap-7'>
-          <div className='w-full'>
+          <div className='grid w-full  gap-2 sm:gap-6'>
             <Input id='fullname' label='Name and surname' placeholder='John Smith' type='text' className='w-full' />
 
-            <Input id='email' label='Email' placeholder='john.smith@gmail.com' type='text' className='w-full' />
             <Input id='email' label='Email' placeholder='john.smith@gmail.com' type='text' className='w-full' />
 
             <div className='flex w-full flex-col'>
               {/* TODO: Add select input after it's ready */}
-              <p className='text-md my-2 block text-grey-1'>Phone</p>
-              <div className='flex w-full gap-4'>
+              <p className='text-md mb-2 block text-grey-1'>Phone</p>
+              <div className='flex w-full gap-1 sm:gap-4'>
                 <div className='relative w-1/5'>
                   <select
                     {...methods.register('countryIndex')}
-                    className='flex w-full appearance-none items-center  justify-center rounded-md border border-transparent bg-background px-4 py-2 text-grey-1 outline-none focus:border-text'
+                    className='flex w-full appearance-none items-center justify-center rounded-md border border-transparent bg-background px-4 py-2 text-grey-1 outline-none focus:border-text'
                   >
                     <option className='flex w-full items-center justify-center' value='+1' selected>
                       🇺🇸 +1
@@ -144,11 +147,11 @@ const PersonalInfoPopup = ({ isOpen, onClose }: PersonalInfoPopupProps) => {
               </div>
             </div>
           </div>
-          <div className='flex w-full gap-4'>
-            <Button btnType='reset' type='secondary' onClick={() => {}} className='w-1/2'>
+          <div className='flex w-full flex-col-reverse gap-4 sm:flex-row'>
+            <Button btnType='reset' type='secondary' onClick={() => {}} className='w-full sm:w-1/2'>
               Cancel
             </Button>
-            <Button btnType='submit' type='primary' className='w-1/2'>
+            <Button btnType='submit' type='primary' className='w-full sm:w-1/2'>
               Save
             </Button>
           </div>

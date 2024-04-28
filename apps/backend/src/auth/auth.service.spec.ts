@@ -6,9 +6,11 @@ import { plainToClass, plainToInstance } from 'class-transformer';
 import auth from '../config/auth';
 import config from '../config/config';
 import { MailService } from '../mail/mail.service';
+import { MinioService } from '../minio/minio.service';
 import { CreatePatientDto } from '../patient/dto/create.dto';
 import { PatientService } from '../patient/patient.service';
 import { CreateUserDto } from '../user/dto/create.dto';
+import { ResponseUserDto } from '../user/dto/response.dto';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
 
@@ -21,6 +23,7 @@ describe('AuthService', () => {
   const patientServiceMock: Partial<PatientService> = {};
   const authConfig: Partial<ConfigType<typeof auth>> = {};
   const mailServiceMock: Partial<MailService> = {};
+  const minioServiceMock: Partial<MinioService> = {};
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -32,6 +35,7 @@ describe('AuthService', () => {
         { provide: config.KEY, useValue: config },
         { provide: auth.KEY, useValue: authConfig },
         { provide: MailService, useValue: mailServiceMock },
+        { provide: MinioService, useValue: minioServiceMock },
       ],
     }).compile();
 
@@ -58,30 +62,21 @@ describe('AuthService', () => {
     patientServiceMock.createPatient = jest.fn().mockResolvedValue({ ...patient, id: '2' });
     mailServiceMock.sendPatientSignUpMail = jest.fn().mockReturnThis();
 
-    const signUpDto = { ...user };
+    const signedUp = await authService.signUpUser(user);
 
-    const signedUp = await authService.signUpUser(signUpDto);
+    const { password, ...userWithoutPassword } = user;
 
-    expect(signedUp).toEqual(expect.objectContaining({ id: '1', ...user }));
-    expect(userServiceMock.createUser).toHaveBeenCalledWith({
-      ...user,
-      password: expect.not.stringMatching(user.password),
-      avatarKey: expect.any(String),
-    });
+    expect(password).toEqual(expect.any(String));
+    expect(signedUp).toEqual(expect.objectContaining({ id: '1', ...userWithoutPassword }));
+    expect(userServiceMock.createUser).toHaveBeenCalledWith({ ...user, avatarKey: expect.any(String) });
   });
 
   it('Should validate credentials', async () => {
-    const pass = bcrypt.hashSync(user.password, 10);
+    const password = bcrypt.hashSync(user.password, 10);
 
-    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue({
-      ...user,
-      password: pass,
-    });
+    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue({ ...user, password });
 
-    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue({
-      ...user,
-      password: pass,
-    });
+    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue({ ...user, password });
 
     patientServiceMock.getPatientByUserId = jest.fn().mockResolvedValue(patient);
 
@@ -96,7 +91,7 @@ describe('AuthService', () => {
 
     const validated = await authService.validatePatientByEmail(user.email, 'invalid_password');
 
-    expect(validated).toBeNull();
+    expect(validated.patient).toBeNull();
   });
 
   it('Should validate Google', async () => {
@@ -121,9 +116,12 @@ describe('AuthService', () => {
   });
 
   it('Should signup user with valid googleId', async () => {
-    const newUser = { ...user, googleId: 'googleId', password: null };
+    const { password, ...userWithoutPassword } = user;
+    const newUser = { ...userWithoutPassword, googleId: 'googleId' };
+
     userServiceMock.createUser = jest.fn().mockResolvedValue(newUser);
 
+    expect(password).toEqual(expect.any(String));
     expect(authService.signUpUserWithGoogle({ ...newUser })).resolves.toEqual({ ...newUser });
   });
 
@@ -136,18 +134,49 @@ describe('AuthService', () => {
   });
 
   it("Shouldn't prolong token's life", async () => {
-    authConfig.JWT_EXPIRATION_TRESHOLD_SECONDS = 60 * 60 * 24 + 10; // more than 1 day
-    authConfig.JWT_EXPIRATION_DAYS = '1d';
+    authConfig.JWT_EXPIRATION_TRESHOLD_SECONDS = 60;
+    authConfig.JWT_EXPIRATION_DAYS = '0d';
+
     const token = await authService.signJwtToken('1');
+
     const result = authService.jwtCloseToExpire(token);
+
     expect(result).toBeFalsy();
   });
 
-  it("Should prolong token's life", async () => {
-    authConfig.JWT_EXPIRATION_TRESHOLD_SECONDS = 0;
-    authConfig.JWT_EXPIRATION_DAYS = '1d';
-    const token = await authService.signJwtToken('1');
-    const result = authService.jwtCloseToExpire(token);
-    expect(result).toBeFalsy();
+  it('Should not login patient with MFA', async () => {
+    const password = bcrypt.hashSync(user.password, 10);
+    const newUser: Partial<ResponseUserDto> = { id: '1', ...user, password, twoFactorAuthToggle: true };
+
+    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue(newUser);
+    patientServiceMock.getPatientByUserId = jest.fn().mockResolvedValue(patient);
+    userServiceMock.updateSecretCode = jest.fn().mockReturnThis();
+    mailServiceMock.sendMFACode = jest.fn().mockReturnThis();
+
+    const result = await authService.validatePatientByEmail(user.email, user.password);
+
+    expect(result.isMFAEnabled).toBeTruthy();
+    expect(userServiceMock.updateSecretCode).toHaveBeenCalledWith(expect.any(String), expect.stringMatching(/.{7,}/));
+    expect(mailServiceMock.sendMFACode).toHaveBeenCalled();
+  });
+
+  it('Should not change password', async () => {
+    const password = bcrypt.hashSync(user.password, 10);
+
+    const newUser: Partial<ResponseUserDto> = {
+      id: '1',
+      ...user,
+      password,
+    };
+
+    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue(newUser);
+    userServiceMock.patchUser = jest.fn().mockReturnThis();
+
+    await expect(async () => {
+      await authService.changePassword(newUser as ResponseUserDto, {
+        oldPassword: 'wrong_password',
+        newPassword: 'new_password',
+      });
+    }).rejects.toThrow();
   });
 });

@@ -1,15 +1,19 @@
 import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { ClassicNestResponse } from './ClassicNestResponse';
 
-class ErrorObject {
-  @ApiProperty({ example: 'name', description: 'Property name' })
+class ErrorValidationObject {
+  @ApiProperty({ example: 'name', description: 'The name of the field where validation failed.' })
   proparty: string;
 
-  @ApiProperty({ example: 'Name is too short', description: 'Detailed error message' })
+  @ApiProperty({ example: 'Name is too short', description: 'Detailed description of the error.' })
   message: string;
 }
 
 export class BadRequestResponse extends OmitType(ClassicNestResponse, ['error']) {
-  @ApiProperty({ type: ErrorObject, isArray: true, description: 'List of errors' })
-  errors: ErrorObject[];
+  @ApiProperty({
+    type: ErrorValidationObject,
+    isArray: true,
+    description: 'A list of all fields that failed validation.',
+  })
+  errors: ErrorValidationObject[];
 }

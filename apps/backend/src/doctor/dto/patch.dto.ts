@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsOptional, IsString, IsUUID, Min, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
+import { IsNumber, IsOptional, IsUUID, Min, ValidateNested } from 'class-validator';
+import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
 
 class UpdateHospitalIdsDto {
   @IsOptional()
@@ -35,7 +36,7 @@ export class PatchDoctorDto {
     example: 'Experienced doctor with a focus on patient care',
   })
   @IsOptional()
-  @IsString()
+  @IsNotEmptyString()
   about?: string;
 
   @IsOptional()

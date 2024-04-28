@@ -6,251 +6,212 @@
 
 export interface paths {
   "/auth/login/patient": {
-    /**
-     * Login with an email and a password
-     * @description This endpoint is used for logging in with an email and password.
-     */
+    /** Login patient */
     post: operations["AuthController_localLogin"];
   };
+  "/auth/login/patient/mfa": {
+    /** Login patient with MFA */
+    post: operations["AuthController_verifyMFA"];
+  };
   "/auth/signup": {
-    /**
-     * Local sign up
-     * @description This endpoint is used for the local sign up.
-     */
-    post: operations["AuthController_signUpFirstStep"];
+    /** Sign up user */
+    post: operations["AuthController_signUpUserFirstStep"];
   };
   "/auth/signup/patient/{token}": {
+    /** Sign up patient */
     post: operations["AuthController_signUpPatientSecondStep"];
   };
   "/auth/login/google": {
+    /** Login with Google */
     get: operations["AuthController_googleLogin"];
   };
   "/auth/login/google/redirect": {
+    /** Login with Google redirect */
     get: operations["AuthController_googleLoginRedirect"];
   };
   "/auth/logout": {
-    /**
-     * Logging out
-     * @description This endpoint is used for logging out.
-     */
+    /** Logout */
     get: operations["AuthController_logout"];
   };
+  "/auth/password/change": {
+    /** Change password */
+    post: operations["AuthController_changePassword"];
+  };
+  "/auth/patient/me": {
+    /** Get patient */
+    get: operations["AuthController_getPatient"];
+  };
   "/user/{id}": {
-    /**
-     * Get a user by ID
-     * @description This endpoint retrieves a user object by ID.
-     */
+    /** Get user */
     get: operations["UserController_getUser"];
-    /**
-     * Delete a user by ID
-     * @description This endpoint deletes a user object by ID.
-     */
+    /** Delete user */
     delete: operations["UserController_deleteUser"];
-    /**
-     * Update a user by ID
-     * @description This endpoint updates a user object by ID.
-     */
+    /** Update user */
     patch: operations["UserController_patchUser"];
   };
   "/user": {
-    /**
-     * Create a new user
-     * @description This endpoint creates a new user.
-     */
+    /** Create user */
     post: operations["UserController_createUser"];
   };
   "/patient/{id}": {
-    /**
-     * Get a patient by ID
-     * @description This endpoint retrieves a patient object by ID.
-     */
+    /** Get patient */
     get: operations["PatientController_getPatient"];
-    /**
-     * Delete a patient by ID
-     * @description This endpoint deletes a patient object by ID.
-     */
+    /** Delete patient */
     delete: operations["PatientController_deletePatient"];
-    /**
-     * Update a patient by ID
-     * @description This endpoint updates a patient object by ID.
-     */
+    /** Update patient */
     patch: operations["PatientController_patchPatient"];
   };
   "/patient": {
-    /**
-     * Create a new patient
-     * @description This endpoint creates a new patient.
-     */
+    /** Create patient */
     post: operations["PatientController_createPatient"];
   };
+  "/patient/{id}/allergy": {
+    /** Get patient allergies */
+    get: operations["PatientController_getPatientAllergies"];
+    /** Create patient allergy */
+    post: operations["PatientController_createPatientAllergy"];
+  };
   "/favorite": {
-    /**
-     * Get favorite doctors
-     * @description This endpoint retrieves favorite doctors.
-     */
+    /** Get favorites */
     get: operations["FavoriteController_getFavorites"];
-    /**
-     * Add a doctor to favorites
-     * @description This endpoint addes a doctor to favorites list.
-     */
+    /** Create favorite */
     post: operations["FavoriteController_createFavorite"];
   };
   "/favorite/{id}": {
-    /**
-     * Get a favorite doctor by ID
-     * @description This endpoint retrieves a favorite doctor by ID.
-     */
+    /** Get favorite */
     get: operations["FavoriteController_getFovorite"];
-    /**
-     * Remove the doctor from favorites
-     * @description This endpoint deletes a doctor from favorite doctors.
-     */
+    /** Delete favorite */
     delete: operations["FavoriteController_deleteFavorite"];
   };
   "/doctor": {
-    /**
-     * Get all doctors
-     * @description This endpoint retrieves all doctors.
-     */
+    /** Get all doctors */
     get: operations["DoctorController_getDoctors"];
-    /**
-     * Create a new doctor
-     * @description Creates a new doctor profile
-     */
+    /** Create doctor */
     post: operations["DoctorController_createDoctor"];
   };
+  "/doctor/dactors/{id}": {
+    /** Get all doctors by patient */
+    get: operations["DoctorController_getPatientDoctors"];
+  };
   "/doctor/{id}": {
-    /**
-     * Get a doctor by ID
-     * @description This endpoint retrieves a doctor by ID.
-     */
+    /** Get doctor */
     get: operations["DoctorController_getDoctor"];
-    /**
-     * Delete a doctor by ID
-     * @description This endpoint deletes a doctor object by ID.
-     */
+    /** Delete doctor */
     delete: operations["DoctorController_deleteDoctor"];
-    /**
-     * Update a doctor by ID
-     * @description This endpoint updates a doctor object by ID.
-     */
+    /** Update doctor */
     patch: operations["DoctorController_patchDoctor"];
   };
   "/hospital": {
-    /**
-     * Get a list of hospitals
-     * @description This endpoint retrieves a list of hospital objects.
-     */
+    /** Get all hospitals */
     get: operations["HospitalController_getHospitals"];
-    /**
-     * Create a new hospital
-     * @description This endpoint creates a new hospital.
-     */
+    /** Create hospital */
     post: operations["HospitalController_createHospital"];
   };
   "/hospital/{id}": {
-    /**
-     * Get a hospital by ID
-     * @description This endpoint retrieves a hospital object by ID.
-     */
+    /** Get hospital */
     get: operations["HospitalController_getHospital"];
-    /**
-     * Delete a hospital by ID
-     * @description This endpoint deletes a hospital object by ID.
-     */
+    /** Delete hospital */
     delete: operations["HospitalController_deleteHospital"];
-    /**
-     * Update a hospital by ID
-     * @description This endpoint updates a hospital object by ID.
-     */
+    /** Update hospital */
     patch: operations["HospitalController_patchHospital"];
   };
   "/specialization": {
+    /** Get all specializations */
     get: operations["SpecializationController_getSpecializations"];
-    post: operations["SpecializationController_create"];
+    /** Create specialization */
+    post: operations["SpecializationController_createSpecialization"];
   };
   "/specialization/{id}": {
+    /** Get specialization */
     get: operations["SpecializationController_getSpecialization"];
+    /** Delete specialization */
     delete: operations["SpecializationController_deleteSpecialization"];
-    patch: operations["SpecializationController_updateSpecialization"];
+    /** Update specialization */
+    patch: operations["SpecializationController_patchSpecialization"];
   };
   "/file/upload": {
-    /**
-     * Uploading a file
-     * @description This endpoint is used for the file uploading.
-     */
+    /** Upload file */
     post: operations["FileController_uploadFile"];
   };
   "/file/{name}": {
-    /**
-     * Get a link for a file by name
-     * @description This endpoint retrieves a link for a file by name.
-     */
-    get: operations["FileController_getFile"];
-    /**
-     * Delete a file by name
-     * @description This endpoint deletes a file by name.
-     */
-    delete: operations["FileController_deleteFile"];
+    /** Get file */
+    get: operations["FileController_getFileByName"];
+    /** Delete file */
+    delete: operations["FileController_deleteFileByName"];
   };
   "/appointment": {
-    /**
-     * Get a list of all appointments
-     * @description This endpoint retrieves a list of all appointment objects.
-     */
-    get: operations["AppointmentController_findAll"];
-    /**
-     * Create a new appointment
-     * @description This endpoint creates a new appointment.
-     */
-    post: operations["AppointmentController_create"];
+    /** Get all appointments */
+    get: operations["AppointmentController_getAppointments"];
+    /** Create an appointment */
+    post: operations["AppointmentController_createAppointment"];
   };
-  "/appointment/all-by-patient/{id}": {
-    /**
-     * Get a list of appointments of the patient
-     * @description This endpoint retrieves a list of appointment objects of the patient by it's ID.
-     */
-    get: operations["AppointmentController_findAllByPatientId"];
+  "/appointment/patient/{id}": {
+    /** Get all appointments by patient id */
+    get: operations["AppointmentController_getAppointmentsByPatientId"];
   };
-  "/appointment/all-by-doctor/{id}": {
-    /**
-     * Get a list of appointments of the doctor
-     * @description This endpoint retrieves a list of appointment objects of the doctor by it's ID.
-     */
-    get: operations["AppointmentController_findAllByDoctorId"];
+  "/appointment/doctor/{id}": {
+    /** Get all appointments by doctor id */
+    get: operations["AppointmentController_getAppointmentsByDoctorId"];
   };
   "/appointment/{id}": {
-    /**
-     * Get an appointment by ID
-     * @description This endpoint retrieves an appointment object by ID.
-     */
-    get: operations["AppointmentController_findOne"];
-    /**
-     * Delete an appointment by ID
-     * @description This endpoint deletes an appointment object by ID.
-     */
-    delete: operations["AppointmentController_remove"];
-    /**
-     * Update an appointment by ID
-     * @description This endpoint updates an appointment object by ID.
-     */
-    patch: operations["AppointmentController_update"];
+    /** Get an appointment */
+    get: operations["AppointmentController_getAppointment"];
+    /** Delete an appointment */
+    delete: operations["AppointmentController_deleteAppointment"];
+    /** Update an appointment */
+    patch: operations["AppointmentController_patchAppointment"];
   };
   "/declaration": {
-    get: operations["DeclarationController_findAll"];
-    post: operations["DeclarationController_create"];
+    /** Get declarations */
+    get: operations["DeclarationController_getDeclrations"];
+    /** Create declaration */
+    post: operations["DeclarationController_createDeclaration"];
   };
   "/declaration/{id}": {
-    get: operations["DeclarationController_findOne"];
-    delete: operations["DeclarationController_remove"];
-    patch: operations["DeclarationController_update"];
+    /** Get declaration */
+    get: operations["DeclarationController_getDeclaration"];
+    /** Delete declaration */
+    delete: operations["DeclarationController_deleteDeclaration"];
+    /** Update declaration */
+    patch: operations["DeclarationController_patchDeclaration"];
   };
-  "/payment": {
-    /**
-     * Get a payment intent
-     * @description This endpoint return payment intent from stripe api
-     */
-    post: operations["PaymentController_createPayment"];
+  "/review/doctor/{doctorId}": {
+    /** Get reviews by doctor */
+    get: operations["ReviewController_getReviewsByDoctorId"];
+    /** Create a new review */
+    post: operations["ReviewController_createReview"];
+  };
+  "/review": {
+    /** Get reviews */
+    get: operations["ReviewController_getReviews"];
+  };
+  "/review/doctor/{doctorId}/average": {
+    /** Get the average rating of a doctor */
+    get: operations["ReviewController_getAvgRateByDoctorId"];
+  };
+  "/review/{id}": {
+    /** Get review */
+    get: operations["ReviewController_getReview"];
+  };
+  "/review/{reviewId}": {
+    /** Delete a review */
+    delete: operations["ReviewController_deleteReview"];
+    /** Update a review */
+    patch: operations["ReviewController_patchReview"];
+  };
+  "/allergy": {
+    /** Get all allergies */
+    get: operations["AllergyController_getAllergies"];
+    /** Create allergy */
+    post: operations["AllergyController_createAllergy"];
+  };
+  "/allergy/{id}": {
+    /** Get allergy */
+    get: operations["AllergyController_getAllergy"];
+    /** Delete allergy */
+    delete: operations["AllergyController_deleteAllergy"];
+    /** Update allergy */
+    patch: operations["AllergyController_patchAllergy"];
   };
 }
 
@@ -258,68 +219,33 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
-    AuthLocalLoginDto: {
+    LocalLoginDto: {
       /**
-       * @description Patient email
-       * @example hello@example.com
+       * @description Unique user mail.
+       * @example example@example.com
        */
       email: string;
       /**
-       * @description Patient password
+       * @description User password.
        * @example password
        */
       password: string;
     };
-    ResponsePatientDto: {
-      /** @description The ID of the patient */
-      id: string;
-      /** @description The ID of the user associated with the patient */
-      userId: string;
-      /** @description The weight of the patient */
-      weight: number;
-      /** @description The height of the patient */
-      height: number;
-      /** @description The age of the patient */
-      age: number;
+    LocalLoginResponseDto: {
       /**
-       * @description The blood type of the patient
-       * @enum {string}
+       * @description Whether two-factor authorization is enabled for the user.
+       * @example false
        */
-      bloodType: "O_PLUS" | "O_MINUS" | "A_PLUS" | "A_MINUS" | "B_PLUS" | "B_MINUS" | "AB_PLUS" | "AB_MINUS";
-      /**
-       * @description The gender of the patient
-       * @enum {string}
-       */
-      gender: "MALE" | "FEMALE";
-      /** @description The identity card key of the patient */
-      identityCardKey: string;
-      /** @description The country of residence of the patient */
-      country: string;
-      /** @description The state of residence of the patient */
-      state?: string;
-      /** @description The city of residence of the patient */
-      city: string;
-      /** @description The street address of the patient */
-      street: string;
-      /** @description The apartment number of the patient */
-      apartment?: string;
-      /** @description The zip code of the patient */
-      zipCode?: number;
-      /** @description The email notification toggle of the patient */
-      emailNotificationToggle: boolean;
-      /** @description The sms notification toggle of the patient */
-      twoFactorAuthToggle: boolean;
-      /** @description The two factor authentication toggle of the patient */
-      requestBillPaymentApproval: boolean;
+      isMFAEnabled: boolean;
     };
-    ErrorObject: {
+    ErrorValidationObject: {
       /**
-       * @description Property name
+       * @description The name of the field where validation failed.
        * @example name
        */
       proparty: string;
       /**
-       * @description Detailed error message
+       * @description Detailed description of the error.
        * @example Name is too short
        */
       message: string;
@@ -332,8 +258,8 @@ export interface components {
       statusCode: number;
       /** @description Detailed description of the error. */
       message: string | string[];
-      /** @description List of errors */
-      errors: components["schemas"]["ErrorObject"][];
+      /** @description A list of all fields that failed validation. */
+      errors: components["schemas"]["ErrorValidationObject"][];
     };
     ClassicNestResponse: {
       /**
@@ -345,312 +271,737 @@ export interface components {
       message: string | string[];
       /**
        * @description Brief description of the error.
-       * @example Not Found
+       * @example The name must be longer than 4 characters.
        */
       error?: string;
     };
-    ResponseWithoutRelationsUserDto: {
+    LocalLoginTwoFactorDto: {
       /**
-       * @description The ID of the user
-       * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+       * @description Unique user mail.
+       * @example example@example.com
        */
-      id: string;
+      email: string;
       /**
-       * @description The first name of the user
+       * @description User password.
+       * @example password
+       */
+      password: string;
+      /**
+       * @description One-time unique authorization code.
+       * @example 236854
+       */
+      code: string;
+    };
+    SignUpUserDto: {
+      /**
+       * @description The user's real first name.
        * @example John
        */
       firstName: string;
       /**
-       * @description The last name of the user
+       * @description The user's real last name.
        * @example Doe
        */
       lastName: string;
       /**
-       * @description The phone number of the user
-       * @example +380980000000
+       * @description The user's phone number in national format.
+       * @example +380000000000
        */
       phone: string;
       /**
-       * @description The email address of the user
-       * @example user@example.com
+       * @description Unique user mail.
+       * @example example@example.com
        */
       email: string;
       /**
-       * @description Indicates whether the email is verified
-       * @example true
+       * @description User password.
+       * @example password
+       */
+      password?: string;
+      /**
+       * @description Unique Google Id of the user.
+       * @example G-123456789
+       */
+      googleId?: string;
+      /**
+       * @description Link to the user image.
+       * @example https://imgur.com/2Bmq0jd
+       */
+      avatarImgUrl?: string;
+    };
+    ResponseUserDto: {
+      /**
+       * @description Unique user id.
+       * @example 54409afc-04c4-4fbd-a6cf-cfcba13102a0
+       */
+      id: string;
+      /**
+       * @description The user's real first name.
+       * @example John
+       */
+      firstName: string;
+      /**
+       * @description The user's real last name.
+       * @example Doe
+       */
+      lastName: string;
+      /**
+       * @description The user's phone number in national format.
+       * @example +380000000000
+       */
+      phone: string;
+      /**
+       * @description Unique user mail.
+       * @example example@example.com
+       */
+      email: string;
+      /**
+       * @description Whether the user has confirmed his mail in the service.
+       * @example false
        */
       emailVerified: boolean;
       /**
-       * @description The Google ID of the user
-       * @example google123
+       * @description Unique Google Id of the user.
+       * @example G-123456789
        */
-      googleId: string;
+      googleId?: string;
       /**
-       * @description The avatar key of the user
-       * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+       * @description The unique file id of the file in S3 storage.
+       * @example aae1358c-d7b5-4cae-8867-50269b4b3769.jpeg
        */
       avatarKey: string;
     };
-    AuthSignUpPatientDto: {
-      /** @description The weight of the patient */
+    SignUpPatientDto: {
+      /**
+       * @description Patient's weight.
+       * @example 65
+       */
       weight: number;
-      /** @description The height of the patient */
+      /**
+       * @description Patient height.
+       * @example 185
+       */
       height: number;
-      /** @description The age of the patient */
+      /**
+       * @description Patient's age.
+       * @example 35
+       */
       age: number;
       /**
-       * @description The blood type of the patient
+       * @description The patient's blood type.
+       * @example AB_MINUS
        * @enum {string}
        */
       bloodType: "O_PLUS" | "O_MINUS" | "A_PLUS" | "A_MINUS" | "B_PLUS" | "B_MINUS" | "AB_PLUS" | "AB_MINUS";
       /**
-       * @description The gender of the patient
+       * @description Patient gender.
+       * @example MALE
        * @enum {string}
        */
       gender: "MALE" | "FEMALE";
-      /** @description The country of residence of the patient */
-      country: string;
-      /** @description The state of residence of the patient */
-      state?: string;
-      /** @description The city of residence of the patient */
-      city: string;
-      /** @description The street address of the patient */
-      street: string;
-      /** @description The apartment number of the patient */
-      apartment?: string;
-      /** @description The zip code of the patient */
-      zipCode?: number;
-    };
-    ResponseUserDto: {
       /**
-       * @description The ID of the user
-       * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+       * @description The country where the hospital is located.
+       * @example USA
        */
-      id: string;
+      country: string;
       /**
-       * @description The first name of the user
+       * @description The address of the state where the hospital is located.
+       * @example Oregon
+       */
+      state?: string;
+      /**
+       * @description The name of the city where this hospital is located.
+       * @example Salem
+       */
+      city: string;
+      /**
+       * @description The name of the street where this hospital is located.
+       * @example St. Big Bells
+       */
+      street: string;
+      /**
+       * @description Patient's apartment number.
+       * @example 35A
+       */
+      apartment?: string;
+      /**
+       * @description The hospital's zip code.
+       * @example 128
+       */
+      zipCode: number;
+    };
+    ChangePasswordDto: {
+      /**
+       * @description Old user password.
+       * @example password
+       */
+      oldPassword: string;
+      /**
+       * @description New user password.
+       * @example pa$$w0rd
+       */
+      newPassword: string;
+    };
+    BadRequestException: Record<string, never>;
+    PatientResponseDto: {
+      /**
+       * @description The user's real first name.
        * @example John
        */
       firstName: string;
       /**
-       * @description The last name of the user
+       * @description The user's real last name.
        * @example Doe
        */
       lastName: string;
       /**
-       * @description The phone number of the user
-       * @example +380980000000
+       * @description The user's phone number in national format.
+       * @example +380000000000
        */
       phone: string;
       /**
-       * @description The email address of the user
-       * @example user@example.com
+       * @description Unique user mail.
+       * @example example@example.com
        */
       email: string;
       /**
-       * @description Indicates whether the email is verified
-       * @example true
+       * @description Whether the user has confirmed his mail in the service.
+       * @example false
        */
       emailVerified: boolean;
       /**
-       * @description The Google ID of the user
-       * @example google123
+       * @description Unique Google Id of the user.
+       * @example G-123456789
        */
-      googleId: string;
+      googleId?: string;
       /**
-       * @description The avatar key of the user
-       * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+       * @description The unique file id of the file in S3 storage.
+       * @example aae1358c-d7b5-4cae-8867-50269b4b3769.jpeg
        */
       avatarKey: string;
       /**
-       * @description The list of doctors associated with the user
-       * @example []
+       * @description Patient's weight.
+       * @example 65
        */
-      doctors: string[];
+      weight: number;
       /**
-       * @description The list of patients associated with the user
-       * @example []
+       * @description Patient height.
+       * @example 185
        */
-      patients: string[];
+      height: number;
+      /**
+       * @description Patient's age.
+       * @example 35
+       */
+      age: number;
+      /**
+       * @description The patient's blood type.
+       * @example AB_MINUS
+       * @enum {string}
+       */
+      bloodType: "O_PLUS" | "O_MINUS" | "A_PLUS" | "A_MINUS" | "B_PLUS" | "B_MINUS" | "AB_PLUS" | "AB_MINUS";
+      /**
+       * @description Patient gender.
+       * @example MALE
+       * @enum {string}
+       */
+      gender: "MALE" | "FEMALE";
+      /**
+       * @description A unique key to the patient identification file.
+       * @example 207fe335-41b6-4ec0-9820-f3fed883cb2b
+       */
+      identityCardKey: string;
+      /**
+       * @description The country where the hospital is located.
+       * @example USA
+       */
+      country: string;
+      /**
+       * @description The address of the state where the hospital is located.
+       * @example Oregon
+       */
+      state?: string;
+      /**
+       * @description The name of the city where this hospital is located.
+       * @example Salem
+       */
+      city: string;
+      /**
+       * @description The name of the street where this hospital is located.
+       * @example St. Big Bells
+       */
+      street: string;
+      /**
+       * @description Patient's apartment number.
+       * @example 35A
+       */
+      apartment?: string;
+      /**
+       * @description The hospital's zip code.
+       * @example 128
+       */
+      zipCode: number;
+      /**
+       * @description Status of alerts to the patient's email.
+       * @default false
+       */
+      emailNotificationToggle: boolean;
+      /**
+       * @description Whether to request a two-factor confirmation when making a payment.
+       * @example false
+       */
+      requestBillPaymentApproval: boolean;
+      /**
+       * @description Unique user id.
+       * @example d627a2a8-d8ea-4777-89df-aa38fc283373
+       */
+      userId: string;
+      /**
+       * @description Unique patient id.
+       * @example 42913473-d748-48ea-8727-17b74bc6d4a5
+       */
+      patientId: string;
     };
     CreateUserDto: {
       /**
-       * @description The first name of the user
+       * @description The user's real first name.
        * @example John
        */
       firstName: string;
       /**
-       * @description The last name of the user
+       * @description The user's real last name.
        * @example Doe
        */
       lastName: string;
       /**
-       * @description The phone number of the user
-       * @example +380980000000
+       * @description The user's phone number in national format.
+       * @example +380000000000
        */
       phone: string;
       /**
-       * @description The email address of the user
-       * @example user@example.com
+       * @description Unique user mail.
+       * @example example@example.com
        */
       email: string;
       /**
-       * @description The password of the user
-       * @example password123
+       * @description User password.
+       * @example password
        */
-      password: string | null;
+      password?: string;
       /**
-       * @description The Google ID of the user
-       * @example google123
+       * @description Unique Google Id of the user.
+       * @example G-123456789
        */
-      googleId: string | null;
+      googleId?: string;
       /**
-       * @description The avatar key of the user
-       * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+       * @description The unique file id of the file in S3 storage.
+       * @example a9c0d068-ec97-48cc-b2d1-91dade70f07d.jpeg
        */
       avatarKey: string;
     };
-    PatchUserDto: {
+    PatchUserWithoutCredentialsDto: {
       /**
-       * @description The first name of the user
+       * @description The user's real first name.
        * @example John
        */
       firstName?: string;
       /**
-       * @description The last name of the user
+       * @description The user's real last name.
        * @example Doe
        */
       lastName?: string;
       /**
-       * @description The phone number of the user
-       * @example +380980000000
+       * @description The user's phone number in national format.
+       * @example +380000000000
        */
       phone?: string;
       /**
-       * @description The email address of the user
-       * @example user@example.com
+       * @description Unique user mail.
+       * @example example@example.com
        */
       email?: string;
       /**
-       * @description The password of the user
-       * @example password123
-       */
-      password?: string | null;
-      /**
-       * @description The Google ID of the user
-       * @example google123
-       */
-      googleId?: string | null;
-      /**
-       * @description The avatar key of the user
-       * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+       * @description The unique file id of the file in S3 storage.
+       * @example a9c0d068-ec97-48cc-b2d1-91dade70f07d.jpeg
        */
       avatarKey?: string;
     };
-    CreatePatientDto: {
-      /** @description The ID of the user associated with the patient */
+    ResponsePatientDto: {
+      /**
+       * @description Unique patient id.
+       * @example b6358dd2-d409-42cc-be9d-e321b79ec836
+       */
+      id: string;
+      /**
+       * @description The unique user id of the user to which the patient is bound.
+       * @example ede53a91-dce9-4d9f-9e72-96218a010df5
+       */
       userId: string;
-      /** @description The weight of the patient */
+      /**
+       * @description Patient's weight.
+       * @example 65
+       */
       weight: number;
-      /** @description The height of the patient */
+      /**
+       * @description Patient height.
+       * @example 185
+       */
       height: number;
-      /** @description The age of the patient */
+      /**
+       * @description Patient's age.
+       * @example 35
+       */
       age: number;
       /**
-       * @description The blood type of the patient
+       * @description The patient's blood type.
+       * @example AB_MINUS
        * @enum {string}
        */
       bloodType: "O_PLUS" | "O_MINUS" | "A_PLUS" | "A_MINUS" | "B_PLUS" | "B_MINUS" | "AB_PLUS" | "AB_MINUS";
       /**
-       * @description The gender of the patient
+       * @description Patient gender.
+       * @example MALE
        * @enum {string}
        */
       gender: "MALE" | "FEMALE";
-      /** @description The country of residence of the patient */
+      /**
+       * @description A unique key to the patient identification file.
+       * @example 207fe335-41b6-4ec0-9820-f3fed883cb2b
+       */
+      identityCardKey: string;
+      /**
+       * @description The country where the hospital is located.
+       * @example USA
+       */
       country: string;
-      /** @description The state of residence of the patient */
+      /**
+       * @description The address of the state where the hospital is located.
+       * @example Oregon
+       */
       state?: string;
-      /** @description The city of residence of the patient */
+      /**
+       * @description The name of the city where this hospital is located.
+       * @example Salem
+       */
       city: string;
-      /** @description The street address of the patient */
+      /**
+       * @description The name of the street where this hospital is located.
+       * @example St. Big Bells
+       */
       street: string;
-      /** @description The apartment number of the patient */
+      /**
+       * @description Patient's apartment number.
+       * @example 35A
+       */
       apartment?: string;
-      /** @description The zip code of the patient */
-      zipCode?: number;
+      /**
+       * @description The hospital's zip code.
+       * @example 128
+       */
+      zipCode: number;
+      /**
+       * @description Status of alerts to the patient's email.
+       * @default false
+       */
+      emailNotificationToggle: boolean;
+      /**
+       * @description Whether to request a two-factor confirmation when making a payment.
+       * @example false
+       */
+      requestBillPaymentApproval: boolean;
+    };
+    CreatePatientDto: {
+      /**
+       * @description The unique user id of the user to which the patient is bound.
+       * @example 5699c534-7203-4f7b-b097-06a106678a6b
+       */
+      userId: string;
+      /**
+       * @description Patient's weight.
+       * @example 65
+       */
+      weight: number;
+      /**
+       * @description Patient height.
+       * @example 185
+       */
+      height: number;
+      /**
+       * @description Patient's age.
+       * @example 35
+       */
+      age: number;
+      /**
+       * @description The patient's blood type.
+       * @example AB_MINUS
+       * @enum {string}
+       */
+      bloodType: "O_PLUS" | "O_MINUS" | "A_PLUS" | "A_MINUS" | "B_PLUS" | "B_MINUS" | "AB_PLUS" | "AB_MINUS";
+      /**
+       * @description Patient gender.
+       * @example MALE
+       * @enum {string}
+       */
+      gender: "MALE" | "FEMALE";
+      /**
+       * @description The country where the hospital is located.
+       * @example USA
+       */
+      country: string;
+      /**
+       * @description The address of the state where the hospital is located.
+       * @example Oregon
+       */
+      state?: string;
+      /**
+       * @description The name of the city where this hospital is located.
+       * @example Salem
+       */
+      city: string;
+      /**
+       * @description The name of the street where this hospital is located.
+       * @example St. Big Bells
+       */
+      street: string;
+      /**
+       * @description Patient's apartment number.
+       * @example 35A
+       */
+      apartment?: string;
+      /**
+       * @description The hospital's zip code.
+       * @example 128
+       */
+      zipCode: number;
     };
     PatchPatientDto: {
-      /** @description The weight of the patient */
+      /**
+       * @description Patient's weight.
+       * @example 65
+       */
       weight?: number;
-      /** @description The height of the patient */
+      /**
+       * @description Patient height.
+       * @example 185
+       */
       height?: number;
-      /** @description The age of the patient */
+      /**
+       * @description Patient's age.
+       * @example 35
+       */
       age?: number;
       /**
-       * @description The blood type of the patient
+       * @description The patient's blood type.
+       * @example AB_MINUS
        * @enum {string}
        */
       bloodType?: "O_PLUS" | "O_MINUS" | "A_PLUS" | "A_MINUS" | "B_PLUS" | "B_MINUS" | "AB_PLUS" | "AB_MINUS";
       /**
-       * @description The gender of the patient
+       * @description Patient gender.
+       * @example MALE
        * @enum {string}
        */
       gender?: "MALE" | "FEMALE";
-      /** @description The country of residence of the patient */
+      /**
+       * @description The country where the hospital is located.
+       * @example USA
+       */
       country?: string;
-      /** @description The state of residence of the patient */
+      /**
+       * @description The address of the state where the hospital is located.
+       * @example Oregon
+       */
       state?: string;
-      /** @description The city of residence of the patient */
+      /**
+       * @description The name of the city where this hospital is located.
+       * @example Salem
+       */
       city?: string;
-      /** @description The street address of the patient */
+      /**
+       * @description The name of the street where this hospital is located.
+       * @example St. Big Bells
+       */
       street?: string;
-      /** @description The apartment number of the patient */
+      /**
+       * @description Patient's apartment number.
+       * @example 35A
+       */
       apartment?: string;
-      /** @description The zip code of the patient */
+      /**
+       * @description The hospital's zip code.
+       * @example 128
+       */
       zipCode?: number;
-      /** @description The ID of declaration between the patient and the user */
+      /**
+       * @description Unique declaration id.
+       * @example 12234
+       */
       declarationId: string;
-      /** @description Identity card key of the patient */
+      /**
+       * @description A unique key to the patient identification file.
+       * @example 8e47b698-bdf9-41c4-8e00-4bc1764a654e
+       */
       identityCardKey: string;
-      /** @description The email notification toggle of the patient */
+      /**
+       * @description Status of alerts to the patient's email.
+       * @default false
+       */
       emailNotificationToggle: boolean;
-      /** @description The sms notification toggle of the patient */
+      /**
+       * @description Status of alerts on the patient's text messages.
+       * @example true
+       */
       twoFactorAuthToggle: boolean;
-      /** @description The two factor authentication toggle of the patient */
+      /**
+       * @description Whether to request a two-factor confirmation when making a payment.
+       * @example false
+       */
       requestBillPaymentApproval: boolean;
+    };
+    CreatePatientConditionDto: {
+      /**
+       * @description Unique allergy id.
+       * @example c866c80e-10b1-4971-b48e-d2329bedcc18
+       */
+      allergyId: string;
+    };
+    ResponsePatientAllergyDto: {
+      /**
+       * @description Unique patient allergy id.
+       * @example 71aae368-7275-4235-8b21-d6bc65d6716e
+       */
+      id: string;
+      /**
+       * @description Unique patient id.
+       * @example e8dbae53-6d80-4eda-bde2-40a637a0e0a0
+       */
+      patientId: string;
+      /**
+       * @description Unique allergy id.
+       * @example 3678c272-fa61-4b7d-960e-f46c1250b9cc
+       */
+      allergyId: string;
+    };
+    ResponseAllergyDto: {
+      /**
+       * @description Unique allergy id.
+       * @example 3d8785fe-3d63-4966-992e-dccd6f34c2bc
+       */
+      id: string;
+      /**
+       * @description Name of allergy.
+       * @example Dust
+       */
+      name: string;
     };
     CreateFavoriteDto: {
       /**
-       * @description The ID of the doctor
-       * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+       * @description Unique doctor id.
+       * @example e11c9c40-88f6-4af5-ac2d-e0d33d48c352
        */
       doctorId: string;
       /**
-       * @description The ID of the patient
-       * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+       * @description Unique patient id.
+       * @example 636769fb-8f1a-40c2-82a7-0815f86c74e7
        */
       patientId: string;
     };
+    ResponseFavoriteDto: {
+      /**
+       * @description Unique doctor id.
+       * @example e11c9c40-88f6-4af5-ac2d-e0d33d48c352
+       */
+      doctorId: string;
+      /**
+       * @description Unique patient id.
+       * @example 636769fb-8f1a-40c2-82a7-0815f86c74e7
+       */
+      patientId: string;
+      /**
+       * @description Unique favorite id.
+       * @example 8a34a48b-ffb0-426c-9d40-834a62d27a6f
+       */
+      id: string;
+    };
     CreateDoctorDto: {
       /**
-       * @description The ID of the user
-       * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+       * @description Unique user id.
+       * @example 0530a95c-8f6a-4d3b-b26e-f4d653549dd3
        */
       userId: string;
       /**
-       * @description The pay rate of the doctor
+       * @description Doctor's hourly rate.
        * @example 100
        */
       payrate: number;
       /**
-       * @description About section of the doctor
-       * @example Experienced doctor with a focus on patient care
+       * @description A full description of the doctor.
+       * @example Experienced doctor with a focus on patient care.
        */
       about: string;
-      /** @description An array of IDs for specializations of the Doctor */
+      /**
+       * @description A list of ids specialties that the doctor covers.
+       * @example [
+       *   "6db389b6-b2ab-441e-b9d2-1d67f1928d0c"
+       * ]
+       */
       specializationIds: string[];
-      /** @description An array of IDs for hospitals the Doctor is associated with */
+      /**
+       * @description List of hospitals where the doctor works.
+       * @example [
+       *   "5fa9686f-48e9-479c-b254-424f32caf441"
+       * ]
+       */
       hospitalIds: string[];
+    };
+    ResponseHospitalDto: {
+      /**
+       * @description The hospital's unique id.
+       * @example bc266c49-59eb-4d6b-ac05-f1f2eb31719d
+       */
+      id: string;
+      /**
+       * @description The full name of the hospital is.
+       * @example Ichilov and Assuta
+       */
+      name: string;
+      /**
+       * @description The country where the hospital is located.
+       * @example USA
+       */
+      country: string;
+      /**
+       * @description The address of the state where the hospital is located.
+       * @example Oregon
+       */
+      state?: string;
+      /**
+       * @description The name of the city where this hospital is located.
+       * @example Salem
+       */
+      city: string;
+      /**
+       * @description The name of the street where this hospital is located.
+       * @example St. Big Bells
+       */
+      street: string;
+      /**
+       * @description The hospital's zip code.
+       * @example 128
+       */
+      zipCode: number;
+    };
+    ResponseSpecializationDto: {
+      /**
+       * @description Unique specialisation id.
+       * @example eee614e3-d454-4061-954d-6bdd3a7b1aeb
+       */
+      id: string;
+      /**
+       * @description Specialization name.
+       * @example Surgeon
+       */
+      name: string;
     };
     ResponseDoctorDto: {
       /**
@@ -659,6 +1010,11 @@ export interface components {
        */
       id: string;
       /**
+       * @description The ID of the user associated with the doctor
+       * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+       */
+      userId: string;
+      /**
        * @description The pay rate of the doctor
        * @example 100
        */
@@ -669,10 +1025,34 @@ export interface components {
        */
       about: string;
       /**
-       * @description The ID of the user associated with the doctor
-       * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+       * @description First name of the doctor
+       * @example John
        */
-      userId: string;
+      firstName: string;
+      /**
+       * @description Last name of the doctor
+       * @example Doe
+       */
+      lastName: string;
+      /**
+       * @description Key of the avatar of the doctor
+       * @example acde070d-8c4c-4f0d-9d8a-162843c10333.jpg
+       */
+      avatarKey: string;
+      /**
+       * @description The phone of the doctor
+       * @example +38099561735634
+       */
+      phone: string;
+      /**
+       * @description Email of the doctor
+       * @example johndoe@mail.com
+       */
+      email: string;
+      /** @description An array of hospitals associated with the doctor */
+      hospitals: components["schemas"]["ResponseHospitalDto"][];
+      /** @description An array of specializations of the doctor */
+      specializations: components["schemas"]["ResponseSpecializationDto"][];
     };
     PatchDoctorDto: {
       /**
@@ -687,158 +1067,412 @@ export interface components {
       about: string;
     };
     CreateHospitalDto: {
-      /** @description The name of the hospital */
+      /**
+       * @description The full name of the hospital is.
+       * @example Ichilov and Assuta
+       */
       name: string;
-      /** @description The country where the hospital is situated */
+      /**
+       * @description The country where the hospital is located.
+       * @example USA
+       */
       country: string;
-      /** @description The state where the hospital is situated */
+      /**
+       * @description The address of the state where the hospital is located.
+       * @example Oregon
+       */
       state?: string;
-      /** @description The city where the hospital is situated */
+      /**
+       * @description The name of the city where this hospital is located.
+       * @example Salem
+       */
       city: string;
-      /** @description The street where the hospital is situated */
+      /**
+       * @description The name of the street where this hospital is located.
+       * @example St. Big Bells
+       */
       street: string;
-      /** @description The apartment where the hospital is situated */
-      apartment: string;
-      /** @description The zip code of the hospital */
-      zipCode: number;
-    };
-    ResponseHospitalDto: {
-      /** @description The name of the hospital */
-      name: string;
-      /** @description The country where the hospital is situated */
-      country: string;
-      /** @description The state where the hospital is situated */
-      state: string | null;
-      /** @description The city where the hospital is situated */
-      city: string;
-      /** @description The street where the hospital is situated */
-      street: string;
-      /** @description The apartment where the hospital is situated */
-      apartment: string;
-      /** @description The zip code of the hospital */
+      /**
+       * @description The hospital's zip code.
+       * @example 128
+       */
       zipCode: number;
     };
     PatchHospitalDto: {
-      /** @description The name of the hospital */
+      /**
+       * @description The full name of the hospital is.
+       * @example Ichilov and Assuta
+       */
       name?: string;
-      /** @description The country where the hospital is situated */
+      /**
+       * @description The country where the hospital is located.
+       * @example USA
+       */
       country?: string;
-      /** @description The state where the hospital is situated */
+      /**
+       * @description The address of the state where the hospital is located.
+       * @example Oregon
+       */
       state?: string;
-      /** @description The city where the hospital is situated */
+      /**
+       * @description The name of the city where this hospital is located.
+       * @example Salem
+       */
       city?: string;
-      /** @description The street where the hospital is situated */
+      /**
+       * @description The name of the street where this hospital is located.
+       * @example St. Big Bells
+       */
       street?: string;
-      /** @description The apartment where the hospital is situated */
-      apartment?: string;
-      /** @description The zip code of the hospital */
+      /**
+       * @description The hospital's zip code.
+       * @example 128
+       */
       zipCode?: number;
     };
     CreateSpecializationDto: {
       /**
-       * @description Specialization name
-       * @example Surgeon
-       */
-      name: string;
-    };
-    ResponseSpecializationDto: {
-      /**
-       * @description Spesialization id
-       * @example 1
-       */
-      id: string;
-      /**
-       * @description Spesialization name
+       * @description Specialization name.
        * @example Surgeon
        */
       name: string;
     };
     UpdateSpecializationDto: {
       /**
-       * @description Specialization name
+       * @description Specialization name.
        * @example Surgeon
        */
       name?: string;
     };
-    CreateAppointmentDto: {
-      /** @description The ID of the doctor the appointment is created with */
-      doctorId: string;
-      /** @description The ID of the patient who created the appointment */
-      patientId: string;
-      /** @description The date and time of the appointment in ISO8601 fromat */
-      assignedAt: Record<string, never>;
+    ResponseFileDto: {
       /**
-       * @description The status of the appointment
+       * @description File Name.
+       * @example 3985f493-df30-4a16-a82c-6357caf6d44f.png
+       */
+      name: string;
+      /**
+       * @description Full link in the S3 storage to get the file.
+       * @example https://storage.googleapis.com/bucket/3985f493-df30-4a16-a82c-6357caf6d44f.png
+       */
+      url: string;
+    };
+    CreateAppointmentDto: {
+      /**
+       * @description Unique doctor id.
+       * @example d5381a4b-f256-4ef1-9a76-e593aa63ca9d
+       */
+      doctorId: string;
+      /**
+       * @description Unique patient id.
+       * @example a480fe15-5608-4908-8a9d-124e497c37b1
+       */
+      patientId: string;
+      /**
+       * @description The date on which the meeting is scheduled.
+       * @example 2024-04-28T11:13:38.875Z
+       */
+      assignedAt: string;
+      /**
+       * @description Current status of the appointment.
+       * @example PLANNED
        * @enum {string}
        */
       status: "PLANNED" | "COMPLETED" | "CANCELED";
-      /** @description Notes for the appointment */
+      /**
+       * @description Additional comments left by the patient or doctor.
+       * @example Get some blood pressure pills.
+       */
       notes: string;
+      /**
+       * @description The unique id of the billed payment.
+       * @example 9da5a13b-fb2f-4b92-84f7-7a7640f22a23
+       */
+      paymentInvoiceKey: string;
+      /**
+       * @description The unique id from the receipt file for the appointment.
+       * @example c80ea702-e031-4d2a-8206-a4a475345cdf
+       */
+      paymentReceiptKey: string;
+      /**
+       * @description The time when the appointment should start.
+       * @example 2024-04-28T11:13:38.876Z
+       */
+      startedAt: string;
+      /**
+       * @description The time when the appointment should end.
+       * @example 2024-04-28T11:13:38.876Z
+       */
+      endedAt: string;
     };
     ResponseAppointmentDto: {
-      /** @description The ID of the appointment */
+      /**
+       * @description Unique appointment id.
+       * @example 0999746f-5e7c-40f7-bd6c-7373018f745b
+       */
       id: string;
-      /** @description The ID of the doctor the appointment is created with */
+      /**
+       * @description Unique doctor id.
+       * @example 2e9d2c4f-5b51-4275-9dbd-121076bfe641
+       */
       doctorId: string;
-      /** @description The ID of the patient who created the appointment */
+      /**
+       * @description Unique patient id.
+       * @example 0940acd7-cd17-42c1-981c-405f399fd5ca
+       */
       patientId: string;
       /**
        * Format: date-time
-       * @description assingedAt for the appointment
+       * @description The date on which the meeting is scheduled.
+       * @example 2024-04-28T11:13:38.873Z
        */
       assignedAt: string;
-      /** @description Notes for the appointment */
-      notes: string;
       /**
-       * @description The status of the appointment
+       * @description Current status of the appointment.
        * @enum {string}
        */
       status: "PLANNED" | "COMPLETED" | "CANCELED";
-      /** @description The key of the video record of the appointment */
-      videoRecordKey: string;
-      /** @description The key of the file with the invoice for the appointment */
+      /**
+       * @description Additional comments left by the patient or doctor.
+       * @example Get some blood pressure pills.
+       */
+      notes: string;
+      /**
+       * @description The unique id of the billed payment.
+       * @example fd99e37a-284f-41fb-9847-311db0c48c5d
+       */
       paymentInvoiceKey: string;
-      /** @description The key of the file with the receipt for payment for the appointment */
+      /** @description The unique id from the receipt file for the appointment. */
       paymentReceiptKey: string;
+      /**
+       * @description The unique id of the video chat recording.
+       * @example c9d6d59e-255a-4d2e-a1fe-e47a68b8eb02.mp4
+       */
+      videoRecordKey: string;
+      /**
+       * @description The time when the appointment should start.
+       * @example 2024-04-28T11:13:38.873Z
+       */
+      startedAt: string;
+      /**
+       * @description The time when the appointment should end.
+       * @example 2024-04-28T11:13:38.874Z
+       */
+      endedAt: string;
     };
     PatchAppointmentDto: {
-      /** @description The ID of the doctor the appointment is created with */
-      doctorId?: string;
-      /** @description The ID of the patient who created the appointment */
-      patientId?: string;
-      /** @description The date and time of the appointment in ISO8601 fromat */
-      assignedAt?: Record<string, never>;
       /**
-       * @description The status of the appointment
+       * @description Unique doctor id.
+       * @example d5381a4b-f256-4ef1-9a76-e593aa63ca9d
+       */
+      doctorId?: string;
+      /**
+       * @description Unique patient id.
+       * @example a480fe15-5608-4908-8a9d-124e497c37b1
+       */
+      patientId?: string;
+      /**
+       * @description The date on which the meeting is scheduled.
+       * @example 2024-04-28T11:13:38.875Z
+       */
+      assignedAt?: string;
+      /**
+       * @description Current status of the appointment.
+       * @example PLANNED
        * @enum {string}
        */
       status?: "PLANNED" | "COMPLETED" | "CANCELED";
-      /** @description Notes for the appointment */
+      /**
+       * @description Additional comments left by the patient or doctor.
+       * @example Get some blood pressure pills.
+       */
       notes?: string;
+      /**
+       * @description The unique id of the billed payment.
+       * @example 9da5a13b-fb2f-4b92-84f7-7a7640f22a23
+       */
+      paymentInvoiceKey?: string;
+      /**
+       * @description The unique id from the receipt file for the appointment.
+       * @example c80ea702-e031-4d2a-8206-a4a475345cdf
+       */
+      paymentReceiptKey?: string;
+      /**
+       * @description The time when the appointment should start.
+       * @example 2024-04-28T11:13:38.876Z
+       */
+      startedAt?: string;
+      /**
+       * @description The time when the appointment should end.
+       * @example 2024-04-28T11:13:38.876Z
+       */
+      endedAt?: string;
     };
     CreateDeclarationDto: {
       /**
-       * @description Doctor Id
-       * @example 8ef6b3ed-24c5-48d7-8627-6f792096e753
+       * @description Unique doctor id.
+       * @example a0fa08ea-daa9-41f9-853c-eadeb799c143
        */
       doctorId: string;
       /**
-       * @description Patient Id
-       * @example be464d16-37b9-44f7-b3b2-b9ace817b695
+       * @description Unique patient id.
+       * @example b3d5ee9b-1381-4633-ad6d-9d5a84f0e018
        */
       patientId: string;
     };
-    CreatePaymentDto: {
+    ResponseDeclarationDto: {
       /**
-       * @description The appointment duration in hour
+       * @description Unique doctor id.
+       * @example a0fa08ea-daa9-41f9-853c-eadeb799c143
+       */
+      doctorId: string;
+      /**
+       * @description Unique patient id.
+       * @example b3d5ee9b-1381-4633-ad6d-9d5a84f0e018
+       */
+      patientId: string;
+      /**
+       * @description Unique declration id.
        * @example 1
        */
-      appointmentDuration: number;
+      id: number;
+    };
+    CreateReviewDto: {
       /**
-       * @description The price per hour
-       * @example 50
+       * @description Text of the review.
+       * @example Good doctor, recommended.
        */
-      pricePerHour: number;
+      text?: string;
+      /**
+       * @description Rate of the review.
+       * @example 5
+       */
+      rate?: number;
+    };
+    ResponseReviewDto: {
+      /**
+       * @description Unique rating id.
+       * @example 311f762c-824c-42c5-b965-9d2f9770e949
+       */
+      id: string;
+      /**
+       * @description The rate in review.
+       * @example 4
+       */
+      rate: number;
+      /**
+       * @description Text in review.
+       * @example Experienced doctor with a focus on patient care.
+       */
+      text: string;
+      /**
+       * @description Unique doctor id.
+       * @example 50aa3d85-b372-485f-8ca3-915e9e1679be
+       */
+      doctorId: string;
+      /**
+       * Format: date-time
+       * @description The date when the review was created.
+       * @example 2024-04-28T11:13:39.817Z
+       */
+      createdAt: string;
+      /**
+       * Format: date-time
+       * @description The date when the review was updated.
+       * @example 2024-04-28T11:13:39.817Z
+       */
+      updatedAt: string;
+    };
+    UnauthorizedResponse: {
+      /**
+       * @description Detailed description of the error.
+       * @example Unauthorized access
+       */
+      message: string;
+      /**
+       * @description Error in numeric format.
+       * @example 401
+       */
+      errorCode: number;
+    };
+    ResponseReviewDtoWithNames: {
+      /**
+       * @description Unique rating id.
+       * @example 311f762c-824c-42c5-b965-9d2f9770e949
+       */
+      id: string;
+      /**
+       * @description The rate in review.
+       * @example 4
+       */
+      rate: number;
+      /**
+       * @description Text in review.
+       * @example Experienced doctor with a focus on patient care.
+       */
+      text: string;
+      /**
+       * @description Unique doctor id.
+       * @example 50aa3d85-b372-485f-8ca3-915e9e1679be
+       */
+      doctorId: string;
+      /**
+       * @description The names of the doctor, when icnludesName prodived.
+       * @example {
+       *   "user": {
+       *     "firstName": "John",
+       *     "lastName": "Doe"
+       *   }
+       * }
+       */
+      doctor?: Record<string, never>;
+      /**
+       * @description The names of the patient, when icnludesName provided.
+       * @example {
+       *   "user": {
+       *     "firstName": "John",
+       *     "lastName": "Doe"
+       *   }
+       * }
+       */
+      patient?: Record<string, never>;
+    };
+    AvgRateResponse: {
+      /**
+       * @description Average rating.
+       * @example 4.5
+       */
+      avg: number;
+      /**
+       * @description Total number of reviews.
+       * @example 10
+       */
+      count: number;
+    };
+    PatchReviewDto: {
+      /**
+       * @description Text of the review.
+       * @example Good doctor, recommended.
+       */
+      text?: string;
+      /**
+       * @description Rate of the review.
+       * @example 5
+       */
+      rate?: number;
+    };
+    CreateAllergyDto: {
+      /**
+       * @description Name of allergy.
+       * @example Dust
+       */
+      name: string;
+    };
+    UpdateAllergyDto: {
+      /**
+       * @description Name of allergy.
+       * @example Dust
+       */
+      name?: string;
     };
   };
   responses: never;
@@ -854,30 +1488,27 @@ export type external = Record<string, never>;
 
 export interface operations {
 
-  /**
-   * Login with an email and a password
-   * @description This endpoint is used for logging in with an email and password.
-   */
+  /** Login patient */
   AuthController_localLogin: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["AuthLocalLoginDto"];
+        "application/json": components["schemas"]["LocalLoginDto"];
       };
     };
     responses: {
-      /** @description User data */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponsePatientDto"];
+          "application/json": components["schemas"]["LocalLoginResponseDto"];
         };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -885,30 +1516,25 @@ export interface operations {
       };
     };
   };
-  /**
-   * Local sign up
-   * @description This endpoint is used for the local sign up.
-   */
-  AuthController_signUpFirstStep: {
+  /** Login patient with MFA */
+  AuthController_verifyMFA: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["ResponseWithoutRelationsUserDto"];
+        "application/json": components["schemas"]["LocalLoginTwoFactorDto"];
       };
     };
     responses: {
-      /** @description Patient data */
+      /** @description Response when the request is successfully processed. */
       200: {
-        content: {
-          "application/json": components["schemas"]["ResponsePatientDto"];
-        };
+        content: never;
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -916,6 +1542,35 @@ export interface operations {
       };
     };
   };
+  /** Sign up user */
+  AuthController_signUpUserFirstStep: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["SignUpUserDto"];
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["ResponseUserDto"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  /** Sign up patient */
   AuthController_signUpPatientSecondStep: {
     parameters: {
       path: {
@@ -924,41 +1579,21 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["AuthSignUpPatientDto"];
+        "application/json": components["schemas"]["SignUpPatientDto"];
       };
     };
     responses: {
-      201: {
-        content: never;
-      };
-    };
-  };
-  AuthController_googleLogin: {
-    responses: {
+      /** @description Response when the request is successfully processed. */
       200: {
         content: never;
       };
-    };
-  };
-  AuthController_googleLoginRedirect: {
-    responses: {
-      200: {
-        content: never;
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
       };
-    };
-  };
-  /**
-   * Logging out
-   * @description This endpoint is used for logging out.
-   */
-  AuthController_logout: {
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["AuthLocalLoginDto"];
-      };
-    };
-    responses: {
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -966,40 +1601,147 @@ export interface operations {
       };
     };
   };
-  /**
-   * Get a user by ID
-   * @description This endpoint retrieves a user object by ID.
-   */
+  /** Login with Google */
+  AuthController_googleLogin: {
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: never;
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  /** Login with Google redirect */
+  AuthController_googleLoginRedirect: {
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: never;
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  /** Logout */
+  AuthController_logout: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["LocalLoginDto"];
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: never;
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  /** Change password */
+  AuthController_changePassword: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ChangePasswordDto"];
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: never;
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      500: {
+        content: {
+          "application/json": components["schemas"]["BadRequestException"];
+        };
+      };
+    };
+  };
+  /** Get patient */
+  AuthController_getPatient: {
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["PatientResponseDto"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  /** Get user */
   UserController_getUser: {
     parameters: {
       path: {
         /**
-         * @description User ID
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+         * @description Unique user id.
+         * @example 92da7be4-b076-4b65-a4f1-1119e2017c03
          */
         id: string;
       };
     };
     responses: {
-      /** @description User exists */
+      /** @description Response if an error occurs while processing a request. */
       200: {
         content: {
           "application/json": components["schemas"]["ResponseUserDto"];
         };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description User not found */
-      404: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -1007,38 +1749,29 @@ export interface operations {
       };
     };
   };
-  /**
-   * Delete a user by ID
-   * @description This endpoint deletes a user object by ID.
-   */
+  /** Delete user */
   UserController_deleteUser: {
     parameters: {
       path: {
         /**
-         * @description User ID
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+         * @description Unique user id.
+         * @example 1974c7b8-fa21-4242-ac4e-cd64f84276dc
          */
         id: string;
       };
     };
     responses: {
-      /** @description User deleted */
-      204: {
+      /** @description Response when the request is successfully processed. */
+      200: {
         content: never;
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description User not found */
-      404: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -1046,45 +1779,36 @@ export interface operations {
       };
     };
   };
-  /**
-   * Update a user by ID
-   * @description This endpoint updates a user object by ID.
-   */
+  /** Update user */
   UserController_patchUser: {
     parameters: {
       path: {
         /**
-         * @description User ID
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+         * @description Unique user id.
+         * @example 74bbf349-a4dd-468f-b5b2-217a27ca7675
          */
         id: string;
       };
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["PatchUserDto"];
+        "application/json": components["schemas"]["PatchUserWithoutCredentialsDto"];
       };
     };
     responses: {
-      /** @description User updated */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
           "application/json": components["schemas"]["ResponseUserDto"];
         };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description User not found */
-      404: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -1092,10 +1816,7 @@ export interface operations {
       };
     };
   };
-  /**
-   * Create a new user
-   * @description This endpoint creates a new user.
-   */
+  /** Create user */
   UserController_createUser: {
     requestBody: {
       content: {
@@ -1103,19 +1824,19 @@ export interface operations {
       };
     };
     responses: {
-      /** @description User created */
-      201: {
+      /** @description Response when the request is successfully processed. */
+      200: {
         content: {
           "application/json": components["schemas"]["ResponseUserDto"];
         };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -1123,40 +1844,31 @@ export interface operations {
       };
     };
   };
-  /**
-   * Get a patient by ID
-   * @description This endpoint retrieves a patient object by ID.
-   */
+  /** Get patient */
   PatientController_getPatient: {
     parameters: {
       path: {
         /**
-         * @description Patient ID
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+         * @description The patient's unique id.
+         * @example 8f5ebff6-fc5e-4568-a1ff-841522f19aaa
          */
         id: string;
       };
     };
     responses: {
-      /** @description Patient exists */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
           "application/json": components["schemas"]["ResponsePatientDto"];
         };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description Patient not found */
-      404: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -1164,38 +1876,29 @@ export interface operations {
       };
     };
   };
-  /**
-   * Delete a patient by ID
-   * @description This endpoint deletes a patient object by ID.
-   */
+  /** Delete patient */
   PatientController_deletePatient: {
     parameters: {
       path: {
         /**
-         * @description Patient ID
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+         * @description The patient's unique id.
+         * @example ce784ad1-19de-46a7-b5e9-64576d15ee8b
          */
         id: string;
       };
     };
     responses: {
-      /** @description Patient deleted */
-      204: {
+      /** @description Response when the request is successfully processed. */
+      200: {
         content: never;
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description Patient not found */
-      404: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -1203,16 +1906,13 @@ export interface operations {
       };
     };
   };
-  /**
-   * Update a patient by ID
-   * @description This endpoint updates a patient object by ID.
-   */
+  /** Update patient */
   PatientController_patchPatient: {
     parameters: {
       path: {
         /**
-         * @description Patient ID
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+         * @description The patient's unique id.
+         * @example a228b8cb-55e8-4d8d-bb6b-24b31f149109
          */
         id: string;
       };
@@ -1223,25 +1923,19 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Patient updated */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
           "application/json": components["schemas"]["ResponsePatientDto"];
         };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description Patient not found */
-      404: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -1249,10 +1943,7 @@ export interface operations {
       };
     };
   };
-  /**
-   * Create a new patient
-   * @description This endpoint creates a new patient.
-   */
+  /** Create patient */
   PatientController_createPatient: {
     requestBody: {
       content: {
@@ -1260,19 +1951,19 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Patient created */
-      201: {
+      /** @description Response when the request is successfully processed. */
+      200: {
         content: {
           "application/json": components["schemas"]["ResponsePatientDto"];
         };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -1280,23 +1971,91 @@ export interface operations {
       };
     };
   };
-  /**
-   * Get favorite doctors
-   * @description This endpoint retrieves favorite doctors.
-   */
+  /** Get patient allergies */
+  PatientController_getPatientAllergies: {
+    parameters: {
+      path: {
+        /**
+         * @description The patient's unique id.
+         * @example bd511852-370a-416b-916a-a9b9b767d11d
+         */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["ResponseAllergyDto"][];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  /** Create patient allergy */
+  PatientController_createPatientAllergy: {
+    parameters: {
+      path: {
+        /**
+         * @description The patient's unique id.
+         * @example 7a15bfe1-6d39-47c9-99ab-5cca7aaa2bfe
+         */
+        id: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreatePatientConditionDto"];
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["ResponsePatientAllergyDto"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  /** Get favorites */
   FavoriteController_getFavorites: {
     responses: {
-      /** @description Favorite doctors */
+      /** @description Response when the request is successfully processed. */
       200: {
-        content: never;
+        content: {
+          "application/json": components["schemas"]["ResponseFavoriteDto"][];
+        };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -1304,10 +2063,7 @@ export interface operations {
       };
     };
   };
-  /**
-   * Add a doctor to favorites
-   * @description This endpoint addes a doctor to favorites list.
-   */
+  /** Create favorite */
   FavoriteController_createFavorite: {
     requestBody: {
       content: {
@@ -1315,17 +2071,19 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Doctor is added to favorite doctors. */
-      201: {
-        content: never;
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["ResponseFavoriteDto"];
+        };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -1333,38 +2091,31 @@ export interface operations {
       };
     };
   };
-  /**
-   * Get a favorite doctor by ID
-   * @description This endpoint retrieves a favorite doctor by ID.
-   */
+  /** Get favorite */
   FavoriteController_getFovorite: {
     parameters: {
       path: {
         /**
-         * @description Doctor ID
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+         * @description Unique doctor id.
+         * @example 90957883-afe8-4346-a664-1ef4139e259c
          */
         id: string;
       };
     };
     responses: {
-      /** @description Favorite doctor by ID exists */
+      /** @description Response when the request is successfully processed. */
       200: {
-        content: never;
+        content: {
+          "application/json": components["schemas"]["ResponseFavoriteDto"];
+        };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description Favorite doctor not found */
-      404: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -1372,32 +2123,29 @@ export interface operations {
       };
     };
   };
-  /**
-   * Remove the doctor from favorites
-   * @description This endpoint deletes a doctor from favorite doctors.
-   */
+  /** Delete favorite */
   FavoriteController_deleteFavorite: {
     parameters: {
       path: {
         /**
-         * @description Doctor ID
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+         * @description Unique doctor id.
+         * @example fd1fd9b0-35a0-4cc3-ab39-bcba5a866c77
          */
         id: string;
       };
     };
     responses: {
-      /** @description Doctor removed from favorites */
-      204: {
+      /** @description Response when the request is successfully processed. */
+      200: {
         content: never;
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -1405,10 +2153,7 @@ export interface operations {
       };
     };
   };
-  /**
-   * Get all doctors
-   * @description This endpoint retrieves all doctors.
-   */
+  /** Get all doctors */
   DoctorController_getDoctors: {
     parameters: {
       query?: {
@@ -1421,19 +2166,19 @@ export interface operations {
       };
     };
     responses: {
-      /** @description All doctors */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
           "application/json": components["schemas"]["ResponseDoctorDto"][];
         };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -1441,10 +2186,7 @@ export interface operations {
       };
     };
   };
-  /**
-   * Create a new doctor
-   * @description Creates a new doctor profile
-   */
+  /** Create doctor */
   DoctorController_createDoctor: {
     requestBody: {
       content: {
@@ -1452,19 +2194,19 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Doctor created */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
           "application/json": components["schemas"]["ResponseDoctorDto"];
         };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -1472,40 +2214,63 @@ export interface operations {
       };
     };
   };
-  /**
-   * Get a doctor by ID
-   * @description This endpoint retrieves a doctor by ID.
-   */
+  /** Get all doctors by patient */
+  DoctorController_getPatientDoctors: {
+    parameters: {
+      path: {
+        /**
+         * @description Unique patient id.
+         * @example 11cd15f0-a4ad-4647-84c8-692567957c40
+         */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["ResponseDoctorDto"][];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  /** Get doctor */
   DoctorController_getDoctor: {
     parameters: {
       path: {
         /**
-         * @description Doctor ID
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+         * @description Unique doctor id.
+         * @example 30f09a98-4e8d-4490-b028-137458edfa51
          */
         id: string;
       };
     };
     responses: {
-      /** @description A doctor object got by ID */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
           "application/json": components["schemas"]["ResponseDoctorDto"];
         };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description Doctor not found */
-      404: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -1513,38 +2278,29 @@ export interface operations {
       };
     };
   };
-  /**
-   * Delete a doctor by ID
-   * @description This endpoint deletes a doctor object by ID.
-   */
+  /** Delete doctor */
   DoctorController_deleteDoctor: {
     parameters: {
       path: {
         /**
-         * @description Doctor ID
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+         * @description Unique doctor id.
+         * @example 6332177b-4e44-44a3-bf0b-7aa7537ec9ac
          */
         id: string;
       };
     };
     responses: {
-      /** @description Doctor deleted */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: never;
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description Doctor not found */
-      404: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -1552,16 +2308,13 @@ export interface operations {
       };
     };
   };
-  /**
-   * Update a doctor by ID
-   * @description This endpoint updates a doctor object by ID.
-   */
+  /** Update doctor */
   DoctorController_patchDoctor: {
     parameters: {
       path: {
         /**
-         * @description Doctor ID
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+         * @description Unique doctor id.
+         * @example b2d67dba-a2bc-49e2-abeb-eaa1f01320d2
          */
         id: string;
       };
@@ -1572,25 +2325,19 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Doctor updated */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
           "application/json": components["schemas"]["ResponseDoctorDto"];
         };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description Doctor not found */
-      404: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -1598,19 +2345,22 @@ export interface operations {
       };
     };
   };
-  /**
-   * Get a list of hospitals
-   * @description This endpoint retrieves a list of hospital objects.
-   */
+  /** Get all hospitals */
   HospitalController_getHospitals: {
     responses: {
-      /** @description Hospitals exist */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseHospitalDto"];
+          "application/json": components["schemas"]["ResponseHospitalDto"][];
         };
       };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -1618,10 +2368,7 @@ export interface operations {
       };
     };
   };
-  /**
-   * Create a new hospital
-   * @description This endpoint creates a new hospital.
-   */
+  /** Create hospital */
   HospitalController_createHospital: {
     requestBody: {
       content: {
@@ -1629,60 +2376,19 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Hospital created */
-      201: {
-        content: {
-          "application/json": components["schemas"]["ResponseHospitalDto"];
-        };
-      };
-      /** @description Bad request */
-      400: {
-        content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
-        };
-      };
-      /** @description Internal server error */
-      500: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-    };
-  };
-  /**
-   * Get a hospital by ID
-   * @description This endpoint retrieves a hospital object by ID.
-   */
-  HospitalController_getHospital: {
-    parameters: {
-      path: {
-        /**
-         * @description Hospital ID
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
-         */
-        id: string;
-      };
-    };
-    responses: {
-      /** @description Hospital exists */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
           "application/json": components["schemas"]["ResponseHospitalDto"];
         };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description Hospital not found */
-      404: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -1690,38 +2396,31 @@ export interface operations {
       };
     };
   };
-  /**
-   * Delete a hospital by ID
-   * @description This endpoint deletes a hospital object by ID.
-   */
-  HospitalController_deleteHospital: {
+  /** Get hospital */
+  HospitalController_getHospital: {
     parameters: {
       path: {
         /**
-         * @description Hospital ID
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+         * @description The hospital's unique id.
+         * @example 6b9671d8-0a06-40ef-a2a1-bd8616f83491
          */
         id: string;
       };
     };
     responses: {
-      /** @description Hospital deleted */
-      204: {
-        content: never;
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["ResponseHospitalDto"];
+        };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description Hospital not found */
-      404: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -1729,16 +2428,43 @@ export interface operations {
       };
     };
   };
-  /**
-   * Update a hospital by ID
-   * @description This endpoint updates a hospital object by ID.
-   */
+  /** Delete hospital */
+  HospitalController_deleteHospital: {
+    parameters: {
+      path: {
+        /**
+         * @description The hospital's unique id.
+         * @example b641cccf-78d6-4528-b867-c1f3bd10e2cd
+         */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: never;
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  /** Update hospital */
   HospitalController_patchHospital: {
     parameters: {
       path: {
         /**
-         * @description Patient ID
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+         * @description The hospital's unique id.
+         * @example 54b334db-5a65-4dc3-8423-78ea8bdcbfde
          */
         id: string;
       };
@@ -1749,25 +2475,19 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Hospital updated */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
           "application/json": components["schemas"]["ResponseHospitalDto"];
         };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description Hospital not found */
-      404: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -1775,72 +2495,126 @@ export interface operations {
       };
     };
   };
+  /** Get all specializations */
   SpecializationController_getSpecializations: {
     responses: {
-      /** @description Return specializations list */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
           "application/json": components["schemas"]["ResponseSpecializationDto"][];
         };
       };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
     };
   };
-  SpecializationController_create: {
+  /** Create specialization */
+  SpecializationController_createSpecialization: {
     requestBody: {
       content: {
         "application/json": components["schemas"]["CreateSpecializationDto"];
       };
     };
     responses: {
-      /** @description Spesialization created */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
           "application/json": components["schemas"]["ResponseSpecializationDto"];
         };
       };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
     };
   };
+  /** Get specialization */
   SpecializationController_getSpecialization: {
     parameters: {
       path: {
         /**
-         * @description Spesialization id
-         * @example 1
+         * @description Unique specialisation id.
+         * @example 172f21f5-c3bd-437c-8288-76c4f6078e03
          */
         id: string;
       };
     };
     responses: {
-      /** @description Spesialization object */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
           "application/json": components["schemas"]["ResponseSpecializationDto"];
         };
       };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
     };
   };
+  /** Delete specialization */
   SpecializationController_deleteSpecialization: {
     parameters: {
       path: {
         /**
-         * @description Spesialization id
-         * @example 1
+         * @description Unique specialisation id.
+         * @example adca33d5-7d3c-4ff2-ae92-28621c073929
          */
         id: string;
       };
     };
     responses: {
+      /** @description Response when the request is successfully processed. */
       200: {
         content: never;
       };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
     };
   };
-  SpecializationController_updateSpecialization: {
+  /** Update specialization */
+  SpecializationController_patchSpecialization: {
     parameters: {
       path: {
         /**
-         * @description Spesialization id
-         * @example 1
+         * @description Unique specialisation id.
+         * @example 5d8ddefa-5b2d-4569-b340-9eb8796264cb
          */
         id: string;
       };
@@ -1851,80 +2625,48 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Spesialization updated */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
           "application/json": components["schemas"]["ResponseSpecializationDto"];
         };
       };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
     };
   };
-  /**
-   * Uploading a file
-   * @description This endpoint is used for the file uploading.
-   */
+  /** Upload file */
   FileController_uploadFile: {
-    /** @description Formdata object with a file data */
+    /** @description The file to be uploaded. */
     requestBody: {
       content: {
         "multipart/form-data": string;
       };
     };
     responses: {
-      /** @description Message: File was uploaded successfully */
-      201: {
-        content: {
-          "application/json": string;
-        };
-      };
-      /** @description Bad request */
-      400: {
-        content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
-        };
-      };
-      /** @description Internal server error */
-      500: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-    };
-  };
-  /**
-   * Get a link for a file by name
-   * @description This endpoint retrieves a link for a file by name.
-   */
-  FileController_getFile: {
-    parameters: {
-      path: {
-        /**
-         * @description File name
-         * @example file.pdf
-         */
-        name: string;
-      };
-    };
-    responses: {
-      /** @description The link for the file */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": string;
+          "application/json": components["schemas"]["ResponseFileDto"];
         };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description File not found */
-      404: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -1932,34 +2674,31 @@ export interface operations {
       };
     };
   };
-  /**
-   * Delete a file by name
-   * @description This endpoint deletes a file by name.
-   */
-  FileController_deleteFile: {
+  /** Get file */
+  FileController_getFileByName: {
     parameters: {
       path: {
         /**
-         * @description File name
-         * @example file.pdf
+         * @description Unique file name.
+         * @example 6b5fbeb4-573c-4cfc-afa6-5eea2a7232ff.png
          */
         name: string;
       };
     };
     responses: {
-      /** @description Bad request */
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["ResponseFileDto"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description File not found */
-      404: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -1967,19 +2706,52 @@ export interface operations {
       };
     };
   };
-  /**
-   * Get a list of all appointments
-   * @description This endpoint retrieves a list of all appointment objects.
-   */
-  AppointmentController_findAll: {
+  /** Delete file */
+  FileController_deleteFileByName: {
+    parameters: {
+      path: {
+        /**
+         * @description Unique file name.
+         * @example c1165bde-4cfb-4fd9-9125-b5fb7f3212f6.png
+         */
+        name: string;
+      };
+    };
     responses: {
-      /** @description Appointments exist */
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: never;
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  /** Get all appointments */
+  AppointmentController_getAppointments: {
+    responses: {
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
           "application/json": components["schemas"]["ResponseAppointmentDto"];
         };
       };
-      /** @description Internalserver error */
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -1987,30 +2759,27 @@ export interface operations {
       };
     };
   };
-  /**
-   * Create a new appointment
-   * @description This endpoint creates a new appointment.
-   */
-  AppointmentController_create: {
+  /** Create an appointment */
+  AppointmentController_createAppointment: {
     requestBody: {
       content: {
         "application/json": components["schemas"]["CreateAppointmentDto"];
       };
     };
     responses: {
-      /** @description Appointment created */
-      201: {
+      /** @description Response when the request is successfully processed. */
+      200: {
         content: {
           "application/json": components["schemas"]["ResponseAppointmentDto"];
         };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -2018,98 +2787,31 @@ export interface operations {
       };
     };
   };
-  /**
-   * Get a list of appointments of the patient
-   * @description This endpoint retrieves a list of appointment objects of the patient by it's ID.
-   */
-  AppointmentController_findAllByPatientId: {
+  /** Get all appointments by patient id */
+  AppointmentController_getAppointmentsByPatientId: {
     parameters: {
       path: {
         /**
-         * @description Patient ID
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+         * @description Unique patient id.
+         * @example 54863287-cc83-472c-a1be-5c8831b72df1
          */
         id: string;
       };
     };
     responses: {
-      /** @description Appointments exist */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseAppointmentDto"];
+          "application/json": components["schemas"]["ResponseAppointmentDto"][];
         };
       };
-      /** @description Internal server error */
-      500: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-    };
-  };
-  /**
-   * Get a list of appointments of the doctor
-   * @description This endpoint retrieves a list of appointment objects of the doctor by it's ID.
-   */
-  AppointmentController_findAllByDoctorId: {
-    parameters: {
-      path: {
-        /**
-         * @description Doctor ID
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
-         */
-        id: string;
-      };
-    };
-    responses: {
-      /** @description Appointments exist */
-      200: {
-        content: {
-          "application/json": components["schemas"]["ResponseAppointmentDto"];
-        };
-      };
-      /** @description Internal server error */
-      500: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-    };
-  };
-  /**
-   * Get an appointment by ID
-   * @description This endpoint retrieves an appointment object by ID.
-   */
-  AppointmentController_findOne: {
-    parameters: {
-      path: {
-        /**
-         * @description Appointment ID
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
-         */
-        id: string;
-      };
-    };
-    responses: {
-      /** @description Appointment exists */
-      200: {
-        content: {
-          "application/json": components["schemas"]["ResponseAppointmentDto"];
-        };
-      };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description Appointment not found */
-      404: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -2117,38 +2819,93 @@ export interface operations {
       };
     };
   };
-  /**
-   * Delete an appointment by ID
-   * @description This endpoint deletes an appointment object by ID.
-   */
-  AppointmentController_remove: {
+  /** Get all appointments by doctor id */
+  AppointmentController_getAppointmentsByDoctorId: {
     parameters: {
       path: {
         /**
-         * @description Appointment ID
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+         * @description Unique doctor id.
+         * @example 7ebd64b6-c0e6-4464-96c0-bb39c306e333
          */
         id: string;
       };
     };
     responses: {
-      /** @description Appointment deleted */
-      204: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["ResponseAppointmentDto"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  /** Get an appointment */
+  AppointmentController_getAppointment: {
+    parameters: {
+      path: {
+        /**
+         * @description Unique appointment id.
+         * @example 3f0ae4cc-eec5-4220-b52c-46b39b142529
+         */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["ResponseAppointmentDto"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  /** Delete an appointment */
+  AppointmentController_deleteAppointment: {
+    parameters: {
+      path: {
+        /**
+         * @description Unique appointment id.
+         * @example de707e83-b503-47ab-853c-140336ccb4be
+         */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
         content: never;
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description Appointment not found */
-      404: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -2156,16 +2913,13 @@ export interface operations {
       };
     };
   };
-  /**
-   * Update an appointment by ID
-   * @description This endpoint updates an appointment object by ID.
-   */
-  AppointmentController_update: {
+  /** Update an appointment */
+  AppointmentController_patchAppointment: {
     parameters: {
       path: {
         /**
-         * @description Appointment ID
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+         * @description Unique appointment id.
+         * @example 91312081-50a0-46bc-9f54-49af324e706c
          */
         id: string;
       };
@@ -2176,25 +2930,19 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Appointment updated */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
           "application/json": components["schemas"]["ResponseAppointmentDto"];
         };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           "application/json": components["schemas"]["BadRequestResponse"];
         };
       };
-      /** @description Appointment not found */
-      404: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
@@ -2202,67 +2950,125 @@ export interface operations {
       };
     };
   };
-  DeclarationController_findAll: {
+  /** Get declarations */
+  DeclarationController_getDeclrations: {
     responses: {
-      /** @description Declarations list */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["CreateDeclarationDto"][];
+          "application/json": components["schemas"]["ResponseDeclarationDto"][];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
         };
       };
     };
   };
-  DeclarationController_create: {
+  /** Create declaration */
+  DeclarationController_createDeclaration: {
     requestBody: {
       content: {
         "application/json": components["schemas"]["CreateDeclarationDto"];
       };
     };
     responses: {
-      /** @description Declaration created */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["CreateDeclarationDto"];
+          "application/json": components["schemas"]["ResponseDeclarationDto"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
         };
       };
     };
   };
-  DeclarationController_findOne: {
-    parameters: {
-      path: {
-        id: string;
-      };
-    };
-    responses: {
-      /** @description Get declaration */
-      200: {
-        content: {
-          "application/json": components["schemas"]["CreateDeclarationDto"];
-        };
-      };
-    };
-  };
-  DeclarationController_remove: {
+  /** Get declaration */
+  DeclarationController_getDeclaration: {
     parameters: {
       path: {
         /**
-         * @description Declaration id
+         * @description Unique declaration id.
          * @example 1
          */
         id: string;
       };
     };
     responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["ResponseDeclarationDto"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  /** Delete declaration */
+  DeclarationController_deleteDeclaration: {
+    parameters: {
+      path: {
+        /**
+         * @description Unique declaration id.
+         * @example 1
+         */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
       200: {
         content: never;
       };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
     };
   };
-  DeclarationController_update: {
+  /** Update declaration */
+  DeclarationController_patchDeclaration: {
     parameters: {
       path: {
         /**
-         * @description Declaration id
+         * @description Unique declaration id.
          * @example 1
          */
         id: string;
@@ -2274,29 +3080,449 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Updated declaration */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["CreateDeclarationDto"][];
+          "application/json": components["schemas"]["ResponseDeclarationDto"][];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
         };
       };
     };
   };
-  /**
-   * Get a payment intent
-   * @description This endpoint return payment intent from stripe api
-   */
-  PaymentController_createPayment: {
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CreatePaymentDto"];
+  /** Get reviews by doctor */
+  ReviewController_getReviewsByDoctorId: {
+    parameters: {
+      path: {
+        doctorId: string;
+        /**
+         * @description Include names in reviews.
+         * @example false
+         */
+        includeNames: string;
+        /**
+         * @description How many reviews should be skipped.
+         * @example 1
+         */
+        skip: string;
+        /**
+         * @description How many reviews should be taken.
+         * @example 50
+         */
+        take: string;
       };
     };
     responses: {
-      /** @description Get payment intent */
-      201: {
+      /** @description Response when the request is successfully processed. */
+      200: {
         content: {
-          "application/json": components["schemas"]["CreatePaymentDto"];
+          "application/json": components["schemas"]["ResponseReviewDto"][];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  /** Create a new review */
+  ReviewController_createReview: {
+    parameters: {
+      header?: {
+        /** @description JWT token */
+        Cookie?: string;
+      };
+      path: {
+        doctorId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateReviewDto"];
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["ResponseReviewDto"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      401: {
+        content: {
+          "application/json": components["schemas"]["UnauthorizedResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  /** Get reviews */
+  ReviewController_getReviews: {
+    parameters: {
+      path: {
+        /**
+         * @description Include names in reviews.
+         * @example false
+         */
+        includeNames: string;
+        /**
+         * @description How many reviews should be skipped.
+         * @example 1
+         */
+        skip: string;
+        /**
+         * @description How many reviews should be taken.
+         * @example 50
+         */
+        take: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["ResponseReviewDtoWithNames"][];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  /** Get the average rating of a doctor */
+  ReviewController_getAvgRateByDoctorId: {
+    parameters: {
+      path: {
+        /**
+         * @description Unique doctor id.
+         * @example 88593943-512e-4ddf-8680-387ada3c206c
+         */
+        doctorId: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["AvgRateResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  /** Get review */
+  ReviewController_getReview: {
+    parameters: {
+      path: {
+        /**
+         * @description Unique review id.
+         * @example c6577db6-3e94-430c-b8cd-129a81caddbc
+         */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["ResponseReviewDto"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  /** Delete a review */
+  ReviewController_deleteReview: {
+    parameters: {
+      header?: {
+        /** @description JWT token */
+        Cookie?: string;
+      };
+      path: {
+        reviewId: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: never;
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      401: {
+        content: {
+          "application/json": components["schemas"]["UnauthorizedResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  /** Update a review */
+  ReviewController_patchReview: {
+    parameters: {
+      header?: {
+        /** @description JWT token */
+        Cookie?: string;
+      };
+      path: {
+        reviewId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PatchReviewDto"];
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["ResponseReviewDto"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      401: {
+        content: {
+          "application/json": components["schemas"]["UnauthorizedResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  /** Get all allergies */
+  AllergyController_getAllergies: {
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["ResponseAllergyDto"][];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  /** Create allergy */
+  AllergyController_createAllergy: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateAllergyDto"];
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["ResponseAllergyDto"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  /** Get allergy */
+  AllergyController_getAllergy: {
+    parameters: {
+      path: {
+        /**
+         * @description Unique allergy id.
+         * @example 4d3310fc-9471-4f65-bc87-387433a27875
+         */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["ResponseAllergyDto"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  /** Delete allergy */
+  AllergyController_deleteAllergy: {
+    parameters: {
+      path: {
+        /**
+         * @description Unique allergy id.
+         * @example 323e095e-cab7-4af1-9606-0e5b772892f7
+         */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: never;
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      404: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  /** Update allergy */
+  AllergyController_patchAllergy: {
+    parameters: {
+      path: {
+        /**
+         * @description Unique allergy id.
+         * @example 4b6df469-ef87-44c5-a17d-a691d96a402a
+         */
+        id: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateAllergyDto"];
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          "application/json": components["schemas"]["ResponseAllergyDto"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          "application/json": components["schemas"]["BadRequestResponse"];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          "application/json": components["schemas"]["ClassicNestResponse"];
         };
       };
     };

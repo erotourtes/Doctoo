@@ -1,4 +1,4 @@
-import AppointmentBadge from '../AppointmentBadge';
+import { Badge } from '@/components/UI';
 
 type StatusColors = {
   [key: string]: {
@@ -8,9 +8,9 @@ type StatusColors = {
 };
 
 const statusColors: StatusColors = {
-  Planned: { badgeColor: 'main-light', labelColor: 'main' },
-  Completed: { badgeColor: 'orange-light', labelColor: 'orange' },
-  Canceled: { badgeColor: 'error-light', labelColor: 'error' },
+  PLANNED: { badgeColor: 'main-light', labelColor: 'main' },
+  COMPLETED: { badgeColor: 'orange-light', labelColor: 'orange' },
+  CANCELED: { badgeColor: 'error-light', labelColor: 'error' },
 };
 
 type AppointmentBadgesProps = { status: string; paymentInvoiceKey?: string; paymentReceiptKey?: string };
@@ -18,24 +18,18 @@ type AppointmentBadgesProps = { status: string; paymentInvoiceKey?: string; paym
 export default function AppointmentBadges({ status, paymentInvoiceKey, paymentReceiptKey }: AppointmentBadgesProps) {
   return (
     <div className='flex gap-x-3'>
-      <AppointmentBadge
-        label={status}
-        badgeColor={statusColors[status].badgeColor}
-        labelColor={statusColors[status].labelColor}
-      />
+      <Badge badgeColor={statusColors[status].badgeColor} labelColor={statusColors[status].labelColor}>
+        {status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()}
+      </Badge>
       {paymentReceiptKey !== undefined && (
-        <AppointmentBadge
-          label='Paid'
-          badgeColor={statusColors['Completed'].badgeColor}
-          labelColor={statusColors['Completed'].labelColor}
-        />
+        <Badge badgeColor={statusColors['COMPLETED'].badgeColor} labelColor={statusColors['COMPLETED'].labelColor}>
+          Paid
+        </Badge>
       )}
       {paymentInvoiceKey !== undefined && paymentReceiptKey === undefined && (
-        <AppointmentBadge
-          label='Waiting for payment'
-          badgeColor={statusColors['Planned'].badgeColor}
-          labelColor={statusColors['Planned'].labelColor}
-        />
+        <Badge badgeColor={statusColors['PLANNED'].badgeColor} labelColor={statusColors['PLANNED'].labelColor}>
+          Waiting for payment
+        </Badge>
       )}
     </div>
   );

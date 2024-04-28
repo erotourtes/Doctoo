@@ -1,4 +1,4 @@
-import { ICondition } from './Condition';
+import type { paths } from '@/api';
 
 export enum BloodType {
   O_PLUS = 'O+',
@@ -11,28 +11,7 @@ export enum BloodType {
   AB_MINUS = 'AB-',
 }
 
-export interface IPatient {
-  id: string;
-  userId: string;
-  weight: number;
-  height: number;
-  age: number;
-  bloodType: BloodType;
-  gender: Gender;
-  identityCardKey: string;
-  country: string;
-  state?: string;
-  city: string;
-  street: string;
-  apartment?: string;
-  zipCode?: string;
-  conditions: ICondition[];
-  vaccinations: Vaccination[];
-  allergies: Allergy[];
-  emailNotificationToggle: boolean;
-  twoFactorAuthToggle: boolean;
-  requestBillPaymentApproval: boolean;
-}
+export type TPatient = paths['/patient/{id}']['get']['responses']['200']['content']['application/json'];
 
 export enum Gender {
   MALE = 'male',
@@ -44,7 +23,7 @@ export type Vaccination = {
   name: string;
 };
 
-export type Allergy = {
+export type Condition = {
   id: string;
   name: string;
 };

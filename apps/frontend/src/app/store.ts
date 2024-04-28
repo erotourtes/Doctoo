@@ -3,7 +3,8 @@ import { doctorSlice } from './doctor/DoctorSlice';
 import { appointmentSlice } from './appointment/AppointmentSlice';
 import { patientSlice } from './patient/PatientSlice';
 import paymentSlice from './payment/paymentSlice';
-import { conditionSlice } from './condition/ConditionSlice';
+import { allergySlice } from './allergy/AllergySlice';
+import conditionSlice from './condition/ConditionSlice';
 
 export const store = configureStore({
   reducer: {
@@ -11,7 +12,8 @@ export const store = configureStore({
     appointment: appointmentSlice.reducer,
     patient: patientSlice.reducer,
     payment: paymentSlice,
-    condition: conditionSlice.reducer,
+    allergy: allergySlice.reducer,
+    condition: conditionSlice,
   },
 });
 

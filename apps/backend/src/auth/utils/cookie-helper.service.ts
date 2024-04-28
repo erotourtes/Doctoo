@@ -1,15 +1,12 @@
 import { Inject } from '@nestjs/common';
-import { Response, Request } from 'express';
-import config from '../../config/config';
 import { ConfigType } from '@nestjs/config';
+import { Request, Response } from 'express';
+import config from '../../config/config';
 
 export class AuthRequestHelper {
-  static readonly JWT_COOKIE_NAME = 'jwt';
+  constructor(@Inject(config.KEY) private readonly configObject: ConfigType<typeof config>) {}
 
-  constructor(
-    @Inject(config.KEY)
-    private readonly configObject: ConfigType<typeof config>,
-  ) {}
+  static readonly JWT_COOKIE_NAME = 'jwt';
 
   attachJwtTokenToCookie(res: Response, token: string) {
     const secure = this.configObject.NODE_ENV === 'production';
@@ -31,6 +28,7 @@ export class AuthRequestHelper {
 
   redirectToFrontendSignUpPage(res: Response, token: string) {
     const { FRONTEND_URL, FRONTEND_SIGNUP_PATH } = this.configObject;
+
     res.redirect(`${FRONTEND_URL}/${FRONTEND_SIGNUP_PATH}?token=${token}`);
   }
 }

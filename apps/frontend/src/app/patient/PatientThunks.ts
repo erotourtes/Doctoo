@@ -1,46 +1,34 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { updatePatientData } from './PatientSlice';
 import { instance } from '@/api/axios.api';
-import type { IPatient } from '@/dataTypes/Patient';
-import type { IUSer } from '@/dataTypes/User';
+import { type TPatient } from '@/dataTypes/Patient';
+import type { IUser } from '@/dataTypes/User';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { AxiosResponse } from 'axios';
-import type { ICondition } from '@/dataTypes/Condition';
+import api from '../api';
+import { setPatientData, setPatientState, updatePatientData } from './PatientSlice';
+import handleError from '@/api/handleError.api';
 
 export const getPatientData = createAsyncThunk('patient', async (id: string, { dispatch }) => {
   try {
-    const patientResponse: AxiosResponse<IPatient> = await instance.get(`/patient/${id}`);
+    const { data, error } = await api.GET('/patient/{id}', { params: { path: { id } } });
 
-    if (patientResponse.status !== 200) {
+    if (error) {
       throw new Error('Failed to fetch patient data GET /patient/:id');
     }
 
-    const { userId } = patientResponse.data;
-    const userResponse: AxiosResponse<IUSer> = await instance.get(`/user/${userId}`);
-
-    if (userResponse.status !== 200) {
-      throw new Error('Failed to fetch user data GET /user/:id');
-    }
-
-    const conditionsResponse: AxiosResponse<ICondition[]> = await instance.get(`/patient/${id}/condition`);
-
-    if (conditionsResponse.status !== 200) {
-      throw new Error('Failed to fetch conditions data GET /patient/:id/conditions');
-    }
-
-    dispatch(
-      updatePatientData({ ...patientResponse.data, ...userResponse.data, conditions: conditionsResponse.data ?? [] }),
-    );
+    dispatch(updatePatientData({ ...data }));
+    //TODO: Delete the line above, and uncomment after PR #214 is merged
+    // dispatch(setPatientData({ ...data }));
   } catch (e) {
     const error = e as Error;
-    throw error;
+    handleError(error);
   }
 });
 
 export const patchPatientData = createAsyncThunk(
   'patient',
-  async ({ id, data }: { id: string; data: Partial<Omit<IPatient, 'userId'>> }, { dispatch }) => {
+  async ({ id, data }: { id: string; data: Partial<Omit<TPatient, 'userId'>> }, { dispatch }) => {
     try {
-      const response: AxiosResponse<IPatient> = await instance.patch(`/patient/${id}`, data);
+      const response: AxiosResponse<TPatient> = await instance.patch(`/patient/${id}`, data);
       if (response.status === 200) {
         dispatch(updatePatientData(response.data));
       }
@@ -53,10 +41,10 @@ export const patchPatientData = createAsyncThunk(
 
 export const patchUserData = createAsyncThunk(
   'patient',
-  async ({ id, data }: { id: string; data: Partial<IUSer> }, { dispatch }) => {
+  async ({ id, data }: { id: string; data: Partial<IUser> }, { dispatch }) => {
     console.log(data, id);
     try {
-      const response: AxiosResponse<IUSer> = await instance.patch(`/user/${id}`, data);
+      const response: AxiosResponse<IUser> = await instance.patch(`/user/${id}`, data);
       if (response.status === 200) {
         dispatch(updatePatientData(response.data));
       }
@@ -77,4 +65,25 @@ export const deletePatient = createAsyncThunk('patient', async (id: string) => {
     const error = e as Error;
     throw error;
   }
+});
+
+export const authorizePatient = createAsyncThunk('patient', async (_void, { dispatch }) => {
+  dispatch(setPatientState({ isLoading: true }));
+  const { data, error } = await api.GET('/auth/patient/me');
+  if (error || !data) return void dispatch(setPatientState({ isLoading: false }));
+
+  dispatch(
+    setPatientData({
+      ...data,
+      id: data.patientId,
+      bloodType: data.bloodType,
+      gender: data.gender,
+      zipCode: data.zipCode ?? 0,
+      allergies: [],
+      conditions: [],
+      vaccinations: [],
+      twoFactorAuthToggle: false,
+    }),
+  );
+  dispatch(setPatientState({ isFetched: true, isLoading: false }));
 });
