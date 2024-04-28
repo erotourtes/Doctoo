@@ -48,7 +48,7 @@ export const Default: Story = {
     },
     scheduleIsOpen: true,
     closePopup: () => {},
-    currentDay: dayjs(),
+    currentDay: dayjs('2024-04-28'),
   },
 
   render: function Render({ scheduleInfo, currentDay }) {

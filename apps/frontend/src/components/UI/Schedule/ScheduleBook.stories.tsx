@@ -35,7 +35,7 @@ export const Default: Story = {
     doctorId: '3',
     patientId: '7',
     closePopup: () => {},
-    currentDay: dayjs(),
+    currentDay: dayjs('2024-04-28'),
   },
   render: function Render({ patientId, currentDay }) {
     const dispatch = useAppDispatch();
