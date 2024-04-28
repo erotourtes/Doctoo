@@ -2,110 +2,88 @@ import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/commo
 import {
   ApiBadRequestResponse,
   ApiBody,
-  ApiCreatedResponse,
   ApiInternalServerErrorResponse,
-  ApiNoContentResponse,
-  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
+import { randomUUID } from 'crypto';
 import { BadRequestResponse } from '../utils/BadRequestResponse';
 import { ClassicNestResponse } from '../utils/ClassicNestResponse';
+import { RESPONSE_STATUS } from '../utils/constants';
 import { CreatePatientDto } from './dto/create.dto';
+import { CreatePatientConditionDto } from './dto/createPatientAllergy.dto';
 import { PatchPatientDto } from './dto/patch.dto';
 import { ResponsePatientDto } from './dto/response.dto';
-import { PatientService } from './patient.service';
-import { CreatePatientConditionDto } from './dto/createPatientAllergy.dto';
 import { ResponseAllergyDto } from './dto/responseAllergy.dto';
 import { ResponsePatientAllergyDto } from './dto/responsePatientAllergy.dto';
+import { PatientService } from './patient.service';
 
-@ApiTags('Patient')
+@ApiTags('Patient Enpoints')
 @Controller('patient')
 export class PatientController {
   constructor(private readonly patientService: PatientService) {}
 
-  @ApiOperation({
-    summary: 'Get a patient by ID',
-    description: 'This endpoint retrieves a patient object by ID.',
-  })
-  @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
-  @ApiOkResponse({ type: ResponsePatientDto, description: 'Patient exists' })
-  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'Patient not found' })
-  @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Get(':id')
+  @ApiOperation({ summary: 'Get patient' })
+  @ApiOkResponse({ type: ResponsePatientDto, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiParam({ name: 'id', example: randomUUID(), description: "The patient's unique id." })
   async getPatient(@Param('id') id: string) {
     return this.patientService.getPatient(id);
   }
 
-  @ApiOperation({
-    summary: 'Create a new patient',
-    description: 'This endpoint creates a new patient.',
-  })
-  @ApiBody({ type: CreatePatientDto })
-  @ApiCreatedResponse({ type: ResponsePatientDto, description: 'Patient created' })
-  @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Post()
+  @ApiOperation({ summary: 'Create patient' })
+  @ApiOkResponse({ type: ResponsePatientDto, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiBody({ type: CreatePatientDto })
   async createPatient(@Body() body: CreatePatientDto) {
     return this.patientService.createPatient(body);
   }
 
-  @ApiOperation({
-    summary: 'Update a patient by ID',
-    description: 'This endpoint updates a patient object by ID.',
-  })
-  @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
-  @ApiBody({ type: PatchPatientDto })
-  @ApiOkResponse({ type: ResponsePatientDto, description: 'Patient updated' })
-  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'Patient not found' })
-  @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Patch(':id')
+  @ApiOperation({ summary: 'Update patient' })
+  @ApiOkResponse({ type: ResponsePatientDto, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiParam({ name: 'id', example: randomUUID(), description: "The patient's unique id." })
+  @ApiBody({ type: PatchPatientDto })
   async patchPatient(@Param('id') id: string, @Body() body: PatchPatientDto) {
     return this.patientService.patchPatient(id, body);
   }
 
-  @ApiOperation({
-    summary: 'Delete a patient by ID',
-    description: 'This endpoint deletes a patient object by ID.',
-  })
-  @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
-  @ApiNoContentResponse({ description: 'Patient deleted' })
-  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'Patient not found' })
-  @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
-  @Delete(':id')
-  async deletePatient(@Param('id') id: string) {
-    return this.patientService.deletePatient(id);
-  }
-
-  @ApiOperation({
-    summary: 'Create a new patient allergy',
-    description: 'This endpoint creates a new patient allergy.',
-  })
-  @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
-  @ApiOkResponse({ type: ResponsePatientAllergyDto, description: 'Patient allergy created' })
-  @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
-  @ApiBody({ type: CreatePatientConditionDto })
   @Post(':id/allergy')
+  @ApiOperation({ summary: 'Create patient allergy' })
+  @ApiOkResponse({ type: ResponsePatientAllergyDto, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiParam({ name: 'id', example: randomUUID(), description: "The patient's unique id." })
+  @ApiBody({ type: CreatePatientConditionDto })
   async createPatientAllergy(@Param('id') patientId: string, @Body() body: CreatePatientConditionDto) {
     return this.patientService.createPatientAllergy(patientId, body.allergyId);
   }
 
-  @ApiOperation({
-    summary: 'Get allergies by patient ID',
-    description: 'This endpoint retrieves allergies by patient ID.',
-  })
-  @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
-  @ApiOkResponse({ type: ResponseAllergyDto, isArray: true, description: 'Patient allergy exist' })
-  @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Get(':id/allergy')
+  @ApiOperation({ summary: 'Get patient allergies' })
+  @ApiOkResponse({ type: ResponseAllergyDto, isArray: true, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiParam({ name: 'id', example: randomUUID(), description: "The patient's unique id." })
   async getPatientAllergies(@Param('id') patientId: string) {
     return this.patientService.getPatientAllergies(patientId);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete patient' })
+  @ApiOkResponse({ description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiParam({ name: 'id', example: randomUUID(), description: "The patient's unique id." })
+  async deletePatient(@Param('id') id: string) {
+    return this.patientService.deletePatient(id);
   }
 }

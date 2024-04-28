@@ -1,30 +1,32 @@
-import { Type } from 'class-transformer';
-import { IsNumber, IsString, IsUUID, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { IsNumber, IsUUID, Min } from 'class-validator';
+import { randomUUID } from 'crypto';
+import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
 
 export class CreateDoctorDto {
-  @ApiProperty({ description: 'The ID of the user', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
-  @IsString()
+  @ApiProperty({ example: randomUUID(), description: 'Unique user id.' })
+  @IsUUID(4)
   userId: string;
 
-  @ApiProperty({ description: 'The pay rate of the doctor', example: 100 })
+  @ApiProperty({ example: 100, description: "Doctor's hourly rate." })
   @IsNumber()
   @Min(0)
   @Type(() => Number)
   payrate: number;
 
   @ApiProperty({
-    description: 'About section of the doctor',
-    example: 'Experienced doctor with a focus on patient care',
+    example: 'Experienced doctor with a focus on patient care.',
+    description: 'A full description of the doctor.',
   })
-  @IsString()
+  @IsNotEmptyString()
   about: string;
 
-  @ApiProperty({ description: 'An array of IDs for specializations of the Doctor' })
-  @IsUUID(4, { each: true, message: 'each specializationlId should be a UUID' })
+  @ApiProperty({ example: [randomUUID()], description: 'A list of ids specialties that the doctor covers.' })
+  @IsUUID(4, { each: true, message: 'Each value must be in UUID format.' })
   specializationIds: string[];
 
-  @ApiProperty({ description: 'An array of IDs for hospitals the Doctor is associated with' })
-  @IsUUID(4, { each: true, message: 'each hospitalId should be a UUID' })
+  @ApiProperty({ example: [randomUUID()], description: 'List of hospitals where the doctor works.' })
+  @IsUUID(4, { each: true, message: 'Each value must be in UUID format.' })
   hospitalIds: string[];
 }

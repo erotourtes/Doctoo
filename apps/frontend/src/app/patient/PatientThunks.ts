@@ -1,10 +1,10 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { setPatientData, setPatientState, updatePatientData } from './PatientSlice';
 import { instance } from '@/api/axios.api';
 import { BloodType, Gender, type IPatient } from '@/dataTypes/Patient';
 import type { IUser } from '@/dataTypes/User';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { AxiosResponse } from 'axios';
 import api from '../api';
+import { setPatientData, setPatientState, updatePatientData } from './PatientSlice';
 
 export const getPatientData = createAsyncThunk('patient', async (id: string, { dispatch }) => {
   try {
@@ -69,7 +69,7 @@ export const deletePatient = createAsyncThunk('patient', async (id: string) => {
 
 export const authorizePatient = createAsyncThunk('patient', async (_void, { dispatch }) => {
   dispatch(setPatientState({ isLoading: true }));
-  const { data, error } = await api.GET('/auth/getme/patient');
+  const { data, error } = await api.GET('/auth/patient/me');
   if (error || !data) return void dispatch(setPatientState({ isLoading: false }));
 
   dispatch(
@@ -82,6 +82,7 @@ export const authorizePatient = createAsyncThunk('patient', async (_void, { disp
       allergies: [],
       conditions: [],
       vaccinations: [],
+      twoFactorAuthToggle: false,
     }),
   );
   dispatch(setPatientState({ isFetched: true, isLoading: false }));

@@ -1,7 +1,9 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { plainToInstance } from 'class-transformer';
 import { randomUUID } from 'crypto';
 import { Client } from 'minio';
+import { ResponseFileDto } from '../file/dto/response.dto';
 
 @Injectable()
 export class MinioService {
@@ -17,69 +19,79 @@ export class MinioService {
     this.bucketName = this.configService.get('MINIO_BUCKET_NAME');
   }
 
+  private async isFileExists(name: string): Promise<boolean> {
+    try {
+      await this.minioClient.statObject(this.bucketName, name);
+    } catch (err) {
+      throw new NotFoundException('Requested file not found.');
+    }
+
+    return true;
+  }
+
   private minioClient: Client;
   private bucketName: string;
   private isProductionMode = this.configService.get('NODE_ENV') === 'production';
 
-  private async createBucketIfNotExists() {
-    const bucketExists = await this.minioClient.bucketExists(this.bucketName);
-    if (!bucketExists) {
-      await this.minioClient.makeBucket(this.bucketName, 'eu-west-1');
-    }
-  }
-
   async onModuleInit() {
-    await this.createBucketIfNotExists();
+    const isBucketExist = await this.minioClient.bucketExists(this.bucketName);
+
+    if (!isBucketExist) {
+      await this.minioClient.makeBucket(this.bucketName);
+    }
   }
 
-  async upload(file: Express.Multer.File) {
-    const allowedFormats = ['image/', 'video/', 'application/pdf'];
+  async upload(file: Express.Multer.File): Promise<ResponseFileDto> {
+    const allowedTypes = ['image/', 'video/', 'application/pdf'];
 
-    if (!allowedFormats.some(format => file.mimetype.startsWith(format))) {
-      throw new BadRequestException('Invalid file format');
+    if (!allowedTypes.some(format => file.mimetype.startsWith(format))) {
+      throw new BadRequestException('Supports only images, videos and documents files.');
     }
 
-    const fullFileName = `${randomUUID()}.${file.originalname.split('.').pop()}`;
+    const fileType = file.originalname.split('.').pop();
+    const fileName = `${randomUUID()}.${fileType}`;
 
-    await this.minioClient.putObject(this.bucketName, fullFileName, file.buffer);
+    await this.minioClient.putObject(this.bucketName, fileName, file.buffer);
 
-    const url = await this.getFileByName(fullFileName);
+    const url = await this.getFileByName(fileName);
 
-    return { name: fullFileName, ...url };
+    return plainToInstance(ResponseFileDto, { name: fileName, ...url });
   }
 
-  async getFileByName(name: string) {
+  async getFileByName(name: string): Promise<ResponseFileDto> {
+    await this.isFileExists(name);
+
+    await this.minioClient.statObject(this.bucketName, name);
+
+    const presignedUrl = await this.minioClient.presignedGetObject(this.bucketName, name);
+
+    const url = this.isProductionMode ? presignedUrl.split('?')[0] : presignedUrl;
+
+    return plainToInstance(ResponseFileDto, { name, url });
+  }
+
+  async deleteFileByName(name: string): Promise<void> {
+    await this.isFileExists(name);
+
+    await this.minioClient.statObject(this.bucketName, name);
+    await this.minioClient.removeObject(this.bucketName, name);
+  }
+
+  async uploadByUrl(url: string): Promise<string> {
+    let response: Response;
+
     try {
-      await this.minioClient.statObject(this.bucketName, name);
-
-      const presignedUrl = await this.minioClient.presignedGetObject(this.bucketName, name);
-
-      const url = this.isProductionMode ? presignedUrl.split('?')[0] : presignedUrl;
-
-      return { url };
+      response = await fetch(url);
     } catch (err) {
-      throw new NotFoundException('Request file not found.');
+      throw new BadRequestException('Invalid image url.');
     }
-  }
 
-  async deleteFileByName(name: string) {
-    try {
-      await this.minioClient.statObject(this.bucketName, name);
-      await this.minioClient.removeObject(this.bucketName, name);
-    } catch (err) {
-      throw new NotFoundException('Request file not found');
-    }
-  }
-
-  async uploadByUrl(url: string) {
-    const response = await fetch(url).catch(() => {
-      throw new BadRequestException('Invalid file url');
-    });
     const buffer = Buffer.from(await response.arrayBuffer());
 
-    const fullFileName = `${randomUUID()}`;
-    await this.minioClient.putObject(this.bucketName, fullFileName, buffer);
+    const fileName = randomUUID();
 
-    return fullFileName;
+    await this.minioClient.putObject(this.bucketName, fileName, buffer);
+
+    return fileName;
   }
 }

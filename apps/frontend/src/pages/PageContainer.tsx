@@ -1,15 +1,16 @@
-import { Route, Routes, useLocation } from 'react-router-dom';
-import ProfilePage from './profile/ProfilePage';
-import SignUpPage from './auth/signup/SignUpPage';
-import LoginPage from './auth/login/LoginPage';
-import LoginPageAuthenticate from './auth/login/LoginPageAuthenticate';
-import SignUpPatientPage from './auth/signup/SignUpPatientPage';
-import Settings from './settings/settingsPage/settingsPage';
 import Sidemenu from '@components/Sidemenu/Sidemenu';
 import Header from '@components/UI/Header/Header';
-import DashboardPage from './dashboard/DashboardPage';
-import { PaymentPage } from './PaymentPage/PaymentPage';
+import { Route, Routes, useLocation } from 'react-router-dom';
+import AppointmentsPage from './Appointments/AppointmentsPage';
 import MyDoctorsPage from './MyDoctors/MyDoctorsPage';
+import { PaymentPage } from './PaymentPage/PaymentPage';
+import LoginPage from './auth/login/LoginPage';
+import LoginPageAuthenticate from './auth/login/LoginPageAuthenticate';
+import SignUpPage from './auth/signup/SignUpPage';
+import SignUpPatientPage from './auth/signup/SignUpPatientPage';
+import DashboardPage from './dashboard/DashboardPage';
+import ProfilePage from './profile/ProfilePage';
+import Settings from './settings/settingsPage/settingsPage';
 
 // import page component
 
@@ -37,7 +38,7 @@ const PageContainer = () => {
         <Route path='/settings' Component={Settings} />
         <Route path='/payment' Component={PaymentPage} />
         <Route path='/my-doctors' Component={MyDoctorsPage} />
-        <Route path='/calendar' Component={CalendarPage} />
+        {/* <Route path='/calendar' Component={CalendarPage({ selectedDate: new Date() })} /> */}
         <Route path='/appointments' Component={AppointmentsPage} />
 
         {/* <Route path='/protected' element={<ProtectPatientRoute />}>

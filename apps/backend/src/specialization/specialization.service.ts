@@ -1,41 +1,65 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateSpecializationDto } from './dto/create.dto';
-import { PrismaService } from '../prisma/prisma.service';
-import { ResponseSpecializationDto } from './dto/response.dto';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateSpecializationDto } from './dto/create.dto';
+import { ResponseSpecializationDto } from './dto/response.dto';
 import { UpdateSpecializationDto } from './dto/update.dto';
 
 @Injectable()
 export class SpecializationService {
   constructor(private prismaService: PrismaService) {}
-  async createSpecialization(dto: CreateSpecializationDto): Promise<ResponseSpecializationDto> {
-    const specialization = await this.prismaService.specialization.create({ data: dto });
+
+  async isSpecializationByIdExists(id: string): Promise<boolean> {
+    const specialization = await this.prismaService.specialization.findUnique({ where: { id } });
+
+    if (!specialization) throw new NotFoundException({ message: 'Specialization with this Id not found.' });
+
+    return true;
+  }
+
+  async isSpecializationByNameExists(name: string): Promise<boolean> {
+    const specialization = await this.prismaService.specialization.findFirst({
+      where: { name: { mode: 'insensitive', equals: name } },
+    });
+
+    if (specialization) throw new BadRequestException({ message: 'Specialization with this name already exists.' });
+
+    return true;
+  }
+
+  async createSpecialization(body: CreateSpecializationDto): Promise<ResponseSpecializationDto> {
+    await this.isSpecializationByNameExists(body.name);
+
+    const specialization = await this.prismaService.specialization.create({ data: body });
+
     return plainToInstance(ResponseSpecializationDto, specialization);
   }
 
   async getSpecializations(): Promise<ResponseSpecializationDto[]> {
     const specializations = await this.prismaService.specialization.findMany();
+
     return plainToInstance(ResponseSpecializationDto, specializations);
   }
 
   async getSpecialization(id: string): Promise<ResponseSpecializationDto> {
+    await this.isSpecializationByIdExists(id);
+
     const specialization = await this.prismaService.specialization.findUnique({ where: { id } });
-    if (!specialization) throw new NotFoundException({ message: `Specialization with id ${id} does not exist` });
+
     return plainToInstance(ResponseSpecializationDto, specialization);
   }
 
-  async updateSpecialization(id: string, dto: UpdateSpecializationDto): Promise<ResponseSpecializationDto> {
-    const specialization = await this.getSpecialization(id);
-    const updatedSpecialization = await this.prismaService.specialization.update({
-      where: { id: specialization.id },
-      data: dto,
-    });
-    return plainToInstance(ResponseSpecializationDto, updatedSpecialization);
+  async patchSpecialization(id: string, body: UpdateSpecializationDto): Promise<ResponseSpecializationDto> {
+    await this.isSpecializationByIdExists(id);
+
+    const specialization = await this.prismaService.specialization.update({ where: { id }, data: body });
+
+    return plainToInstance(ResponseSpecializationDto, specialization);
   }
 
-  async deleteSpecialization(id: string) {
-    const specialization = await this.getSpecialization(id);
+  async deleteSpecialization(id: string): Promise<void> {
+    await this.isSpecializationByIdExists(id);
 
-    await this.prismaService.specialization.delete({ where: { id: specialization.id } });
+    await this.prismaService.specialization.delete({ where: { id } });
   }
 }

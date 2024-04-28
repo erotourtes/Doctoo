@@ -1,24 +1,23 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { AllergyModule } from 'src/allergy/allergy.module';
 import { AppointmentModule } from '../appointment/appointment.module';
 import { AuthModule } from '../auth/auth.module';
 import auth from '../config/auth';
 import config from '../config/config';
+import mail from '../config/mail';
+import { DeclarationModule } from '../declaration/declaration.module';
 import { DoctorModule } from '../doctor/doctor.module';
 import { FavoriteModule } from '../favorite/favorite.module';
 import { FileModule } from '../file/file.module';
 import { HospitalModule } from '../hospital/hospital.module';
+import { MailModule } from '../mail/mail.module';
 import { MinioService } from '../minio/minio.service';
 import { PatientModule } from '../patient/patient.module';
-import { UserModule } from '../user/user.module';
-import { DeclarationModule } from '../declaration/declaration.module';
-import { SpecializationModule } from '../specialization/specialization.module';
-import mail from '../config/mail';
-import { MailModule } from '../mail/mail.module';
-import { ReviewModule } from '../review/review.module';
-
-import { AllergyModule } from 'src/allergy/allergy.module';
 import { PaymentModule } from '../payment/payment.module';
+import { ReviewModule } from '../review/review.module';
+import { SpecializationModule } from '../specialization/specialization.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [

@@ -2,6 +2,7 @@ import { instance } from '@/api/axios.api';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { AxiosResponse } from 'axios';
 import type { IAppointment, ICreateAppointment } from '../../dataTypes/Appointment';
+import api from '../api';
 import {
   deleteAppointment,
   setAppointmentCanceled,
@@ -9,11 +10,10 @@ import {
   setAppointments,
   setNewAppointment,
 } from './AppointmentSlice';
-import api from '../api';
 
 export const getAppointmentsByPatientId = createAsyncThunk('appointment', async (patient_id: string, { dispatch }) => {
   try {
-    const { error, data } = await api.GET(`/appointment/all-by-patient/{id}`, { params: { path: { id: patient_id } } });
+    const { error, data } = await api.GET(`/appointment/patient/{id}`, { params: { path: { id: patient_id } } });
     if (!error) {
       const res: IAppointment[] = data;
 

@@ -4,8 +4,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
-  HttpStatus,
   Param,
   Patch,
   Post,
@@ -13,32 +11,32 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import JWTGuard from '../auth/gaurds/jwt.guard';
-import { PatientService } from '../patient/patient.service';
-import { CreateReviewDto } from './dto/create.dto';
-import { ReviewService } from './review.service';
 import {
   ApiBadRequestResponse,
   ApiBody,
-  ApiCreatedResponse,
   ApiHeader,
   ApiInternalServerErrorResponse,
-  ApiNoContentResponse,
-  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { AvgRateResponse, ResponseReviewDto, ResponseReviewDtoWithNames } from './dto/response.dto';
-import { PatchReviewDto } from './dto/patch.dto';
+import { randomUUID } from 'crypto';
+import JWTGuard from '../auth/gaurds/jwt.guard';
+import { PatientService } from '../patient/patient.service';
 import { BadRequestResponse } from '../utils/BadRequestResponse';
 import { ClassicNestResponse } from '../utils/ClassicNestResponse';
 import { UnauthorizedResponse } from '../utils/UnauthorizedResponse';
-import { InternalServerErrorResponse } from '../utils/InternalServerErrorResponse';
+import { RESPONSE_STATUS } from '../utils/constants';
+import { AvgRateResponse } from './dto/avgRateResponse.dto';
+import { CreateReviewDto } from './dto/create.dto';
+import { PatchReviewDto } from './dto/patch.dto';
+import { ResponseReviewDto } from './dto/response.dto';
+import { ResponseReviewDtoWithNames } from './dto/responseWithNames.dto';
+import { ReviewService } from './review.service';
 
-@ApiTags('Review')
+@ApiTags('Review Endpoints')
 @Controller('review')
 export class ReviewController {
   constructor(
@@ -46,47 +44,35 @@ export class ReviewController {
     private readonly patientService: PatientService,
   ) {}
 
-  @ApiOperation({
-    summary: 'Create a new review',
-    description: 'This endpoint creates a new review.',
-  })
-  @ApiHeader({
-    name: 'Cookie',
-    description:
-      'JWT token (example: jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmOGM1YjJmNC1hMzNkLTRkYWMtYWFjMS0zZDk5NDUzNjdhOTkiLCJpYXQiOjE3MTQwNDc2MzYsImV4cCI6MTcxNDY1MjQzNn0.INySOp4IgImr-enRhksOp_s_RPjn-yNkugpw6ba9JGQ; Path=/; HttpOnly)',
-    required: true,
-  })
-  @ApiBody({ type: CreateReviewDto })
-  @ApiCreatedResponse({ type: ResponseReviewDto, description: 'Review created' })
-  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'Not found' })
-  @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: 'Unauthorized' })
-  @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
-  @Post('doctor/:doctorId')
   @UseGuards(JWTGuard)
+  @Post('doctor/:doctorId')
+  @ApiOperation({ summary: 'Create a new review' })
+  @ApiHeader({ name: 'Cookie', description: 'JWT token' })
+  @ApiOkResponse({ type: ResponseReviewDto, description: RESPONSE_STATUS.SUCCESS })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiBody({ type: CreateReviewDto })
   async createReview(
     @Req() req: Request,
     @Param('doctorId') doctorId: string,
     @Body() createReviewDto: CreateReviewDto,
   ) {
     const user = req['user'];
+
     const patient = await this.patientService.getPatientByUserId(user.id);
 
     return this.reviewService.createReview(patient.id, doctorId, createReviewDto.rate, createReviewDto.text);
   }
 
-  @ApiOperation({
-    summary: 'Get a list reviews',
-    description: 'This endpoint get a list reviews.',
-  })
-  @ApiParam({ name: 'includeNames', type: 'boolean', required: false })
-  @ApiParam({ name: 'skip', type: 'number', required: false })
-  @ApiParam({ name: 'take', type: 'number', required: false })
-  @ApiOkResponse({ type: [ResponseReviewDtoWithNames], description: 'Reviews list' })
-  @ApiNotFoundResponse({ type: BadRequestResponse, description: 'Not found' })
-  @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
   @Get()
+  @ApiOperation({ summary: 'Get reviews' })
+  @ApiOkResponse({ type: ResponseReviewDtoWithNames, isArray: true, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiParam({ name: 'includeNames', example: false, description: 'Include names in reviews.' })
+  @ApiParam({ name: 'skip', example: 1, description: 'How many reviews should be skipped.' })
+  @ApiParam({ name: 'take', example: 50, description: 'How many reviews should be taken.' })
   getReviews(
     @Query('includeNames') includeNames?: string,
     @Query('skip') skipQuery?: string,
@@ -95,32 +81,26 @@ export class ReviewController {
     const skip = skipQuery ? Number(skipQuery) : undefined;
     const take = takeQuery ? Number(takeQuery) : undefined;
 
+    // TODO: Add better validation.
     if (skipQuery && isNaN(skip)) {
-      throw new BadRequestException('Skip query parameter must be a number');
-    }
-    if (takeQuery && isNaN(take)) {
-      throw new BadRequestException('Take query parameter must be a number');
+      throw new BadRequestException('Skip query parameter must be a number.');
     }
 
-    return this.reviewService.getReviews({
-      includeNames: includeNames === 'true',
-      skip,
-      take,
-    });
+    if (takeQuery && isNaN(take)) {
+      throw new BadRequestException('Take query parameter must be a number.');
+    }
+
+    return this.reviewService.getReviews({ includeNames: includeNames === 'true', skip, take });
   }
 
-  @ApiOperation({
-    summary: 'Get a list reviews by doctorId',
-    description: 'This endpoint get a list reviews by doctorId.',
-  })
-  @ApiParam({ name: 'includeNames', type: 'boolean', required: false })
-  @ApiParam({ name: 'skip', type: 'number', required: false })
-  @ApiParam({ name: 'take', type: 'number', required: false })
-  @ApiOkResponse({ type: [ResponseReviewDto], description: 'Reviews list' })
-  @ApiNotFoundResponse({ type: BadRequestResponse, description: 'Not found' })
-  @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
   @Get('doctor/:doctorId')
+  @ApiOperation({ summary: 'Get reviews by doctor' })
+  @ApiOkResponse({ type: ResponseReviewDto, isArray: true, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiParam({ name: 'includeNames', example: false, description: 'Include names in reviews.' })
+  @ApiParam({ name: 'skip', example: 1, description: 'How many reviews should be skipped.' })
+  @ApiParam({ name: 'take', example: 50, description: 'How many reviews should be taken.' })
   getReviewsByDoctorId(
     @Param('doctorId') doctorId: string,
     @Query('includeNames') includeNames: string,
@@ -130,94 +110,70 @@ export class ReviewController {
     const skip = skipQuery ? Number(skipQuery) : undefined;
     const take = takeQuery ? Number(takeQuery) : undefined;
 
+    // TODO: Add better validation.
     if (skipQuery && isNaN(skip)) {
-      throw new BadRequestException('Skip query parameter must be a number');
-    }
-    if (takeQuery && isNaN(take)) {
-      throw new BadRequestException('Take query parameter must be a number');
+      throw new BadRequestException('Skip query parameter must be a number.');
     }
 
-    return this.reviewService.getReviews({
-      doctorId: doctorId,
-      includeNames: includeNames === 'true',
-      skip,
-      take,
-    });
+    if (takeQuery && isNaN(take)) {
+      throw new BadRequestException('Take query parameter must be a number.');
+    }
+
+    return this.reviewService.getReviews({ doctorId: doctorId, includeNames: includeNames === 'true', skip, take });
   }
 
-  @ApiOperation({
-    summary: 'Get the average rating of a doctor',
-    description: 'This endpoint returns the average rating and the number of reviews for a specific doctor.',
-  })
-  @ApiParam({ name: 'doctorId', type: 'string', required: true })
-  @ApiOkResponse({ type: AvgRateResponse, description: 'Average rating and count' })
-  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'Not found' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
   @Get('doctor/:doctorId/average')
+  @ApiOperation({ summary: 'Get the average rating of a doctor' })
+  @ApiOkResponse({ type: AvgRateResponse, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiParam({ name: 'doctorId', example: randomUUID(), description: 'Unique doctor id.' })
   async getAvgRateByDoctorId(@Param('doctorId') doctorId: string) {
     return this.reviewService.getAvgRateByDoctorId(doctorId);
   }
 
-  @ApiOperation({
-    summary: 'Get a review',
-    description: 'This endpoint returns a review by its ID.',
-  })
-  @ApiParam({ name: 'id', type: 'string', required: true })
-  @ApiOkResponse({ type: ResponseReviewDto, description: 'Review' })
-  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'Not found' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
   @Get(':id')
+  @ApiOperation({ summary: 'Get review' })
+  @ApiOkResponse({ type: ResponseReviewDto, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique review id.' })
   async getReview(@Param('id') id: string) {
     const review = await this.reviewService.getReview(id);
+
     delete review.patientId;
 
     return review;
   }
 
-  @ApiOperation({
-    summary: 'Update a review',
-    description: 'This endpoint updates a review.',
-  })
-  @ApiHeader({
-    name: 'Cookie',
-    description:
-      'JWT token (example: jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmOGM1YjJmNC1hMzNkLTRkYWMtYWFjMS0zZDk5NDUzNjdhOTkiLCJpYXQiOjE3MTQwNDc2MzYsImV4cCI6MTcxNDY1MjQzNn0.INySOp4IgImr-enRhksOp_s_RPjn-yNkugpw6ba9JGQ; Path=/; HttpOnly)',
-    required: true,
-  })
-  @ApiBody({ type: PatchReviewDto })
-  @ApiOkResponse({ type: ResponseReviewDto, description: 'Review updated' })
-  @ApiNotFoundResponse({ type: BadRequestResponse, description: 'Not found' })
-  @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: 'Unauthorized' })
-  @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
-  @Patch('/:reviewId')
   @UseGuards(JWTGuard)
-  async patchReview(@Req() req: Request, @Param('reviewId') reviewId: string, @Body() patchReviewDto: PatchReviewDto) {
+  @Patch('/:reviewId')
+  @ApiOperation({ summary: 'Update a review' })
+  @ApiHeader({ name: 'Cookie', description: 'JWT token' })
+  @ApiOkResponse({ type: ResponseReviewDto, description: RESPONSE_STATUS.SUCCESS })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiBody({ type: PatchReviewDto })
+  async patchReview(@Req() req: Request, @Param('reviewId') reviewId: string, @Body() body: PatchReviewDto) {
     const user = req['user'];
+
     const patient = await this.patientService.getPatientByUserId(user.id);
 
-    return this.reviewService.patchReview(reviewId, patient.id, patchReviewDto);
+    return this.reviewService.patchReview(reviewId, patient.id, body);
   }
 
-  @ApiOperation({
-    summary: 'Delete a review',
-    description: 'This endpoint deletes a review.',
-  })
-  @ApiHeader({
-    name: 'Cookie',
-    description:
-      'JWT token (example: jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmOGM1YjJmNC1hMzNkLTRkYWMtYWFjMS0zZDk5NDUzNjdhOTkiLCJpYXQiOjE3MTQwNDc2MzYsImV4cCI6MTcxNDY1MjQzNn0.INySOp4IgImr-enRhksOp_s_RPjn-yNkugpw6ba9JGQ; Path=/; HttpOnly)',
-    required: true,
-  })
-  @ApiNoContentResponse({ description: 'Review deleted' })
-  @ApiNotFoundResponse({ type: BadRequestResponse, description: 'Not found' })
-  @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: 'Unauthorized' })
-  @ApiInternalServerErrorResponse({ type: InternalServerErrorResponse, description: 'Internal server error' })
-  @Delete('/:reviewId')
-  @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(JWTGuard)
+  @Delete('/:reviewId')
+  @ApiOperation({ summary: 'Delete a review' })
+  @ApiHeader({ name: 'Cookie', description: 'JWT token' })
+  @ApiOkResponse({ description: RESPONSE_STATUS.SUCCESS })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
   async deleteReview(@Req() req: Request, @Param('reviewId') reviewId: string) {
     const user = req['user'];
+
     const patient = await this.patientService.getPatientByUserId(user.id);
 
     return this.reviewService.deleteReview(reviewId, patient.id);

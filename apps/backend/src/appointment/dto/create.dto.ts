@@ -1,46 +1,52 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { AppointmentStatus } from '@prisma/client';
-import { IsEnum, IsISO8601, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsISO8601, IsOptional, IsUUID } from 'class-validator';
+import { randomUUID } from 'crypto';
+import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
 
 export class CreateAppointmentDto {
-  @ApiProperty({ description: 'The ID of the doctor the appointment is created with' })
-  @IsNotEmpty()
+  @ApiProperty({ example: randomUUID(), description: 'Unique doctor id.' })
+  @IsUUID(4)
   readonly doctorId: string;
 
-  @ApiProperty({ description: 'The ID of the patient who created the appointment' })
-  @IsNotEmpty()
+  @ApiProperty({ example: randomUUID(), description: 'Unique patient id.' })
+  @IsUUID(4)
   readonly patientId: string;
 
-  @IsISO8601({ strict: true }, { message: 'assignedAt must be a valid ISO8601 date' })
-  @ApiProperty({
-    type: 'Date string in ISO8601 format',
-    description: 'The date and time of the appointment in ISO8601 fromat',
-  })
-  @IsNotEmpty()
+  @ApiProperty({ example: new Date(), description: 'The date on which the meeting is scheduled.' })
+  @IsISO8601({ strict: true })
   assignedAt: string;
 
-  @ApiProperty({ enum: AppointmentStatus, description: 'The status of the appointment' })
+  @ApiProperty({
+    enum: AppointmentStatus,
+    example: AppointmentStatus.PLANNED,
+    description: 'Current status of the appointment.',
+  })
   @IsEnum(AppointmentStatus)
   readonly status: AppointmentStatus;
 
-  @ApiProperty({ description: 'Notes for the appointment' })
-  @IsString()
+  @ApiProperty({
+    example: 'Get some blood pressure pills.',
+    description: 'Additional comments left by the patient or doctor.',
+  })
+  @IsNotEmptyString()
   notes: string;
 
-  @IsNotEmpty()
-  @IsString({ message: 'Invoice key must be a string' })
+  @ApiProperty({ example: randomUUID(), description: 'The unique id of the billed payment.' })
+  @IsUUID(4)
   readonly paymentInvoiceKey: string;
 
-  @IsString({ message: 'Receipt key must be a string' })
+  @ApiProperty({ example: randomUUID(), description: 'The unique id from the receipt file for the appointment.' })
+  @IsUUID(4)
   readonly paymentReceiptKey: string;
 
-  @IsISO8601({ strict: true }, { message: 'Started at must be a valid ISO8601 date' })
+  @ApiProperty({ example: new Date().toISOString(), description: 'The time when the appointment should start.' })
   @IsOptional()
-  @IsString({ message: 'Started at must be a string' })
-  readonly startedAt?: string;
+  @IsISO8601({ strict: true })
+  readonly startedAt: string;
 
-  @IsISO8601({ strict: true }, { message: 'Ended at must be a valid ISO8601 date' })
+  @ApiProperty({ example: new Date().toISOString(), description: 'The time when the appointment should end.' })
   @IsOptional()
-  @IsString({ message: 'Ended at must be a string' })
-  readonly endedAt?: string;
+  @IsISO8601({ strict: true })
+  readonly endedAt: string;
 }

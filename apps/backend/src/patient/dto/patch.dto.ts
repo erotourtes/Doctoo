@@ -1,32 +1,31 @@
 import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsUUID } from 'class-validator';
+import { randomUUID } from 'crypto';
 import { CreatePatientDto } from './create.dto';
 
-class PrePatchPatientDto extends OmitType(CreatePatientDto, ['userId']) {}
-
-export class PatchPatientDto extends PartialType(PrePatchPatientDto) {
+export class PatchPatientDto extends PartialType(OmitType(CreatePatientDto, ['userId'])) {
+  @ApiProperty({ example: '12234', description: 'Unique declaration id.' })
   @IsOptional()
   @IsNumber()
-  @ApiProperty({ description: 'The ID of declaration between the patient and the user' })
   readonly declarationId?: string;
 
+  @ApiProperty({ example: randomUUID(), description: 'A unique key to the patient identification file.' })
   @IsOptional()
-  @IsString()
-  @ApiProperty({ description: 'Identity card key of the patient' })
+  @IsUUID(4)
   readonly identityCardKey: string;
 
+  @ApiProperty({ default: false, description: "Status of alerts to the patient's email." })
   @IsOptional()
   @IsBoolean()
-  @ApiProperty({ description: 'The email notification toggle of the patient' })
   readonly emailNotificationToggle: boolean;
 
+  @ApiProperty({ example: true, description: "Status of alerts on the patient's text messages." })
   @IsOptional()
   @IsBoolean()
-  @ApiProperty({ description: 'The sms notification toggle of the patient' })
   readonly twoFactorAuthToggle: boolean;
 
+  @ApiProperty({ example: false, description: 'Whether to request a two-factor confirmation when making a payment.' })
   @IsOptional()
   @IsBoolean()
-  @ApiProperty({ description: 'The two factor authentication toggle of the patient' })
   readonly requestBillPaymentApproval: boolean;
 }

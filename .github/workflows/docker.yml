@@ -71,6 +71,7 @@ jobs:
           tags: ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/doctoo-${{ matrix.service }}:latest
           build-args: |
             VITE_BACKEND_API_URL=${{ secrets.VITE_BACKEND_API_URL }}
+            VITE_STRIPE_API_KEY=${{ secrets.VITE_STRIPE_API_KEY }}
 
   cd-job:
     runs-on: self-hosted
