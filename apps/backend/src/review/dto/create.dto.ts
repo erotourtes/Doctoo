@@ -1,10 +1,11 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty, IsOptional, IsString, Max, MaxLength, Min } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, Max, MaxLength, Min } from 'class-validator';
+import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
 
 export class CreateReviewDto {
   @ApiPropertyOptional({ example: 'Good doctor, recommended.', description: 'Text of the review.' })
-  @IsString()
   @IsOptional()
+  @IsNotEmptyString()
   @MaxLength(2000)
   text?: string;
 
