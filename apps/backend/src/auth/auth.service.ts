@@ -69,6 +69,10 @@ export class AuthService {
 
     if (!user) return { isMFAEnabled: false, patient: null };
 
+    if (user.emailVerified && !user.password) {
+      throw new BadRequestException("You've signed up with Google, please use Google Sign In and then set a password.");
+    }
+
     const isValidPassword = await this.verifyPassword(password, user.password);
 
     if (!isValidPassword) return { isMFAEnabled: false, patient: null };
@@ -92,9 +96,17 @@ export class AuthService {
 
     const patient = await this.patientService.getPatientByUserId(user.id);
 
-    if (user && patient && user.googleId === googleId) return plainToInstance(ResponseUserDto, user);
+    if (!patient) return null;
 
-    return null;
+    if (user.googleId && user.googleId === googleId) return user;
+
+    if (!user.googleId) {
+      await this.userService.patchUser(user.id, { googleId });
+
+      return user;
+    }
+
+    throw new BadRequestException();
   }
 
   async signJwtToken(id: string): Promise<string> {

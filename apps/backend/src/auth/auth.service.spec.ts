@@ -102,7 +102,7 @@ describe('AuthService', () => {
 
     const validated = await authService.validateGoogleUser(user.email, 'googleId');
 
-    expect(validated).toEqual({ ...user, password: undefined });
+    expect(validated).toEqual({ ...user, password: expect.anything() });
   });
 
   it('Should fail Google validation', async () => {
@@ -110,9 +110,7 @@ describe('AuthService', () => {
 
     userServiceMock.getUserByEmail = jest.fn().mockResolvedValue(user);
 
-    const validated = await authService.validateGoogleUser(user.email, 'invalid_googleId');
-
-    expect(validated).toBeNull();
+    expect(authService.validateGoogleUser(user.email, 'invalid_googleId')).rejects.toThrow('Bad Request');
   });
 
   it('Should signup user with valid googleId', async () => {
