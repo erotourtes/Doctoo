@@ -51,3 +51,13 @@ INSERT INTO patient_conditions (id, patient_id, condition_id)
 VALUES 
   ('18', '7', '16'),
   ('19', '8', '17');
+  
+INSERT INTO allergies (id, name)
+VALUES 
+  ('20', 'peanuts')
+  ('21', 'milk')
+  
+INSERT INTO patient_allergies (id, patient_id, allergy_id)
+VALUES 
+  ('22', '7', '20'),
+  ('23', '8', '21');
