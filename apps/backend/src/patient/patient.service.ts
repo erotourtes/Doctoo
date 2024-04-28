@@ -83,8 +83,7 @@ export class PatientService {
       where: { id, conditionId },
     });
 
-    if (!isPatientAlreadyHaveCondition)
-      throw new BadRequestException('Patient with this Id already have this allergy.');
+    if (isPatientAlreadyHaveCondition) throw new BadRequestException('Patient with this Id already have this allergy.');
 
     const condition = await this.prismaService.patientCondition.create({
       data: {
