@@ -1,21 +1,19 @@
-import { useLocation, useNavigate } from 'react-router';
-import { instance } from '@/api/axios.api';
-import Joi from 'joi';
-import { joiResolver } from '@hookform/resolvers/joi';
-import { FormProvider, useForm } from 'react-hook-form';
-import { cn } from '@/utils/cn';
-import { ErrorMessage } from '../auth-components';
-import { useState } from 'react';
 import { Button, Input } from '@/components/UI';
+import { cn } from '@/utils/cn';
+import { joiResolver } from '@hookform/resolvers/joi';
+import Joi from 'joi';
+import { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { Navigate, useLocation, useNavigate } from 'react-router';
+import { AuthMainContainer, ErrorMessage } from '../auth-components';
+import api from '../../../app/api';
+import { BloodType, Gender } from '../../../dataTypes/Patient';
 
 const SignUpPatientPage = () => {
   const { search } = useLocation();
   const params = new URLSearchParams(search);
   const token = params.get('token');
-  if (!token) {
-    alert('Token is required');
-    return null;
-  }
+  if (!token) return <Navigate to='/signup' replace />;
   return <SignUpPageOrig token={token} />;
 };
 
@@ -23,8 +21,8 @@ type Patient = {
   weight: number;
   height: number;
   age: number;
-  bloodType: string;
-  gender: string;
+  bloodType: keyof typeof BloodType;
+  gender: keyof typeof Gender;
   country: string;
   city: string;
   street: string;
@@ -35,9 +33,13 @@ const patientScheme = Joi.object<Patient>({
   height: Joi.number().required(),
   age: Joi.number().required(),
   bloodType: Joi.string()
-    .valid('O_PLUS', 'O_MINUS', 'A_PLUS', 'A_MINUS', 'B_PLUS', 'B_MINUS', 'AB_PLUS', 'AB_MINUS')
-    .required(),
-  gender: Joi.string().valid('MALE', 'FEMALE').required(),
+    .valid(...Object.keys(BloodType))
+    .required()
+    .messages({ 'any.only': 'Please select blood type' }),
+  gender: Joi.string()
+    .valid(...Object.keys(Gender))
+    .required()
+    .messages({ 'any.only': 'Please select you gender' }),
   country: Joi.string().required(),
   city: Joi.string().required(),
   street: Joi.string().required(),
@@ -52,67 +54,74 @@ const SignUpPageOrig = ({ token }: { token: string }) => {
   const [serverError, setServerError] = useState<string | null>(null);
 
   const onSubmit = async (body: Patient) => {
-    await instance
-      .post(`/auth/signup/patient/${token}`, body, {
-        withCredentials: true,
-      })
-      .then(() => {
-        navigate('/', { replace: true });
-      })
-      .catch(e => {
-        if (e.response) setServerError(e.response.data.message);
-        else setServerError('Something went wrong');
-      });
+    const { error } = await api.POST('/auth/signup/patient/{token}', {
+      body,
+      params: { path: { token } },
+    });
+
+    if (error) {
+      const message = Array.isArray(error.message) ? error.message.join('\n') : error.message;
+      setServerError(message);
+    } else {
+      navigate('/', { replace: true });
+    }
   };
 
   return (
-    <div className='flex h-svh w-svw justify-center'>
+    <AuthMainContainer>
       <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='m-auto w-[700px]'>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className='lg:min-w[700px] my-6 min-w-[300px] max-w-[700px] space-y-3 md:min-w-[400px]'
+        >
           <h2>Continue your registration</h2>
           <Input id='weight' type='text' errorMessage={errors.weight?.message} label='Weight' />
           <Input id='height' type='text' errorMessage={errors.height?.message} label='Height' />
           <Input id='age' type='text' errorMessage={errors.age?.message} label='Age' />
 
-          <p className={cn('text-md my-2 block text-grey-1')}>Blood type</p>
-          <select
-            {...form.register('bloodType')}
-            defaultValue=''
-            className={cn(
-              `w-full rounded-lg bg-background py-2 pl-4 pr-10 text-base text-text hover:border focus:border focus:outline-none`,
-              errors.bloodType?.message && 'border border-solid border-error',
-            )}
-          >
-            <option disabled value=''>
-              Select blood type
-            </option>
-            <option value='O_PLUS'>O+</option>
-            <option value='O_MINUS'>O-</option>
-            <option value='A_PLUS'>A+</option>
-            <option value='A_MINUS'>A-</option>
-            <option value='B_PLUS'>B+</option>
-            <option value='B_MINUS'>B-</option>
-            <option value='AB_PLUS'>AB+</option>
-            <option value='AB_MINUS'>AB-</option>
-          </select>
-          <ErrorMessage message={errors.bloodType?.message} />
+          <div>
+            <p className={cn('text-md my-2 block text-grey-1')}>Blood type</p>
+            <select
+              {...form.register('bloodType')}
+              defaultValue=''
+              className={cn(
+                `w-full rounded-lg border border-transparent bg-background py-2 pl-4 pr-10 text-base text-text hover:border-text focus:border-text focus:outline-none`,
+                errors.bloodType?.message && 'border border-solid border-error',
+              )}
+            >
+              <option disabled value=''>
+                Select blood type
+              </option>
+              {Object.keys(BloodType).map(key => (
+                <option key={key} value={key}>
+                  {BloodType[key as keyof typeof BloodType]}
+                </option>
+              ))}
+            </select>
+            <ErrorMessage message={errors.bloodType?.message} />
+          </div>
 
-          <p className={cn('text-md my-2 block text-grey-1')}>Gender</p>
-          <select
-            {...form.register('gender')}
-            defaultValue=''
-            className={cn(
-              `w-full rounded-lg bg-background py-2 pl-4 pr-10 text-base text-text hover:border focus:border focus:outline-none`,
-              errors.bloodType?.message && 'border border-solid border-error',
-            )}
-          >
-            <option value='' disabled>
-              Select gender
-            </option>
-            <option value='MALE'>Male</option>
-            <option value='FEMALE'>Female</option>
-          </select>
-          <ErrorMessage message={errors.gender?.message} />
+          <div>
+            <p className={cn('text-md my-2 block text-grey-1')}>Gender</p>
+            <select
+              {...form.register('gender')}
+              defaultValue=''
+              className={cn(
+                `w-full rounded-lg border border-transparent bg-background py-2 pl-4 pr-10 text-base text-text hover:border-text focus:border-text focus:outline-none`,
+                errors.bloodType?.message && 'border border-solid border-error',
+              )}
+            >
+              <option value='' disabled>
+                Select gender
+              </option>
+              {Object.keys(Gender).map(key => (
+                <option key={key} value={key}>
+                  {Gender[key as keyof typeof Gender]}
+                </option>
+              ))}
+            </select>
+            <ErrorMessage message={errors.gender?.message} />
+          </div>
 
           <Input id='country' type='text' errorMessage={errors.country?.message} label='Country' />
           <Input id='city' type='text' errorMessage={errors.city?.message} label='City' />
@@ -120,12 +129,12 @@ const SignUpPageOrig = ({ token }: { token: string }) => {
 
           <ErrorMessage message={serverError} />
 
-          <Button btnType='submit' type='primary' className='mt-3'>
+          <Button btnType='submit' type='primary' className='w-full'>
             Sign Up
           </Button>
         </form>
       </FormProvider>
-    </div>
+    </AuthMainContainer>
   );
 };
 

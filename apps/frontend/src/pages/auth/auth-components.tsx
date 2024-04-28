@@ -1,6 +1,7 @@
 import type { FC, PropsWithChildren } from 'react';
 import { Icon } from '@/components/UI';
 import { Link } from 'react-router-dom';
+import { cn } from '../../utils/cn';
 
 export const LogoWithTitle = () => {
   return (
@@ -36,18 +37,18 @@ export const AuthLogInIntoAccount = () => {
 export const AuthMainContainer: FC<PropsWithChildren> = ({ children }) => {
   return (
     <div className='flex h-svh max-h-svh w-svw justify-center '>
-      <div className='flex w-full justify-center overflow-y-auto sm:w-[60%]'>
-        <div className='m-auto flex max-h-[700px]'>{children}</div>
+      <div className='flex max-h-[100%] w-full items-center justify-center overflow-y-auto sm:w-[60%] '>
+        <div className='m-auto flex items-center'>{children}</div>
       </div>
       <div className='hidden h-full w-[40%] bg-greeting-bg bg-cover bg-no-repeat sm:block '> </div>
     </div>
   );
 };
 
-export const ErrorMessage: FC<{ message: string | undefined | null }> = ({ message }) => {
+export const ErrorMessage: FC<{ message?: string | null; className?: string }> = ({ message, className }) => {
   if (!message) return null;
 
-  return <p className='mt-2 text-sm font-normal leading-[17px] text-error'>{message}</p>;
+  return <p className={cn('mt-2 text-sm font-normal leading-[17px] text-error', className)}>{message}</p>;
 };
 
 export const Separator = () => <div className='my-auto block w-full border-b-[1px]' />;
