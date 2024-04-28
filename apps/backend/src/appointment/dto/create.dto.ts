@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { AppointmentStatus } from '@prisma/client';
 import { IsEnum, IsISO8601, IsOptional, IsUUID } from 'class-validator';
 import { randomUUID } from 'crypto';
@@ -25,7 +25,7 @@ export class CreateAppointmentDto {
   @IsEnum(AppointmentStatus)
   readonly status: AppointmentStatus;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 'Get some blood pressure pills.',
     description: 'Additional comments left by the patient or doctor.',
   })
@@ -41,12 +41,15 @@ export class CreateAppointmentDto {
   @IsUUID(4)
   readonly paymentReceiptKey: string;
 
-  @ApiProperty({ example: new Date().toISOString(), description: 'The time when the appointment should start.' })
+  @ApiPropertyOptional({
+    example: new Date().toISOString(),
+    description: 'The time when the appointment should start.',
+  })
   @IsOptional()
   @IsISO8601({ strict: true })
   readonly startedAt: string;
 
-  @ApiProperty({ example: new Date().toISOString(), description: 'The time when the appointment should end.' })
+  @ApiPropertyOptional({ example: new Date().toISOString(), description: 'The time when the appointment should end.' })
   @IsOptional()
   @IsISO8601({ strict: true })
   readonly endedAt: string;

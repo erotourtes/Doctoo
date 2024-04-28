@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsNumber, IsOptional, IsUUID, Min, ValidateNested } from 'class-validator';
 import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
@@ -24,14 +24,14 @@ class UpdateSpecializationIdsDto {
 }
 
 export class PatchDoctorDto {
-  @ApiProperty({ description: 'The pay rate of the doctor', example: 100 })
+  @ApiPropertyOptional({ description: 'The pay rate of the doctor', example: 100 })
   @IsOptional()
   @IsNumber()
   @Min(0)
   @Type(() => Number)
   payrate?: number;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'About section of the doctor',
     example: 'Experienced doctor with a focus on patient care',
   })

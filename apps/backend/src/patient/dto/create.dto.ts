@@ -51,7 +51,7 @@ export class CreatePatientDto {
   @IsNotEmptyString()
   readonly apartment?: string;
 
-  @ApiProperty({ example: 0o200, description: "The hospital's zip code." })
+  @ApiPropertyOptional({ example: 0o200, description: "The hospital's zip code." })
   @IsOptional()
   @IsNumber()
   readonly zipCode?: number;
