@@ -87,3 +87,9 @@ export const authorizePatient = createAsyncThunk('patient', async (_void, { disp
   );
   dispatch(setPatientState({ isFetched: true, isLoading: false }));
 });
+
+export const logoutPatient = createAsyncThunk('patient', async (_void, { dispatch }) => {
+  const { error } = await api.GET('/auth/logout');
+  if (error) throw new Error('Failed to logout');
+  dispatch(setPatientState({ isFetched: false }));
+});
