@@ -12,9 +12,9 @@ export class PatientService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async isPatientByIdExists(id: string): Promise<boolean> {
-    const pattient = await this.prismaService.patient.findUnique({ where: { id } });
+    const patient = await this.prismaService.patient.findUnique({ where: { id } });
 
-    if (!pattient) throw new NotFoundException('A patient with this Id not found.');
+    if (!patient) throw new NotFoundException('A patient with this Id not found.');
 
     return true;
   }
@@ -45,7 +45,11 @@ export class PatientService {
   }
 
   async createPatient(body: CreatePatientDto): Promise<ResponsePatientDto> {
-    await this.isPatientByUserIdExists(body.userId);
+    const isPatientAlreadyCreated = await this.prismaService.patient.findFirst({
+      where: { user: { id: body.userId } },
+    });
+
+    if (isPatientAlreadyCreated) throw new NotFoundException('A patient with this user Id already created.');
 
     const patient = await this.prismaService.patient.create({ data: body });
 
