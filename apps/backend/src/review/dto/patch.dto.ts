@@ -1,14 +1,4 @@
-import { IsString, IsInt, Min, Max, MaxLength, IsOptional } from 'class-validator';
+import { PartialType } from '@nestjs/swagger';
+import { CreateReviewDto } from './create.dto';
 
-export class PatchReviewDto {
-  @IsOptional()
-  @IsString()
-  @MaxLength(2000)
-  text?: string;
-
-  @IsOptional()
-  @IsInt()
-  @Min(0)
-  @Max(5)
-  rate?: number;
-}
+export class PatchReviewDto extends PartialType(CreateReviewDto) {}

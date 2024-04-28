@@ -4,12 +4,12 @@ export interface Specialization {
 }
 
 export interface Hospital {
+  id: string;
   name: string;
   country: string;
   state?: string | null;
   city: string;
   street: string;
-  apartment: string;
   zipCode: number;
 }
 

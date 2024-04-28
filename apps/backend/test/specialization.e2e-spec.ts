@@ -3,9 +3,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { randomUUID } from 'crypto';
 import * as request from 'supertest';
 import { PrismaService } from '../src/prisma/prisma.service';
-import { SpecializationModule } from '../src/specialization/specialization.module';
-import { specializationStub } from '../src/mocks/stubs/specialization.stub';
 import { UpdateSpecializationDto } from '../src/specialization/dto/update.dto';
+import { SpecializationModule } from '../src/specialization/specialization.module';
+import { specializationStub } from '../src/specialization/specialization.stub';
 
 describe('SpecializationController (e2e)', () => {
   let app: INestApplication;
@@ -24,7 +24,7 @@ describe('SpecializationController (e2e)', () => {
     prisma = moduleFixture.get<PrismaService>(PrismaService);
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     await prisma.specialization.deleteMany();
   });
 

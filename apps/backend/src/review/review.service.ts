@@ -1,10 +1,13 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { Review } from '@prisma/client';
+import { plainToInstance } from 'class-transformer';
 import { DoctorService } from '../doctor/doctor.service';
 import { PatientService } from '../patient/patient.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { AvgRateResponse } from './dto/avgRateResponse.dto';
 import { PatchReviewDto } from './dto/patch.dto';
-import { AvgRateResponse, ResponseReviewDto, ResponseReviewDtoWithNames } from './dto/response.dto';
+import { ResponseReviewDto } from './dto/response.dto';
+import { ResponseReviewDtoWithNames } from './dto/responseWithNames.dto';
 
 interface FindAllByDoctorIdOptions {
   includeNames?: boolean;
@@ -25,32 +28,20 @@ export class ReviewService {
     await this.patientService.getPatient(patientId);
     await this.doctorService.getDoctor(doctorId);
 
-    return this.prismaService.review.create({
-      data: {
-        patient: { connect: { id: patientId } },
-        doctor: { connect: { id: doctorId } },
-        rate,
-        text,
-      },
-      select: {
-        id: true,
-        rate: true,
-        text: true,
-        doctorId: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+    const review = this.prismaService.review.create({
+      data: { patient: { connect: { id: patientId } }, doctor: { connect: { id: doctorId } }, rate, text },
+      select: { id: true, rate: true, text: true, doctorId: true, createdAt: true, updatedAt: true },
     });
+
+    return plainToInstance(ResponseReviewDto, review);
   }
 
   async getReviews(options: FindAllByDoctorIdOptions = { includeNames: false }): Promise<ResponseReviewDtoWithNames[]> {
-    return this.prismaService.review.findMany({
+    const reviews = await this.prismaService.review.findMany({
       where: { doctorId: options.doctorId },
       skip: options.skip,
       take: options.take,
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy: { createdAt: 'desc' },
       select: {
         id: true,
         rate: true,
@@ -59,29 +50,13 @@ export class ReviewService {
         createdAt: true,
         updatedAt: true,
         ...(options.includeNames && {
-          doctor: {
-            select: {
-              user: {
-                select: {
-                  firstName: true,
-                  lastName: true,
-                },
-              },
-            },
-          },
-          patient: {
-            select: {
-              user: {
-                select: {
-                  firstName: true,
-                  lastName: true,
-                },
-              },
-            },
-          },
+          doctor: { select: { user: { select: { firstName: true, lastName: true } } } },
+          patient: { select: { user: { select: { firstName: true, lastName: true } } } },
         }),
       },
     });
+
+    return plainToInstance(ResponseReviewDtoWithNames, reviews);
   }
 
   async getAvgRateByDoctorId(doctorId: string): Promise<AvgRateResponse> {
@@ -89,78 +64,55 @@ export class ReviewService {
 
     const result = await this.prismaService.review.aggregate({
       where: { doctorId: doctorId },
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      _avg: {
-        rate: true,
-      },
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      _count: {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        _all: true,
-      },
+      _avg: { rate: true },
+      _count: { _all: true },
     });
 
     const {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       _avg: { rate },
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       _count: { _all: count },
     } = result;
-    return { avg: rate, count };
+
+    return plainToInstance(AvgRateResponse, { avg: rate, count });
   }
 
   async getReview(id: string): Promise<Review> {
-    const review = await this.prismaService.review.findFirst({
-      where: { id: id },
-    });
+    const review = await this.prismaService.review.findFirst({ where: { id: id } });
+
     if (!review) throw new NotFoundException({ message: `Review with id ${id} does not exist` });
+
     return review;
   }
 
-  async patchReview(reviewId: string, patientId: string, patchReviewDto: PatchReviewDto): Promise<ResponseReviewDto> {
+  async patchReview(reviewId: string, patientId: string, body: PatchReviewDto): Promise<ResponseReviewDto> {
     const patient = await this.patientService.getPatient(patientId);
 
     const review = await this.getReview(reviewId);
 
-    if (review && patient.id !== review.patientId)
-      throw new UnauthorizedException({
-        message: `Patient with id ${patient.id} is not authorized to update review with id ${review.id}`,
-      });
+    if (review && patient.id !== review.patientId) {
+      throw new UnauthorizedException({ message: 'Patient is not authorized to update review with this Id.' });
+    }
 
-    return this.prismaService.review.update({
+    const patchedReview = this.prismaService.review.update({
       where: { id: reviewId },
-      data: patchReviewDto,
-      select: {
-        id: true,
-        rate: true,
-        text: true,
-        doctorId: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+      data: body,
+      select: { id: true, rate: true, text: true, doctorId: true, createdAt: true, updatedAt: true },
     });
+
+    return plainToInstance(ResponseReviewDto, patchedReview);
   }
 
-  async deleteReview(reviewId: string, patientId: string): Promise<ResponseReviewDto> {
+  async deleteReview(reviewId: string, patientId: string): Promise<void> {
     const patient = await this.patientService.getPatient(patientId);
 
     const review = await this.getReview(reviewId);
 
-    if (review && patient.id !== review.patientId)
+    if (review && patient.id !== review.patientId) {
       throw new UnauthorizedException({
         message: `Patient with id ${patient.id} is not authorized to delete review with id ${review.id}`,
       });
+    }
 
-    return this.prismaService.review.delete({
-      where: { id: reviewId },
-      select: {
-        id: true,
-        rate: true,
-        text: true,
-        doctorId: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+    await this.prismaService.review.delete({ where: { id: reviewId } });
   }
 }

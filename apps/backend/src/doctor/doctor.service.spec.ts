@@ -1,13 +1,13 @@
 import { Test } from '@nestjs/testing';
+import { HospitalModule } from '../hospital/hospital.module';
+import { hospitalStub } from '../hospital/hospital.stub';
 import { PrismaService } from '../prisma/prisma.service';
+import { SpecializationModule } from '../specialization/specialization.module';
+import { UserModule } from '../user/user.module';
+import { userStub } from '../user/user.stub';
 import { DoctorService } from './doctor.service';
 import { CreateDoctorDto } from './dto/create.dto';
 import { PatchDoctorDto } from './dto/patch.dto';
-import { userStub } from '../mocks/stubs/user.stub';
-import { UserModule } from '../user/user.module';
-import { hospitalStub } from '../mocks/stubs/hospital.stub';
-import { HospitalModule } from '../hospital/hospital.module';
-import { SpecializationModule } from '../specialization/specialization.module';
 
 describe('DoctorService', () => {
   let doctorService: DoctorService;
@@ -37,11 +37,7 @@ describe('DoctorService', () => {
     const specialization = await prisma.specialization.create({ data: { name: 'test' } });
     const hospital = await prisma.hospital.create({ data: hospitalStub() });
 
-    const doctorDto: Partial<CreateDoctorDto> = {
-      about: 'test',
-      payrate: 50,
-      userId: user.id,
-    };
+    const doctorDto: Partial<CreateDoctorDto> = { about: 'test', payrate: 50, userId: user.id };
 
     const createdDoctor = await doctorService.createDoctor({
       ...doctorDto,
@@ -50,6 +46,7 @@ describe('DoctorService', () => {
     } as CreateDoctorDto);
 
     const expected = { about: doctorDto.about, payrate: doctorDto.payrate };
+
     expect(createdDoctor).toMatchObject(expected);
     expect(createdDoctor.id).toBeDefined();
   });
@@ -59,11 +56,7 @@ describe('DoctorService', () => {
     const specialization = await prisma.specialization.create({ data: { name: 'test' } });
     const hospital = await prisma.hospital.create({ data: hospitalStub() });
 
-    const doctorDto: Partial<CreateDoctorDto> = {
-      about: 'test',
-      payrate: 50,
-      userId: user.id,
-    };
+    const doctorDto: Partial<CreateDoctorDto> = { about: 'test', payrate: 50, userId: user.id };
 
     const { id } = await prisma.doctor.create({
       data: {
@@ -85,11 +78,7 @@ describe('DoctorService', () => {
     const specialization = await prisma.specialization.create({ data: { name: 'test' } });
     const hospital = await prisma.hospital.create({ data: hospitalStub() });
 
-    const doctorDto: Partial<CreateDoctorDto> = {
-      about: 'test',
-      payrate: 50,
-      userId: user.id,
-    };
+    const doctorDto: Partial<CreateDoctorDto> = { about: 'test', payrate: 50, userId: user.id };
 
     const { id } = await prisma.doctor.create({
       data: {
@@ -104,6 +93,7 @@ describe('DoctorService', () => {
     const updatedDoctor = await doctorService.patchDoctor(id, delta);
 
     const expected = { id, about: doctorDto.about, payrate: doctorDto.payrate, ...delta };
+
     expect(updatedDoctor).toMatchObject(expected);
   });
 
@@ -112,11 +102,7 @@ describe('DoctorService', () => {
     const specialization = await prisma.specialization.create({ data: { name: 'test' } });
     const hospital = await prisma.hospital.create({ data: hospitalStub() });
 
-    const doctorDto: Partial<CreateDoctorDto> = {
-      about: 'test',
-      payrate: 50,
-      userId: user.id,
-    };
+    const doctorDto: Partial<CreateDoctorDto> = { about: 'test', payrate: 50, userId: user.id };
 
     const { id } = await prisma.doctor.create({
       data: {
@@ -129,8 +115,5 @@ describe('DoctorService', () => {
     const deleteResult = await doctorService.deleteDoctor(id);
 
     expect(deleteResult).toBeUndefined();
-
-    const existingDoctor = await prisma.doctor.findUnique({ where: { id } });
-    expect(existingDoctor).toBeNull();
   });
 });

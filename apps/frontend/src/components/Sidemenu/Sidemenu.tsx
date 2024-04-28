@@ -3,6 +3,7 @@ import type React from 'react';
 import { useLocation } from 'react-router-dom';
 import NavButton from './NavButton';
 import NavLogo from '@UI/NavLogo/NavLogo';
+import { cn } from '../../utils/cn';
 
 type SidemenuProps = {
   variant?: 'small' | 'large';
@@ -19,7 +20,12 @@ const Sidemenu: React.FunctionComponent<SidemenuProps> = ({ variant = 'large' })
 
   return (
     <nav
-      className={`no-scrollbar sidemenu relative flex flex-col overflow-y-auto overflow-x-hidden bg-main ${variantSize === 'large' ? 'w-72 items-stretch gap-8 p-8 pt-12' : 'w-16 items-center gap-[30px] p-4 pt-11 sm:w-20'} h-full shrink-0`}
+      className={cn(
+        'no-scrollbar sidemenu flex h-full shrink-0 flex-col overflow-y-auto bg-main',
+        variantSize === 'large'
+          ? 'w-72 items-stretch gap-8 p-8 pt-12'
+          : 'w-16 items-center gap-[30px] p-4 pt-11 sm:w-20',
+      )}
     >
       <NavLogo variant={variantSize} />
 

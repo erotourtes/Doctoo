@@ -1,6 +1,6 @@
 import { ConfigType } from '@nestjs/config';
-import { AuthRequestHelper } from './cookie-helper.service';
 import config from '../../config/config';
+import { AuthRequestHelper } from './cookie-helper.service';
 
 describe('CookieHelper', () => {
   it('Should attach JWT token to cookie', () => {

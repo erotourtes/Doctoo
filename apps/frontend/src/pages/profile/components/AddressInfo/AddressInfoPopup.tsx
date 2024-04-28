@@ -54,7 +54,7 @@ const AddressInfoPopup = ({ isOpen, onClose }: AddressInfoPopupProps) => {
       modalFullClassName='max-w-[508px]'
       modalBodyClassName=' relative z-20 flex h-full max-w-[412px] flex-col gap-7 rounded-xl bg-white'
     >
-      <p className='text-2xl font-medium text-black'>Add a new address</p>
+      <p className='text-xl font-medium text-black sm:text-2xl'>Add a new address</p>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit as SubmitHandler<FieldValues>)} className='flex w-full flex-col gap-7'>
           <div className='grid w-full gap-2 sm:gap-6'>

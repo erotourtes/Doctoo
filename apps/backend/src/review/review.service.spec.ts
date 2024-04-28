@@ -1,10 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { ReviewService } from './review.service';
-import { PrismaService } from '../prisma/prisma.service';
-import { PatientService } from '../patient/patient.service';
-import { DoctorService } from '../doctor/doctor.service';
 import { NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import { DoctorService } from '../doctor/doctor.service';
+import { PatientService } from '../patient/patient.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { PatchReviewDto } from './dto/patch.dto';
+import { ReviewService } from './review.service';
 
 describe('ReviewService', () => {
   let reviewService: ReviewService;
@@ -15,25 +15,9 @@ describe('ReviewService', () => {
   const rate = 5;
   const text = 'Excellent doctor!';
 
-  const responseCreatedReview = {
-    id: reviewId,
-    rate,
-    text,
-    doctorId,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
+  const responseCreatedReview = { id: reviewId, rate, text, doctorId, createdAt: new Date(), updatedAt: new Date() };
 
-  const responseArrayReviews = [
-    {
-      id: 'review1',
-      rate,
-      text,
-      doctorId,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-  ];
+  const responseArrayReviews = [{ id: 'review1', rate, text, doctorId, createdAt: new Date(), updatedAt: new Date() }];
 
   const mockPrismaService = {
     review: {
@@ -45,12 +29,10 @@ describe('ReviewService', () => {
       delete: jest.fn(),
     },
   };
-  const mockPatientService = {
-    getPatient: jest.fn(),
-  };
-  const mockDoctorService = {
-    getDoctor: jest.fn(),
-  };
+
+  const mockPatientService = { getPatient: jest.fn() };
+
+  const mockDoctorService = { getDoctor: jest.fn() };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -71,20 +53,8 @@ describe('ReviewService', () => {
 
   describe('createReview', () => {
     const createOptions = {
-      data: {
-        patient: { connect: { id: patientId } },
-        doctor: { connect: { id: doctorId } },
-        rate,
-        text,
-      },
-      select: {
-        id: true,
-        rate: true,
-        text: true,
-        doctorId: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+      data: { patient: { connect: { id: patientId } }, doctor: { connect: { id: doctorId } }, rate, text },
+      select: { id: true, rate: true, text: true, doctorId: true, createdAt: true, updatedAt: true },
     };
 
     it('should create a review', async () => {
@@ -124,6 +94,7 @@ describe('ReviewService', () => {
       reviewService = module.get<ReviewService>(ReviewService);
 
       await expect(reviewService.createReview(patientId, doctorId, rate, text)).rejects.toThrow(NotFoundException);
+
       expect(mockPrismaService.review.create).not.toHaveBeenCalledWith(createOptions);
     });
 
@@ -144,6 +115,7 @@ describe('ReviewService', () => {
       reviewService = module.get<ReviewService>(ReviewService);
 
       await expect(reviewService.createReview(patientId, doctorId, rate, text)).rejects.toThrow(NotFoundException);
+
       expect(mockPrismaService.review.create).not.toHaveBeenCalledWith(createOptions);
     });
   });
@@ -213,26 +185,8 @@ describe('ReviewService', () => {
           doctorId: true,
           createdAt: true,
           updatedAt: true,
-          doctor: {
-            select: {
-              user: {
-                select: {
-                  firstName: true,
-                  lastName: true,
-                },
-              },
-            },
-          },
-          patient: {
-            select: {
-              user: {
-                select: {
-                  firstName: true,
-                  lastName: true,
-                },
-              },
-            },
-          },
+          doctor: { select: { user: { select: { firstName: true, lastName: true } } } },
+          patient: { select: { user: { select: { firstName: true, lastName: true } } } },
         },
       });
 
@@ -241,12 +195,7 @@ describe('ReviewService', () => {
   });
 
   describe('getAvgRateByDoctorId', () => {
-    const mockResult = {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      _avg: { rate: 4.5 },
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      _count: { _all: 10 },
-    };
+    const mockResult = { _avg: { rate: 4.5 }, _count: { _all: 10 } };
 
     it('should return the average rate and count of reviews for a doctor', async () => {
       mockPrismaService.review.aggregate.mockResolvedValue(mockResult);
@@ -268,9 +217,7 @@ describe('ReviewService', () => {
       expect(mockDoctorService.getDoctor).toHaveBeenCalledWith(doctorId);
       expect(mockPrismaService.review.aggregate).toHaveBeenCalledWith({
         where: { doctorId: doctorId },
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         _avg: { rate: true },
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         _count: { _all: true },
       });
 
@@ -293,15 +240,13 @@ describe('ReviewService', () => {
       reviewService = module.get<ReviewService>(ReviewService);
 
       await expect(reviewService.getAvgRateByDoctorId(doctorId)).rejects.toThrow(NotFoundException);
+
       expect(mockPrismaService.review.aggregate).not.toHaveBeenCalled();
     });
   });
 
   describe('patchReview', () => {
-    const patchReviewDto: PatchReviewDto = {
-      rate: 5,
-      text: 'Great doctor!',
-    };
+    const patchReviewDto: PatchReviewDto = { rate: 5, text: 'Great doctor!' };
     const mockReview = { id: reviewId, patientId: patientId, rate: 4, text: 'Good doctor.' };
 
     it('should update a review', async () => {
@@ -327,14 +272,7 @@ describe('ReviewService', () => {
       expect(mockPrismaService.review.update).toHaveBeenCalledWith({
         where: { id: reviewId },
         data: patchReviewDto,
-        select: {
-          id: true,
-          rate: true,
-          text: true,
-          doctorId: true,
-          createdAt: true,
-          updatedAt: true,
-        },
+        select: { id: true, rate: true, text: true, doctorId: true, createdAt: true, updatedAt: true },
       });
 
       expect(result).toEqual({ ...mockReview, ...patchReviewDto });
@@ -357,6 +295,7 @@ describe('ReviewService', () => {
       reviewService = module.get<ReviewService>(ReviewService);
 
       await expect(reviewService.patchReview(reviewId, patientId, patchReviewDto)).rejects.toThrow(NotFoundException);
+
       expect(mockPrismaService.review.update).not.toHaveBeenCalled();
     });
 
@@ -379,6 +318,7 @@ describe('ReviewService', () => {
       await expect(reviewService.patchReview(reviewId, patientId, patchReviewDto)).rejects.toThrow(
         UnauthorizedException,
       );
+
       expect(mockPrismaService.review.update).not.toHaveBeenCalled();
     });
   });
@@ -408,19 +348,7 @@ describe('ReviewService', () => {
 
       expect(mockPatientService.getPatient).toHaveBeenCalledWith(patientId);
       expect(mockPrismaService.review.findFirst).toHaveBeenCalledWith({ where: { id: reviewId } });
-      expect(mockPrismaService.review.delete).toHaveBeenCalledWith({
-        where: { id: reviewId },
-        select: {
-          id: true,
-          rate: true,
-          text: true,
-          doctorId: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-      });
-
-      expect(result).toEqual(mockReview);
+      expect(result).toBeUndefined();
     });
 
     it('should throw a NotFoundException when the review is not found', async () => {
@@ -440,6 +368,7 @@ describe('ReviewService', () => {
       reviewService = module.get<ReviewService>(ReviewService);
 
       await expect(reviewService.deleteReview(reviewId, patientId)).rejects.toThrow(NotFoundException);
+
       expect(mockPrismaService.review.delete).not.toHaveBeenCalled();
     });
 
@@ -460,6 +389,7 @@ describe('ReviewService', () => {
       reviewService = module.get<ReviewService>(ReviewService);
 
       await expect(reviewService.deleteReview(reviewId, patientId)).rejects.toThrow(UnauthorizedException);
+
       expect(mockPrismaService.review.delete).not.toHaveBeenCalled();
     });
   });

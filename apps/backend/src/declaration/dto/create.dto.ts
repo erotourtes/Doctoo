@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsUUID } from 'class-validator';
 import { randomUUID } from 'crypto';
 
 export class CreateDeclarationDto {
-  @ApiProperty({ example: randomUUID(), description: 'Doctor Id' })
-  @IsNotEmpty()
+  @ApiProperty({ example: randomUUID(), description: 'Unique doctor id.' })
+  @IsUUID(4)
   readonly doctorId: string;
 
-  @ApiProperty({ example: randomUUID(), description: 'Patient Id' })
-  @IsNotEmpty()
+  @ApiProperty({ example: randomUUID(), description: 'Unique patient id.' })
+  @IsUUID(4)
   readonly patientId: string;
 }

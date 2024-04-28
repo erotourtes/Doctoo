@@ -1,204 +1,233 @@
 import { BadRequestException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { plainToInstance } from 'class-transformer';
 import auth from '../config/auth';
-import { PatientService } from '../patient/patient.service';
-import { ResponseWithoutRelationsUserDto } from '../user/dto/responseWithoutRelations';
-import { UserService } from '../user/user.service';
-import { AuthSignUpPatientDto, AuthSignUpUserDto } from './dto/signUp.dto';
-import { JwtPayload } from './strategies/jwt';
-import { ResponsePatientDto } from '../patient/dto/response.dto';
 import { MailService } from '../mail/mail.service';
-import { ChangePasswordDto } from './dto/change-password.dto';
-import { TwoFactorAuthDto } from './dto/localLogin.dto';
-import { GetMePatientResponseDto } from './dto/response.dto';
+import { MinioService } from '../minio/minio.service';
+import { ResponsePatientDto } from '../patient/dto/response.dto';
+import { PatientService } from '../patient/patient.service';
+import { ResponseUserDto } from '../user/dto/response.dto';
+import { UserService } from '../user/user.service';
+import { ChangePasswordDto } from './dto/changePassword.dto';
+import { LocalLoginTwoFactorDto } from './dto/localLoginTwoFactor.dto';
+import { PatientResponseDto } from './dto/patientResponse.dto';
+import { SignUpPatientDto } from './dto/signUpPatient.dto';
+import { SignUpUserDto } from './dto/signUpUser.dto';
+import { JwtPayload } from './strategies/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly mailService: MailService,
+    private readonly minioService: MinioService,
     private readonly userService: UserService,
     private readonly patientService: PatientService,
     @Inject(auth.KEY) private readonly authObject: ConfigType<typeof auth>,
   ) {}
 
-  async signUpPatient(body: AuthSignUpPatientDto, token: string): Promise<ResponsePatientDto> {
-    const verified = await this.jwtService.verifyAsync<JwtPayload>(token).catch(() => {
+  async signUpPatient(body: SignUpPatientDto, token: string): Promise<ResponsePatientDto> {
+    let verified: JwtPayload;
+
+    try {
+      verified = await this.jwtService.verifyAsync<JwtPayload>(token);
+    } catch (err) {
       throw new BadRequestException();
-    });
-    const patient = await this.patientService.createPatient({
-      ...body,
-      userId: verified.sub,
-    });
-    this.userService.setVerified(verified.sub, true);
-    return patient;
+    }
+
+    const patient = await this.patientService.createPatient({ ...body, userId: verified.sub });
+
+    await this.userService.updateEmailVerifiedStatus(verified.sub, true);
+
+    return plainToInstance(ResponsePatientDto, patient);
   }
 
-  async signUpUser(body: AuthSignUpUserDto): Promise<ResponseWithoutRelationsUserDto> {
-    if (body.password) return await this.signUpUserWithPassword(body);
+  async signUpUser(body: SignUpUserDto): Promise<ResponseUserDto> {
+    if (body.password) {
+      const user = await this.signUpUserWithPassword(body);
+
+      return plainToInstance(ResponseUserDto, user);
+    }
+
     throw new BadRequestException();
   }
 
-  async signUpUserWithGoogle(body: AuthSignUpUserDto): Promise<ResponseWithoutRelationsUserDto> {
+  async signUpUserWithGoogle(body: SignUpUserDto): Promise<ResponseUserDto> {
     if (body.googleId) return await this.signUpUserWithGoogleId(body);
+
     throw new BadRequestException();
   }
 
   async validatePatientByEmail(
     email: string,
     password: string,
-  ): Promise<{ is2faEnabled: boolean; patient: ResponsePatientDto | null }> {
-    const user = await this.userService.getUserWithSecretsByEmail(email);
-    if (!user) return { is2faEnabled: false, patient: null };
+  ): Promise<{ isMFAEnabled: boolean; patient: ResponsePatientDto | null }> {
+    const user = await this.userService.getUserByEmail(email);
+
+    if (!user) return { isMFAEnabled: false, patient: null };
+
+    if (user.emailVerified && !user.password) {
+      throw new BadRequestException("You've signed up with Google, please use Google Sign In and then set a password.");
+    }
+
     const isValidPassword = await this.verifyPassword(password, user.password);
-    if (!isValidPassword) return { is2faEnabled: false, patient: null };
+
+    if (!isValidPassword) return { isMFAEnabled: false, patient: null };
 
     const patient = await this.patientService.getPatientByUserId(user.id);
 
     if (user.twoFactorAuthToggle) {
-      const { code, hashed } = await this.get2faCode();
-      this.userService.set2faCode(user.id, hashed);
-      this.mailService.send2faCode(user.email, user.firstName, code);
+      const { code, hashed } = await this.getMFACode();
+
+      this.userService.updateSecretCode(user.id, hashed);
+      this.mailService.sendMFACode(user.email, user.firstName, code);
     }
 
-    return { is2faEnabled: user.twoFactorAuthToggle, patient };
+    return { isMFAEnabled: user.twoFactorAuthToggle, patient };
   }
 
-  async validateGoogleUser(email: string, googleId: string): Promise<ResponseWithoutRelationsUserDto | null> {
-    const user = await this.userService.getUserWithSecretsByEmail(email);
+  async validateGoogleUser(email: string, googleId: string): Promise<ResponseUserDto | null> {
+    const user = await this.userService.getUserByEmail(email);
+
     if (!user) return null;
+
     const patient = await this.patientService.getPatientByUserId(user.id);
 
-    if (user && patient && user.googleId === googleId) return plainToInstance(ResponseWithoutRelationsUserDto, user);
+    if (!patient) return null;
 
-    return null;
+    if (user.googleId && user.googleId === googleId) return user;
+
+    if (!user.googleId) {
+      await this.userService.patchUser(user.id, { googleId });
+
+      return user;
+    }
+
+    throw new BadRequestException();
   }
 
-  async signJwtToken(userId: string): Promise<string> {
-    const payload: JwtPayload = { sub: userId };
-
-    const accessToken = await this.jwtService.signAsync(payload);
-
-    return accessToken;
-  }
-
-  async signGoogleId(googleId: string): Promise<string> {
-    const payload: JwtPayload = { sub: googleId };
+  async signJwtToken(id: string): Promise<string> {
+    const payload: JwtPayload = { sub: id };
 
     const accessToken = await this.jwtService.signAsync(payload, { expiresIn: '1d' });
 
     return accessToken;
   }
 
-  async getMePatient(user?: ResponseWithoutRelationsUserDto): Promise<GetMePatientResponseDto> {
+  async getMePatient(user?: ResponseUserDto): Promise<PatientResponseDto> {
     if (!user) throw new UnauthorizedException();
+
     const patient = await this.patientService.getPatientByUserId(user.id);
 
-    return plainToInstance(GetMePatientResponseDto, {
-      ...plainToInstance(ResponseWithoutRelationsUserDto, user),
+    return plainToInstance(PatientResponseDto, {
+      ...plainToInstance(ResponseUserDto, user),
       ...plainToInstance(ResponsePatientDto, patient),
       userId: user.id,
       patientId: patient.id,
     });
   }
 
-  /**
-   * Doesn't check if token is valid
-   * @param token Jwt Token
-   * @returns bool if token is close to expire
-   */
   jwtCloseToExpire(token: string): boolean {
     const payload = this.jwtService.decode<JwtPayload & { exp: number }>(token);
+
     if (!payload || !payload.sub || !payload.exp) return false;
 
     // payload.exp => seconds
     const intervalLeft = payload.exp - Date.now() / 1000;
+
     if (intervalLeft < 0) return false;
 
     const isCloseToExpire = intervalLeft < this.authObject.JWT_EXPIRATION_TRESHOLD_SECONDS;
+
     return isCloseToExpire;
   }
 
-  async verify2fa(body: TwoFactorAuthDto): Promise<ResponseWithoutRelationsUserDto> {
-    const user = await this.userService.getUserWithSecretsByEmail(body.email);
-    if (!user) throw new BadRequestException('User not found');
-    if (!user.twoFactorAuthToggle) throw new BadRequestException('2FA not enabled');
+  async verifyMFA(body: LocalLoginTwoFactorDto): Promise<ResponseUserDto> {
+    const user = await this.userService.getUserByEmail(body.email);
+
+    if (!user) throw new BadRequestException('Requested user not found.');
+
+    if (!user.twoFactorAuthToggle) throw new BadRequestException('MFA is not enabled for this user.');
 
     const isValidPassword = await this.verifyPassword(body.password, user.password);
-    if (!isValidPassword) throw new BadRequestException('Invalid credentials');
 
-    const isValidCode = await this.verify2faCode(body.code, user.secretCode);
-    if (!isValidCode) throw new BadRequestException('Invalid credentials');
-    this.userService.set2faCode(user.id, null);
+    if (!isValidPassword) throw new BadRequestException('Invalid auth credentials.');
+
+    const isValidCode = await this.verifyMFACode(body.code, user.secretCode);
+
+    if (!isValidCode) throw new BadRequestException('Invalid auth credentials.');
+
+    await this.userService.updateSecretCode(user.id, null);
 
     return user;
   }
 
-  async changePassword(user: ResponseWithoutRelationsUserDto, body: ChangePasswordDto): Promise<void> {
-    const { password } = await this.userService.getUserWithSecretsByEmail(user.email);
-    const isPasswordValid = await this.verifyPassword(body.oldPassword, password);
-    if (!isPasswordValid) throw new BadRequestException('Invalid password');
+  async changePassword(user: ResponseUserDto, body: ChangePasswordDto): Promise<void> {
+    const { password } = await this.userService.getUserByEmail(user.email);
 
-    await this.userService.patchUser(user.id, {
-      password: await this.hashPassword(body.newPassword),
-    });
+    const isPasswordValid = await this.verifyPassword(body.oldPassword, password);
+
+    if (!isPasswordValid) throw new BadRequestException('Invalid auth credentials.');
+
+    await this.userService.patchUser(user.id, { password: await this.hashPassword(body.newPassword) });
   }
 
-  private async signUpUserWithPassword(body: AuthSignUpUserDto): Promise<ResponseWithoutRelationsUserDto> {
-    const existingUser: ResponseWithoutRelationsUserDto | null = await this.userService
-      .getUserByEmail(body.email)
-      .catch(() => null);
+  private async signUpUserWithPassword(body: SignUpUserDto): Promise<ResponseUserDto> {
+    const existingUser: User = await this.userService.getUserByEmail(body.email);
+
     if (existingUser) {
-      if (existingUser.emailVerified) throw new BadRequestException('User already exists');
+      if (existingUser.emailVerified) throw new BadRequestException('Requested user already exists.');
 
       const token = await this.jwtService.signAsync({ sub: existingUser.id }, { expiresIn: '1d' });
-      this.mailService.sendPatientSignUpMail(existingUser.email, existingUser.firstName, token);
 
-      return existingUser;
+      await this.mailService.sendPatientSignUpMail(existingUser.email, existingUser.firstName, token);
+
+      return plainToInstance(ResponseUserDto, existingUser);
     }
 
     const password = await this.hashPassword(body.password);
 
-    // TODO: Create private function for this.
-    const user = await this.userService.createUser({
-      email: body.email,
-      firstName: body.firstName,
-      lastName: body.lastName,
-      phone: body.phone,
-      googleId: body.googleId,
-      password,
-      avatarKey: '', // TODO: use file service.
-    });
+    const data = Object.assign(body, { password });
+
+    const user = await this.createUser(data);
 
     const token = await this.jwtService.signAsync({ sub: user.id }, { expiresIn: '1d' });
+
     this.mailService.sendPatientSignUpMail(user.email, user.firstName, token);
 
-    return user;
+    return plainToInstance(ResponseUserDto, user);
   }
 
-  private async signUpUserWithGoogleId(body: AuthSignUpUserDto): Promise<ResponseWithoutRelationsUserDto> {
-    const existingUser: ResponseWithoutRelationsUserDto | null = await this.userService
-      .getUserByEmail(body.email)
-      .catch(() => null);
-    if (existingUser) {
-      if (existingUser.emailVerified) throw new BadRequestException('User already exists');
-      return existingUser;
+  private async signUpUserWithGoogleId(body: SignUpUserDto): Promise<ResponseUserDto> {
+    const isUserExists: User = await this.userService.getUserByEmail(body.email);
+
+    if (isUserExists) {
+      if (isUserExists.emailVerified) throw new BadRequestException('Requested user already exists.');
+
+      return plainToInstance(ResponseUserDto, isUserExists);
     }
 
-    // TODO: Create private function for this.
     const user = await this.userService.createUser({
       email: body.email,
       firstName: body.firstName,
       lastName: body.lastName,
       phone: body.phone,
       googleId: body.googleId,
-      avatarKey: '', // TODO: use file service.
+      avatarKey: '',
     });
 
-    return user;
+    if (body?.avatarImgUrl) {
+      try {
+        this.minioService.uploadByUrl(body.avatarImgUrl).then(fileName => {
+          this.userService.patchUser(user.id, { avatarKey: fileName });
+        });
+      } catch (err) {}
+    }
+
+    return plainToInstance(ResponseUserDto, user);
   }
 
   private async hashPassword(password: string): Promise<string> {
@@ -214,27 +243,44 @@ export class AuthService {
     return isValidPassword;
   }
 
-  private async get2faCode(): Promise<{ code: string; hashed: string }> {
+  private async getMFACode(): Promise<{ code: string; hashed: string }> {
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     const hashed = await bcrypt.hash(code, 10);
 
     const expirationTime = new Date();
+
     expirationTime.setMinutes(expirationTime.getMinutes() + 5);
 
     return { code, hashed: `${hashed}:separator:${expirationTime.toISOString()}` };
   }
 
-  private async verify2faCode(code: string, hashed: string): Promise<boolean> {
+  private async verifyMFACode(code: string, hashed: string): Promise<boolean> {
     const [hash, expiration] = hashed.split(':separator:');
+
     if (!hash || !expiration) return false;
 
     const isValid = await bcrypt.compare(code, hash);
+
     if (!isValid) return false;
 
-    const expirationTime = new Date(Date.parse(expiration));
-    const now = new Date();
-    if (expirationTime < now) return false;
+    if (new Date(Date.parse(expiration)) < new Date()) return false;
 
     return true;
+  }
+
+  private async createUser(body: SignUpUserDto): Promise<ResponseUserDto> {
+    const { email, firstName, lastName, phone, googleId, password } = body;
+
+    const user = await this.userService.createUser({
+      email,
+      firstName,
+      lastName,
+      phone,
+      googleId,
+      ...(password ? { password } : {}),
+      avatarKey: '',
+    });
+
+    return plainToInstance(ResponseUserDto, user);
   }
 }

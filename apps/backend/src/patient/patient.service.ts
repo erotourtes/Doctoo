@@ -4,21 +4,33 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreatePatientDto } from './dto/create.dto';
 import { PatchPatientDto } from './dto/patch.dto';
 import { ResponsePatientDto } from './dto/response.dto';
+import { ResponseAllergyDto } from './dto/responseAllergy.dto';
+import { ResponsePatientAllergyDto } from './dto/responsePatientAllergy.dto';
+import { ResponsePatientConditionDto } from './dto/responsePatientCondition.dto';
+import { ResponseConditionDto } from './dto/responseCondition.dto';
 
 @Injectable()
 export class PatientService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  private async isPatientExists(id: string): Promise<boolean> {
-    const isPatientExsists = await this.prismaService.patient.findUnique({ where: { id } });
+  async isPatientByIdExists(id: string): Promise<boolean> {
+    const patient = await this.prismaService.patient.findUnique({ where: { id } });
 
-    if (!isPatientExsists) throw new NotFoundException('A patient with this Id not found.');
+    if (!patient) throw new NotFoundException('A patient with this Id not found.');
+
+    return true;
+  }
+
+  async isPatientByUserIdExists(userId: string): Promise<boolean> {
+    const patient = await this.prismaService.patient.findFirst({ where: { user: { id: userId } } });
+
+    if (!patient) throw new NotFoundException('A patient with this Id not found.');
 
     return true;
   }
 
   async getPatient(id: string): Promise<ResponsePatientDto> {
-    await this.isPatientExists(id);
+    await this.isPatientByIdExists(id);
 
     const patient = await this.prismaService.patient.findUnique({ where: { id } });
 
@@ -26,50 +38,66 @@ export class PatientService {
   }
 
   async getPatientByUserId(userId: string): Promise<ResponsePatientDto> {
+    await this.isPatientByUserIdExists(userId);
+
     // TODO: only 1 patient for user
-    const patient = await this.prismaService.patient.findFirst({
-      where: { user: { id: userId } },
-    });
+    const patient = await this.prismaService.patient.findFirst({ where: { user: { id: userId } } });
 
     return plainToInstance(ResponsePatientDto, patient);
   }
 
   async createPatient(body: CreatePatientDto): Promise<ResponsePatientDto> {
-    const exists = await this.prismaService.patient.findFirst({
+    const isPatientAlreadyCreated = await this.prismaService.patient.findFirst({
       where: { user: { id: body.userId } },
     });
-    if (exists) throw new BadRequestException('Patient already exists');
+
+    if (isPatientAlreadyCreated) throw new NotFoundException('A patient with this user Id already created.');
+
     const patient = await this.prismaService.patient.create({ data: body });
 
     return plainToInstance(ResponsePatientDto, patient);
   }
 
   async patchPatient(id: string, body: PatchPatientDto): Promise<ResponsePatientDto> {
-    await this.isPatientExists(id);
+    await this.isPatientByIdExists(id);
 
     const patient = await this.prismaService.patient.update({ where: { id }, data: body });
 
     return plainToInstance(ResponsePatientDto, patient);
   }
 
-  async deletePatient(id: string) {
-    await this.isPatientExists(id);
+  async createPatientAllergy(id: string, allergyId: string): Promise<ResponsePatientAllergyDto> {
+    const isPatientAlreadyHaveAllergy = await this.prismaService.patientAllergy.findUnique({
+      where: { id, allergyId },
+    });
 
-    await this.prismaService.patient.delete({ where: { id } });
+    if (isPatientAlreadyHaveAllergy) throw new BadRequestException('Patient with this Id already have this allergy.');
+
+    const allergy = await this.prismaService.patientAllergy.create({ data: { patientId: id, allergyId } });
+
+    return plainToInstance(ResponsePatientAllergyDto, allergy);
   }
 
-  async createPatientCondition(patientId: string, conditionId: string) {
-    const patientCondition = await this.prismaService.patientCondition.create({
+  async createPatientCondition(id: string, conditionId: string) {
+    const isPatientAlreadyHaveCondition = await this.prismaService.patientCondition.findUnique({
+      where: { id, conditionId },
+    });
+
+    if (!isPatientAlreadyHaveCondition)
+      throw new BadRequestException('Patient with this Id already have this allergy.');
+
+    const condition = await this.prismaService.patientCondition.create({
       data: {
-        patientId,
+        patientId: id,
         conditionId,
       },
     });
 
-    return patientCondition;
+    return plainToInstance(ResponsePatientConditionDto, condition);
   }
-
   async getPatientConditions(patientId: string) {
+    await this.isPatientByIdExists(patientId);
+
     const rawConditions = await this.prismaService.patientCondition.findMany({
       where: { patientId },
       select: {
@@ -79,24 +107,27 @@ export class PatientService {
       },
     });
 
-    const conditions = rawConditions.map(c => c.condition);
+    const conditions = rawConditions.map(record => record.condition);
 
-    return conditions;
+    return plainToInstance(ResponseConditionDto, conditions);
   }
 
-  async createPatientAllergy(patientId: string, allergyId: string) {
-    const allergy = await this.prismaService.patientAllergy.create({ data: { patientId, allergyId } });
+  async getPatientAllergies(id: string): Promise<ResponseAllergyDto[]> {
+    await this.isPatientByIdExists(id);
 
-    return allergy;
-  }
-
-  async getPatientAllergies(patientId: string) {
     const rawAllergies = await this.prismaService.patientAllergy.findMany({
-      where: { patientId },
+      where: { patientId: id },
       select: { allergy: { select: { name: true, id: true } } },
     });
-    const allergies = rawAllergies.map(a => a.allergy);
 
-    return allergies;
+    const allergies = rawAllergies.map(record => record.allergy);
+
+    return plainToInstance(ResponseAllergyDto, allergies);
+  }
+
+  async deletePatient(id: string): Promise<void> {
+    await this.isPatientByIdExists(id);
+
+    await this.prismaService.patient.delete({ where: { id } });
   }
 }

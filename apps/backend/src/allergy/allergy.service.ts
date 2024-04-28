@@ -1,50 +1,62 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAllergyDto } from './dto/create.dto';
-import { UpdateAllergyDto } from './dto/update.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateAllergyDto } from './dto/create.dto';
+import { ResponseAllergyDto } from './dto/response.dto';
+import { UpdateAllergyDto } from './dto/update.dto';
 
 @Injectable()
 export class AllergyService {
   constructor(private prismaService: PrismaService) {}
 
-  create(createAllergyDto: CreateAllergyDto) {
-    const allergy = this.prismaService.allergy.create({ data: createAllergyDto });
-    return allergy;
+  private async isAllergyExist(id: string): Promise<boolean> {
+    const allergy = await this.prismaService.allergy.findUnique({ where: { id } });
+
+    if (!allergy) throw new NotFoundException('An allergy with this Id not found.');
+
+    return true;
   }
 
-  findAll() {
-    const allergies = this.prismaService.allergy.findMany();
-    return allergies;
+  async createAllergy(body: CreateAllergyDto): Promise<ResponseAllergyDto> {
+    const allergy = await this.prismaService.allergy.create({ data: body });
+
+    return plainToInstance(ResponseAllergyDto, allergy);
   }
 
-  findOne(id: string) {
+  async getAllergies(): Promise<ResponseAllergyDto[]> {
+    const allergies = await this.prismaService.allergy.findMany();
+
+    return plainToInstance(ResponseAllergyDto, allergies);
+  }
+
+  async getAllergy(id: string): Promise<ResponseAllergyDto> {
+    await this.isAllergyExist(id);
+
     const allergy = this.prismaService.allergy.findUnique({ where: { id } });
-    return allergy;
+
+    return plainToInstance(ResponseAllergyDto, allergy);
   }
 
-  update(id: string, updateAllergyDto: UpdateAllergyDto) {
-    const updatedAllergy = this.prismaService.allergy.update({
-      where: { id },
-      data: updateAllergyDto,
-    });
-    return updatedAllergy;
+  async patchAllergy(id: string, body: UpdateAllergyDto): Promise<ResponseAllergyDto> {
+    await this.isAllergyExist(id);
+
+    const allergy = this.prismaService.allergy.update({ where: { id }, data: body });
+
+    return plainToInstance(ResponseAllergyDto, allergy);
   }
 
-  remove(id: string) {
-    const deletedAllergy = this.prismaService.allergy.delete({ where: { id } });
-    return deletedAllergy;
-  }
-
-  async findAllergiesByPatientId(id: string) {
+  async getAllergiesByPatiendId(patientId: string): Promise<ResponseAllergyDto[]> {
     const allergies = await this.prismaService.patientAllergy.findMany({
-      where: { patientId: id },
-      select: {
-        allergy: {
-          select: { id: true, name: true },
-        },
-      },
+      where: { patientId },
+      select: { allergy: { select: { id: true, name: true } } },
     });
 
-    return allergies;
+    return plainToInstance(ResponseAllergyDto, allergies);
+  }
+
+  async deleteAllergy(id: string): Promise<void> {
+    await this.isAllergyExist(id);
+
+    this.prismaService.allergy.delete({ where: { id } });
   }
 }

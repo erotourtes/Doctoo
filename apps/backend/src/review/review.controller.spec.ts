@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ReviewController } from './review.controller';
-import { PatientModule } from '../patient/patient.module';
 import { DoctorModule } from '../doctor/doctor.module';
+import { PatientModule } from '../patient/patient.module';
 import { PrismaService } from '../prisma/prisma.service';
+import { ReviewController } from './review.controller';
 import { ReviewService } from './review.service';
 
 describe('ReviewController', () => {

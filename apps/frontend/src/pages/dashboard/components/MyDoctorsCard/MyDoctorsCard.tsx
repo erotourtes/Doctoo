@@ -2,12 +2,14 @@ import { Button } from '@/components/UI/Button/Button';
 import Icon from '@/components/UI/Icon/Icon';
 import type { IDoctor } from '@/dataTypes/Doctor';
 import DoctorCard from '../DoctorCard/DoctorCard';
+import { useNavigate } from 'react-router-dom';
 
 type AppointmentCardProps = {
   doctors: IDoctor[] | undefined;
 };
 
 export default function MyDoctorsCard({ doctors }: AppointmentCardProps) {
+  const navigate = useNavigate();
   return (
     <>
       <aside className='m-w-[302px] mt-[24px] h-[236px] min-h-[236px] w-[302px] rounded-xl bg-[#ffffff] p-[24px]'>
@@ -17,6 +19,7 @@ export default function MyDoctorsCard({ doctors }: AppointmentCardProps) {
             <Button
               className='ml-auto mr-0  h-[28px]  rounded-2xl border-none bg-[#F1F6F9] px-[18px] text-[#454F50]'
               type={'secondary'}
+              onClick={() => navigate(`/my-doctors`)}
             >
               <div className='flex flex-row text-sm font-normal'>
                 <p>{`View all (${doctors?.length})`}</p> <Icon variant={'arrow-right'} />

@@ -1,31 +1,44 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateFavoriteDto } from './dto/create.dto';
+import { ResponseFavoriteDto } from './dto/response.dto';
 
 @Injectable()
 export class FavoriteService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async createFavorite(body: CreateFavoriteDto) {
+  async isFavoriteExists(id: string): Promise<boolean> {
+    const favorite = await this.prismaService.favorite.findUnique({ where: { id } });
+
+    if (!favorite) throw new NotFoundException('A favorite with this Id not found.');
+
+    return true;
+  }
+
+  async createFavorite(body: CreateFavoriteDto): Promise<ResponseFavoriteDto> {
     const favorite = await this.prismaService.favorite.create({ data: body });
 
-    return favorite;
+    return plainToInstance(ResponseFavoriteDto, favorite);
   }
 
-  async getFavorites() {
-    // TODO use authorized object from request.
-    const favorites = await this.prismaService.favorite.findMany({ include: { doctor: true } });
+  async getFavorites(): Promise<ResponseFavoriteDto[]> {
+    const favorites = await this.prismaService.favorite.findMany();
 
-    return favorites;
+    return plainToInstance(ResponseFavoriteDto, favorites);
   }
 
-  async getFavorite(id: string) {
-    const favorite = await this.prismaService.favorite.findUnique({ where: { id: id }, include: { doctor: true } });
+  async getFavorite(id: string): Promise<ResponseFavoriteDto> {
+    await this.isFavoriteExists(id);
 
-    return favorite;
+    const favorite = await this.prismaService.favorite.findUnique({ where: { id } });
+
+    return plainToInstance(ResponseFavoriteDto, favorite);
   }
 
-  async deleteFavorite(id: string) {
+  async deleteFavorite(id: string): Promise<void> {
+    await this.isFavoriteExists(id);
+
     await this.prismaService.favorite.delete({ where: { id } });
   }
 }

@@ -7,12 +7,12 @@ type MedicalConditionPopupProps = {
 };
 
 const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) => {
-  type Condtion = {
+  type Condition = {
     id: string;
     name: string;
   };
 
-  const conditions: Condtion[] = [
+  const conditions: Condition[] = [
     {
       id: '1',
       name: 'Diabetes',
@@ -47,15 +47,15 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
     },
   ];
 
-  const [allConditions, setAllcondtions] = useState<Condtion[]>(conditions);
-  const [suggestedCondtions, setSuggestedConditions] = useState<Condtion[]>([]);
-  const [selectedCondtions, setSelectedConditions] = useState<Condtion[]>([]);
+  const [allConditions, setAllConditions] = useState<Condition[]>(conditions);
+  const [suggestedConditions, setSuggestedConditions] = useState<Condition[]>([]);
+  const [selectedConditions, setSelectedConditions] = useState<Condition[]>([]);
   const [allAllergies, setAllAllergies] = useState<Allergy[]>(allergies);
   const [suggestedAllergies, setSuggestedAllergies] = useState<Allergy[]>([]);
   const [selectedAllergies, setSelectedAllergies] = useState<Allergy[]>([]);
 
   useEffect(() => {
-    setAllcondtions(conditions);
+    setAllConditions(conditions);
     setAllAllergies(allergies);
   }, []);
   return (
@@ -65,7 +65,7 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
       modalFullClassName='max-w-[612px]'
       modalBodyClassName='flex max-w-[516px] flex-col gap-7'
     >
-      <p className='text-2xl font-medium text-black'>Medical condition and allergies </p>
+      <p className='text-xl font-medium text-black sm:text-2xl'>Medical condition and allergies </p>
       <form onSubmit={e => e.preventDefault()} className='flex w-full flex-col gap-7'>
         <div className='grid gap-2 sm:gap-6'>
           <div>
@@ -73,7 +73,7 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
               Medical condition
             </label>
             <div className='box-border flex w-full flex-wrap rounded-lg bg-background pl-2 text-base text-text focus:outline-none'>
-              {selectedCondtions.map(condition => (
+              {selectedConditions.map(condition => (
                 <Tag
                   key={condition.id}
                   icon
@@ -81,7 +81,7 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
                   className='my-2 ml-1'
                   onClick={() => {
                     setSelectedConditions(prev => prev.filter(c => c.id !== condition.id));
-                    setAllcondtions(prev => [...prev, condition]);
+                    setAllConditions(prev => [...prev, condition]);
                   }}
                 />
               ))}
@@ -92,7 +92,7 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
                   if (!value) return setSuggestedConditions([]);
 
                   allConditions.map(condition => {
-                    if (suggestedCondtions.some(c => c.name === condition.name)) {
+                    if (suggestedConditions.some(c => c.name === condition.name)) {
                       return;
                     }
 
@@ -102,10 +102,10 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
                   });
                 }}
                 id='condition'
-                className='bg-transparent px-4 py-2 outline-none'
+                className='w-full bg-transparent px-4 py-2 outline-none'
               />
             </div>
-            {suggestedCondtions.map(condition => (
+            {suggestedConditions.map(condition => (
               <Tag
                 icon={false}
                 key={condition.id}
@@ -113,7 +113,7 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
                 className='my-2 ml-1'
                 onClick={() => {
                   setSelectedConditions(prev => [...prev, condition]);
-                  setAllcondtions(prev => prev.filter(c => c.id !== condition.id));
+                  setAllConditions(prev => prev.filter(c => c.id !== condition.id));
                   setSuggestedConditions([]);
                 }}
               />
@@ -154,7 +154,7 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
                   });
                 }}
                 id='allergies'
-                className='bg-transparent px-4 py-2 outline-none'
+                className='w-full bg-transparent px-4 py-2 outline-none'
               />
             </div>
             {suggestedAllergies.map(allergy => (
@@ -186,14 +186,14 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
           <Button
             type='primary'
             onClick={() => {
-              if (selectedCondtions.length === 0) {
+              if (selectedConditions.length === 0) {
                 return;
               }
               if (selectedAllergies.length === 0) {
                 return;
               }
               //TODO: add fetch when PR is accepted
-              console.log('Sent data:', selectedCondtions, selectedAllergies);
+              console.log('Sent data:', selectedConditions, selectedAllergies);
             }}
             className='w-full sm:w-1/2'
           >
