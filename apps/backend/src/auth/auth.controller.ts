@@ -7,12 +7,14 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { Response } from 'express';
 import { ResponseUserDto } from '../user/dto/response.dto';
 import { UserDec } from '../user/user.decorator';
 import { BadRequestResponse } from '../utils/BadRequestResponse';
 import { ClassicNestResponse } from '../utils/ClassicNestResponse';
+import { UnauthorizedResponse } from '../utils/UnauthorizedResponse';
 import { RESPONSE_STATUS } from '../utils/constants';
 import { AuthService } from './auth.service';
 import { ChangePasswordDto } from './dto/changePassword.dto';
@@ -133,6 +135,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Logout' })
   @ApiHeader({ name: 'Cookie', example: 'jwt=eyJhbGci...', description: 'JWT token' })
   @ApiOkResponse({ description: RESPONSE_STATUS.SUCCESS })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
   async logout(@Res({ passthrough: true }) res: Response) {
@@ -144,6 +147,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Change password' })
   @ApiHeader({ name: 'Cookie', example: 'jwt=eyJhbGci...', description: 'JWT token' })
   @ApiOkResponse({ description: RESPONSE_STATUS.SUCCESS })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: BadRequestException })
   @ApiBody({ type: ChangePasswordDto })
@@ -156,6 +160,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Get patient' })
   @ApiHeader({ name: 'Cookie', example: 'jwt=eyJhbGci...', description: 'JWT token' })
   @ApiOkResponse({ type: PatientResponseDto, description: RESPONSE_STATUS.SUCCESS })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
   async getPatient(@UserDec() user: ResponseUserDto): Promise<PatientResponseDto> {
