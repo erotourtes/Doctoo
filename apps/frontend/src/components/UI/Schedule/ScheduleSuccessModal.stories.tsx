@@ -47,7 +47,11 @@ export const Default: Story = {
         <Button type='primary' onClick={openPopup}>
           Open Pop Up
         </Button>
-        <ScheduleSuccessModal popupIsOpen={popupIsOpen} closePopup={closePopup} date={dayjs()} />
+        <ScheduleSuccessModal
+          popupIsOpen={popupIsOpen}
+          closePopup={closePopup}
+          date={dayjs('2024-01-01T00:00:00.000Z')}
+        />
       </>
     );
   },

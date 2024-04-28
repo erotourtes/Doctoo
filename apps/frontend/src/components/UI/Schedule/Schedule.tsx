@@ -1,8 +1,10 @@
+import type { Dayjs } from 'dayjs';
 import PopupDoctoo from '../Popup/Popup';
 import ScheduleAbout from './ScheduleAbout';
 import ScheduleBook from './ScheduleBook';
 import ScheduleHeader from './ScheduleHeader';
 import ScheduleTestimonials from './ScheduleTestimonials';
+import dayjs from 'dayjs';
 
 type ScheduleProps = {
   closePopup: () => void;
@@ -18,9 +20,10 @@ type ScheduleProps = {
     rating: number;
     reviewsCount: number;
   };
+  currentDay?: Dayjs;
 };
 
-export default function Schedule({ scheduleInfo, closePopup, scheduleIsOpen }: ScheduleProps) {
+export default function Schedule({ scheduleInfo, closePopup, scheduleIsOpen, currentDay = dayjs() }: ScheduleProps) {
   const { doctorFirstName, doctorLastName, payrate, avatarKey, about, doctorId, patientId } = scheduleInfo;
   const doctorFullName = `Dr. ${doctorFirstName} ${doctorLastName}`;
 
@@ -40,7 +43,7 @@ export default function Schedule({ scheduleInfo, closePopup, scheduleIsOpen }: S
         specialization='Specialization'
       />
 
-      <ScheduleBook doctorId={doctorId} patientId={patientId} closePopup={closePopup} />
+      <ScheduleBook currentDay={currentDay} doctorId={doctorId} patientId={patientId} closePopup={closePopup} />
 
       <ScheduleAbout about={about} />
 
