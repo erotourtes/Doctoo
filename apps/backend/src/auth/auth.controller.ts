@@ -2,6 +2,7 @@ import { BadRequestException, Body, Controller, Get, Param, Post, Res, UseGuards
 import {
   ApiBadRequestResponse,
   ApiBody,
+  ApiHeader,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiOperation,
@@ -130,6 +131,7 @@ export class AuthController {
   @UseGuards(JWTGuard)
   @Get('logout')
   @ApiOperation({ summary: 'Logout' })
+  @ApiHeader({ name: 'Cookie', example: 'jwt=eyJhbGci...', description: 'JWT token' })
   @ApiOkResponse({ description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
@@ -140,6 +142,7 @@ export class AuthController {
   @UseGuards(JWTGuard)
   @Post('password/change')
   @ApiOperation({ summary: 'Change password' })
+  @ApiHeader({ name: 'Cookie', example: 'jwt=eyJhbGci...', description: 'JWT token' })
   @ApiOkResponse({ description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: BadRequestException })
@@ -151,6 +154,7 @@ export class AuthController {
   @UseGuards(JWTGuard)
   @Get('patient/me')
   @ApiOperation({ summary: 'Get patient' })
+  @ApiHeader({ name: 'Cookie', example: 'jwt=eyJhbGci...', description: 'JWT token' })
   @ApiOkResponse({ type: PatientResponseDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
