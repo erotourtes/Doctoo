@@ -1,55 +1,58 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { BloodType, Gender } from '@prisma/client';
-import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsUUID } from 'class-validator';
+import { randomUUID } from 'crypto';
 import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
 
 export class CreatePatientDto {
-  @IsNotEmptyString()
-  @ApiProperty({ description: 'The ID of the user associated with the patient' })
+  @ApiProperty({ example: randomUUID(), description: 'The unique user id of the user to which the patient is bound.' })
+  @IsUUID(4)
   readonly userId: string;
 
+  @ApiProperty({ example: 65, description: "Patient's weight." })
   @IsNumber()
-  @ApiProperty({ description: 'The weight of the patient' })
   readonly weight: number;
 
+  @ApiProperty({ example: 185, description: 'Patient height.' })
   @IsNumber()
-  @ApiProperty({ description: 'The height of the patient' })
   readonly height: number;
 
+  @ApiProperty({ example: 35, description: "Patient's age." })
   @IsNumber()
-  @ApiProperty({ description: 'The age of the patient' })
   readonly age: number;
 
+  @ApiProperty({ enum: BloodType, example: BloodType.AB_MINUS, description: "The patient's blood type." })
   @IsEnum(BloodType)
-  @ApiProperty({ description: 'The blood type of the patient', type: 'enum', enum: BloodType })
   readonly bloodType: BloodType;
 
+  @ApiProperty({ enum: Gender, example: Gender.MALE, description: 'Patient gender.' })
   @IsEnum(Gender)
-  @ApiProperty({ description: 'The gender of the patient', type: 'enum', enum: Gender })
   readonly gender: Gender;
 
-  @IsString()
-  @ApiProperty({ description: 'The country of residence of the patient' })
+  @ApiProperty({ example: 'USA', description: 'The country where the hospital is located.' })
+  @IsNotEmptyString()
   readonly country: string;
 
+  @ApiPropertyOptional({ example: 'Oregon', description: 'The address of the state where the hospital is located.' })
   @IsOptional()
-  @ApiProperty({ description: 'The state of residence of the patient', required: false })
+  @IsNotEmptyString()
   readonly state?: string;
 
-  @IsString()
-  @ApiProperty({ description: 'The city of residence of the patient' })
+  @ApiProperty({ example: 'Salem', description: 'The name of the city where this hospital is located.' })
+  @IsNotEmptyString()
   readonly city: string;
 
-  @IsString()
-  @ApiProperty({ description: 'The street address of the patient' })
+  @ApiProperty({ example: 'St. Big Bells', description: 'The name of the street where this hospital is located.' })
+  @IsNotEmptyString()
   readonly street: string;
 
+  @ApiPropertyOptional({ example: '35A', description: "Patient's apartment number." })
   @IsOptional()
-  @ApiProperty({ description: 'The apartment number of the patient', required: false })
+  @IsNotEmptyString()
   readonly apartment?: string;
 
+  @ApiProperty({ example: 0o200, description: "The hospital's zip code." })
   @IsOptional()
   @IsNumber()
-  @ApiProperty({ description: 'The zip code of the patient', required: false })
   readonly zipCode?: number;
 }

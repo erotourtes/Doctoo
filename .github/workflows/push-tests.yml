@@ -1,19 +1,24 @@
-name: Internship 2024 Doctoo CI/CD
+name: Project Build & Tests
+
 on:
   push:
+    branches-ignore:
+      - 'main'
+      - 'development'
 
 jobs:
   build:
-    name: Build
-    runs-on: ubuntu-20.04
     strategy:
       matrix:
         node-version: [18]
+
+    runs-on: self-hosted
+    name: Build Project
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js and PNPM
+      - name: Setup Node.js and pnpm
         uses: pnpm/action-setup@v3
         with:
           version: 8
@@ -31,16 +36,17 @@ jobs:
         run: pnpm build
 
   test:
-    name: Test
-    runs-on: ubuntu-20.04
     strategy:
       matrix:
         node-version: [18]
+
+    runs-on: self-hosted
+    name: Test Project
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js and PNPM
+      - name: Setup Node.js and pnpm
         uses: pnpm/action-setup@v3
         with:
           version: 8
@@ -53,17 +59,16 @@ jobs:
 
       - name: Install dependencies
         run: pnpm i -r
-      - name: Generate prisma schema
+
+      - name: Generate @prisma/client
         run: pnpm run prebuild
         working-directory: ./apps/backend
 
-      - name: Run unit tests backend
+      - name: Unit tests for backend
         run: pnpm run backend:test
 
-      - name: Run e2e tests backend
+      - name: e2e tests for backend
         run: pnpm run  backend:test:e2e
-      - name: Run unit tests frontend
-        run: pnpm run  frontend:test
-        
 
-       
+      - name: Unit tests for frontend
+        run: pnpm run frontend:test

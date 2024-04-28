@@ -1,33 +1,36 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEmail, IsOptional, IsPhoneNumber } from 'class-validator';
+import { randomUUID } from 'crypto';
 import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
 
 export class CreateUserDto {
+  @ApiProperty({ example: 'John', description: "The user's real first name." })
   @IsNotEmptyString()
-  @ApiProperty({ description: 'The first name of the user', example: 'John' })
   readonly firstName: string;
 
+  @ApiProperty({ example: 'Doe', description: "The user's real last name." })
   @IsNotEmptyString()
-  @ApiProperty({ description: 'The last name of the user', example: 'Doe' })
   readonly lastName: string;
 
+  @ApiProperty({ example: '+380000000000', description: "The user's phone number in national format." })
   @IsPhoneNumber()
-  @ApiProperty({ description: 'The phone number of the user', example: '+380980000000' })
   readonly phone: string;
 
+  @ApiProperty({ example: 'example@example.com', description: 'Unique user mail.' })
   @IsEmail()
-  @ApiProperty({ description: 'The email address of the user', example: 'user@example.com' })
   readonly email: string;
 
+  @ApiPropertyOptional({ example: 'password', description: 'User password.' })
   @IsOptional()
-  @ApiProperty({ description: 'The password of the user', nullable: true, example: 'password123' })
+  @IsNotEmptyString()
   password?: string;
 
+  @ApiPropertyOptional({ example: 'G-123456789', description: 'Unique Google Id of the user.' })
   @IsOptional()
-  @ApiProperty({ description: 'The Google ID of the user', nullable: true, example: 'google123' })
+  @IsNotEmptyString()
   googleId?: string;
 
+  @ApiProperty({ example: `${randomUUID()}.jpeg`, description: 'The unique file id of the file in S3 storage.' })
   @IsNotEmptyString()
-  @ApiProperty({ description: 'The avatar key of the user', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
   avatarKey: string;
 }

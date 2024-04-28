@@ -1,44 +1,36 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
-import { ResponseDoctorDto } from '../../doctor/dto/response.dto';
-import { ResponsePatientDto } from '../../patient/dto/response.dto';
+import { randomUUID } from 'crypto';
 
 export class ResponseUserDto {
-  @ApiProperty({ description: 'The ID of the user', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
-  readonly id?: string;
+  @ApiProperty({ example: randomUUID(), description: 'Unique user id.' })
+  readonly id: string;
 
-  @ApiProperty({ description: 'The first name of the user', example: 'John' })
-  readonly firstName?: string;
+  @ApiProperty({ example: 'John', description: "The user's real first name." })
+  readonly firstName: string;
 
-  @ApiProperty({ description: 'The last name of the user', example: 'Doe' })
-  readonly lastName?: string;
+  @ApiProperty({ example: 'Doe', description: "The user's real last name." })
+  readonly lastName: string;
 
-  @ApiProperty({ description: 'The phone number of the user', example: '+380980000000' })
-  readonly phone?: string;
+  @ApiProperty({ example: '+380000000000', description: "The user's phone number in national format." })
+  readonly phone: string;
 
-  @ApiProperty({ description: 'The email address of the user', example: 'user@example.com' })
-  readonly email?: string;
+  @ApiProperty({ example: 'example@example.com', description: 'Unique user mail.' })
+  readonly email: string;
+
+  @ApiProperty({ example: false, description: 'Whether the user has confirmed his mail in the service.' })
+  readonly emailVerified: boolean;
+
+  @ApiPropertyOptional({ example: 'G-123456789', description: 'Unique Google Id of the user.' })
+  readonly googleId?: string;
+
+  @ApiProperty({ example: `${randomUUID()}.jpeg`, description: 'The unique file id of the file in S3 storage.' })
+  readonly avatarKey: string;
 
   @Exclude()
   readonly password?: string;
 
-  @ApiProperty({ description: 'Indicates whether the email is verified', example: true })
-  readonly emailVerified?: boolean;
-
-  @ApiProperty({ description: 'The Google ID of the user', example: 'google123' })
-  readonly googleId?: string;
-
-  @ApiProperty({ description: 'The avatar key of the user', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
-  readonly avatarKey?: string;
-
-  @ApiProperty({ description: 'The list of doctors associated with the user', example: [] })
-  readonly doctors?: ResponseDoctorDto[];
-
-  @ApiProperty({ description: 'The list of patients associated with the user', example: [] })
-  readonly patients?: ResponsePatientDto[];
-
   @Exclude()
-  @ApiProperty({ description: 'Is two-factor authentication enabled', example: true })
   readonly twoFactorAuthToggle?: boolean;
 
   @Exclude()

@@ -8,14 +8,10 @@ describe('AllergyService', () => {
   let allergyService: AllergyService;
   let prisma: PrismaService;
 
-  const allergyDto: CreateAllergyDto = {
-    name: 'test',
-  };
+  const allergyDto: CreateAllergyDto = { name: 'test' };
 
   beforeEach(async () => {
-    const moduleRef = await Test.createTestingModule({
-      providers: [AllergyService, PrismaService],
-    }).compile();
+    const moduleRef = await Test.createTestingModule({ providers: [AllergyService, PrismaService] }).compile();
 
     allergyService = moduleRef.get<AllergyService>(AllergyService);
     prisma = moduleRef.get<PrismaService>(PrismaService);
@@ -31,7 +27,7 @@ describe('AllergyService', () => {
   });
 
   it('should create allergy', async () => {
-    const createdCondtion = await allergyService.create(allergyDto);
+    const createdCondtion = await allergyService.createAllergy(allergyDto);
 
     expect(createdCondtion).toMatchObject(allergyDto);
     expect(createdCondtion.id).toBeDefined();
@@ -40,7 +36,7 @@ describe('AllergyService', () => {
   it('should return allergy by id', async () => {
     const { id } = await prisma.allergy.create({ data: allergyDto });
 
-    const allergy = await allergyService.findOne(id);
+    const allergy = await allergyService.getAllergy(id);
 
     expect(allergy).toMatchObject({ ...allergyDto, id });
   });
@@ -50,7 +46,7 @@ describe('AllergyService', () => {
 
     const data: UpdateAllergyDto = { name: 'test-updated' };
 
-    const updatedAllergy = await allergyService.update(id, data);
+    const updatedAllergy = await allergyService.patchAllergy(id, data);
 
     expect(updatedAllergy).toMatchObject({ ...allergyDto, ...data, id });
   });
@@ -58,8 +54,8 @@ describe('AllergyService', () => {
   it('should remove allergy', async () => {
     const { id } = await prisma.allergy.create({ data: allergyDto });
 
-    const removedAllergy = await allergyService.remove(id);
+    const removedAllergy = await allergyService.deleteAllergy(id);
 
-    expect(removedAllergy).toMatchObject({ id, ...allergyDto });
+    expect(removedAllergy).toBeUndefined();
   });
 });

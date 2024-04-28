@@ -1,8 +1,8 @@
 import { instance } from '@/api/axios.api';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { setDoctorData } from './DoctorSlice';
+import type { paths } from '../../api';
 import api from '../api';
-import type { IDoctor } from '@/dataTypes/Doctor';
+import { setDoctorData } from './DoctorSlice';
 
 export const getDoctorData = createAsyncThunk('doctor', async (_, { dispatch }) => {
   try {
@@ -18,9 +18,9 @@ export const getDoctorData = createAsyncThunk('doctor', async (_, { dispatch }) 
 
 export const getPatientDoctorData = createAsyncThunk('doctor', async (patient_id: string, { dispatch }) => {
   try {
-    const { error, data } = await api.GET(`/doctor/patient-dactors/{id}`, { params: { path: { id: patient_id } } });
+    const { error, data } = await api.GET(`/doctor/dactors/{id}`, { params: { path: { id: patient_id } } });
     if (!error) {
-      const res: IDoctor[] = data;
+      const res: paths['/doctor/dactors/{id}']['get']['responses']['200']['content']['application/json'] = data;
 
       dispatch(setDoctorData(res));
     }

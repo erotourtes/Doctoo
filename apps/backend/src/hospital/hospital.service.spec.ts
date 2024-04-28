@@ -10,9 +10,7 @@ describe('HospitalService', () => {
   let prisma: PrismaService;
 
   beforeEach(async () => {
-    const moduleRef = await Test.createTestingModule({
-      providers: [HospitalService, PrismaService],
-    }).compile();
+    const moduleRef = await Test.createTestingModule({ providers: [HospitalService, PrismaService] }).compile();
 
     hospitalService = moduleRef.get<HospitalService>(HospitalService);
     prisma = moduleRef.get<PrismaService>(PrismaService);
@@ -23,12 +21,7 @@ describe('HospitalService', () => {
   });
 
   it('should create hospital', async () => {
-    const hospitalDto: CreateHospitalDto = {
-      name: 'test-hospital',
-      city: 'test',
-      country: 'test',
-      street: 'test',
-    };
+    const hospitalDto: CreateHospitalDto = { name: 'test-hospital', city: 'test', country: 'test', street: 'test' };
 
     const createdHospital = await hospitalService.createHospital(hospitalDto);
 
@@ -37,12 +30,7 @@ describe('HospitalService', () => {
   });
 
   it('should return hospital by id', async () => {
-    const hospitalDto: CreateHospitalDto = {
-      name: 'test-hospital',
-      city: 'test',
-      country: 'test',
-      street: 'test',
-    };
+    const hospitalDto: CreateHospitalDto = { name: 'test-hospital', city: 'test', country: 'test', street: 'test' };
 
     const { id } = await prisma.hospital.create({ data: hospitalDto });
 
@@ -52,12 +40,7 @@ describe('HospitalService', () => {
   });
 
   it('should update hospital', async () => {
-    const hospitalDto: CreateHospitalDto = {
-      name: 'test-hospital',
-      city: 'test',
-      country: 'test',
-      street: 'test',
-    };
+    const hospitalDto: CreateHospitalDto = { name: 'test-hospital', city: 'test', country: 'test', street: 'test' };
 
     const { id } = await prisma.hospital.create({ data: hospitalDto });
 
@@ -69,12 +52,7 @@ describe('HospitalService', () => {
   });
 
   it('should delete hospital', async () => {
-    const hospitalDto: CreateHospitalDto = {
-      name: 'test-hospital',
-      city: 'test',
-      country: 'test',
-      street: 'test',
-    };
+    const hospitalDto: CreateHospitalDto = { name: 'test-hospital', city: 'test', country: 'test', street: 'test' };
 
     const { id } = await prisma.hospital.create({ data: hospitalDto });
 

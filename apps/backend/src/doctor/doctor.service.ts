@@ -1,14 +1,14 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
+import { HospitalService } from '../hospital/hospital.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { SpecializationService } from '../specialization/specialization.service';
 import { UserService } from '../user/user.service';
+import { removeDuplicates } from '../utils/arrayUtils';
 import { CreateDoctorDto } from './dto/create.dto';
+import { GetDoctorsQuery } from './dto/get.query';
 import { PatchDoctorDto } from './dto/patch.dto';
 import { ResponseDoctorDto } from './dto/response.dto';
-import { HospitalService } from '../hospital/hospital.service';
-import { GetDoctorsQuery } from './query/get-doctors.query';
-import { SpecializationService } from '../specialization/specialization.service';
-import { removeDuplicates } from '../utils/arrayUtils';
-import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class DoctorService {
@@ -19,30 +19,47 @@ export class DoctorService {
     private readonly specializationService: SpecializationService,
   ) {}
 
+  async isDoctorByIdExists(id: string): Promise<boolean> {
+    const doctor = await this.prismaService.doctor.findUnique({ where: { id } });
+
+    if (!doctor) throw new NotFoundException({ message: 'Doctor with this Id not found.' });
+
+    return true;
+  }
+
+  async isDoctorByUserIdExists(userId: string): Promise<boolean> {
+    const doctor = await this.prismaService.doctor.findUnique({ where: { userId } });
+
+    if (doctor) throw new NotFoundException({ message: 'Doctor with this Id already exists.' });
+
+    return true;
+  }
+
   async createDoctor(body: CreateDoctorDto): Promise<ResponseDoctorDto> {
-    const user = await this.userService.getUser(body.userId);
+    await this.userService.isUserExists(body.userId);
 
-    if (!user) throw new NotFoundException({ message: `User with id ${body.userId} does not exist` });
-
-    const candidateDoctor = await this.prismaService.doctor.findUnique({ where: { userId: body.userId } });
-
-    if (candidateDoctor) {
-      throw new BadRequestException({ message: `Doctor associated with user with id ${body.userId} already exists` });
-    }
+    await this.isDoctorByUserIdExists(body.userId);
 
     const { hospitalIds, specializationIds, userId, ...doctorData } = body;
+
     const existingHospitalIds = [];
+
+    // TODO: Optimize this code...
     for (const hospitalId of hospitalIds) {
       const hospital = await this.hospitalService.getHospital(hospitalId);
+
       existingHospitalIds.push(hospital.id);
     }
 
     const existingSpecializationIds = [];
+
+    // TODO: Optimize this code...
     for (const specializationId of specializationIds) {
       const specialization = await this.specializationService.getSpecialization(specializationId);
       existingSpecializationIds.push(specialization.id);
     }
 
+    // TODO: Optimize this code...
     const doctor = await this.prismaService.doctor.create({
       data: {
         ...doctorData,
@@ -64,13 +81,18 @@ export class DoctorService {
     const hospitalFilter: { id?: string } = {};
     const specializationFilter: { id?: string } = {};
     const searchFilters = [];
+
     const { hospitalId, specializationId, search } = query;
+
     if (hospitalId) hospitalFilter.id = hospitalId;
+
     if (specializationId) specializationFilter.id = specializationId;
+
     if (search) {
       searchFilters.push({ hospitals: { every: { hospital: { name: { contains: search } } } } });
       searchFilters.push({ specializations: { every: { specialization: { name: { contains: search } } } } });
     }
+
     const doctors = await this.prismaService.doctor.findMany({
       include: {
         user: { select: { firstName: true, lastName: true, avatarKey: true } },
@@ -99,29 +121,36 @@ export class DoctorService {
       },
     });
 
-    if (!doctor) throw new NotFoundException({ message: `Doctor with id ${id} does not exist` });
+    if (!doctor) throw new NotFoundException({ message: 'Doctor with this Id not found.' });
+
     return plainToInstance(ResponseDoctorDto, doctor);
   }
 
   // TODO: refactor, extracting logic for updating hospitals and specializations into separate functions
   async patchDoctor(id: string, body: PatchDoctorDto): Promise<ResponseDoctorDto> {
-    await this.getDoctor(id);
+    await this.isDoctorByIdExists(id);
+
     const { about, payrate, hospitalIds, specializationIds } = body;
+
     const addedExistingHospitalIds = [];
+
     if (hospitalIds?.added?.length) {
       for (const hospitalId of hospitalIds.added) {
         const hospital = await this.hospitalService.getHospital(hospitalId);
         addedExistingHospitalIds.push(hospital.id);
       }
     }
+
     const addedExistingSpecializationIds = [];
+
     if (specializationIds?.added?.length) {
       for (const specializationId of specializationIds.added) {
         const specialization = await this.specializationService.getSpecialization(specializationId);
         addedExistingSpecializationIds.push(specialization.id);
       }
     }
-    const patchedDoctor = await this.prismaService.doctor.update({
+
+    const doctor = await this.prismaService.doctor.update({
       where: { id },
       data: {
         about,
@@ -148,25 +177,15 @@ export class DoctorService {
       },
     });
 
-    return plainToInstance(ResponseDoctorDto, patchedDoctor, { exposeUnsetFields: false });
-  }
-
-  async deleteDoctor(id: string) {
-    await this.getDoctor(id);
-
-    await this.prismaService.doctor.delete({ where: { id } });
+    return plainToInstance(ResponseDoctorDto, doctor, { exposeUnsetFields: false });
   }
 
   async getPatientDoctors(id: string): Promise<ResponseDoctorDto[]> {
+    const request = { where: { patientId: id }, include: { doctor: { include: { user: true } } } };
+
     const [appointments, declaration] = await Promise.all([
-      this.prismaService.appointment.findMany({
-        where: { patientId: id },
-        include: { doctor: { include: { user: true } } },
-      }),
-      this.prismaService.declaration.findUnique({
-        where: { patientId: id },
-        include: { doctor: { include: { user: true } } },
-      }),
+      this.prismaService.appointment.findMany(request),
+      this.prismaService.declaration.findUnique(request),
     ]);
 
     const doctorsFromAppointments = appointments.map(appointment => appointment.doctor);
@@ -176,5 +195,11 @@ export class DoctorService {
     return removeDuplicates(allDoctors, doctor => doctor.id).map(el => {
       return plainToInstance(ResponseDoctorDto, el, { exposeUnsetFields: false });
     });
+  }
+
+  async deleteDoctor(id: string): Promise<void> {
+    await this.getDoctor(id);
+
+    await this.prismaService.doctor.delete({ where: { id } });
   }
 }

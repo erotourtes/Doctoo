@@ -14,7 +14,7 @@ export class MailService {
     await this.mailerService.sendMail({
       to,
       subject: `Welcome to the ${this.configObject.APP_NAME}!`,
-      template: './patient-sign-up-step',
+      template: './patient-signup',
       context: {
         name,
         url: `${this.configObject.FRONTEND_URL}/${this.configObject.FRONTEND_SIGNUP_PATH}?token=${token}`,
@@ -22,15 +22,12 @@ export class MailService {
     });
   }
 
-  async send2faCode(to: string, name: string, code: string): Promise<void> {
+  async sendMFACode(to: string, name: string, code: string): Promise<void> {
     await this.mailerService.sendMail({
       to,
-      subject: '2FA code',
-      template: './2fa-code',
-      context: {
-        name,
-        code,
-      },
+      subject: 'Enable MFA for your account',
+      template: './enable-mfa',
+      context: { name, code },
     });
   }
 }

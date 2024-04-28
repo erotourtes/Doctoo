@@ -24,6 +24,7 @@ enum Gender {
 }
 
 enum AppointmentStatus {
+  PENDING_PAYMENT
   PLANNED
   COMPLETED
   CANCELED
@@ -123,15 +124,14 @@ model HospitalDoctor {
 }
 
 model Hospital {
-  id        String           @id @default(uuid())
-  name      String
-  country   String
-  state     String?
-  city      String
-  street    String
-  apartment String?
-  zipCode   Int?             @map("zip_code")
-  doctors   HospitalDoctor[]
+  id      String           @id @default(uuid())
+  name    String
+  country String
+  state   String?
+  city    String
+  street  String
+  zipCode Int?             @map("zip_code")
+  doctors HospitalDoctor[]
 
   @@map("hospitals")
 }
@@ -268,12 +268,12 @@ model Appointment {
   doctorId          String            @map("doctor_id")
   assignedAt        DateTime          @map("assigned_at")
   status            AppointmentStatus
-  notes             String
+  notes             String?
   videoRecordKey    String?           @map("video_record_key")
   paymentInvoiceKey String?           @map("payment_invoice_key")
   paymentReceiptKey String?           @map("payment_receipt_key")
-  startedAt         String?           @map("started_at")
-  endedAt           String?           @map("ended_at")
+  startedAt         String            @map("started_at")
+  endedAt           String            @map("ended_at")
   patient           Patient           @relation(fields: [patientId], references: [id])
   doctor            Doctor            @relation(fields: [doctorId], references: [id])
 

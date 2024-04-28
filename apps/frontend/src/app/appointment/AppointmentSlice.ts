@@ -1,7 +1,7 @@
 import type { RootState } from '@/app/store';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '../createAppSlice';
-import { AppointmentStatus } from '@/dataTypes/Appointment';
+import type { AppointmentStatus } from '@/dataTypes/Appointment';
 import type { IAppointment } from '@/dataTypes/Appointment';
 
 type AppointmentData = {
@@ -24,17 +24,10 @@ export const appointmentSlice = createAppSlice({
       state.appointments.push(action.payload);
     },
 
-    setAppointmentCanceled: (state, action: PayloadAction<string>) => {
-      const appointment = state.appointments.find(appointment => appointment.id === action.payload);
+    setChangeAppointmentStatus: (state, action: PayloadAction<{ status: AppointmentStatus; id: string }>) => {
+      const appointment = state.appointments.find(appointment => appointment.id === action.payload.id);
       if (appointment) {
-        appointment.status = AppointmentStatus.CANCELED;
-      }
-    },
-
-    setAppointmentCompleted: (state, action: PayloadAction<string>) => {
-      const appointment = state.appointments.find(appointment => appointment.id === action.payload);
-      if (appointment) {
-        appointment.status = AppointmentStatus.COMPLETED;
+        appointment.status = action.payload.status;
       }
     },
 
@@ -44,13 +37,8 @@ export const appointmentSlice = createAppSlice({
   },
 });
 
-export const {
-  setAppointments,
-  setAppointmentCompleted,
-  setAppointmentCanceled,
-  setNewAppointment,
-  deleteAppointment,
-} = appointmentSlice.actions;
+export const { setAppointments, setNewAppointment, deleteAppointment, setChangeAppointmentStatus } =
+  appointmentSlice.actions;
 
 export const appointmentData = (state: RootState) => state.appointment.appointments;
 

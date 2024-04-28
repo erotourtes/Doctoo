@@ -10,6 +10,9 @@ export class ClassicNestResponse {
   })
   message: string | string[];
 
-  @ApiPropertyOptional({ example: 'Not Found', description: 'Brief description of the error.' })
+  @ApiPropertyOptional({
+    example: 'The name must be longer than 4 characters.',
+    description: 'Brief description of the error.',
+  })
   error?: string;
 }

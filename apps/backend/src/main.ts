@@ -31,9 +31,9 @@ async function bootstrap() {
   const configService = app.get<ConfigService>(ConfigService);
 
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('Docktoo')
-    .setDescription('API specification for an application providing online healthcare services')
-    .setVersion('1.0')
+    .setTitle('Docktoo API')
+    .setDescription('Detailed technical documentation describing all possible API endpoints for this project.')
+    .setVersion(process.env.npm_package_version)
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);

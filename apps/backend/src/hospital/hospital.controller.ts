@@ -2,90 +2,72 @@ import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/commo
 import {
   ApiBadRequestResponse,
   ApiBody,
-  ApiCreatedResponse,
   ApiInternalServerErrorResponse,
-  ApiNoContentResponse,
-  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
+import { randomUUID } from 'crypto';
 import { BadRequestResponse } from '../utils/BadRequestResponse';
 import { ClassicNestResponse } from '../utils/ClassicNestResponse';
+import { RESPONSE_STATUS } from '../utils/constants';
 import { CreateHospitalDto } from './dto/create.dto';
 import { PatchHospitalDto } from './dto/patch.dto';
 import { ResponseHospitalDto } from './dto/response.dto';
 import { HospitalService } from './hospital.service';
 
-@ApiTags('Hospital')
+@ApiTags('Hospital Endpoints')
 @Controller('hospital')
 export class HospitalController {
   constructor(private readonly hospitalService: HospitalService) {}
 
-  @ApiOperation({
-    summary: 'Create a new hospital',
-    description: 'This endpoint creates a new hospital.',
-  })
-  @ApiBody({ type: CreateHospitalDto })
-  @ApiCreatedResponse({ type: ResponseHospitalDto, description: 'Hospital created' })
-  @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Post()
+  @ApiOperation({ summary: 'Create hospital' })
+  @ApiOkResponse({ type: ResponseHospitalDto, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiBody({ type: CreateHospitalDto })
   createHospital(@Body() body: CreateHospitalDto) {
     return this.hospitalService.createHospital(body);
   }
 
-  @ApiOperation({
-    summary: 'Get a list of hospitals',
-    description: 'This endpoint retrieves a list of hospital objects.',
-  })
-  @ApiOkResponse({ type: ResponseHospitalDto, description: 'Hospitals exist' })
-  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Get()
+  @ApiOperation({ summary: 'Get all hospitals' })
+  @ApiOkResponse({ type: ResponseHospitalDto, isArray: true, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
   getHospitals() {
     return this.hospitalService.getHospitals();
   }
 
-  @ApiOperation({
-    summary: 'Get a hospital by ID',
-    description: 'This endpoint retrieves a hospital object by ID.',
-  })
-  @ApiParam({ name: 'id', description: 'Hospital ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
-  @ApiOkResponse({ type: ResponseHospitalDto, description: 'Hospital exists' })
-  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'Hospital not found' })
-  @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Get(':id')
+  @ApiOperation({ summary: 'Get hospital' })
+  @ApiOkResponse({ type: ResponseHospitalDto, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiParam({ name: 'id', example: randomUUID(), description: "The hospital's unique id." })
   getHospital(@Param('id') id: string) {
     return this.hospitalService.getHospital(id);
   }
 
-  @ApiOperation({
-    summary: 'Update a hospital by ID',
-    description: 'This endpoint updates a hospital object by ID.',
-  })
-  @ApiParam({ name: 'id', description: 'Patient ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
-  @ApiBody({ type: PatchHospitalDto })
-  @ApiOkResponse({ type: ResponseHospitalDto, description: 'Hospital updated' })
-  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'Hospital not found' })
-  @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Patch(':id')
+  @ApiOperation({ summary: 'Update hospital' })
+  @ApiOkResponse({ type: ResponseHospitalDto, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiParam({ name: 'id', example: randomUUID(), description: "The hospital's unique id." })
+  @ApiBody({ type: PatchHospitalDto })
   patchHospital(@Param('id') id: string, @Body() body: PatchHospitalDto) {
     return this.hospitalService.patchHospital(id, body);
   }
 
-  @ApiOperation({
-    summary: 'Delete a hospital by ID',
-    description: 'This endpoint deletes a hospital object by ID.',
-  })
-  @ApiParam({ name: 'id', description: 'Hospital ID', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
-  @ApiNoContentResponse({ description: 'Hospital deleted' })
-  @ApiNotFoundResponse({ type: ClassicNestResponse, description: 'Hospital not found' })
-  @ApiBadRequestResponse({ type: BadRequestResponse, description: 'Bad request' })
-  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error' })
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete hospital' })
+  @ApiOkResponse({ description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiParam({ name: 'id', example: randomUUID(), description: "The hospital's unique id." })
   deleteHospital(@Param('id') id: string) {
     return this.hospitalService.deleteHospital(id);
   }

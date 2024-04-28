@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
 
 export class CreateSpecializationDto {
-  @ApiProperty({ example: 'Surgeon', description: 'Specialization name' })
-  @IsString({ message: 'name should be a string' })
+  @ApiProperty({ example: 'Surgeon', description: 'Specialization name.' })
+  @IsNotEmptyString()
   readonly name: string;
 }

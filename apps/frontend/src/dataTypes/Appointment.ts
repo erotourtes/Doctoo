@@ -1,6 +1,7 @@
 import type { IDoctor } from './Doctor';
 
 export enum AppointmentStatus {
+  PENDING_PAYMENT = 'PENDING_PAYMENT',
   PLANNED = 'PLANNED',
   COMPLETED = 'COMPLETED',
   CANCELED = 'CANCELED',
@@ -31,5 +32,4 @@ export interface ICreateAppointment {
   patientId: string;
   assignedAt: string;
   status: AppointmentStatus;
-  notes: string;
 }

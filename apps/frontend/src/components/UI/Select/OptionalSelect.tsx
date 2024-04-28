@@ -36,7 +36,7 @@ const OptionalSelect: React.FC<SelectProps> = ({ options, defaultOption, setChos
   return (
     <div className='relative'>
       <button
-        className='flex w-[130px] cursor-pointer items-center gap-3 rounded-full bg-white p-0.5 pl-3 text-sm text-black hover:bg-grey-5 hover:text-main'
+        className='flex cursor-pointer items-center gap-3 rounded-full bg-white p-0.5 pl-3 text-sm text-black hover:bg-grey-5 hover:text-main'
         onClick={() => setIsOpen(!isOpen)}
       >
         {defaultOption || 'Select'}
@@ -44,33 +44,40 @@ const OptionalSelect: React.FC<SelectProps> = ({ options, defaultOption, setChos
       </button>
 
       {isOpen && (
-        <div className='fex absolute mb-5 mt-2 flex w-[224px] justify-end rounded-md bg-white'>
-          <div className='h- mr-1 mt-4 w-[210px]'>
-            <FormProvider {...methods}>
-              <form onSubmit={handleFormSubmit}>
-                <div style={{ overflowY: 'auto' }} className='custom-scrollbar max-h-[150px]'>
-                  {options.map(option => (
-                    <div key={option.id}>
-                      <ul>
-                        <li
-                          className={`mb-1 w-full rounded-md bg-white p-1 pl-3 text-left text-sm text-grey-1 hover:text-main`}
-                        >
-                          <Checkbox id={option.id}>{option.name}</Checkbox>
-                        </li>
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-                <div className='mr-5 flex justify-end'>
-                  <button
-                    type='submit'
-                    className='m-2 mb-2 cursor-pointer rounded-md bg-white pb-2 text-base font-medium text-main hover:text-main'
-                  >
-                    Apply
-                  </button>
-                </div>
-              </form>
-            </FormProvider>
+        <div>
+          <div className='fixed inset-0 ' onClick={() => setIsOpen(false)}></div>
+
+          <div
+            className='absolute mb-5 mt-2 flex  w-[224px] justify-end rounded-md bg-white'
+            onClick={e => e.stopPropagation()}
+          >
+            <div className='mr-1 mt-4 w-[210px]'>
+              <FormProvider {...methods}>
+                <form onSubmit={handleFormSubmit}>
+                  <div style={{ overflowY: 'auto' }} className='custom-scrollbar max-h-[150px]'>
+                    {options.map(option => (
+                      <div key={option.id}>
+                        <ul>
+                          <li
+                            className={`mb-1 w-full rounded-md bg-white p-1 pl-3 text-left text-sm text-grey-1 hover:bg-grey-4 hover:text-main`}
+                          >
+                            <Checkbox id={option.id}>{option.name}</Checkbox>
+                          </li>
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                  <div className='mr-5 flex justify-end'>
+                    <button
+                      type='submit'
+                      className='m-2 mb-2 cursor-pointer rounded-md bg-white pb-2 text-base font-medium text-main hover:text-main'
+                    >
+                      Apply
+                    </button>
+                  </div>
+                </form>
+              </FormProvider>
+            </div>
           </div>
         </div>
       )}

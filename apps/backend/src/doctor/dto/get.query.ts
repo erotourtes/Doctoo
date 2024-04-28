@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsUUID } from 'class-validator';
+import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
 
 export class GetDoctorsQuery {
   @ApiProperty({ required: false, description: 'ID of the hospital to filter doctors by' })
@@ -14,5 +15,6 @@ export class GetDoctorsQuery {
 
   @ApiProperty({ required: false, description: 'Search string' })
   @IsOptional()
+  @IsNotEmptyString()
   readonly search?: string;
 }

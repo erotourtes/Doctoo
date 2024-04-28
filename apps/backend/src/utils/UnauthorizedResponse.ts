@@ -1,15 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UnauthorizedResponse {
-  @ApiProperty({
-    description: 'The error message associated with the response.',
-    example: 'Unauthorized access',
-  })
-  message: string | string[];
+  @ApiProperty({ example: 'Unauthorized access', description: 'Detailed description of the error.' })
+  message: string;
 
-  @ApiProperty({
-    description: 'The error code or status of the response.',
-    example: 401,
-  })
+  @ApiProperty({ example: 401, description: 'Error in numeric format.' })
   errorCode: number;
 }

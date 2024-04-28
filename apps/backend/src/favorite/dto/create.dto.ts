@@ -1,12 +1,13 @@
-import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsUUID } from 'class-validator';
+import { randomUUID } from 'crypto';
 
 export class CreateFavoriteDto {
-  @ApiProperty({ description: 'The ID of the doctor', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
-  @IsNotEmptyString()
+  @ApiProperty({ example: randomUUID(), description: 'Unique doctor id.' })
+  @IsUUID(4)
   readonly doctorId: string;
 
-  @ApiProperty({ description: 'The ID of the patient', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
-  @IsNotEmptyString()
+  @ApiProperty({ example: randomUUID(), description: 'Unique patient id.' })
+  @IsUUID(4)
   readonly patientId: string;
 }
