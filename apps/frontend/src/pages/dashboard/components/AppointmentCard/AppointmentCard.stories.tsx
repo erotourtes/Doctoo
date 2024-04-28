@@ -37,6 +37,8 @@ export const FutureAppointment: Story = {
         specializations: [],
         hospitals: [],
       },
+      startedAt: '2024-04-23T00:00:00.000Z',
+      endedAt: '2024-04-23T00:00:00.000Z',
     },
   },
 };
@@ -66,6 +68,8 @@ export const IncomingAppointment: Story = {
         specializations: [],
         hospitals: [],
       },
+      startedAt: '2024-04-23T00:00:00.000Z',
+      endedAt: '2024-04-23T00:00:00.000Z',
     },
   },
 };

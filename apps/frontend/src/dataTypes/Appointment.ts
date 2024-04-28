@@ -13,11 +13,12 @@ export interface IAppointment {
   patientId: string;
   assignedAt: string;
   notes: string;
-  status: AppointmentStatus | any;
-  appointmentDuration?: number;
+  status?: AppointmentStatus | any;
   videoRecordKey: string;
   paymentInvoiceKey?: string;
   paymentReceiptKey?: string;
+  startedAt: string;
+  endedAt: string;
   doctor?: IDoctor;
 }
 
@@ -32,4 +33,6 @@ export interface ICreateAppointment {
   patientId: string;
   assignedAt: string;
   status: AppointmentStatus;
+  startedAt: string;
+  endedAt: string;
 }

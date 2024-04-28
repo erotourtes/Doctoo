@@ -7,6 +7,7 @@ import { useAppDispatch } from '@/app/hooks';
 import { useEffect } from 'react';
 import { getAppointmentsByPatientId } from '@/app/appointment/AppointmentThunks';
 import dayjs from 'dayjs';
+import { BrowserRouter } from 'react-router-dom';
 
 const meta = {
   title: 'Components/UI/Schedule/ScheduleBook',
@@ -17,11 +18,13 @@ const meta = {
   tags: ['autodocs'],
   decorators: [
     (Story: any) => (
-      <Provider store={store}>
-        <div className='flex h-screen w-[700px] p-12'>
-          <Story />
-        </div>
-      </Provider>
+      <BrowserRouter>
+        <Provider store={store}>
+          <div className='flex h-screen w-[700px] p-12'>
+            <Story />
+          </div>
+        </Provider>
+      </BrowserRouter>
     ),
   ],
 } satisfies Meta<typeof ScheduleBook>;

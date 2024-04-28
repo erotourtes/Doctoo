@@ -9,6 +9,7 @@ import { useAppDispatch } from '@/app/hooks';
 import { useEffect } from 'react';
 import { getAppointmentsByPatientId } from '@/app/appointment/AppointmentThunks';
 import dayjs from 'dayjs';
+import { BrowserRouter } from 'react-router-dom';
 
 const meta = {
   title: 'Components/UI/Schedule/Schedule',
@@ -68,7 +69,7 @@ export const Default: Story = {
     }
 
     return (
-      <>
+      <BrowserRouter>
         <Button type='primary' onClick={openPopup}>
           Open Schedule Modal
         </Button>
@@ -78,7 +79,7 @@ export const Default: Story = {
           scheduleIsOpen={scheduleIsOpen}
           closePopup={closePopup}
         />
-      </>
+      </BrowserRouter>
     );
   },
 };

@@ -1,15 +1,15 @@
 import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
 import { useEffect, useMemo, useState } from 'react';
-import { /* useAppDispatch */ useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import utc from 'dayjs/plugin/utc';
 import ScheduleSuccessModal from './ScheduleSuccessModal';
 import BookAppointmentBtn from './ScheduleBookComponents/BookAppointmentBtn';
 import TimePicker from './ScheduleBookComponents/TimePicker';
 import WeekPicker from './ScheduleBookComponents/WeekPicker';
-// import { AppointmentStatus } from '@/dataTypes/Appointment';
-// import type { ICreateAppointment } from '@/dataTypes/Appointment';
-// import { createAppointment } from '@/app/appointment/AppointmentThunks';
+import { AppointmentStatus } from '@/dataTypes/Appointment';
+import type { ICreateAppointment } from '@/dataTypes/Appointment';
+import { createAppointment } from '@/app/appointment/AppointmentThunks';
 
 dayjs.extend(utc);
 
@@ -22,25 +22,19 @@ type ScheduleBookProps = {
   currentDay?: Dayjs;
 };
 
-// interface ICreateAppointment {
-//   doctorId: string;
-//   patientId: string;
-//   assignedAt: string;
-//   status: AppointmentStatus;
-//   notes: string;
-// }
+export default function ScheduleBook({ closePopup, currentDay = dayjs(), doctorId, patientId }: ScheduleBookProps) {
+  const dispatch = useAppDispatch();
 
-export default function ScheduleBook({ closePopup, currentDay = dayjs() }: ScheduleBookProps) {
-  // const dispatch = useAppDispatch();
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [currentDate, setCurrentDate] = useState(currentDay);
-  // const [newAppointment, setNewAppointment] = useState<ICreateAppointment>({
-  //   doctorId: '',
-  //   patientId: '',
-  //   assignedAt: '',
-  //   status: AppointmentStatus.PLANNED,
-  //   notes: '',
-  // });
+  const [newAppointment, setNewAppointment] = useState<ICreateAppointment>({
+    doctorId: '',
+    patientId: '',
+    assignedAt: '',
+    status: AppointmentStatus.PLANNED,
+    endedAt: '',
+    startedAt: '',
+  });
 
   const [successfullModal, setSuccessfullModal] = useState(false);
 
@@ -110,22 +104,25 @@ export default function ScheduleBook({ closePopup, currentDay = dayjs() }: Sched
     }
   }, [currentDate]);
 
-  // useEffect(() => {
-  //   if (!selectedDate) return;
+  useEffect(() => {
+    if (!selectedDate) return;
 
-  //   const createNewAppointment: ICreateAppointment = {
-  //     doctorId: doctorId,
-  //     patientId: patientId,
-  //     assignedAt: selectedDate.format('YYYY-MM-DDTHH:mm:ss[Z]'),
-  //     status: AppointmentStatus.PLANNED,
-  //     notes: '',
-  //   };
+    const createNewAppointment: ICreateAppointment = {
+      doctorId: doctorId,
+      patientId: patientId,
+      assignedAt: selectedDate.format('YYYY-MM-DDTHH:mm:ss[Z]'),
+      status: AppointmentStatus.PENDING_PAYMENT,
+      startedAt: selectedDate.format('YYYY-MM-DDTHH:mm:ss[Z]'),
+      endedAt: selectedDate.add(1, 'hour').format('YYYY-MM-DDTHH:mm:ss[Z]'),
+    };
 
-  //   setNewAppointment(createNewAppointment);
-  // }, [selectedDate]);
+    setNewAppointment(createNewAppointment);
+  }, [selectedDate]);
 
   function handleBookAppointment() {
-    // dispatch(createAppointment(newAppointment));
+    if (!selectedDate) return;
+
+    dispatch(createAppointment(newAppointment));
     closePopup();
     setSuccessfullModal(true);
   }

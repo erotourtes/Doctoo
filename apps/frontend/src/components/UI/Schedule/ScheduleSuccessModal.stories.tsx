@@ -4,6 +4,7 @@ import '@/index.css';
 import { useArgs } from '@storybook/preview-api';
 import { Button } from '../Button/Button';
 import dayjs from 'dayjs';
+import { BrowserRouter } from 'react-router-dom';
 
 const meta: Meta<typeof ScheduleSuccessModal> = {
   title: 'Components/UI/Schedule/ScheduleSuccessModal',
@@ -43,7 +44,7 @@ export const Default: Story = {
     }
 
     return (
-      <>
+      <BrowserRouter>
         <Button type='primary' onClick={openPopup}>
           Open Pop Up
         </Button>
@@ -52,7 +53,7 @@ export const Default: Story = {
           closePopup={closePopup}
           date={dayjs('2024-01-01T00:00:00.000Z')}
         />
-      </>
+      </BrowserRouter>
     );
   },
 };
