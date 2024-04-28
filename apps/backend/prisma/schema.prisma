@@ -24,6 +24,7 @@ enum Gender {
 }
 
 enum AppointmentStatus {
+  PENDING_PAYMENT
   PLANNED
   COMPLETED
   CANCELED
@@ -266,7 +267,7 @@ model Appointment {
   doctorId          String            @map("doctor_id")
   assignedAt        DateTime          @map("assigned_at")
   status            AppointmentStatus
-  notes             String
+  notes             String?
   videoRecordKey    String?           @map("video_record_key")
   paymentInvoiceKey String?           @map("payment_invoice_key")
   paymentReceiptKey String?           @map("payment_receipt_key")

@@ -29,6 +29,7 @@ export class CreateAppointmentDto {
     example: 'Get some blood pressure pills.',
     description: 'Additional comments left by the patient or doctor.',
   })
+  @IsOptional()
   @IsNotEmptyString()
   notes: string;
 
