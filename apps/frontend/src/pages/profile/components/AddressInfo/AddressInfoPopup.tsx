@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { patchPatientData } from '@/app/patient/PatientThunks';
 import { PopupDoctoo, Input, Button } from '@/components/UI';
-import type { IPatient } from '@/dataTypes/Patient';
+import type { TPatient } from '@/dataTypes/Patient';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Joi from 'joi';
 import { type FieldValues, FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
@@ -40,9 +40,11 @@ const AddressInfoPopup = ({ isOpen, onClose }: AddressInfoPopupProps) => {
   const { handleSubmit } = methods;
 
   function onSubmit(data: FormData): void {
+    const zipCode = parseInt(data.zipCode ?? '0');
     console.log(data);
-    const patientData: Partial<IPatient> = {
+    const patientData: Partial<TPatient> = {
       ...data,
+      zipCode: typeof zipCode === 'number' ? zipCode : 0,
     };
     dispatch(patchPatientData({ id: patient.id, data: patientData }));
   }
