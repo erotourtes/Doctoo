@@ -10,7 +10,7 @@ jobs:
       matrix:
         node-version: [18]
 
-    runs-on: self-hosted
+    runs-on: self-hosted-chromatic
     name: Chromatic Tests
     steps:
       - name: Checkout code

@@ -12,7 +12,7 @@ jobs:
       matrix:
         service: [backend, frontend]
 
-    runs-on: self-hosted
+    runs-on: self-hosted-deploy
     name: CI Job
     steps:
       - name: Checkout
@@ -70,7 +70,7 @@ jobs:
             VITE_STRIPE_API_KEY=${{ secrets.VITE_STRIPE_API_KEY }}
 
   cd-job:
-    runs-on: self-hosted
+    runs-on: self-hosted-deploy
     name: CD Job
     needs: ci-job
     steps:

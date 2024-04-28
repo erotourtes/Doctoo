@@ -12,7 +12,7 @@ jobs:
       matrix:
         node-version: [18]
 
-    runs-on: self-hosted
+    runs-on: self-hosted-tests
     name: Build Project
     steps:
       - name: Checkout code
@@ -40,7 +40,7 @@ jobs:
       matrix:
         node-version: [18]
 
-    runs-on: self-hosted
+    runs-on: self-hosted-tests
     name: Test Project
     steps:
       - name: Checkout code
