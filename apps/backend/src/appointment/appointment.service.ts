@@ -41,7 +41,7 @@ export class AppointmentService {
   }
 
   async getAppointmentsByPatientId(id: string): Promise<ResponseAppointmentDto[]> {
-    await this.isAppointmentExists(id);
+    await this.patientService.isPatientByIdExists(id);
 
     const appointments = await this.prismaService.appointment.findMany({
       where: { patientId: id },
