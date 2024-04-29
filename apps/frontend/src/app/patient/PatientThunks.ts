@@ -80,8 +80,6 @@ export const authorizePatient = createAsyncThunk('patient', async (_void, { disp
       gender: data.gender,
       zipCode: data.zipCode ?? 0,
       allergies: [],
-      conditions: [],
-      vaccinations: [],
       twoFactorAuthToggle: false,
     }),
   );

@@ -1,4 +1,6 @@
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { PopupDoctoo, Button, Tag } from '@/components/UI';
+import type { TCondition } from '@/dataTypes/Condition';
 import { useEffect, useState } from 'react';
 
 type MedicalConditionPopupProps = {
@@ -7,25 +9,9 @@ type MedicalConditionPopupProps = {
 };
 
 const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) => {
-  type Condition = {
-    id: string;
-    name: string;
-  };
+  const conditions = useAppSelector(state => state.condition.data);
 
-  const conditions: Condition[] = [
-    {
-      id: '1',
-      name: 'Diabetes',
-    },
-    {
-      id: '2',
-      name: 'Diarehia',
-    },
-    {
-      id: '3',
-      name: 'Hypertension',
-    },
-  ];
+  const dispatch = useAppDispatch();
 
   type Allergy = {
     id: string;
@@ -47,9 +33,9 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
     },
   ];
 
-  const [allConditions, setAllConditions] = useState<Condition[]>(conditions);
-  const [suggestedConditions, setSuggestedConditions] = useState<Condition[]>([]);
-  const [selectedConditions, setSelectedConditions] = useState<Condition[]>([]);
+  const [allConditions, setAllConditions] = useState<TCondition[]>(conditions);
+  const [suggestedConditions, setSuggestedConditions] = useState<TCondition[]>([]);
+  const [selectedConditions, setSelectedConditions] = useState<TCondition[]>([]);
   const [allAllergies, setAllAllergies] = useState<Allergy[]>(allergies);
   const [suggestedAllergies, setSuggestedAllergies] = useState<Allergy[]>([]);
   const [selectedAllergies, setSelectedAllergies] = useState<Allergy[]>([]);
@@ -187,13 +173,11 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
             type='primary'
             onClick={() => {
               if (selectedConditions.length === 0) {
-                return;
+                dispatch;
               }
               if (selectedAllergies.length === 0) {
                 return;
               }
-              //TODO: add fetch when PR is accepted
-              console.log('Sent data:', selectedConditions, selectedAllergies);
             }}
             className='w-full sm:w-1/2'
           >
