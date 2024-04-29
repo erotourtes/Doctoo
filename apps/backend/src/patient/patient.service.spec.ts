@@ -190,11 +190,11 @@ describe('PatientService', () => {
 
     const condition = await prisma.condition.create({ data: { name: 'test' } });
 
-    const result = await patientService.createPatientCondition(patient.id, condition.id);
+    const result = await patientService.createPatientConditions(patient.id, [{ conditionId: condition.id }]);
 
-    const expected = { conditionId: condition.id, patientId: patient.id };
+    const expected = 1;
 
-    expect(result).toMatchObject(expected);
+    expect(result).toEqual(expected);
   });
 
   it('should return a patient condition list', async () => {
