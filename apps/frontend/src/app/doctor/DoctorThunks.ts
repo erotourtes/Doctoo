@@ -29,3 +29,17 @@ export const getPatientDoctorData = createAsyncThunk('doctor', async (patient_id
     throw error;
   }
 });
+
+export const getMytDoctorData = createAsyncThunk('doctor', async (_, { dispatch }) => {
+  try {
+    const { error, data } = await api.GET(`/doctor/doctors/my`, {});
+    if (!error) {
+      const res: paths['/doctor/doctors/my']['get']['responses']['200']['content']['application/json'] = data;
+
+      dispatch(setDoctorData(res));
+    }
+  } catch (e) {
+    const error = e as Error;
+    throw error;
+  }
+});

@@ -1,12 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
+  ApiHeader,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { randomUUID } from 'crypto';
 import { BadRequestResponse } from '../utils/BadRequestResponse';
@@ -16,6 +18,9 @@ import { AppointmentService } from './appointment.service';
 import { CreateAppointmentDto } from './dto/create.dto';
 import { PatchAppointmentDto } from './dto/patch.dto';
 import { ResponseAppointmentDto } from './dto/response.dto';
+import JWTGuard from 'src/auth/gaurds/jwt.guard';
+import { UserDec } from 'src/user/user.decorator';
+import { UnauthorizedResponse } from 'src/utils/UnauthorizedResponse';
 
 @ApiTags('Appointment Endpoints')
 @Controller('appointment')
@@ -49,6 +54,18 @@ export class AppointmentController {
   @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique patient id.' })
   getAppointmentsByPatientId(@Param('id') id: string) {
     return this.appointmentService.getAppointmentsByPatientId(id);
+  }
+
+  @UseGuards(JWTGuard)
+  @Get('my')
+  @ApiOperation({ summary: 'Get my appointment' })
+  @ApiHeader({ name: 'Cookie', example: 'jwt=eyJhbGci...', description: 'JWT token' })
+  @ApiOkResponse({ type: ResponseAppointmentDto, isArray: true, description: RESPONSE_STATUS.SUCCESS })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  getMyAppointments(@UserDec() userInfo) {
+    return this.appointmentService.getAppointmentsByPatientId(userInfo.id);
   }
 
   @Get('doctor/:id')
