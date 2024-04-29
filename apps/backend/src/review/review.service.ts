@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, UnauthorizedException, forwardRef } from '@nestjs/common';
 import { Review } from '@prisma/client';
 import { plainToInstance } from 'class-transformer';
 import { DoctorService } from '../doctor/doctor.service';
@@ -8,6 +8,8 @@ import { AvgRateResponse } from './dto/avgRateResponse.dto';
 import { PatchReviewDto } from './dto/patch.dto';
 import { ResponseReviewDto } from './dto/response.dto';
 import { ResponseReviewDtoWithNames } from './dto/responseWithNames.dto';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { ReviewUpdatedEvent } from './events/review-updated.event';
 
 interface FindAllByDoctorIdOptions {
   includeNames?: boolean;
@@ -21,18 +23,19 @@ export class ReviewService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly patientService: PatientService,
-    private readonly doctorService: DoctorService,
+    @Inject(forwardRef(() => DoctorService)) private readonly doctorService: DoctorService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async createReview(patientId: string, doctorId: string, rate: number, text?: string): Promise<ResponseReviewDto> {
     await this.patientService.getPatient(patientId);
     await this.doctorService.getDoctor(doctorId);
 
-    const review = this.prismaService.review.create({
+    const review = await this.prismaService.review.create({
       data: { patient: { connect: { id: patientId } }, doctor: { connect: { id: doctorId } }, rate, text },
       select: { id: true, rate: true, text: true, doctorId: true, createdAt: true, updatedAt: true },
     });
-
+    this.eventEmitter.emit('review.updated', new ReviewUpdatedEvent(review.id, review.doctorId));
     return plainToInstance(ResponseReviewDto, review);
   }
 
@@ -93,12 +96,13 @@ export class ReviewService {
       throw new UnauthorizedException({ message: 'Patient is not authorized to update review with this Id.' });
     }
 
-    const patchedReview = this.prismaService.review.update({
+    const patchedReview = await this.prismaService.review.update({
       where: { id: reviewId },
       data: body,
       select: { id: true, rate: true, text: true, doctorId: true, createdAt: true, updatedAt: true },
     });
-
+    if (body.rate !== review.rate)
+      this.eventEmitter.emit('review.updated', new ReviewUpdatedEvent(patchedReview.id, patchedReview.doctorId));
     return plainToInstance(ResponseReviewDto, patchedReview);
   }
 
@@ -114,5 +118,6 @@ export class ReviewService {
     }
 
     await this.prismaService.review.delete({ where: { id: reviewId } });
+    this.eventEmitter.emit('review.updated', new ReviewUpdatedEvent(review.id, review.doctorId));
   }
 }
