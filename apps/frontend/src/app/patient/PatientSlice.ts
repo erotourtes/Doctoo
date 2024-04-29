@@ -1,12 +1,11 @@
 import type { RootState } from '@/app/store';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '../createAppSlice';
-import type { Condition, TPatient } from '@/dataTypes/Patient';
-import type { IUser } from '@/dataTypes/User';
+import type { TPatient } from '@/dataTypes/Patient';
 import type { IAllergy } from '@/dataTypes/Allergy';
+import type { TCondition } from '@/dataTypes/Condition';
 
-type Patient = TPatient &
-  IUser & { conditions: Condition[]; vaccinations: string[]; allergies: IAllergy[]; twoFactorAuthToggle: boolean };
+type Patient = TPatient & { allergies: IAllergy[] };
 
 interface PatientData {
   data: Patient;
@@ -42,7 +41,6 @@ const initialState: PatientData = {
     apartment: '',
     zipCode: 0,
     conditions: [],
-    vaccinations: [],
     allergies: [],
     emailNotificationToggle: false,
     twoFactorAuthToggle: false,
@@ -59,6 +57,13 @@ export const patientSlice = createAppSlice({
     },
     updatePatientData: (state, action: PayloadAction<Partial<Patient>>) => {
       state.data = { ...state.data, ...action.payload };
+    },
+    addPatientCondition: (state, action: PayloadAction<TCondition[]>) => {
+      action.payload.forEach(condition => {
+        if (state.data.conditions.find(c => c.id === condition.id)) return;
+
+        state.data.conditions.push(condition);
+      });
     },
     setPatientState: (state, action: PayloadAction<Partial<PatientData['state']>>) => {
       state.state = { ...state.state, ...action.payload };
