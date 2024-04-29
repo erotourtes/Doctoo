@@ -1,4 +1,7 @@
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { createPatientAllergies } from '@/app/patient/PatientThunks';
 import { PopupDoctoo, Button, Tag } from '@/components/UI';
+import type { TAllergy } from '@/dataTypes/Allergy';
 import { useEffect, useState } from 'react';
 
 type MedicalConditionPopupProps = {
@@ -12,6 +15,16 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
     name: string;
   };
 
+  const dispatch = useAppDispatch();
+
+  const allergies = useAppSelector(state => state.allergy.data);
+
+  const { id } = useAppSelector(state => state.patient.data);
+
+  useEffect(() => {
+    setAllAllergies(allergies);
+  }, [allergies]);
+
   const conditions: Condition[] = [
     {
       id: '1',
@@ -19,7 +32,7 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
     },
     {
       id: '2',
-      name: 'Diarehia',
+      name: 'Diabetes',
     },
     {
       id: '3',
@@ -27,37 +40,13 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
     },
   ];
 
-  type Allergy = {
-    id: string;
-    name: string;
-  };
-
-  const allergies: Allergy[] = [
-    {
-      id: '1',
-      name: 'Peanuts',
-    },
-    {
-      id: '2',
-      name: 'Lactose',
-    },
-    {
-      id: '3',
-      name: 'Gluten',
-    },
-  ];
-
   const [allConditions, setAllConditions] = useState<Condition[]>(conditions);
   const [suggestedConditions, setSuggestedConditions] = useState<Condition[]>([]);
   const [selectedConditions, setSelectedConditions] = useState<Condition[]>([]);
-  const [allAllergies, setAllAllergies] = useState<Allergy[]>(allergies);
-  const [suggestedAllergies, setSuggestedAllergies] = useState<Allergy[]>([]);
-  const [selectedAllergies, setSelectedAllergies] = useState<Allergy[]>([]);
+  const [allAllergies, setAllAllergies] = useState<TAllergy[]>(allergies);
+  const [suggestedAllergies, setSuggestedAllergies] = useState<TAllergy[]>([]);
+  const [selectedAllergies, setSelectedAllergies] = useState<TAllergy[]>([]);
 
-  useEffect(() => {
-    setAllConditions(conditions);
-    setAllAllergies(allergies);
-  }, []);
   return (
     <PopupDoctoo
       popupIsOpen={isOpen}
@@ -190,9 +179,8 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
                 return;
               }
               if (selectedAllergies.length === 0) {
-                return;
+                dispatch(createPatientAllergies({ body: selectedAllergies, id }));
               }
-              //TODO: add fetch when PR is accepted
               console.log('Sent data:', selectedConditions, selectedAllergies);
             }}
             className='w-full sm:w-1/2'

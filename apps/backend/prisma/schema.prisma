@@ -51,6 +51,7 @@ model User {
   password      String?
   googleId      String?   @map("googleId")
   avatarKey     String    @map("avatar_key")
+  role          Role?
   doctors       Doctor[]
   patients      Patient[]
 
@@ -92,6 +93,11 @@ model Notification {
   action    NotificationAction
 
   @@map("notifications")
+}
+
+enum Role {
+  DOCTOR
+  PATIENT
 }
 
 model Doctor {

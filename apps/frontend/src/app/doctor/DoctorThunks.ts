@@ -1,8 +1,9 @@
 import { instance } from '@/api/axios.api';
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { setDeleteDoctor, setDoctorData, setNewDoctor, setPatchDoctorData } from './DoctorSlice';
 import type { paths } from '../../api';
 import api from '../api';
-import { setDoctorData } from './DoctorSlice';
+import type { IDoctor } from '../../dataTypes/Doctor';
 
 export const getDoctorData = createAsyncThunk('doctor', async (_, { dispatch }) => {
   try {
@@ -30,13 +31,38 @@ export const getPatientDoctorData = createAsyncThunk('doctor', async (patient_id
   }
 });
 
-export const getMytDoctorData = createAsyncThunk('doctor', async (_, { dispatch }) => {
+export const createDoctor = createAsyncThunk('doctor', async (doctor: IDoctor, { dispatch }) => {
   try {
-    const { error, data } = await api.GET(`/doctor/doctors/my`, {});
-    if (!error) {
-      const res: paths['/doctor/doctors/my']['get']['responses']['200']['content']['application/json'] = data;
+    const response = await instance.post(`/doctor`, doctor);
+    if (response.status === 201) {
+      dispatch(setNewDoctor(response.data));
+    }
+  } catch (e) {
+    const error = e as Error;
+    throw error;
+  }
+});
 
-      dispatch(setDoctorData(res));
+export const patchDoctorData = createAsyncThunk(
+  'doctor',
+  async ({ id, data }: { id: string; data: Partial<IDoctor> }, { dispatch }) => {
+    try {
+      const response = await instance.patch(`/doctor/${id}`, data);
+      if (response.status === 200) {
+        dispatch(setPatchDoctorData(response.data));
+      }
+    } catch (e) {
+      const error = e as Error;
+      throw error;
+    }
+  },
+);
+
+export const deleteDoctor = createAsyncThunk('doctor', async (doctor_id: string, { dispatch }) => {
+  try {
+    const response = await instance.delete(`/doctor/${doctor_id}`);
+    if (response.status === 200) {
+      dispatch(setDeleteDoctor(response.data));
     }
   } catch (e) {
     const error = e as Error;

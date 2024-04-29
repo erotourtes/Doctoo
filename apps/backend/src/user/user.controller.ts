@@ -1,12 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
+  ApiHeader,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { randomUUID } from 'crypto';
 import { BadRequestResponse } from '../utils/BadRequestResponse';
@@ -16,11 +18,26 @@ import { CreateUserDto } from './dto/create.dto';
 import { PatchUserWithoutCredentialsDto } from './dto/patchWithoutCredentials';
 import { ResponseUserDto } from './dto/response.dto';
 import { UserService } from './user.service';
+import JWTGuard from 'src/auth/gaurds/jwt.guard';
+import { UnauthorizedResponse } from 'src/utils/UnauthorizedResponse';
+import { UserDec } from './user.decorator';
 
 @ApiTags('User Enpoints')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Get('me')
+  @UseGuards(JWTGuard)
+  @ApiOperation({ summary: 'Get curent login user' })
+  @ApiHeader({ name: 'Cookie', example: 'jwt=eyJhbGci...', description: 'JWT token' })
+  @ApiOkResponse({ type: ResponseUserDto, description: RESPONSE_STATUS.ERROR })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  getMeInfo(@UserDec() userInfo) {
+    return this.userService.getUser(userInfo.id);
+  }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get user' })

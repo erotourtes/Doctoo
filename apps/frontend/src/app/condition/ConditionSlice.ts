@@ -17,7 +17,6 @@ export const conditionSlice = createAppSlice({
   reducers: {
     setConditionData: (state, action: PayloadAction<TCondition[]>) => {
       state.data = action.payload;
-      console.log(state.data);
     },
     addCondition: (state, action: PayloadAction<TCondition>) => {
       state.data.push(action.payload);
