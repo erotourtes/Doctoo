@@ -19,10 +19,12 @@ import { ReviewModule } from '../review/review.module';
 import { SpecializationModule } from '../specialization/specialization.module';
 import { UserModule } from '../user/user.module';
 import { ConditionModule } from 'src/condition/condition.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [auth, config, mail] }),
+    EventEmitterModule.forRoot(),
     AuthModule,
     MailModule,
     UserModule,
