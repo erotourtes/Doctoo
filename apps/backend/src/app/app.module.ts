@@ -18,6 +18,7 @@ import { PaymentModule } from '../payment/payment.module';
 import { ReviewModule } from '../review/review.module';
 import { SpecializationModule } from '../specialization/specialization.module';
 import { UserModule } from '../user/user.module';
+import { ConditionModule } from 'src/condition/condition.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { UserModule } from '../user/user.module';
     DeclarationModule,
     SpecializationModule,
     ReviewModule,
+    ConditionModule,
     AllergyModule,
     PaymentModule,
   ],

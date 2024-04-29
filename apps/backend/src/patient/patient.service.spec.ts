@@ -183,6 +183,36 @@ describe('PatientService', () => {
     expect(result).toMatchObject(expected);
   });
 
+  it('should create a patient condition list', async () => {
+    const user = await prisma.user.create({ data: userStub() });
+
+    const patient = await prisma.patient.create({ data: { ...patientStub(), user: { connect: { id: user.id } } } });
+
+    const condition = await prisma.condition.create({ data: { name: 'test' } });
+
+    const result = await patientService.createPatientCondition(patient.id, condition.id);
+
+    const expected = { conditionId: condition.id, patientId: patient.id };
+
+    expect(result).toMatchObject(expected);
+  });
+
+  it('should return a patient condition list', async () => {
+    const user = await prisma.user.create({ data: userStub() });
+
+    const patient = await prisma.patient.create({ data: { ...patientStub(), user: { connect: { id: user.id } } } });
+
+    const condition = await prisma.condition.create({ data: { name: 'test' } });
+
+    await prisma.patientCondition.create({ data: { patientId: patient.id, conditionId: condition.id } });
+
+    const result = await patientService.getPatientConditions(patient.id);
+
+    const expected = [{ id: condition.id, name: condition.name }];
+
+    expect(result).toMatchObject(expected);
+  });
+
   it('should delete patient', async () => {
     const user = await prisma.user.create({ data: userStub() });
 
@@ -202,5 +232,7 @@ describe('PatientService', () => {
     await prisma.patient.deleteMany();
     await prisma.allergy.deleteMany();
     await prisma.patientAllergy.deleteMany();
+    await prisma.condition.deleteMany();
+    await prisma.patientCondition.deleteMany();
   });
 });

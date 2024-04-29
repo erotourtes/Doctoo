@@ -13,14 +13,17 @@ import { BadRequestResponse } from '../utils/BadRequestResponse';
 import { ClassicNestResponse } from '../utils/ClassicNestResponse';
 import { RESPONSE_STATUS } from '../utils/constants';
 import { CreatePatientDto } from './dto/create.dto';
-import { CreatePatientConditionDto } from './dto/createPatientAllergy.dto';
 import { PatchPatientDto } from './dto/patch.dto';
 import { ResponsePatientDto } from './dto/response.dto';
+import { CreatePatientConditionDto } from './dto/createPatientCondition.dto';
 import { ResponseAllergyDto } from './dto/responseAllergy.dto';
 import { ResponsePatientAllergyDto } from './dto/responsePatientAllergy.dto';
 import { PatientService } from './patient.service';
+import { CreatePatientAllergyDto } from './dto/createPatientAllergy.dto';
+import { ResponsePatientConditionDto } from './dto/responsePatientCondition.dto';
+import { ResponseConditionDto } from './dto/responseCondition.dto';
 
-@ApiTags('Patient Enpoints')
+@ApiTags('Patient Endpoints')
 @Controller('patient')
 export class PatientController {
   constructor(private readonly patientService: PatientService) {}
@@ -62,8 +65,8 @@ export class PatientController {
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiParam({ name: 'id', example: randomUUID(), description: "The patient's unique id." })
-  @ApiBody({ type: CreatePatientConditionDto })
-  async createPatientAllergy(@Param('id') patientId: string, @Body() body: CreatePatientConditionDto) {
+  @ApiBody({ type: CreatePatientAllergyDto })
+  async createPatientAllergy(@Param('id') patientId: string, @Body() body: CreatePatientAllergyDto) {
     return this.patientService.createPatientAllergy(patientId, body.allergyId);
   }
 
@@ -75,6 +78,27 @@ export class PatientController {
   @ApiParam({ name: 'id', example: randomUUID(), description: "The patient's unique id." })
   async getPatientAllergies(@Param('id') patientId: string) {
     return this.patientService.getPatientAllergies(patientId);
+  }
+
+  @Post(':id/condition')
+  @ApiOperation({ summary: 'Create patient condition' })
+  @ApiOkResponse({ type: ResponsePatientConditionDto, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiParam({ name: 'id', example: randomUUID(), description: "The patient's unique id." })
+  @ApiBody({ type: CreatePatientConditionDto })
+  async createPatientCondition(@Param('id') patientId: string, @Body() body: CreatePatientConditionDto) {
+    return this.patientService.createPatientCondition(patientId, body.conditionId);
+  }
+
+  @Get(':id/condition')
+  @ApiOperation({ summary: 'Get patient conditions' })
+  @ApiOkResponse({ type: ResponseConditionDto, isArray: true, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiParam({ name: 'id', example: randomUUID(), description: "The patient's unique id." })
+  async getPatientConditions(@Param('id') patientId: string) {
+    return this.patientService.getPatientConditions(patientId);
   }
 
   @Delete(':id')
