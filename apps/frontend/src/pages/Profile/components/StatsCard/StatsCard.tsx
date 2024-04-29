@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { patchPatientData } from '@/app/patient/PatientThunks';
-import type { BloodType, Gender } from '@/dataTypes/Patient';
+import type { TPatient } from '@/dataTypes/Patient';
 import { capitalizeString } from '@/utils/capitalizeString';
 import Icon from '@UI/Icon/Icon';
 import type { IconVariant } from '@UI/Icon/types';
@@ -64,8 +64,8 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
                   onChange={e => {
                     setInputValue(e.target.value);
                     setIsEditing(false);
-                    let gender: Gender | null = null;
-                    let bloodType: BloodType | null = null;
+                    let gender: TPatient['gender'] | null = null;
+                    let bloodType: TPatient['bloodType'] | null = null;
                     switch (title) {
                       case 'Gender':
                         switch (inputValue.toLowerCase()) {

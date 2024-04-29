@@ -1,9 +1,7 @@
-
 import { BloodType, Gender, User } from '@prisma/client';
 import { Exclude, Expose, Transform } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { randomUUID } from 'crypto';
-
 
 export class ResponsePatientDto {
   @ApiProperty({ example: randomUUID(), description: 'Unique patient id.' })
