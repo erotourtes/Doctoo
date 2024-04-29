@@ -5,6 +5,64 @@ import { Button } from '@/components/UI';
 import { useArgs } from '@storybook/preview-api';
 import { PopupDoctoo } from '@/components/UI';
 import { AppointmentStatus } from '@/dataTypes/Appointment';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import AppointmentSlice from '@/app/appointment/AppointmentSlice';
+
+const mockAppointments = [
+  {
+    id: '1',
+    doctorId: 'doc1',
+    patientId: 'pat1',
+    assignedAt: '2022-12-01T10:00:00.000Z',
+    notes: 'This is a mock appointment',
+    status: AppointmentStatus.CANCELED,
+    videoRecordKey: 'video1',
+    startedAt: '2022-12-01T10:00:00.000Z',
+    endedAt: '2022-12-01T11:00:00.000Z',
+    paymentInvoiceKey: 'invoice1',
+    paymentReceiptKey: 'receipt1',
+    doctor: {
+      id: 'doc1',
+      userId: 'user1',
+      payrate: 100,
+      about: 'This is a mock doctor',
+      firstName: 'Mocking',
+      lastName: 'Mock',
+      avatarKey: 'https://i.pravatar.cc/300',
+      email: 'dr.mock@example.com',
+      phone: '+1234567890',
+      specializations: [
+        {
+          id: 'spec1',
+          name: 'Specialization1',
+        },
+      ],
+      hospitals: [
+        {
+          id: 'hosp1',
+          name: 'Mock Hospital',
+          country: 'Mockland',
+          state: 'Mock State',
+          city: 'Mock City',
+          street: '123 Mock Street',
+          zipCode: 12345,
+        },
+      ],
+    },
+  },
+];
+
+const mockStore = configureStore({
+  reducer: {
+    appointment: AppointmentSlice,
+  },
+  preloadedState: {
+    appointment: {
+      appointments: mockAppointments,
+    },
+  },
+});
 
 const meta: Meta<typeof AppointmentsPopup> = {
   title: 'Pages/AppointmentsPage/AppointmentsPopup',
@@ -14,11 +72,13 @@ const meta: Meta<typeof AppointmentsPopup> = {
   },
   decorators: [
     Story => (
-      <div className='flex h-screen w-screen overflow-hidden bg-background'>
-        <main className='main-wrapper flex h-full w-full flex-col gap-6 overflow-auto p-8'>
-          <Story />
-        </main>
-      </div>
+      <Provider store={mockStore}>
+        <div className='flex h-screen w-screen overflow-hidden bg-background'>
+          <main className='main-wrapper flex h-full w-full flex-col gap-6 overflow-auto p-8'>
+            <Story />
+          </main>
+        </div>
+      </Provider>
     ),
   ],
 };
@@ -36,10 +96,11 @@ export const Default: Story = {
       assignedAt: '2022-12-01T10:00:00.000Z',
       notes: 'This is a mock appointment',
       status: AppointmentStatus.PLANNED,
-      appointmentDuration: 60,
       videoRecordKey: 'video1',
       paymentInvoiceKey: 'invoice1',
       paymentReceiptKey: 'receipt1',
+      startedAt: '2022-12-01T10:00:00.000Z',
+      endedAt: '2022-12-01T11:00:00.000Z',
       doctor: {
         id: 'doc1',
         userId: 'user1',
@@ -58,12 +119,12 @@ export const Default: Story = {
         ],
         hospitals: [
           {
+            id: 'hosp1',
             name: 'Mock Hospital',
             country: 'Mockland',
             state: 'Mock State',
             city: 'Mock City',
             street: '123 Mock Street',
-            apartment: '1A',
             zipCode: 12345,
           },
         ],

@@ -14,14 +14,15 @@ const mockAppointments = [
     assignedAt: '2022-12-01T10:00:00.000Z',
     notes: 'This is a mock appointment',
     status: AppointmentStatus.CANCELED,
-    appointmentDuration: 60,
     videoRecordKey: 'video1',
+    startedAt: '2022-12-01T10:00:00.000Z',
+    endedAt: '2022-12-01T11:00:00.000Z',
     paymentInvoiceKey: 'invoice1',
     paymentReceiptKey: 'receipt1',
     doctor: {
       id: 'doc1',
       userId: 'user1',
-      payrate: 100.0,
+      payrate: 100,
       about: 'This is a mock doctor',
       firstName: 'Mocking',
       lastName: 'Mock',
@@ -36,12 +37,12 @@ const mockAppointments = [
       ],
       hospitals: [
         {
+          id: 'hosp1',
           name: 'Mock Hospital',
           country: 'Mockland',
           state: 'Mock State',
           city: 'Mock City',
           street: '123 Mock Street',
-          apartment: '1A',
           zipCode: 12345,
         },
       ],
@@ -79,4 +80,15 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default: Story = {
+  render: () => (
+    <AppointmentsList
+      filters={{
+        doctors: ['All doctors'],
+        statuses: ['All statuses'],
+        time: ['All time'],
+        order: ['Oldest to latest'],
+      }}
+    />
+  ),
+};

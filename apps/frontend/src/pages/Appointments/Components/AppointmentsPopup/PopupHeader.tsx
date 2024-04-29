@@ -1,8 +1,9 @@
 import Icon from '@/components/UI/Icon/Icon';
 import dayjs from 'dayjs';
 import AppointmentBadges from '../AppointmentsList/ItemBadges';
+import type { AppointmentStatus } from '@/dataTypes/Appointment';
 
-type PopupHeaderProps = { assignedAt: string; status: string };
+type PopupHeaderProps = { assignedAt: string; status: AppointmentStatus };
 
 export default function PopupHeader({ assignedAt, status }: PopupHeaderProps) {
   return (
