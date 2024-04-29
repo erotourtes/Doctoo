@@ -47,7 +47,6 @@ model User {
   phone               String
   email               String    @unique
   emailVerified       Boolean   @default(false) @map("email_verified")
-  twoFactorAuthToggle Boolean   @default(false) @map("two_factor_auth_toggle")
   secretCode          String?   @map("secret_code")
   password            String?
   googleId            String?   @map("googleId")

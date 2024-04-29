@@ -79,14 +79,14 @@ export class AuthService {
 
     const patient = await this.patientService.getPatientByUserId(user.id);
 
-    if (user.twoFactorAuthToggle) {
+    if (patient.twoFactorAuthToggle) {
       const { code, hashed } = await this.getMFACode();
 
       this.userService.updateSecretCode(user.id, hashed);
       this.mailService.sendMFACode(user.email, user.firstName, code);
     }
 
-    return { isMFAEnabled: user.twoFactorAuthToggle, patient };
+    return { isMFAEnabled: patient.twoFactorAuthToggle, patient };
   }
 
   async validateGoogleUser(email: string, googleId: string): Promise<ResponseUserDto | null> {
@@ -150,7 +150,8 @@ export class AuthService {
 
     if (!user) throw new BadRequestException('Requested user not found.');
 
-    if (!user.twoFactorAuthToggle) throw new BadRequestException('MFA is not enabled for this user.');
+    const patient = await this.patientService.getPatientByUserId(user.id);
+    if (!patient.twoFactorAuthToggle) throw new BadRequestException('MFA is not enabled for this user.');
 
     const isValidPassword = await this.verifyPassword(body.password, user.password);
 

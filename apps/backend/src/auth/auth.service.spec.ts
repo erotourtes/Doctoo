@@ -144,10 +144,10 @@ describe('AuthService', () => {
 
   it('Should not login patient with MFA', async () => {
     const password = bcrypt.hashSync(user.password, 10);
-    const newUser: Partial<ResponseUserDto> = { id: '1', ...user, password, twoFactorAuthToggle: true };
+    const newUser: Partial<ResponseUserDto> = { id: '1', ...user, password };
 
     userServiceMock.getUserByEmail = jest.fn().mockResolvedValue(newUser);
-    patientServiceMock.getPatientByUserId = jest.fn().mockResolvedValue(patient);
+    patientServiceMock.getPatientByUserId = jest.fn().mockResolvedValue({ ...patient, twoFactorAuthToggle: true });
     userServiceMock.updateSecretCode = jest.fn().mockReturnThis();
     mailServiceMock.sendMFACode = jest.fn().mockReturnThis();
 
