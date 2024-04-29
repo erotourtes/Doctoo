@@ -18,6 +18,14 @@ export class UserService {
     return true;
   }
 
+  private async isEmailExists(email: string): Promise<boolean> {
+    const isEmailExists = await this.prismaService.user.findUnique({ where: { email } });
+
+    if (isEmailExists) throw new NotFoundException('A user with this email already exists.');
+
+    return true;
+  }
+
   async getUser(id: string): Promise<ResponseUserDto> {
     await this.isUserExists(id);
 
@@ -33,6 +41,8 @@ export class UserService {
   }
 
   async createUser(body: CreateUserDto): Promise<ResponseUserDto> {
+    await this.isEmailExists(body.email);
+
     const user = await this.prismaService.user.create({ data: body });
 
     return plainToInstance(ResponseUserDto, user);

@@ -3,18 +3,20 @@ import NearestAppointmentsComponent from './components/NerestAppointmentsCard/Ne
 import { Calendar } from '@/components/UI/Calendar/Calendar';
 import MyDoctorsCard from './components/MyDoctorsCard/MyDoctorsCard';
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
-import { getPatientDoctorData } from '@/app/doctor/DoctorThunks';
+import { getMytDoctorData } from '@/app/doctor/DoctorThunks';
 import { useEffect, useState } from 'react';
 import NotificationsComponent from './components/NotificationsComponent/NotificationsComponent';
 import { AppointmentStatus, type IAppointment } from '@/dataTypes/Appointment';
 import dayjs from 'dayjs';
 import { Button, InputSearch } from '@/components/UI';
+import { getMyAppointments } from '@/app/appointment/AppointmentThunks';
 
 const DashboardPage = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getPatientDoctorData('8'));
+    dispatch(getMytDoctorData());
+    dispatch(getMyAppointments());
   }, []);
 
   const [search, setSearch] = useState('');

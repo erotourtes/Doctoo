@@ -1,19 +1,19 @@
 import { Badge } from '@/components/UI';
+import type { BadgeColorKeys, LabelColorKeys } from '@/components/UI/Badge/Badge';
+import type { AppointmentStatus } from '@/dataTypes/Appointment';
 
 type StatusColors = {
-  [key: string]: {
-    badgeColor: string;
-    labelColor: string;
-  };
+  [key in AppointmentStatus]: { badgeColor: BadgeColorKeys; labelColor: LabelColorKeys };
 };
 
 const statusColors: StatusColors = {
-  PLANNED: { badgeColor: 'main-light', labelColor: 'main' },
-  COMPLETED: { badgeColor: 'orange-light', labelColor: 'orange' },
-  CANCELED: { badgeColor: 'error-light', labelColor: 'error' },
+  PENDING_PAYMENT: { badgeColor: 'bg-orange-light', labelColor: 'text-orange' },
+  PLANNED: { badgeColor: 'bg-main-light', labelColor: 'text-main' },
+  COMPLETED: { badgeColor: 'bg-orange-light', labelColor: 'text-orange' },
+  CANCELED: { badgeColor: 'bg-error-light', labelColor: 'text-error' },
 };
 
-type AppointmentBadgesProps = { status: string; paymentInvoiceKey?: string; paymentReceiptKey?: string };
+type AppointmentBadgesProps = { status: AppointmentStatus; paymentInvoiceKey?: string; paymentReceiptKey?: string };
 
 export default function AppointmentBadges({ status, paymentInvoiceKey, paymentReceiptKey }: AppointmentBadgesProps) {
   return (

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import DoctorCard from './DoctorCard';
+import dayjs from 'dayjs';
 
 const meta: Meta<typeof DoctorCard> = {
   title: 'Components/UI/DoctorCard',
@@ -7,7 +8,6 @@ const meta: Meta<typeof DoctorCard> = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
 };
 
 export default meta;
@@ -15,29 +15,79 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: {
-    avatarUrl: 'https://picsum.photos/id/237/512/512',
-    name: 'Doctor Name',
-    specialization: 'Dentist',
-    reviews: 15,
-    tags: ['Best doctor', 'Available'],
-    buttons: ['1:00 pm', '2:00 pm', '3:00 pm'],
-    isBookMode: false,
-    payrate: 60,
-    className: '',
-  },
+  args: {},
+  render: () => (
+    <div className='w-[800px]'>
+      <DoctorCard>
+        <DoctorCard.Image url='https://thispersondoesnotexist.com/' />
+        <DoctorCard.Name>John Doe</DoctorCard.Name>
+        <DoctorCard.Specializations specializations={[{ id: '1', name: 'Therapist' }]} />
+        <DoctorCard.PayrateLabel payrate={75} />
+        <DoctorCard.Tags tags={['Top doctor']} />
+        <DoctorCard.Rating rating={4.5} reviewsCount={10} />
+      </DoctorCard>
+    </div>
+  ),
+};
+
+export const WithImageFavoriteOverlay: Story = {
+  args: {},
+  render: () => (
+    <div className='w-[800px]'>
+      <DoctorCard>
+        <DoctorCard.ImageWithFavorite
+          isFavorite={false}
+          onClickFavorite={() => null}
+          url='https://thispersondoesnotexist.com/'
+        />
+        <DoctorCard.Name>John Doe</DoctorCard.Name>
+        <DoctorCard.Specializations specializations={[{ id: '1', name: 'Therapist' }]} />
+        <DoctorCard.PayrateLabel payrate={75} />
+        <DoctorCard.Tags tags={['Top doctor']} />
+        <DoctorCard.Rating rating={4.5} reviewsCount={10} />
+      </DoctorCard>
+    </div>
+  ),
 };
 
 export const BookMode: Story = {
-  args: {
-    avatarUrl: 'https://picsum.photos/id/237/512/512',
-    name: 'Doctor Name',
-    specialization: 'Dentist',
-    reviews: 15,
-    tags: ['Best doctor', 'Available'],
-    buttons: ['1:00 pm', '2:00 pm', '3:00 pm'],
-    isBookMode: true,
-    payrate: 60,
-    className: '',
-  },
+  args: {},
+  render: () => (
+    <div className='w-[800px]'>
+      <DoctorCard>
+        <DoctorCard.Image url='https://thispersondoesnotexist.com/' />
+        <DoctorCard.Name>John Doe</DoctorCard.Name>
+        <DoctorCard.Specializations specializations={[{ id: '1', name: 'Therapist' }]} />
+        <DoctorCard.Tags tags={['Top doctor']} />
+        <DoctorCard.Rating rating={4.5} reviewsCount={10} />
+        <DoctorCard.BookButton onClick={() => null} />
+      </DoctorCard>
+    </div>
+  ),
+};
+
+export const WithTimeSlots: Story = {
+  args: {},
+  render: () => (
+    <div className='w-[800px]'>
+      <DoctorCard>
+        <DoctorCard.Image url='https://thispersondoesnotexist.com/' />
+        <DoctorCard.Name>John Doe</DoctorCard.Name>
+        <DoctorCard.PayrateLabel payrate={75} />
+        <DoctorCard.Specializations specializations={[{ id: '1', name: 'Therapist' }]} />
+        <DoctorCard.Tags tags={['Top doctor']} />
+        <DoctorCard.Rating rating={4.5} reviewsCount={10} />
+        <DoctorCard.TimeSlots
+          timestamps={[
+            dayjs().add(1, 'day').set('hour', 12).set('minute', 0).toDate(),
+            dayjs().add(1, 'day').set('hour', 13).set('minute', 0).toDate(),
+            dayjs().add(1, 'day').set('hour', 14).set('minute', 0).toDate(),
+            dayjs().add(1, 'day').set('hour', 15).set('minute', 0).toDate(),
+          ]}
+          onClickMore={() => null}
+          onClickSlot={i => console.log(i)}
+        />
+      </DoctorCard>
+    </div>
+  ),
 };

@@ -11,8 +11,8 @@ const meta: Meta<typeof Badge> = {
   tags: ['autodocs'],
   args: {
     children: 'Label',
-    badgeColor: 'main-light',
-    labelColor: 'main',
+    badgeColor: 'bg-main-light',
+    labelColor: 'text-main',
   },
   argTypes: {
     children: {

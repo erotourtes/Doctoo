@@ -1,8 +1,7 @@
 import type { RootState } from '@/app/store';
+import type { AppointmentStatus, IAppointment } from '@/dataTypes/Appointment';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '../createAppSlice';
-import type { AppointmentStatus } from '@/dataTypes/Appointment';
-import type { IAppointment } from '@/dataTypes/Appointment';
 
 type AppointmentData = {
   appointments: IAppointment[];

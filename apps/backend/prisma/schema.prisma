@@ -41,19 +41,18 @@ enum NotificationAction {
 }
 
 model User {
-  id                  String    @id @default(uuid())
-  firstName           String    @map("first_name")
-  lastName            String    @map("last_name")
-  phone               String
-  email               String    @unique
-  emailVerified       Boolean   @default(false) @map("email_verified")
-  twoFactorAuthToggle Boolean   @default(false) @map("two_factor_auth_toggle")
-  secretCode          String?   @map("secret_code")
-  password            String?
-  googleId            String?   @map("googleId")
-  avatarKey           String    @map("avatar_key")
-  doctors             Doctor[]
-  patients            Patient[]
+  id            String    @id @default(uuid())
+  firstName     String    @map("first_name")
+  lastName      String    @map("last_name")
+  phone         String
+  email         String    @unique
+  emailVerified Boolean   @default(false) @map("email_verified")
+  secretCode    String?   @map("secret_code")
+  password      String?
+  googleId      String?   @map("googleId")
+  avatarKey     String    @map("avatar_key")
+  doctors       Doctor[]
+  patients      Patient[]
 
   @@map("users")
 }
@@ -272,8 +271,8 @@ model Appointment {
   videoRecordKey    String?           @map("video_record_key")
   paymentInvoiceKey String?           @map("payment_invoice_key")
   paymentReceiptKey String?           @map("payment_receipt_key")
-  startedAt         String            @map("started_at")
-  endedAt           String            @map("ended_at")
+  startedAt         String?           @map("started_at")
+  endedAt           String?           @map("ended_at")
   patient           Patient           @relation(fields: [patientId], references: [id])
   doctor            Doctor            @relation(fields: [doctorId], references: [id])
 

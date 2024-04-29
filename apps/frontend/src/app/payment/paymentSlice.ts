@@ -34,6 +34,6 @@ export const paymentSlice = createAppSlice({
 
 export const { setPaymentData } = paymentSlice.actions;
 
-export const doctorData = (state: RootState) => state.doctor.doctors;
+export const paymentData = (state: RootState) => state.payment.data;
 
 export default paymentSlice.reducer;

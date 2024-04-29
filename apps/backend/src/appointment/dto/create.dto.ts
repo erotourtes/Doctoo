@@ -1,19 +1,22 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { AppointmentStatus } from '@prisma/client';
 import { IsEnum, IsISO8601, IsOptional, IsUUID } from 'class-validator';
-import { randomUUID } from 'crypto';
 import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
+import { randomUUID } from 'crypto';
 
 export class CreateAppointmentDto {
-  @ApiProperty({ example: randomUUID(), description: 'Unique doctor id.' })
   @IsUUID(4)
+  @ApiProperty({ example: randomUUID(), description: 'Unique doctor id.' })
+  @IsNotEmptyString()
   readonly doctorId: string;
 
   @ApiProperty({ example: randomUUID(), description: 'Unique patient id.' })
   @IsUUID(4)
+  @IsNotEmptyString()
   readonly patientId: string;
 
   @ApiProperty({ example: new Date(), description: 'The date on which the meeting is scheduled.' })
+  @IsNotEmptyString()
   @IsISO8601({ strict: true })
   assignedAt: string;
 
@@ -33,24 +36,27 @@ export class CreateAppointmentDto {
   @IsNotEmptyString()
   notes: string;
 
-  @ApiProperty({ example: randomUUID(), description: 'The unique id of the billed payment.' })
+  @ApiPropertyOptional({ example: randomUUID(), description: 'The unique Id of the billed payment.' })
+  @IsOptional()
+  @IsNotEmptyString()
   @IsUUID(4)
   readonly paymentInvoiceKey: string;
 
-  @ApiProperty({ example: randomUUID(), description: 'The unique id from the receipt file for the appointment.' })
+  @ApiPropertyOptional({ example: randomUUID(), description: 'The unique id of the payment receipt.' })
+  @IsOptional()
+  @IsNotEmptyString()
   @IsUUID(4)
   readonly paymentReceiptKey: string;
 
-  @ApiPropertyOptional({
-    example: new Date().toISOString(),
-    description: 'The time when the appointment should start.',
-  })
+  @ApiPropertyOptional({ description: 'The date and time the appointment started' })
   @IsOptional()
   @IsISO8601({ strict: true })
-  readonly startedAt: string;
+  @IsNotEmptyString()
+  readonly startedAt?: string;
 
-  @ApiPropertyOptional({ example: new Date().toISOString(), description: 'The time when the appointment should end.' })
+  @ApiPropertyOptional({ description: 'The date and time the appointment ended' })
   @IsOptional()
   @IsISO8601({ strict: true })
-  readonly endedAt: string;
+  @IsNotEmptyString()
+  readonly endedAt?: string;
 }

@@ -33,9 +33,10 @@ export default function AppointmentsPage() {
   const [filterState, dispatchFilterAction] = useReducer(filterReducer, initialFilterState);
 
   const meetingsForDay = appointments.map(appointment => ({
-    date: dayjs(appointment.assignedAt),
-    status: appointment.status.toLowerCase(),
+    date: dayjs(appointment.assignedAt).toDate(),
+    status: appointment.status.toUpperCase(),
   }));
+  console.log(meetingsForDay);
 
   const [search, setSearch] = useState('');
 

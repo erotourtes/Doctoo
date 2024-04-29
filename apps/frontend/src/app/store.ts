@@ -5,6 +5,7 @@ import { patientSlice } from './patient/PatientSlice';
 import paymentSlice from './payment/paymentSlice';
 import { allergySlice } from './allergy/AllergySlice';
 import conditionSlice from './condition/ConditionSlice';
+import reviewSlice from './review/ReviewSlice';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     payment: paymentSlice,
     allergy: allergySlice.reducer,
     condition: conditionSlice,
+    review: reviewSlice,
   },
 });
 

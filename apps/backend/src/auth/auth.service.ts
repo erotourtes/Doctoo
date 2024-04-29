@@ -13,7 +13,6 @@ import { ResponseUserDto } from '../user/dto/response.dto';
 import { UserService } from '../user/user.service';
 import { ChangePasswordDto } from './dto/changePassword.dto';
 import { LocalLoginTwoFactorDto } from './dto/localLoginTwoFactor.dto';
-import { PatientResponseDto } from './dto/patientResponse.dto';
 import { SignUpPatientDto } from './dto/signUpPatient.dto';
 import { SignUpUserDto } from './dto/signUpUser.dto';
 import { JwtPayload } from './strategies/jwt';
@@ -79,14 +78,14 @@ export class AuthService {
 
     const patient = await this.patientService.getPatientByUserId(user.id);
 
-    if (user.twoFactorAuthToggle) {
+    if (patient.twoFactorAuthToggle) {
       const { code, hashed } = await this.getMFACode();
 
       this.userService.updateSecretCode(user.id, hashed);
       this.mailService.sendMFACode(user.email, user.firstName, code);
     }
 
-    return { isMFAEnabled: user.twoFactorAuthToggle, patient };
+    return { isMFAEnabled: patient.twoFactorAuthToggle, patient };
   }
 
   async validateGoogleUser(email: string, googleId: string): Promise<ResponseUserDto | null> {
@@ -117,17 +116,12 @@ export class AuthService {
     return accessToken;
   }
 
-  async getMePatient(user?: ResponseUserDto): Promise<PatientResponseDto> {
+  async getMePatient(user?: ResponseUserDto): Promise<ResponsePatientDto> {
     if (!user) throw new UnauthorizedException();
 
     const patient = await this.patientService.getPatientByUserId(user.id);
 
-    return plainToInstance(PatientResponseDto, {
-      ...plainToInstance(ResponseUserDto, user),
-      ...plainToInstance(ResponsePatientDto, patient),
-      userId: user.id,
-      patientId: patient.id,
-    });
+    return patient;
   }
 
   jwtCloseToExpire(token: string): boolean {
@@ -150,7 +144,8 @@ export class AuthService {
 
     if (!user) throw new BadRequestException('Requested user not found.');
 
-    if (!user.twoFactorAuthToggle) throw new BadRequestException('MFA is not enabled for this user.');
+    const patient = await this.patientService.getPatientByUserId(user.id);
+    if (!patient.twoFactorAuthToggle) throw new BadRequestException('MFA is not enabled for this user.');
 
     const isValidPassword = await this.verifyPassword(body.password, user.password);
 
