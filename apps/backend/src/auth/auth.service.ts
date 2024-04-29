@@ -13,7 +13,6 @@ import { ResponseUserDto } from '../user/dto/response.dto';
 import { UserService } from '../user/user.service';
 import { ChangePasswordDto } from './dto/changePassword.dto';
 import { LocalLoginTwoFactorDto } from './dto/localLoginTwoFactor.dto';
-import { PatientResponseDto } from './dto/patientResponse.dto';
 import { SignUpPatientDto } from './dto/signUpPatient.dto';
 import { SignUpUserDto } from './dto/signUpUser.dto';
 import { JwtPayload } from './strategies/jwt';
@@ -117,17 +116,12 @@ export class AuthService {
     return accessToken;
   }
 
-  async getMePatient(user?: ResponseUserDto): Promise<PatientResponseDto> {
+  async getMePatient(user?: ResponseUserDto): Promise<ResponsePatientDto> {
     if (!user) throw new UnauthorizedException();
 
     const patient = await this.patientService.getPatientByUserId(user.id);
 
-    return plainToInstance(PatientResponseDto, {
-      ...plainToInstance(ResponseUserDto, user),
-      ...plainToInstance(ResponsePatientDto, patient),
-      userId: user.id,
-      patientId: patient.id,
-    });
+    return patient;
   }
 
   jwtCloseToExpire(token: string): boolean {

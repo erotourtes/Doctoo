@@ -75,14 +75,9 @@ export const authorizePatient = createAsyncThunk('patient', async (_void, { disp
   dispatch(
     setPatientData({
       ...data,
-      id: data.patientId,
-      bloodType: data.bloodType,
-      gender: data.gender,
-      zipCode: data.zipCode ?? 0,
       allergies: [],
       conditions: [],
       vaccinations: [],
-      twoFactorAuthToggle: false,
     }),
   );
   dispatch(setPatientState({ isFetched: true, isLoading: false }));

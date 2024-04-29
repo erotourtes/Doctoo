@@ -22,12 +22,12 @@ import { GoogleSignInResponseDto } from './dto/googleSignInResponse.dto';
 import { LocalLoginDto } from './dto/localLogin.dto';
 import { LocalLoginResponseDto } from './dto/localLoginResponse.dto';
 import { LocalLoginTwoFactorDto } from './dto/localLoginTwoFactor.dto';
-import { PatientResponseDto } from './dto/patientResponse.dto';
 import { SignUpPatientDto } from './dto/signUpPatient.dto';
 import { SignUpUserDto } from './dto/signUpUser.dto';
 import JWTGuard from './gaurds/jwt.guard';
 import { GoogleAuthGuard } from './strategies/google';
 import { AuthRequestHelper } from './utils/cookie-helper.service';
+import { ResponsePatientDto } from '../patient/dto/response.dto';
 
 @ApiTags('Auth Endpoints')
 @Controller('auth')
@@ -159,11 +159,11 @@ export class AuthController {
   @Get('patient/me')
   @ApiOperation({ summary: 'Get patient' })
   @ApiHeader({ name: 'Cookie', example: 'jwt=eyJhbGci...', description: 'JWT token' })
-  @ApiOkResponse({ type: PatientResponseDto, description: RESPONSE_STATUS.SUCCESS })
+  @ApiOkResponse({ type: ResponsePatientDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  async getPatient(@UserDec() user: ResponseUserDto): Promise<PatientResponseDto> {
+  async getPatient(@UserDec() user: ResponseUserDto): Promise<ResponsePatientDto> {
     return await this.authService.getMePatient(user);
   }
 }

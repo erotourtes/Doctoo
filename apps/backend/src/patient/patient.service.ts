@@ -52,7 +52,10 @@ export class PatientService {
     await this.isPatientByUserIdExists(userId);
 
     // TODO: only 1 patient for user
-    const patient = await this.prismaService.patient.findFirst({ where: { user: { id: userId } } });
+    const patient = await this.prismaService.patient.findFirst({
+      where: { user: { id: userId } },
+      include: { user: true },
+    });
 
     return plainToInstance(ResponsePatientDto, patient);
   }
