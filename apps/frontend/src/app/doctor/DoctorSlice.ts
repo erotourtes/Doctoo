@@ -18,10 +18,26 @@ export const doctorSlice = createAppSlice({
     setDoctorData: (state, action: PayloadAction<IDoctor[]>) => {
       state.doctors = action.payload;
     },
+
+    setNewDoctor: (state, action: PayloadAction<IDoctor>) => {
+      state.doctors.push(action.payload);
+    },
+
+    setPatchDoctorData: (state, action: PayloadAction<{ id: string; data: Partial<IDoctor> }>) => {
+      const { id, data } = action.payload;
+      const doctorIndex = state.doctors.findIndex(doctor => doctor.id === id);
+      if (doctorIndex !== -1) {
+        state.doctors[doctorIndex] = { ...state.doctors[doctorIndex], ...data };
+      }
+    },
+
+    setDeleteDoctor: (state, action: PayloadAction<string>) => {
+      state.doctors = state.doctors.filter(doctor => doctor.id !== action.payload);
+    },
   },
 });
 
-export const { setDoctorData } = doctorSlice.actions;
+export const { setDoctorData, setNewDoctor, setDeleteDoctor, setPatchDoctorData } = doctorSlice.actions;
 
 export const doctorData = (state: RootState) => state.doctor.doctors;
 
