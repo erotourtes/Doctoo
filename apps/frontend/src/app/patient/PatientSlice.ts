@@ -68,6 +68,6 @@ export const patientSlice = createAppSlice({
 
 export const { setPatientData, updatePatientData, setPatientState } = patientSlice.actions;
 
-export const doctorData = (state: RootState) => state.doctor.doctors;
+export const patientData = (state: RootState) => state.patient.data;
 
 export default patientSlice.reducer;
