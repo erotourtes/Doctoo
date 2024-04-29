@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Role } from '@prisma/client';
 import { Exclude } from 'class-transformer';
 import { randomUUID } from 'crypto';
 
@@ -26,6 +27,9 @@ export class ResponseUserDto {
 
   @ApiProperty({ example: `${randomUUID()}.jpeg`, description: 'The unique file id of the file in S3 storage.' })
   readonly avatarKey: string;
+
+  @ApiPropertyOptional({ example: `DOCTOR`, description: 'Represent user role ' })
+  readonly role?: Role;
 
   @Exclude()
   readonly password?: string;

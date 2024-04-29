@@ -43,7 +43,6 @@ export const patchPatientData = createAsyncThunk(
 export const patchUserData = createAsyncThunk(
   'patient',
   async ({ id, data }: { id: string; data: Partial<IUser> }, { dispatch }) => {
-    console.log(data, id);
     try {
       const response: AxiosResponse<IUser> = await instance.patch(`/user/${id}`, data);
       if (response.status === 200) {
