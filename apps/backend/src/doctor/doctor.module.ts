@@ -5,9 +5,10 @@ import { SpecializationModule } from '../specialization/specialization.module';
 import { UserModule } from '../user/user.module';
 import { DoctorController } from './doctor.controller';
 import { DoctorService } from './doctor.service';
+import { ReviewModule } from '../review/review.module';
 
 @Module({
-  imports: [UserModule, HospitalModule, SpecializationModule],
+  imports: [UserModule, HospitalModule, SpecializationModule, ReviewModule],
   providers: [DoctorService, PrismaService],
   controllers: [DoctorController],
   exports: [DoctorService],
