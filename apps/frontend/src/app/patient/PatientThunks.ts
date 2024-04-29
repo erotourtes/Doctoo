@@ -6,6 +6,7 @@ import type { AxiosResponse } from 'axios';
 import api from '../api';
 import { setPatientData, setPatientState, updatePatientData } from './PatientSlice';
 import handleError from '@/api/handleError.api';
+import type { components, paths } from '@/api';
 
 export const getPatientData = createAsyncThunk('patient', async (id: string, { dispatch }) => {
   try {
@@ -87,4 +88,13 @@ export const logoutPatient = createAsyncThunk('patient', async (_void, { dispatc
   const { error } = await api.GET('/auth/logout');
   if (error) throw new Error('Failed to logout');
   dispatch(setPatientState({ isFetched: false }));
+});
+
+type ChangePasswordType = paths['/auth/password/change']['post']['requestBody']['content']['application/json'];
+type ErrorResponseType = components['schemas']['ClassicNestResponse'];
+
+export const changePassword = createAsyncThunk<ErrorResponseType, ChangePasswordType>('patient', async body => {
+  const { error } = await api.POST('/auth/password/change', { body });
+  // TODO: remove casting
+  return error as ErrorResponseType;
 });
