@@ -60,7 +60,7 @@ export const patientSlice = createAppSlice({
     },
     addPatientCondition: (state, action: PayloadAction<TCondition[]>) => {
       action.payload.forEach(condition => {
-        if (state.data.conditions.find(c => c.id === condition.id)) return;
+        if (state.data.conditions.some(a => a.id === condition.id)) return;
 
         state.data.conditions.push(condition);
       });

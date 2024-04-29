@@ -6,6 +6,7 @@ import type { AxiosResponse } from 'axios';
 import api from '../api';
 import { setPatientData, setPatientState, updatePatientData } from './PatientSlice';
 import handleError from '@/api/handleError.api';
+import type { TCondition } from '@/dataTypes/Condition';
 
 export const getPatientData = createAsyncThunk('patient', async (id: string, { dispatch }) => {
   try {
@@ -91,3 +92,28 @@ export const logoutPatient = createAsyncThunk('patient', async (_void, { dispatc
   if (error) throw new Error('Failed to logout');
   dispatch(setPatientState({ isFetched: false }));
 });
+
+export const createPatientAllergies = createAsyncThunk(
+  'patient',
+  async (data: { body: TCondition[]; id: string }, { dispatch }) => {
+    try {
+      const body = data.body.map(condition => ({ conditionId: condition.id }));
+      dispatch(setPatientState({ isLoading: true }));
+      const { data: responseData, error } = await api.POST('/patient/{id}/condition', {
+        params: { path: { id: data.id } },
+        body,
+      });
+
+      if (error) throw new Error('Failed to create patient allergy');
+
+      if (responseData === data.body.length) {
+        dispatch(addPatientAllergy(data.body));
+        dispatch(setPatientState({ isLoading: false, isFetched: true }));
+      }
+    } catch (e) {
+      dispatch(setPatientState({ isLoading: false }));
+      const error = e as Error;
+      handleError(error);
+    }
+  },
+);
