@@ -6,8 +6,8 @@ import { PatchPatientDto } from './dto/patch.dto';
 import { ResponsePatientDto } from './dto/response.dto';
 import { ResponseAllergyDto } from './dto/responseAllergy.dto';
 import { ResponsePatientAllergyDto } from './dto/responsePatientAllergy.dto';
-import { ResponsePatientConditionDto } from './dto/responsePatientCondition.dto';
 import { ResponseConditionDto } from './dto/responseCondition.dto';
+import { CreatePatientConditionDto } from './dto/createPatientCondition.dto';
 
 @Injectable()
 export class PatientService {
@@ -42,6 +42,16 @@ export class PatientService {
             avatarKey: true,
           },
         },
+        conditions: {
+          select: {
+            condition: {
+              select: {
+                name: true,
+                id: true,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -49,12 +59,10 @@ export class PatientService {
   }
 
   async getPatientByUserId(userId: string): Promise<ResponsePatientDto> {
-
     await this.isPatientByUserIdExists(userId);
 
     // TODO: only 1 patient for user
     const patient = await this.prismaService.patient.findFirst({ where: { user: { id: userId } } });
-
 
     return plainToInstance(ResponsePatientDto, patient);
   }
@@ -91,21 +99,21 @@ export class PatientService {
     return plainToInstance(ResponsePatientAllergyDto, allergy);
   }
 
-  async createPatientCondition(id: string, conditionId: string) {
-    const isPatientAlreadyHaveCondition = await this.prismaService.patientCondition.findUnique({
-      where: { id, conditionId },
+  async createPatientConditions(id: string, conditions: CreatePatientConditionDto[]): Promise<number> {
+    conditions.forEach(async ({ conditionId }) => {
+      const isPatientAlreadyHaveCondition = await this.prismaService.patientCondition.findUnique({
+        where: { id, conditionId },
+      });
+
+      if (isPatientAlreadyHaveCondition)
+        throw new BadRequestException('Patient with this Id already have condition with this Id.');
     });
 
-    if (isPatientAlreadyHaveCondition) throw new BadRequestException('Patient with this Id already have this allergy.');
-
-    const condition = await this.prismaService.patientCondition.create({
-      data: {
-        patientId: id,
-        conditionId,
-      },
+    const { count } = await this.prismaService.patientCondition.createMany({
+      data: conditions.map(({ conditionId }) => ({ patientId: id, conditionId })),
     });
-
-    return plainToInstance(ResponsePatientConditionDto, condition);
+    console.log(count);
+    return count;
   }
   async getPatientConditions(patientId: string) {
     await this.isPatientByIdExists(patientId);
