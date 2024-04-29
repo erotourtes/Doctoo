@@ -8,6 +8,7 @@ import { hospitalStub } from '../src/hospital/hospital.stub';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { specializationStub } from '../src/specialization/specialization.stub';
 import { userStub } from '../src/user/user.stub';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 describe('DoctorController (e2e)', () => {
   let app: INestApplication;
@@ -15,7 +16,7 @@ describe('DoctorController (e2e)', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [DoctorModule],
+      imports: [DoctorModule, EventEmitterModule.forRoot()],
       providers: [PrismaService],
     }).compile();
 
@@ -53,7 +54,7 @@ describe('DoctorController (e2e)', () => {
       const response = await request(app.getHttpServer()).get('/doctor');
 
       expect(response.status).toEqual(200);
-      expect(response.body).toMatchObject([doctorStub()]);
+      expect(response.body).toMatchObject({ doctors: [doctorStub()], count: 1 });
     });
   });
 

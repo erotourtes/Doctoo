@@ -8,6 +8,7 @@ import { patientStub } from 'src/patient/patient.stub';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { userStub } from 'src/user/user.stub';
 import { appointmentStub } from 'src/appointment/appointment.stub';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 describe('AppointmentController (e2e)', () => {
   let app: INestApplication;
@@ -18,7 +19,7 @@ describe('AppointmentController (e2e)', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppointmentModule],
+      imports: [AppointmentModule, EventEmitterModule.forRoot()],
       providers: [PrismaService],
     }).compile();
 

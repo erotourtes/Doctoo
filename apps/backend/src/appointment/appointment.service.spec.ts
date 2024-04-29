@@ -1,10 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../prisma/prisma.service';
-import { UserService } from '../user/user.service';
-import { PatientService } from '../patient/patient.service';
-import { DoctorService } from '../doctor/doctor.service';
-import { HospitalService } from '../hospital/hospital.service';
-import { SpecializationService } from '../specialization/specialization.service';
 import { AppointmentService } from './appointment.service';
 import { UserModule } from '../user/user.module';
 import { PatientModule } from '../patient/patient.module';
@@ -16,6 +11,7 @@ import { appointmentStub } from './appointment.stub';
 import { AppointmentStatus } from '@prisma/client';
 import { CreateAppointmentDto } from './dto/create.dto';
 import { PatchAppointmentDto } from './dto/patch.dto';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 describe('AppointmentService', () => {
   let appointmentService: AppointmentService;
@@ -26,16 +22,8 @@ describe('AppointmentService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [UserModule, PatientModule, DoctorModule],
-      providers: [
-        AppointmentService,
-        PrismaService,
-        UserService,
-        DoctorService,
-        PatientService,
-        HospitalService,
-        SpecializationService,
-      ],
+      imports: [UserModule, PatientModule, DoctorModule, EventEmitterModule.forRoot()],
+      providers: [AppointmentService, PrismaService],
     }).compile();
 
     appointmentService = module.get<AppointmentService>(AppointmentService);
