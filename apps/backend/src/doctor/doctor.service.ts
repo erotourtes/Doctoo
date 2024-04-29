@@ -211,7 +211,10 @@ export class DoctorService {
   }
 
   async getPatientDoctors(id: string): Promise<ResponseDoctorDto[]> {
-    const request = { where: { patientId: id }, include: { doctor: { include: { user: true } } } };
+    const request = {
+      where: { patientId: id },
+      include: { doctor: { include: { user: true, _count: { select: { reviews: true } } } } },
+    };
 
     const [appointments, declaration] = await Promise.all([
       this.prismaService.appointment.findMany(request),
