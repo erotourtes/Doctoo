@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { HospitalService } from '../hospital/hospital.service';
 import { PrismaService } from '../prisma/prisma.service';
@@ -9,6 +9,10 @@ import { CreateDoctorDto } from './dto/create.dto';
 import { GetDoctorsQuery } from './dto/get.query';
 import { PatchDoctorDto } from './dto/patch.dto';
 import { ResponseDoctorDto } from './dto/response.dto';
+import { OnEvent } from '@nestjs/event-emitter';
+import { ReviewUpdatedEvent } from '../review/events/review-updated.event';
+import { ReviewService } from '../review/review.service';
+import { ResponseDoctorListDto } from './dto/response-list.dto';
 
 @Injectable()
 export class DoctorService {
@@ -17,6 +21,7 @@ export class DoctorService {
     private readonly userService: UserService,
     private readonly hospitalService: HospitalService,
     private readonly specializationService: SpecializationService,
+    @Inject(forwardRef(() => ReviewService)) private readonly reviewService: ReviewService,
   ) {}
 
   async isDoctorByIdExists(id: string): Promise<boolean> {
@@ -77,38 +82,53 @@ export class DoctorService {
   }
 
   // TODO: refactor, extracting filter mapping logic into separate function/s
-  async getDoctors(query?: GetDoctorsQuery): Promise<ResponseDoctorDto[]> {
+  async getDoctors(query?: GetDoctorsQuery): Promise<ResponseDoctorListDto> {
+    const { hospitalId, specializationId, search, status } = query;
+    const page = query.page || 1;
+    const itemsPerPage = query.itemsPerPage || 10;
+    const offset = (page - 1) * itemsPerPage;
+
     const hospitalFilter: { id?: string } = {};
     const specializationFilter: { id?: string } = {};
+    const statusFilter: { rating?: any } = {};
     const searchFilters = [];
-
-    const { hospitalId, specializationId, search } = query;
 
     if (hospitalId) hospitalFilter.id = hospitalId;
 
     if (specializationId) specializationFilter.id = specializationId;
 
+    if (status) statusFilter.rating = { gte: 4.5 };
+
     if (search) {
-      searchFilters.push({ hospitals: { every: { hospital: { name: { contains: search } } } } });
-      searchFilters.push({ specializations: { every: { specialization: { name: { contains: search } } } } });
+      searchFilters.push({ hospitals: { some: { hospital: { name: { contains: search, mode: 'insensitive' } } } } });
+      searchFilters.push({
+        specializations: { some: { specialization: { name: { contains: search, mode: 'insensitive' } } } },
+      });
     }
+
+    const conditions = {
+      AND: [
+        { hospitals: { some: { hospital: hospitalFilter } } },
+        { specializations: { some: { specialization: specializationFilter } } },
+        statusFilter,
+        searchFilters.length ? { OR: searchFilters } : {},
+      ],
+    };
 
     const doctors = await this.prismaService.doctor.findMany({
       include: {
         user: { select: { firstName: true, lastName: true, avatarKey: true } },
         hospitals: { select: { hospital: { select: { id: true, name: true } } } },
         specializations: { select: { specialization: true } },
+        _count: { select: { reviews: true } },
       },
-      where: {
-        AND: [
-          { hospitals: { every: { hospital: hospitalFilter } } },
-          { specializations: { every: { specialization: specializationFilter } } },
-          searchFilters.length ? { OR: searchFilters } : {},
-        ],
-      },
+      where: conditions,
+      skip: offset,
+      take: itemsPerPage,
     });
+    const count = await this.prismaService.doctor.count({ where: conditions });
 
-    return plainToInstance(ResponseDoctorDto, doctors);
+    return plainToInstance(ResponseDoctorListDto, { doctors, count });
   }
 
   async getDoctor(id: string): Promise<ResponseDoctorDto> {
@@ -118,6 +138,7 @@ export class DoctorService {
         user: { select: { firstName: true, lastName: true, avatarKey: true } },
         hospitals: { select: { hospital: true } },
         specializations: { select: { specialization: true } },
+        _count: { select: { reviews: true } },
       },
     });
 
@@ -178,6 +199,15 @@ export class DoctorService {
     });
 
     return plainToInstance(ResponseDoctorDto, doctor, { exposeUnsetFields: false });
+  }
+
+  @OnEvent('review.updated')
+  async recalculateDoctorRating(payload: ReviewUpdatedEvent) {
+    const { avg: newRating } = await this.reviewService.getAvgRateByDoctorId(payload.doctorId);
+    await this.prismaService.doctor.update({
+      data: { rating: newRating },
+      where: { id: payload.doctorId },
+    });
   }
 
   async getPatientDoctors(id: string): Promise<ResponseDoctorDto[]> {
