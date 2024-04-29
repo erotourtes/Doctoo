@@ -1,7 +1,8 @@
-import { BloodType, Gender, User } from '@prisma/client';
+import { Allergy, BloodType, Gender, User } from '@prisma/client';
 import { Exclude, Expose, Transform } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { randomUUID } from 'crypto';
+import { ResponseAllergyDto } from './responseAllergy.dto';
 
 export class ResponsePatientDto {
   @ApiProperty({ example: randomUUID(), description: 'Unique patient id.' })
@@ -94,6 +95,18 @@ export class ResponsePatientDto {
     example: 'johndoe@mail.com',
   })
   readonly email: string;
+
+  @Expose()
+  @Transform(({ obj }) =>
+    obj.allergies ? obj.allergies.map(allergy => allergy.allergy as Allergy) : ([] as Allergy[]),
+  )
+  @ApiProperty({
+    type: ResponseAllergyDto,
+    isArray: true,
+    description: 'List of allergies of the patient.',
+    example: { id: randomUUID(), name: 'Peanuts' },
+  })
+  readonly allergies: Allergy[];
 
   @Exclude()
   readonly user: User;

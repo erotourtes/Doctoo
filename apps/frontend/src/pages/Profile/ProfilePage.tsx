@@ -1,14 +1,23 @@
 import PageHeader from '../PageHeader';
 import StatsCard from './components/StatsCard/StatsCard';
-import { useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import PersonalInfo from './components/PersonalInfo/PersonalInfo';
 import MedicalCondition from './components/MedicalCondition/MedicalCondition';
 import AddressInfo from './components/AddressInfo/AddressInfo';
 import PaymentMethods from './components/PaymentMethods/PaymentMethods';
 import { capitalizeString } from '@/utils/capitalizeString';
+import { useEffect } from 'react';
+import { getAllAllergies } from '@/app/allergy/AllergyThunks';
 
 const ProfilePage = () => {
   const patient = useAppSelector(state => state.patient.data);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getAllAllergies());
+  });
+
   return (
     <div>
       <PageHeader iconVariant='account' title='Profile' />

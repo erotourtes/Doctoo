@@ -1,13 +1,11 @@
 import type { RootState } from '@/app/store';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '../createAppSlice';
-import type { Condition, TPatient } from '@/dataTypes/Patient';
-import type { IUser } from '@/dataTypes/User';
-import type { IAllergy } from '@/dataTypes/Allergy';
+import type { TPatient } from '@/dataTypes/Patient';
+import type { TAllergy } from '@/dataTypes/Allergy';
+import type { TCondition } from '@/dataTypes/Condition';
 
-type Patient = TPatient &
-  IUser & { conditions: Condition[]; vaccinations: string[]; allergies: IAllergy[]; twoFactorAuthToggle: boolean };
-
+type Patient = TPatient & { conditions: TCondition[] };
 interface PatientData {
   data: Patient;
   state: {
@@ -42,7 +40,6 @@ const initialState: PatientData = {
     apartment: '',
     zipCode: 0,
     conditions: [],
-    vaccinations: [],
     allergies: [],
     emailNotificationToggle: false,
     twoFactorAuthToggle: false,
@@ -60,13 +57,24 @@ export const patientSlice = createAppSlice({
     updatePatientData: (state, action: PayloadAction<Partial<Patient>>) => {
       state.data = { ...state.data, ...action.payload };
     },
+    addPatientCondition: (state, action: PayloadAction<TCondition>) => {
+      state.data.conditions.push(action.payload);
+    },
+    addPatientAllergy: (state, action: PayloadAction<TAllergy[]>) => {
+      action.payload.forEach(allergy => {
+        if (state.data.allergies.some(a => a.id === allergy.id)) return;
+
+        state.data.allergies.push(allergy);
+      });
+    },
     setPatientState: (state, action: PayloadAction<Partial<PatientData['state']>>) => {
       state.state = { ...state.state, ...action.payload };
     },
   },
 });
 
-export const { setPatientData, updatePatientData, setPatientState } = patientSlice.actions;
+export const { setPatientData, updatePatientData, setPatientState, addPatientAllergy, addPatientCondition } =
+  patientSlice.actions;
 
 export const patientData = (state: RootState) => state.patient.data;
 

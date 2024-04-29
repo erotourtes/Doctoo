@@ -13,15 +13,15 @@ import { BadRequestResponse } from '../utils/BadRequestResponse';
 import { ClassicNestResponse } from '../utils/ClassicNestResponse';
 import { RESPONSE_STATUS } from '../utils/constants';
 import { CreatePatientDto } from './dto/create.dto';
+import { CreatePatientAllergyDto } from './dto/createPatientAllergy.dto';
+import { CreatePatientConditionDto } from './dto/createPatientCondition.dto';
 import { PatchPatientDto } from './dto/patch.dto';
 import { ResponsePatientDto } from './dto/response.dto';
-import { CreatePatientConditionDto } from './dto/createPatientCondition.dto';
 import { ResponseAllergyDto } from './dto/responseAllergy.dto';
-import { ResponsePatientAllergyDto } from './dto/responsePatientAllergy.dto';
-import { PatientService } from './patient.service';
-import { CreatePatientAllergyDto } from './dto/createPatientAllergy.dto';
-import { ResponsePatientConditionDto } from './dto/responsePatientCondition.dto';
 import { ResponseConditionDto } from './dto/responseCondition.dto';
+import { ResponsePatientAllergyDto } from './dto/responsePatientAllergy.dto';
+import { ResponsePatientConditionDto } from './dto/responsePatientCondition.dto';
+import { PatientService } from './patient.service';
 
 @ApiTags('Patient Endpoints')
 @Controller('patient')
@@ -67,7 +67,7 @@ export class PatientController {
   @ApiParam({ name: 'id', example: randomUUID(), description: "The patient's unique id." })
   @ApiBody({ type: CreatePatientAllergyDto })
   async createPatientAllergy(@Param('id') patientId: string, @Body() body: CreatePatientAllergyDto) {
-    return this.patientService.createPatientAllergy(patientId, body.allergyId);
+    return this.patientService.createPatientAllergies(patientId, body);
   }
 
   @Get(':id/allergy')

@@ -22,8 +22,3 @@ export type Vaccination = {
   id: string;
   name: string;
 };
-
-export type Condition = {
-  id: string;
-  name: string;
-};

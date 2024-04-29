@@ -1,12 +1,13 @@
+import type { components, paths } from '@/api';
 import { instance } from '@/api/axios.api';
+import handleError from '@/api/handleError.api';
+import type { TAllergy } from '@/dataTypes/Allergy';
 import { type TPatient } from '@/dataTypes/Patient';
 import type { IUser } from '@/dataTypes/User';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { AxiosResponse } from 'axios';
 import api from '../api';
-import { setPatientData, setPatientState, updatePatientData } from './PatientSlice';
-import handleError from '@/api/handleError.api';
-import type { components, paths } from '@/api';
+import { addPatientAllergy, setPatientData, setPatientState, updatePatientData } from './PatientSlice';
 
 export const getPatientData = createAsyncThunk('patient', async (id: string, { dispatch }) => {
   try {
@@ -16,9 +17,7 @@ export const getPatientData = createAsyncThunk('patient', async (id: string, { d
       throw new Error('Failed to fetch patient data GET /patient/:id');
     }
 
-    dispatch(updatePatientData({ ...data }));
-    //TODO: Delete the line above, and uncomment after PR #214 is merged
-    // dispatch(setPatientData({ ...data }));
+    dispatch(setPatientData({ ...data, conditions: [] }));
   } catch (e) {
     const error = e as Error;
     handleError(error);
@@ -72,12 +71,14 @@ export const authorizePatient = createAsyncThunk('patient', async (_void, { disp
   const { data, error } = await api.GET('/auth/patient/me');
   if (error || !data) return void dispatch(setPatientState({ isLoading: false }));
 
+  console.log(data);
   dispatch(
     setPatientData({
       ...data,
-      allergies: [],
+      bloodType: data.bloodType,
+      gender: data.gender,
+      zipCode: data.zipCode ?? 0,
       conditions: [],
-      vaccinations: [],
     }),
   );
   dispatch(setPatientState({ isFetched: true, isLoading: false }));
@@ -89,6 +90,30 @@ export const logoutPatient = createAsyncThunk('patient', async (_void, { dispatc
   dispatch(setPatientState({ isFetched: false }));
 });
 
+export const createPatientAllergies = createAsyncThunk(
+  'patient',
+  async (data: { body: TAllergy[]; id: string }, { dispatch }) => {
+    try {
+      dispatch(setPatientState({ isLoading: true }));
+
+      const { data: responseData, error } = await api.POST('/patient/{id}/allergy', {
+        params: { path: { id: data.id } },
+        body: { allergyIds: data.body.map(({ id }) => id) },
+      });
+
+      if (error) throw new Error('Failed to create patient allergy');
+
+      if (responseData.count === data.body.length) {
+        dispatch(addPatientAllergy(data.body));
+        dispatch(setPatientState({ isLoading: false, isFetched: true }));
+      }
+    } catch (e) {
+      dispatch(setPatientState({ isLoading: false }));
+      const error = e as Error;
+      handleError(error);
+    }
+  },
+);
 type ChangePasswordType = paths['/auth/password/change']['post']['requestBody']['content']['application/json'];
 type ErrorResponseType = components['schemas']['ClassicNestResponse'];
 
