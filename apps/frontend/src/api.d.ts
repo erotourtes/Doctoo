@@ -78,13 +78,6 @@ export interface paths {
     post: operations["PatientController_createPatientConditions"];
   };
   "/favorite": {
-  '/patient/{id}/condition': {
-    /** Get patient conditions */
-    get: operations['PatientController_getPatientConditions'];
-    /** Create patient condition */
-    post: operations['PatientController_createPatientCondition'];
-  };
-  '/favorite': {
     /** Get favorites */
     get: operations["FavoriteController_getFavorites"];
     /** Create favorite */
@@ -102,17 +95,15 @@ export interface paths {
     /** Create doctor */
     post: operations["DoctorController_createDoctor"];
   };
-  "/doctor/dactors/{id}": {
-  '/doctor/doctors/{id}': {
+  "/doctor/doctors/{id}": {
     /** Get all doctors by patient */
     get: operations["DoctorController_getPatientDoctors"];
   };
-  "/doctor/{id}": {
-  '/doctor/dactors/my': {
+  "/doctor/doctors/my": {
     /** Get my doctors */
-    get: operations['DoctorController_getMyDoctors'];
+    get: operations["DoctorController_getMyDoctors"];
   };
-  '/doctor/{id}': {
+  "/doctor/{id}": {
     /** Get doctor */
     get: operations["DoctorController_getDoctor"];
     /** Delete doctor */
@@ -168,12 +159,11 @@ export interface paths {
     /** Get all appointments by patient id */
     get: operations["AppointmentController_getAppointmentsByPatientId"];
   };
-  "/appointment/doctor/{id}": {
-  '/appointment/my': {
+  "/appointment/my": {
     /** Get my appointment */
-    get: operations['AppointmentController_getMyAppointments'];
+    get: operations["AppointmentController_getMyAppointments"];
   };
-  '/appointment/doctor/{id}': {
+  "/appointment/doctor/{id}": {
     /** Get all appointments by doctor id */
     get: operations["AppointmentController_getAppointmentsByDoctorId"];
   };
@@ -253,36 +243,6 @@ export interface paths {
     patch: operations["ConditionController_update"];
   };
   "/allergy": {
-  '/condition': {
-    /**
-     * Get all conditions
-     * @description This endpoint retrieves all conditions.
-     */
-    get: operations['ConditionController_findAll'];
-    /**
-     * Create a new condition
-     * @description This endpoint creates a new condition.
-     */
-    post: operations['ConditionController_create'];
-  };
-  '/condition/{id}': {
-    /**
-     * Get a condition by ID
-     * @description This endpoint retrieves a condition object by ID.
-     */
-    get: operations['ConditionController_findOne'];
-    /**
-     * Delete a condition by ID
-     * @description This endpoint deletes a condition object by ID.
-     */
-    delete: operations['ConditionController_remove'];
-    /**
-     * Update a condition by ID
-     * @description This endpoint updates a condition object by ID.
-     */
-    patch: operations['ConditionController_update'];
-  };
-  '/allergy': {
     /** Get all allergies */
     get: operations["AllergyController_getAllergies"];
     /** Create allergy */
@@ -415,8 +375,7 @@ export interface components {
     ResponseUserDto: {
       /**
        * @description Unique user id.
-       * @example 35621ca5-4f90-4bd4-a46e-66c2b788174c
-       * @example 1a26ef42-65ee-4db3-bc21-4ba825fe209a
+       * @example 207980cc-24e4-4793-b7a4-d50d137f8ae9
        */
       id: string;
       /**
@@ -451,8 +410,7 @@ export interface components {
       googleId?: string;
       /**
        * @description The unique file id of the file in S3 storage.
-       * @example d9ca8292-58c6-4108-8bc9-181ed15f7fe7.jpeg
-       * @example dada311c-caad-4199-becb-8e69241dbb63.jpeg
+       * @example 21b8bd62-059d-494c-a3f2-1c27fc298d33.jpeg
        */
       avatarKey: string;
     };
@@ -543,7 +501,7 @@ export interface components {
     ResponseConditionDto: {
       /**
        * @description Condition id
-       * @example 94aee92c-aceb-4045-97f4-55f342bb1fa5
+       * @example 22d38a2e-f92d-4bb1-8e50-e85427df4341
        */
       id: string;
       /**
@@ -552,45 +510,15 @@ export interface components {
        */
       name: string;
     };
-    PatientResponseDto: {
     ResponsePatientDto: {
       /**
-       * @description First name of the doctor
-       * @example John
-       */
-      firstName: string;
-      /**
-       * @description Last name of the doctor
-       * @example Doe
-       */
-      lastName: string;
-      /**
-       * @description The phone of the doctor
-       * @example +38099561735634
        * @description Unique patient id.
-       * @example 29c43cbe-c3e2-4731-beb8-20ccc550836e
+       * @example 56e9cab3-c0e0-4fa1-96e6-ae3f350984ba
        */
       id: string;
       /**
-       * @description Email of the doctor
-       * @example johndoe@mail.com
-       */
-      email: string;
-      /**
-       * @description Whether the user has confirmed his mail in the service.
-       * @example false
-       */
-      emailVerified: boolean;
-      /**
-       * @description Unique Google Id of the user.
-       * @example G-123456789
-       */
-      googleId?: string;
-      /**
-       * @description Key of the avatar of the doctor
-       * @example acde070d-8c4c-4f0d-9d8a-162843c10333.jpg
        * @description The unique user id of the user to which the patient is bound.
-       * @example d1b126ad-f1a4-4eb0-8f05-7e31779a8190
+       * @example a10b544a-c0b8-4564-87c3-d5807f4884ee
        */
       userId: string;
       /**
@@ -622,8 +550,7 @@ export interface components {
       gender: "MALE" | "FEMALE";
       /**
        * @description A unique key to the patient identification file.
-       * @example d2efb346-dd4b-46bf-ab6b-9421b74f1fc7
-       * @example 9044d550-f173-423f-9c64-14c41703c3d8
+       * @example 93ce68ec-1dc9-4b10-bd49-d1efd4249781
        */
       identityCardKey: string;
       /**
@@ -669,19 +596,6 @@ export interface components {
       /** @description The two factor authentication toggle of the patient */
       twoFactorAuthToggle: boolean;
       /**
-       * @description List of conditions of the patient.
-       * @example {
-       *   "id": "9ed61d87-5c61-4575-9e80-1a8cd88455d0",
-       *   "name": "Diabetes"
-       * }
-       */
-      conditions: components["schemas"]["ResponseConditionDto"][];
-      /**
-       * @description Unique user id.
-       * @example 3afe3d5d-46e9-467e-a72f-04b65220da8f
-      /** @description The two factor authentication toggle of the patient */
-      twoFactorAuthToggle: boolean;
-      /**
        * @description First name of the doctor
        * @example John
        */
@@ -692,10 +606,6 @@ export interface components {
        */
       lastName: string;
       /**
-       * @description Unique patient id.
-       * @example bc9b85d2-0af5-436d-bb7c-aab09006e4d6
-       */
-      patientId: string;
        * @description Key of the avatar of the doctor
        * @example acde070d-8c4c-4f0d-9d8a-162843c10333.jpg
        */
@@ -710,6 +620,14 @@ export interface components {
        * @example johndoe@mail.com
        */
       email: string;
+      /**
+       * @description List of conditions of the patient.
+       * @example {
+       *   "id": "a5373aa2-4148-4ba5-8802-f1e0cee70b24",
+       *   "name": "Diabetes"
+       * }
+       */
+      conditions: components["schemas"]["ResponseConditionDto"][];
     };
     CreateUserDto: {
       /**
@@ -744,8 +662,7 @@ export interface components {
       googleId?: string;
       /**
        * @description The unique file id of the file in S3 storage.
-       * @example ff32ddc2-61e0-486e-9810-5c21f1bb142f.jpeg
-       * @example d96b8e8a-f23d-49fa-b780-7f024d856246.jpeg
+       * @example e824025e-29e6-4210-9444-99ac5581b80d.jpeg
        */
       avatarKey: string;
     };
@@ -772,135 +689,14 @@ export interface components {
       email?: string;
       /**
        * @description The unique file id of the file in S3 storage.
-       * @example ff32ddc2-61e0-486e-9810-5c21f1bb142f.jpeg
-       * @example d96b8e8a-f23d-49fa-b780-7f024d856246.jpeg
+       * @example e824025e-29e6-4210-9444-99ac5581b80d.jpeg
        */
       avatarKey?: string;
-    };
-    ResponsePatientDto: {
-      /**
-       * @description Unique patient id.
-       * @example 8a6e47c2-d87e-489e-9979-5834dbab00cb
-       */
-      id: string;
-      /**
-       * @description The unique user id of the user to which the patient is bound.
-       * @example 0f51048e-1f7e-4953-944b-9b29d174d771
-       */
-      userId: string;
-      /**
-       * @description Patient's weight.
-       * @example 65
-       */
-      weight: number;
-      /**
-       * @description Patient height.
-       * @example 185
-       */
-      height: number;
-      /**
-       * @description Patient's age.
-       * @example 35
-       */
-      age: number;
-      /**
-       * @description The patient's blood type.
-       * @example AB_MINUS
-       * @enum {string}
-       */
-      bloodType: "O_PLUS" | "O_MINUS" | "A_PLUS" | "A_MINUS" | "B_PLUS" | "B_MINUS" | "AB_PLUS" | "AB_MINUS";
-      /**
-       * @description Patient gender.
-       * @example MALE
-       * @enum {string}
-       */
-      gender: "MALE" | "FEMALE";
-      /**
-       * @description A unique key to the patient identification file.
-       * @example d2efb346-dd4b-46bf-ab6b-9421b74f1fc7
-       */
-      identityCardKey: string;
-      /**
-       * @description The country where the hospital is located.
-       * @example USA
-       */
-      country: string;
-      /**
-       * @description The address of the state where the hospital is located.
-       * @example Oregon
-       */
-      state?: string;
-      /**
-       * @description The name of the city where this hospital is located.
-       * @example Salem
-       */
-      city: string;
-      /**
-       * @description The name of the street where this hospital is located.
-       * @example St. Big Bells
-       */
-      street: string;
-      /**
-       * @description Patient's apartment number.
-       * @example 35A
-       */
-      apartment?: string;
-      /**
-       * @description The hospital's zip code.
-       * @example 128
-       */
-      zipCode: number;
-      /**
-       * @description Status of alerts to the patient's email.
-       * @default false
-       */
-      emailNotificationToggle: boolean;
-      /**
-       * @description Whether to request a two-factor confirmation when making a payment.
-       * @example false
-       */
-      requestBillPaymentApproval: boolean;
-      /** @description The two factor authentication toggle of the patient */
-      twoFactorAuthToggle: boolean;
-      /**
-       * @description First name of the doctor
-       * @example John
-       */
-      firstName: string;
-      /**
-       * @description Last name of the doctor
-       * @example Doe
-       */
-      lastName: string;
-      /**
-       * @description Key of the avatar of the doctor
-       * @example acde070d-8c4c-4f0d-9d8a-162843c10333.jpg
-       */
-      avatarKey: string;
-      /**
-       * @description The phone of the doctor
-       * @example +38099561735634
-       */
-      phone: string;
-      /**
-       * @description Email of the doctor
-       * @example johndoe@mail.com
-       */
-      email: string;
-      /**
-       * @description List of conditions of the patient.
-       * @example {
-       *   "id": "9ed61d87-5c61-4575-9e80-1a8cd88455d0",
-       *   "name": "Diabetes"
-       * }
-       */
-      conditions: components["schemas"]["ResponseConditionDto"][];
     };
     CreatePatientDto: {
       /**
        * @description The unique user id of the user to which the patient is bound.
-       * @example fcdc6d64-7e3f-43a1-b04a-705268d59c60
-       * @example f04cdea6-8633-4993-9d08-a2efa1f1bf25
+       * @example 48b076e4-c6e5-4c2c-98af-8fd0b3392504
        */
       userId: string;
       /**
@@ -1026,8 +822,7 @@ export interface components {
       declarationId?: string;
       /**
        * @description A unique key to the patient identification file.
-       * @example 48e10172-23cb-420e-a206-30191b25a09e
-       * @example b63ef126-8250-4e3a-b961-aa151e726e43
+       * @example 18382ef1-e539-464e-ace4-84606e6dd6fd
        */
       identityCardKey?: string;
       /**
@@ -1047,39 +842,33 @@ export interface components {
       requestBillPaymentApproval?: boolean;
     };
     CreatePatientAllergyDto: {
-    CreatePatientAllergyDto: {
       /**
        * @description Unique allergy id.
-       * @example 5f8ea736-cc38-4902-88fc-0049103a712b
-       * @example 1a0ac08c-bfd6-4279-a7df-a26d609af386
+       * @example 6a19b08c-9f06-481a-b227-022937a22a02
        */
       allergyId: string;
     };
     ResponsePatientAllergyDto: {
       /**
        * @description Unique patient allergy id.
-       * @example 07b51dc2-c47e-4ec3-94e5-e1faf076b6c5
-       * @example 551a4076-b643-4f91-a35c-2d096cb0cab0
+       * @example 91294b95-5372-4708-8a9e-45cc6a1205fe
        */
       id: string;
       /**
        * @description Unique patient id.
-       * @example 5fa8f131-917c-4574-9e48-7cc9739bbbd7
-       * @example 2bdbee41-b7e5-494d-88ee-b212975e598d
+       * @example bd27509c-0a99-482e-bbd7-b90655e4fe14
        */
       patientId: string;
       /**
        * @description Unique allergy id.
-       * @example 70a15e55-22bc-4835-a6dd-b99bf46edf5d
-       * @example 1cd597ec-875c-41f6-9377-d5a5a93a3ca3
+       * @example 6fbd35a5-be78-4843-993b-30023a627e57
        */
       allergyId: string;
     };
     ResponseAllergyDto: {
       /**
        * @description Unique allergy id.
-       * @example bfbe31ab-bedd-4a86-99b7-890f90197087
-       * @example a721ebcb-d156-450f-a416-13b5e2ac67a7
+       * @example 320b09c5-6b0c-40c3-a06b-f0d74c306054
        */
       id: string;
       /**
@@ -1092,69 +881,39 @@ export interface components {
       /** @description Id of condition */
       conditionId: string;
     };
-    CreatePatientConditionDto: {
-      /** @description Id of condition */
-      conditionId: string;
-    };
-    ResponsePatientConditionDto: {
-      /** @description The ID of the patient condition */
-      id: string;
-      /** @description The ID of the patient */
-      patientId: string;
-      /** @description The ID of the condition */
-      conditionId: string;
-    };
-    ResponseConditionDto: {
-      /**
-       * @description Condition id
-       * @example 4dfe008a-c83e-478c-8b95-6717ebe06e6b
-       */
-      id: string;
-      /**
-       * @description Condition name
-       * @example Asthma
-       */
-      name: string;
-    };
     CreateFavoriteDto: {
       /**
        * @description Unique doctor id.
-       * @example aa076f99-625e-46ad-b58c-033729b2911f
-       * @example 20a59bfa-c6aa-4ff1-96ab-e0507f21330f
+       * @example 3a3b6830-3e56-4e71-8775-26c365bd658d
        */
       doctorId: string;
       /**
        * @description Unique patient id.
-       * @example 32a710a7-9f93-4df3-bf9d-b7dbc1cc6e37
-       * @example aa2cdb20-d109-4062-a7b8-262162bd65bb
+       * @example 3d4d65e8-60da-4622-abd7-622ae7f407c5
        */
       patientId: string;
     };
     ResponseFavoriteDto: {
       /**
        * @description Unique doctor id.
-       * @example aa076f99-625e-46ad-b58c-033729b2911f
-       * @example 20a59bfa-c6aa-4ff1-96ab-e0507f21330f
+       * @example 3a3b6830-3e56-4e71-8775-26c365bd658d
        */
       doctorId: string;
       /**
        * @description Unique patient id.
-       * @example 32a710a7-9f93-4df3-bf9d-b7dbc1cc6e37
-       * @example aa2cdb20-d109-4062-a7b8-262162bd65bb
+       * @example 3d4d65e8-60da-4622-abd7-622ae7f407c5
        */
       patientId: string;
       /**
        * @description Unique favorite id.
-       * @example 669890dc-4b4f-4565-8dbc-b2323a27dd57
-       * @example 95eaab01-3131-4451-ba13-6b7e0bfb5acf
+       * @example cf513252-353c-4548-a123-f84572682fe4
        */
       id: string;
     };
     CreateDoctorDto: {
       /**
        * @description Unique user id.
-       * @example 208cc66b-d63d-4280-a17d-e9b9e2428ce4
-       * @example 99d5110a-ed6b-4643-9d96-73ba0aaa0f90
+       * @example f9e40432-effa-4bf8-9d38-70a4332d8ef9
        */
       userId: string;
       /**
@@ -1170,16 +929,14 @@ export interface components {
       /**
        * @description A list of ids specialties that the doctor covers.
        * @example [
-       *   "592388e2-4817-45b5-819e-e97f5186c942"
-       *   "00c113ed-b8e4-45ef-86b8-526558441b11"
+       *   "787510a6-0439-474b-be2c-ea4b39467efc"
        * ]
        */
       specializationIds: string[];
       /**
        * @description List of hospitals where the doctor works.
        * @example [
-       *   "d342ad9b-9085-4a5f-bb51-98e7a7c8cfcb"
-       *   "7273cf35-d9b1-43f3-8764-6429a476cb17"
+       *   "bf655e4a-c049-4070-b6e4-34eb9b8d306f"
        * ]
        */
       hospitalIds: string[];
@@ -1187,8 +944,7 @@ export interface components {
     ResponseHospitalDto: {
       /**
        * @description The hospital's unique id.
-       * @example 8f961281-5808-4948-a85a-1d6cca76a0bc
-       * @example b32874c1-452f-4b93-b49d-20fee16c1094
+       * @example ce4ef969-8476-4c0f-ad7f-e1633eed50a0
        */
       id: string;
       /**
@@ -1225,8 +981,7 @@ export interface components {
     ResponseSpecializationDto: {
       /**
        * @description Unique specialisation id.
-       * @example 62ef841e-1f46-4fc1-a7e1-c1753320f853
-       * @example 4077a332-ab7f-46eb-a8a8-6de837539b1d
+       * @example 269ed033-9949-432d-83da-dc2804e79d8c
        */
       id: string;
       /**
@@ -1379,34 +1134,29 @@ export interface components {
     ResponseFileDto: {
       /**
        * @description File Name.
-       * @example 0936626d-991c-4ba1-984c-70d3ae94cf71.png
-       * @example 468c8148-c2a4-46a9-badb-5d0277250112.png
+       * @example 2377ab82-6564-4776-8a89-6e5cc4c171da.png
        */
       name: string;
       /**
        * @description Full link in the S3 storage to get the file.
-       * @example https://storage.googleapis.com/bucket/0936626d-991c-4ba1-984c-70d3ae94cf71.png
-       * @example https://storage.googleapis.com/bucket/468c8148-c2a4-46a9-badb-5d0277250112.png
+       * @example https://storage.googleapis.com/bucket/2377ab82-6564-4776-8a89-6e5cc4c171da.png
        */
       url: string;
     };
     CreateAppointmentDto: {
       /**
        * @description Unique doctor id.
-       * @example 10e3a87b-b17b-4615-85e7-0d092fa64383
-       * @example 664f495c-9d06-490a-adc2-a3e89f3884d1
+       * @example 25f6b9ac-1f19-4e1f-afc0-f98ca2f20dcb
        */
       doctorId: string;
       /**
        * @description Unique patient id.
-       * @example 455e902a-7dd7-41e3-8b8d-dbda5dd624ab
-       * @example dd7a9b94-7b45-46ea-9e08-9354641d8532
+       * @example 04e1aed2-e85d-45f6-902a-574dead92983
        */
       patientId: string;
       /**
        * @description The date on which the meeting is scheduled.
-       * @example 2024-04-29T11:16:01.938Z
-       * @example 2024-04-29T12:39:31.878Z
+       * @example 2024-04-29T13:36:12.639Z
        */
       assignedAt: string;
       /**
@@ -1415,64 +1165,46 @@ export interface components {
        * @enum {string}
        */
       status: "PENDING_PAYMENT" | "PLANNED" | "COMPLETED" | "CANCELED";
-      status: 'PENDING_PAYMENT' | 'PLANNED' | 'COMPLETED' | 'CANCELED';
       /**
        * @description Additional comments left by the patient or doctor.
        * @example Get some blood pressure pills.
        */
       notes?: string;
       /**
-       * @description The unique id of the billed payment.
-       * @example 6988bc8f-d386-49dc-803a-c4c26b74cf8b
        * @description The unique Id of the billed payment.
-       * @example 395d26ef-f113-4393-b3e7-e27ba4cb82b9
+       * @example 5a063a46-7d33-42f8-8a89-d89ed433f99c
        */
       paymentInvoiceKey?: string;
       /**
-       * @description The unique id from the receipt file for the appointment.
-       * @example 0bbb8288-8504-4ef0-b38e-521cbf2854aa
        * @description The unique id of the payment receipt.
-       * @example e9e66cd5-cdb6-454a-8588-3dc4b4c835ac
-       */
-      paymentReceiptKey: string;
-      /**
-       * @description The time when the appointment should start.
-       * @example 2024-04-29T11:16:01.938Z
+       * @example 1fdd7a2f-30e4-42cc-9176-b201e71c0d03
        */
       paymentReceiptKey?: string;
       /** @description The date and time the appointment started */
       startedAt?: string;
-      /**
-       * @description The time when the appointment should end.
-       * @example 2024-04-29T11:16:01.938Z
-       */
       /** @description The date and time the appointment ended */
       endedAt?: string;
     };
     ResponseAppointmentDto: {
       /**
        * @description Unique appointment id.
-       * @example 418eb72b-ceed-4861-bae4-9db246f25900
-       * @example 9e7cdf77-f0f5-4236-9bc6-47d0f2f85aad
+       * @example f8ef7dba-53c0-47f0-aadb-6f0fe5d586dd
        */
       id: string;
       /**
        * @description Unique doctor id.
-       * @example 861a48d7-2033-43fa-9a40-56370528c106
-       * @example 237533f2-06e4-4318-a6e2-156f847dade2
+       * @example 95e56be5-67f9-4cdb-b8a8-034383aaadc7
        */
       doctorId: string;
       /**
        * @description Unique patient id.
-       * @example 020924f4-7a40-4834-8b8f-9e00c2236f63
-       * @example cd85229d-36be-4dc1-a27f-ecc6b683f2ff
+       * @example 19f5e8c0-a90d-4414-a358-a6a380bb812d
        */
       patientId: string;
       /**
        * Format: date-time
        * @description The date on which the meeting is scheduled.
-       * @example 2024-04-29T11:16:01.936Z
-       * @example 2024-04-29T12:39:31.876Z
+       * @example 2024-04-29T13:36:12.637Z
        */
       assignedAt: string;
       /**
@@ -1480,7 +1212,6 @@ export interface components {
        * @enum {string}
        */
       status: "PENDING_PAYMENT" | "PLANNED" | "COMPLETED" | "CANCELED";
-      status: 'PENDING_PAYMENT' | 'PLANNED' | 'COMPLETED' | 'CANCELED';
       /**
        * @description Additional comments left by the patient or doctor.
        * @example Get some blood pressure pills.
@@ -1488,48 +1219,41 @@ export interface components {
       notes: string;
       /**
        * @description The unique id of the billed payment.
-       * @example 622f67a2-c9a5-4d20-8345-e895806eb9fa
-       * @example ef4e2ae8-5f64-4aaf-a982-fe45c01cfa5a
+       * @example 720e0b64-d725-4d5e-a22e-cfb0baae05ef
        */
       paymentInvoiceKey: string;
       /** @description The unique id from the receipt file for the appointment. */
       paymentReceiptKey: string;
       /**
        * @description The unique id of the video chat recording.
-       * @example 307ca84e-1067-4aff-9a99-e9b7291d7975.mp4
-       * @example d87e168a-b0d8-46f8-8868-dc8555e08aad.mp4
+       * @example 24c102a3-fc41-4cea-a97a-efda64c0fccb.mp4
        */
       videoRecordKey: string;
       /**
        * @description The time when the appointment should start.
-       * @example 2024-04-29T11:16:01.936Z
-       * @example 2024-04-29T12:39:31.876Z
+       * @example 2024-04-29T13:36:12.637Z
        */
       startedAt: string;
       /**
        * @description The time when the appointment should end.
-       * @example 2024-04-29T11:16:01.936Z
-       * @example 2024-04-29T12:39:31.876Z
+       * @example 2024-04-29T13:36:12.637Z
        */
       endedAt: string;
     };
     PatchAppointmentDto: {
       /**
        * @description Unique doctor id.
-       * @example 10e3a87b-b17b-4615-85e7-0d092fa64383
-       * @example 664f495c-9d06-490a-adc2-a3e89f3884d1
+       * @example 25f6b9ac-1f19-4e1f-afc0-f98ca2f20dcb
        */
       doctorId?: string;
       /**
        * @description Unique patient id.
-       * @example 455e902a-7dd7-41e3-8b8d-dbda5dd624ab
-       * @example dd7a9b94-7b45-46ea-9e08-9354641d8532
+       * @example 04e1aed2-e85d-45f6-902a-574dead92983
        */
       patientId?: string;
       /**
        * @description The date on which the meeting is scheduled.
-       * @example 2024-04-29T11:16:01.938Z
-       * @example 2024-04-29T12:39:31.878Z
+       * @example 2024-04-29T13:36:12.639Z
        */
       assignedAt?: string;
       /**
@@ -1538,64 +1262,47 @@ export interface components {
        * @enum {string}
        */
       status?: "PENDING_PAYMENT" | "PLANNED" | "COMPLETED" | "CANCELED";
-      status?: 'PENDING_PAYMENT' | 'PLANNED' | 'COMPLETED' | 'CANCELED';
       /**
        * @description Additional comments left by the patient or doctor.
        * @example Get some blood pressure pills.
        */
       notes?: string;
       /**
-       * @description The unique id of the billed payment.
-       * @example 6988bc8f-d386-49dc-803a-c4c26b74cf8b
        * @description The unique Id of the billed payment.
-       * @example 395d26ef-f113-4393-b3e7-e27ba4cb82b9
+       * @example 5a063a46-7d33-42f8-8a89-d89ed433f99c
        */
       paymentInvoiceKey?: string;
       /**
-       * @description The unique id from the receipt file for the appointment.
-       * @example 0bbb8288-8504-4ef0-b38e-521cbf2854aa
        * @description The unique id of the payment receipt.
-       * @example e9e66cd5-cdb6-454a-8588-3dc4b4c835ac
+       * @example 1fdd7a2f-30e4-42cc-9176-b201e71c0d03
        */
       paymentReceiptKey?: string;
-      /**
-       * @description The time when the appointment should start.
-       * @example 2024-04-29T11:16:01.938Z
-       */
       /** @description The date and time the appointment started */
       startedAt?: string;
-      /**
-       * @description The time when the appointment should end.
-       * @example 2024-04-29T11:16:01.938Z
-       */
       /** @description The date and time the appointment ended */
       endedAt?: string;
     };
     CreateDeclarationDto: {
       /**
        * @description Unique doctor id.
-       * @example 96b7532d-1527-4400-b403-68b30f4f81fa
-       * @example 4f991bba-e83f-4643-a268-ff4ae00350d7
+       * @example e6e7312c-5d17-431f-bcbd-6af08237998a
        */
       doctorId: string;
       /**
        * @description Unique patient id.
-       * @example d454277f-4a50-463e-a226-44b324f36f41
-       * @example 6b4d37cc-ee63-484b-adf5-0ae9629fa00f
+       * @example 6e43b6d1-11af-4918-a4d9-9265f154ef92
        */
       patientId: string;
     };
     ResponseDeclarationDto: {
       /**
        * @description Unique doctor id.
-       * @example 96b7532d-1527-4400-b403-68b30f4f81fa
-       * @example 4f991bba-e83f-4643-a268-ff4ae00350d7
+       * @example e6e7312c-5d17-431f-bcbd-6af08237998a
        */
       doctorId: string;
       /**
        * @description Unique patient id.
-       * @example d454277f-4a50-463e-a226-44b324f36f41
-       * @example 6b4d37cc-ee63-484b-adf5-0ae9629fa00f
+       * @example 6e43b6d1-11af-4918-a4d9-9265f154ef92
        */
       patientId: string;
       /**
@@ -1619,8 +1326,7 @@ export interface components {
     ResponseReviewDto: {
       /**
        * @description Unique rating id.
-       * @example 4d045d61-7ced-46b4-8cce-e2e0eac5da7e
-       * @example 266db49f-af19-4a90-95fb-762e95e28864
+       * @example 35b4ac89-dd6d-40c0-96c7-c6fdbbb0c52c
        */
       id: string;
       /**
@@ -1635,30 +1341,26 @@ export interface components {
       text: string;
       /**
        * @description Unique doctor id.
-       * @example 3c02cdb6-7c9b-472b-88a6-6ebf98ce12a7
-       * @example 162fad47-f2da-49cb-a8c4-a1a9d443457f
+       * @example 451d8138-6153-4c03-9cd4-23068354164d
        */
       doctorId: string;
       /**
        * Format: date-time
        * @description The date when the review was created.
-       * @example 2024-04-29T11:16:02.886Z
-       * @example 2024-04-29T12:39:33.481Z
+       * @example 2024-04-29T13:36:13.745Z
        */
       createdAt: string;
       /**
        * Format: date-time
        * @description The date when the review was updated.
-       * @example 2024-04-29T11:16:02.886Z
-       * @example 2024-04-29T12:39:33.481Z
+       * @example 2024-04-29T13:36:13.745Z
        */
       updatedAt: string;
     };
     ResponseReviewDtoWithNames: {
       /**
        * @description Unique rating id.
-       * @example 4d045d61-7ced-46b4-8cce-e2e0eac5da7e
-       * @example 266db49f-af19-4a90-95fb-762e95e28864
+       * @example 35b4ac89-dd6d-40c0-96c7-c6fdbbb0c52c
        */
       id: string;
       /**
@@ -1673,8 +1375,7 @@ export interface components {
       text: string;
       /**
        * @description Unique doctor id.
-       * @example 3c02cdb6-7c9b-472b-88a6-6ebf98ce12a7
-       * @example 162fad47-f2da-49cb-a8c4-a1a9d443457f
+       * @example 451d8138-6153-4c03-9cd4-23068354164d
        */
       doctorId: string;
       /**
@@ -1721,32 +1422,6 @@ export interface components {
        * @example 5
        */
       rate?: number;
-    };
-    CreateConditionDto: {
-      /**
-       * @description Condition name
-       * @example Asthma
-       */
-      name: string;
-    };
-    ResponseCondtionDto: {
-      /**
-       * @description Condition id
-       * @example 1
-       */
-      id: string;
-      /**
-       * @description Condition name
-       * @example Asthma
-       */
-      name: string;
-    };
-    UpdateConditionDto: {
-      /**
-       * @description Condition name
-       * @example Asthma
-       */
-      name?: string;
     };
     CreateConditionDto: {
       /**
@@ -2039,8 +1714,7 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["PatientResponseDto"];
-          'application/json': components['schemas']['ResponsePatientDto'];
+          "application/json": components["schemas"]["ResponsePatientDto"];
         };
       };
       /** @description Response if an error occurs while processing a request. */
@@ -2069,8 +1743,7 @@ export interface operations {
       path: {
         /**
          * @description Unique user id.
-         * @example 7e0d3913-222b-497f-9b91-f415b628c7ec
-         * @example f63c8964-92a3-43e5-98e2-53edb46aaf86
+         * @example 472fd81f-f838-4b21-be50-2ce636781504
          */
         id: string;
       };
@@ -2102,8 +1775,7 @@ export interface operations {
       path: {
         /**
          * @description Unique user id.
-         * @example 9f48512c-bafd-4977-840f-9925c9b90c03
-         * @example cd57516c-b5da-48fa-80ce-01d188c5d86c
+         * @example 1181d2e0-8249-4fcb-90c2-677034d2bb8e
          */
         id: string;
       };
@@ -2133,8 +1805,7 @@ export interface operations {
       path: {
         /**
          * @description Unique user id.
-         * @example 16b0296b-74ff-40c1-bb9b-9da678387278
-         * @example e17ea10e-a145-4ace-8210-a953a47a04e1
+         * @example f00fe17c-b32c-439f-893b-1355dc471642
          */
         id: string;
       };
@@ -2199,8 +1870,7 @@ export interface operations {
       path: {
         /**
          * @description The patient's unique id.
-         * @example 2a56ae0b-b0ec-455b-9df8-4f30f821b845
-         * @example 38a3fdc0-c84f-46ed-a03e-012714829e9c
+         * @example de7ce2d5-4800-4f82-9674-c580efca1290
          */
         id: string;
       };
@@ -2232,8 +1902,7 @@ export interface operations {
       path: {
         /**
          * @description The patient's unique id.
-         * @example 5964e166-fe8c-4878-bf16-7a663cab2a57
-         * @example 6096eee4-34e0-45d6-a885-b5909760d398
+         * @example 44a98164-d6c3-42fe-a68d-8dc0f7ecfdbd
          */
         id: string;
       };
@@ -2263,8 +1932,7 @@ export interface operations {
       path: {
         /**
          * @description The patient's unique id.
-         * @example 6035f8ee-0a5b-426e-bc12-5face46f2bc2
-         * @example 00f0524b-9132-4ff0-b0d5-532468017d07
+         * @example c4f04c22-1da3-4a4f-998f-559925793b28
          */
         id: string;
       };
@@ -2329,8 +1997,7 @@ export interface operations {
       path: {
         /**
          * @description The patient's unique id.
-         * @example 0f1f4599-fad2-44f9-bd44-852c621f12d6
-         * @example a374cdca-5394-4bc5-a942-9fa7d95eec32
+         * @example 115e9996-7f4f-438a-95d6-d7364cf48332
          */
         id: string;
       };
@@ -2362,8 +2029,7 @@ export interface operations {
       path: {
         /**
          * @description The patient's unique id.
-         * @example e06322d4-a81e-4ab3-b1be-e088b0825738
-         * @example 20dba0ea-51d9-4675-8b15-223470561255
+         * @example 61c55617-fb13-4dc4-a9b1-224bb62fdc28
          */
         id: string;
       };
@@ -2371,7 +2037,6 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["CreatePatientAllergyDto"];
-        'application/json': components['schemas']['CreatePatientAllergyDto'];
       };
     };
     responses: {
@@ -2401,7 +2066,7 @@ export interface operations {
       path: {
         /**
          * @description The patient's unique id.
-         * @example 615a8705-5d95-4d53-ac29-cfade187ee71
+         * @example 3d78a00a-ae8a-4c9a-9b57-bdb575248fcb
          */
         id: string;
       };
@@ -2433,7 +2098,7 @@ export interface operations {
       path: {
         /**
          * @description The patient's unique id.
-         * @example edee59f3-3797-42c7-9984-3e3499aeb584
+         * @example f734f010-fdb8-44b8-9cab-9be268547b52
          */
         id: string;
       };
@@ -2448,98 +2113,6 @@ export interface operations {
       200: {
         content: {
           "application/json": number;
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      400: {
-        content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      500: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-    };
-  };
-  /** Get patient conditions */
-  PatientController_getPatientConditions: {
-    parameters: {
-      path: {
-        /**
-         * @description The patient's unique id.
-         * @example b8bc9886-560a-4bc3-ac9b-21a3572669c5
-         */
-        id: string;
-      };
-    };
-    responses: {
-      /** @description Response when the request is successfully processed. */
-      200: {
-        content: {
-          'application/json': components['schemas']['ResponseConditionDto'][];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      400: {
-        content: {
-          'application/json': components['schemas']['BadRequestResponse'];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      500: {
-        content: {
-          'application/json': components['schemas']['ClassicNestResponse'];
-        };
-      };
-    };
-  };
-  /** Create patient condition */
-  PatientController_createPatientCondition: {
-    parameters: {
-      path: {
-        /**
-         * @description The patient's unique id.
-         * @example 87ee0f5a-a59c-4dc5-bad5-1e3a22a646a0
-         */
-        id: string;
-      };
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreatePatientConditionDto'];
-      };
-    };
-    responses: {
-      /** @description Response when the request is successfully processed. */
-      200: {
-        content: {
-          'application/json': components['schemas']['ResponsePatientConditionDto'];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      400: {
-        content: {
-          'application/json': components['schemas']['BadRequestResponse'];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      500: {
-        content: {
-          'application/json': components['schemas']['ClassicNestResponse'];
-        };
-      };
-    };
-  };
-  /** Get favorites */
-  FavoriteController_getFavorites: {
-    responses: {
-      /** @description Response when the request is successfully processed. */
-      200: {
-        content: {
-          "application/json": components["schemas"]["ResponseFavoriteDto"][];
         };
       };
       /** @description Response if an error occurs while processing a request. */
@@ -2613,8 +2186,7 @@ export interface operations {
       path: {
         /**
          * @description Unique doctor id.
-         * @example 8f90b5af-ca96-4363-bd0c-c7de9f32a113
-         * @example c2421d48-36eb-413c-8c22-acf87bba5ec4
+         * @example 31fc1a64-c5b2-403f-a942-3121ae6bb2ca
          */
         id: string;
       };
@@ -2646,8 +2218,7 @@ export interface operations {
       path: {
         /**
          * @description Unique doctor id.
-         * @example d61571f2-7655-44b6-9873-5e0681f49d10
-         * @example 0ea887f9-4eef-4710-8d37-f2a0c9e0f2b6
+         * @example 306cda78-37e1-4ab7-b744-d880b8ca8144
          */
         id: string;
       };
@@ -2738,8 +2309,7 @@ export interface operations {
       path: {
         /**
          * @description Unique patient id.
-         * @example 4b413ceb-8941-42e6-8f50-59998719ab3e
-         * @example 7ea36f00-eec2-4562-b32c-a096904b26e6
+         * @example bac03364-b697-433d-9fdf-9e1be1988f05
          */
         id: string;
       };
@@ -2789,7 +2359,7 @@ export interface operations {
       /** @description Response if an error occurs while processing a request. */
       401: {
         content: {
-          'application/json': components['schemas']['UnauthorizedResponse'];
+          "application/json": components["schemas"]["UnauthorizedResponse"];
         };
       };
       /** @description Response if an error occurs while processing a request. */
@@ -2800,49 +2370,13 @@ export interface operations {
       };
     };
   };
-  /** Get my doctors */
-  DoctorController_getMyDoctors: {
-    parameters: {
-      header?: {
-        /** @description JWT token */
-        Cookie?: string;
-      };
-    };
-    responses: {
-      /** @description Response when the request is successfully processed. */
-      200: {
-        content: {
-          'application/json': components['schemas']['ResponseDoctorDto'][];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      400: {
-        content: {
-          'application/json': components['schemas']['BadRequestResponse'];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      401: {
-        content: {
-          'application/json': components['schemas']['UnauthorizedResponse'];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      500: {
-        content: {
-          'application/json': components['schemas']['ClassicNestResponse'];
-        };
-      };
-    };
-  };
   /** Get doctor */
   DoctorController_getDoctor: {
     parameters: {
       path: {
         /**
          * @description Unique doctor id.
-         * @example 237cd498-89ce-4fad-9a05-d4cc8e927553
-         * @example 69b59532-cb6b-4eca-9607-0f34c1ea7b46
+         * @example c7d85e9f-cd7e-4234-b938-9b3b76218b74
          */
         id: string;
       };
@@ -2874,8 +2408,7 @@ export interface operations {
       path: {
         /**
          * @description Unique doctor id.
-         * @example c08e9668-7e20-4990-bbdf-1ea86cf85dda
-         * @example cccbaa39-55c5-45cf-8c38-9affc1d4d6ad
+         * @example 1f2d3609-9ce9-4b45-8430-1893d0133850
          */
         id: string;
       };
@@ -2905,8 +2438,7 @@ export interface operations {
       path: {
         /**
          * @description Unique doctor id.
-         * @example e55032c0-5a50-4420-9ce6-dda9b1643b69
-         * @example 3dd0f373-f1b8-4137-9987-7e206f95016e
+         * @example 4f3848b1-59cd-4397-8dc4-5ef102bc6c88
          */
         id: string;
       };
@@ -2994,8 +2526,7 @@ export interface operations {
       path: {
         /**
          * @description The hospital's unique id.
-         * @example 25701cfa-6366-4212-b77f-959482870bbc
-         * @example c6c787fd-6ecf-4c58-ac27-5a6713101bed
+         * @example 02bb74dd-0c3b-4269-9ff2-4e4854cc6d44
          */
         id: string;
       };
@@ -3027,8 +2558,7 @@ export interface operations {
       path: {
         /**
          * @description The hospital's unique id.
-         * @example 510df296-2bf8-4447-aa10-50a183e31d70
-         * @example 75e466d3-a24d-4ac4-a508-a3e885325369
+         * @example 40e85a06-a4d3-412f-93fc-6e5c385fb91a
          */
         id: string;
       };
@@ -3058,8 +2588,7 @@ export interface operations {
       path: {
         /**
          * @description The hospital's unique id.
-         * @example 6491594d-17b3-447d-9d26-9e593ea24906
-         * @example 49109cbe-21c2-473c-80e7-589d97527d13
+         * @example d55aba67-e5d0-435d-8c1c-fb5ad85f2b30
          */
         id: string;
       };
@@ -3147,8 +2676,7 @@ export interface operations {
       path: {
         /**
          * @description Unique specialisation id.
-         * @example 771964c9-88cb-4000-a7ab-8563e12f79f3
-         * @example b5cd5f49-c9da-4168-93e7-50cfe58cdd88
+         * @example 19fae14d-5cb3-429c-bb4e-4024563439a9
          */
         id: string;
       };
@@ -3180,8 +2708,7 @@ export interface operations {
       path: {
         /**
          * @description Unique specialisation id.
-         * @example 89973165-0865-4f3c-89b1-08a44ed0eae9
-         * @example 5455513d-6d04-4e01-9a99-861e96fb4969
+         * @example 18481496-76a1-4907-9f56-8e87e0ecf9ff
          */
         id: string;
       };
@@ -3211,8 +2738,7 @@ export interface operations {
       path: {
         /**
          * @description Unique specialisation id.
-         * @example bc06a1e8-2498-4663-bde1-4cec076611b2
-         * @example 2fe794b2-8233-4b2b-a0c4-6717dfb9e97d
+         * @example 5c65675e-0d41-405f-995e-0b652028b507
          */
         id: string;
       };
@@ -3278,8 +2804,7 @@ export interface operations {
       path: {
         /**
          * @description Unique file name.
-         * @example 6ac3947d-e738-4b1d-98b3-3cbe8e0a8233.png
-         * @example 6a4afe51-5e22-4885-b003-4f5aa8baad6a.png
+         * @example 93766fd2-c9da-48b7-b0a6-e62bcaf52923.png
          */
         name: string;
       };
@@ -3311,8 +2836,7 @@ export interface operations {
       path: {
         /**
          * @description Unique file name.
-         * @example 10fc3743-4cd1-41de-8867-281f7a7f47a6.png
-         * @example a48350e1-a6bc-426b-901f-c5ba26248b79.png
+         * @example 0f259efe-3fe3-4cc9-a01a-839f85cfb962.png
          */
         name: string;
       };
@@ -3393,8 +2917,7 @@ export interface operations {
       path: {
         /**
          * @description Unique patient id.
-         * @example 3fed44cc-41a6-4f9e-bb69-704527a47fd4
-         * @example 1280a491-0180-4112-ac03-a2dfec1643e3
+         * @example bf738fa5-db05-47d3-9a48-5f0345b87148
          */
         id: string;
       };
@@ -3444,7 +2967,7 @@ export interface operations {
       /** @description Response if an error occurs while processing a request. */
       401: {
         content: {
-          'application/json': components['schemas']['UnauthorizedResponse'];
+          "application/json": components["schemas"]["UnauthorizedResponse"];
         };
       };
       /** @description Response if an error occurs while processing a request. */
@@ -3455,49 +2978,13 @@ export interface operations {
       };
     };
   };
-  /** Get my appointment */
-  AppointmentController_getMyAppointments: {
-    parameters: {
-      header?: {
-        /** @description JWT token */
-        Cookie?: string;
-      };
-    };
-    responses: {
-      /** @description Response when the request is successfully processed. */
-      200: {
-        content: {
-          'application/json': components['schemas']['ResponseAppointmentDto'][];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      400: {
-        content: {
-          'application/json': components['schemas']['BadRequestResponse'];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      401: {
-        content: {
-          'application/json': components['schemas']['UnauthorizedResponse'];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      500: {
-        content: {
-          'application/json': components['schemas']['ClassicNestResponse'];
-        };
-      };
-    };
-  };
   /** Get all appointments by doctor id */
   AppointmentController_getAppointmentsByDoctorId: {
     parameters: {
       path: {
         /**
          * @description Unique doctor id.
-         * @example 64f85464-5676-4cba-b72b-1717e26c9c47
-         * @example a6239c34-6f0c-4ab7-8e9d-8de72f4a39af
+         * @example 3f0443b3-7ab7-4b38-8f9c-71ed320b744d
          */
         id: string;
       };
@@ -3529,8 +3016,7 @@ export interface operations {
       path: {
         /**
          * @description Unique appointment id.
-         * @example c4854d93-1b4e-47d3-a090-9d4d04b8edda
-         * @example 6ef352d3-b873-4360-9e09-01c9a9a3bca2
+         * @example 4c08a815-7c65-46cf-ae09-54319a679f43
          */
         id: string;
       };
@@ -3562,8 +3048,7 @@ export interface operations {
       path: {
         /**
          * @description Unique appointment id.
-         * @example 5af11ec5-7a15-4df8-94be-32dabb528196
-         * @example afb3b4d0-2111-46f9-88a3-0af884df1867
+         * @example 395c5386-ce5d-4556-8dfb-d02c459c60d5
          */
         id: string;
       };
@@ -3593,8 +3078,7 @@ export interface operations {
       path: {
         /**
          * @description Unique appointment id.
-         * @example b8923456-ebda-4889-8fa2-3155824aaa9a
-         * @example 71aa2523-1b92-439c-82be-732540c15d18
+         * @example ba035458-eaf0-48b4-8612-cc41ce8fa972
          */
         id: string;
       };
@@ -3909,8 +3393,7 @@ export interface operations {
       path: {
         /**
          * @description Unique doctor id.
-         * @example f8ef3bb5-6d5e-4648-8246-6c03ea1d90f0
-         * @example dcb9bea0-aa93-4b45-a5dd-2a991e20f541
+         * @example 546d77c7-f152-47c0-9bad-edd0b4d85287
          */
         doctorId: string;
       };
@@ -3942,8 +3425,7 @@ export interface operations {
       path: {
         /**
          * @description Unique review id.
-         * @example 73fb5864-0741-4592-8dd7-4586b854aeca
-         * @example d569c66c-08ce-4d45-945b-a5e02525e23a
+         * @example 3304c533-a833-4b56-9912-558f462b9e12
          */
         id: string;
       };
@@ -4221,525 +3703,6 @@ export interface operations {
       };
     };
   };
-  /**
-   * Get all conditions
-   * @description This endpoint retrieves all conditions.
-   */
-  ConditionController_findAll: {
-    responses: {
-      /** @description Return conditions list */
-      200: {
-        content: {
-          'application/json': components['schemas']['ResponseCondtionDto'][];
-        };
-      };
-      /** @description Bad request */
-      400: {
-        content: {
-          'application/json': components['schemas']['BadRequestResponse'];
-        };
-      };
-      /** @description Internal server error */
-      500: {
-        content: {
-          'application/json': components['schemas']['ClassicNestResponse'];
-        };
-      };
-    };
-  };
-  /**
-   * Create a new condition
-   * @description This endpoint creates a new condition.
-   */
-  ConditionController_create: {
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateConditionDto'];
-      };
-    };
-    responses: {
-      /** @description Condition created */
-      200: {
-        content: {
-          'application/json': components['schemas']['ResponseCondtionDto'];
-        };
-      };
-      /** @description Bad request */
-      400: {
-        content: {
-          'application/json': components['schemas']['BadRequestResponse'];
-        };
-      };
-      /** @description Internal server error */
-      500: {
-        content: {
-          'application/json': components['schemas']['ClassicNestResponse'];
-        };
-      };
-    };
-  };
-  /**
-   * Get a condition by ID
-   * @description This endpoint retrieves a condition object by ID.
-   */
-  ConditionController_findOne: {
-    parameters: {
-      path: {
-        /**
-         * @description Condition ID
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
-         */
-        id: string;
-      };
-    };
-    responses: {
-      /** @description Return condition by id */
-      200: {
-        content: {
-          'application/json': components['schemas']['ResponseCondtionDto'];
-        };
-      };
-      /** @description Bad request */
-      400: {
-        content: {
-          'application/json': components['schemas']['BadRequestResponse'];
-        };
-      };
-      /** @description Internal server error */
-      500: {
-        content: {
-          'application/json': components['schemas']['ClassicNestResponse'];
-        };
-      };
-    };
-  };
-  /**
-   * Delete a condition by ID
-   * @description This endpoint deletes a condition object by ID.
-   */
-  ConditionController_remove: {
-    parameters: {
-      path: {
-        /**
-         * @description Condition id
-         * @example 1
-         */
-        id: string;
-      };
-    };
-    responses: {
-      /** @description Condition deleted */
-      200: {
-        content: {
-          'application/json': components['schemas']['ResponseCondtionDto'];
-        };
-      };
-      /** @description Bad request */
-      400: {
-        content: {
-          'application/json': components['schemas']['BadRequestResponse'];
-        };
-      };
-      /** @description Condition not found */
-      404: {
-        content: {
-          'application/json': components['schemas']['ClassicNestResponse'];
-        };
-      };
-      /** @description Internal server error */
-      500: {
-        content: {
-          'application/json': components['schemas']['ClassicNestResponse'];
-        };
-      };
-    };
-  };
-  /**
-   * Update a condition by ID
-   * @description This endpoint updates a condition object by ID.
-   */
-  ConditionController_update: {
-    parameters: {
-      path: {
-        /**
-         * @description Condition id
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
-         */
-        id: string;
-      };
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['UpdateConditionDto'];
-      };
-    };
-    responses: {
-      /** @description Condition updated */
-      200: {
-        content: {
-          'application/json': components['schemas']['ResponseCondtionDto'];
-        };
-      };
-      /** @description Bad request */
-      400: {
-        content: {
-          'application/json': components['schemas']['BadRequestResponse'];
-        };
-      };
-      /** @description Internal server error */
-      500: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-    };
-  };
-  /**
-   * Get all conditions
-   * @description This endpoint retrieves all conditions.
-   */
-  ConditionController_findAll: {
-    responses: {
-      /** @description Return conditions list */
-      200: {
-        content: {
-          "application/json": components["schemas"]["ResponseCondtionDto"][];
-        };
-      };
-      /** @description Bad request */
-      400: {
-        content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
-        };
-      };
-      /** @description Internal server error */
-      500: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-    };
-  };
-  /**
-   * Create a new condition
-   * @description This endpoint creates a new condition.
-   */
-  ConditionController_create: {
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CreateConditionDto"];
-      };
-    };
-    responses: {
-      /** @description Condition created */
-      200: {
-        content: {
-          "application/json": components["schemas"]["ResponseCondtionDto"];
-        };
-      };
-      /** @description Bad request */
-      400: {
-        content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
-        };
-      };
-      /** @description Internal server error */
-      500: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-    };
-  };
-  /**
-   * Get a condition by ID
-   * @description This endpoint retrieves a condition object by ID.
-   */
-  ConditionController_findOne: {
-    parameters: {
-      path: {
-        /**
-         * @description Condition ID
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
-         */
-        id: string;
-      };
-    };
-    responses: {
-      /** @description Return condition by id */
-      200: {
-        content: {
-          "application/json": components["schemas"]["ResponseCondtionDto"];
-        };
-      };
-      /** @description Bad request */
-      400: {
-        content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
-        };
-      };
-      /** @description Internal server error */
-      500: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-    };
-  };
-  /**
-   * Delete a condition by ID
-   * @description This endpoint deletes a condition object by ID.
-   */
-  ConditionController_remove: {
-    parameters: {
-      path: {
-        /**
-         * @description Condition id
-         * @example 1
-         */
-        id: string;
-      };
-    };
-    responses: {
-      /** @description Condition deleted */
-      200: {
-        content: {
-          "application/json": components["schemas"]["ResponseCondtionDto"];
-        };
-      };
-      /** @description Bad request */
-      400: {
-        content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
-        };
-      };
-      /** @description Condition not found */
-      404: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-      /** @description Internal server error */
-      500: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-    };
-  };
-  /**
-   * Update a condition by ID
-   * @description This endpoint updates a condition object by ID.
-   */
-  ConditionController_update: {
-    parameters: {
-      path: {
-        /**
-         * @description Condition id
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
-         */
-        id: string;
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["UpdateConditionDto"];
-      };
-    };
-    responses: {
-      /** @description Condition updated */
-      200: {
-        content: {
-          "application/json": components["schemas"]["ResponseCondtionDto"];
-        };
-      };
-      /** @description Bad request */
-      400: {
-        content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
-        };
-      };
-      /** @description Internal server error */
-      500: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-    };
-  };
-  /**
-   * Get all conditions
-   * @description This endpoint retrieves all conditions.
-   */
-  ConditionController_findAll: {
-    responses: {
-      /** @description Return conditions list */
-      200: {
-        content: {
-          'application/json': components['schemas']['ResponseCondtionDto'][];
-        };
-      };
-      /** @description Bad request */
-      400: {
-        content: {
-          'application/json': components['schemas']['BadRequestResponse'];
-        };
-      };
-      /** @description Internal server error */
-      500: {
-        content: {
-          'application/json': components['schemas']['ClassicNestResponse'];
-        };
-      };
-    };
-  };
-  /**
-   * Create a new condition
-   * @description This endpoint creates a new condition.
-   */
-  ConditionController_create: {
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateConditionDto'];
-      };
-    };
-    responses: {
-      /** @description Condition created */
-      200: {
-        content: {
-          'application/json': components['schemas']['ResponseCondtionDto'];
-        };
-      };
-      /** @description Bad request */
-      400: {
-        content: {
-          'application/json': components['schemas']['BadRequestResponse'];
-        };
-      };
-      /** @description Internal server error */
-      500: {
-        content: {
-          'application/json': components['schemas']['ClassicNestResponse'];
-        };
-      };
-    };
-  };
-  /**
-   * Get a condition by ID
-   * @description This endpoint retrieves a condition object by ID.
-   */
-  ConditionController_findOne: {
-    parameters: {
-      path: {
-        /**
-         * @description Condition ID
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
-         */
-        id: string;
-      };
-    };
-    responses: {
-      /** @description Return condition by id */
-      200: {
-        content: {
-          'application/json': components['schemas']['ResponseCondtionDto'];
-        };
-      };
-      /** @description Bad request */
-      400: {
-        content: {
-          'application/json': components['schemas']['BadRequestResponse'];
-        };
-      };
-      /** @description Internal server error */
-      500: {
-        content: {
-          'application/json': components['schemas']['ClassicNestResponse'];
-        };
-      };
-    };
-  };
-  /**
-   * Delete a condition by ID
-   * @description This endpoint deletes a condition object by ID.
-   */
-  ConditionController_remove: {
-    parameters: {
-      path: {
-        /**
-         * @description Condition id
-         * @example 1
-         */
-        id: string;
-      };
-    };
-    responses: {
-      /** @description Condition deleted */
-      200: {
-        content: {
-          'application/json': components['schemas']['ResponseCondtionDto'];
-        };
-      };
-      /** @description Bad request */
-      400: {
-        content: {
-          'application/json': components['schemas']['BadRequestResponse'];
-        };
-      };
-      /** @description Condition not found */
-      404: {
-        content: {
-          'application/json': components['schemas']['ClassicNestResponse'];
-        };
-      };
-      /** @description Internal server error */
-      500: {
-        content: {
-          'application/json': components['schemas']['ClassicNestResponse'];
-        };
-      };
-    };
-  };
-  /**
-   * Update a condition by ID
-   * @description This endpoint updates a condition object by ID.
-   */
-  ConditionController_update: {
-    parameters: {
-      path: {
-        /**
-         * @description Condition id
-         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
-         */
-        id: string;
-      };
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['UpdateConditionDto'];
-      };
-    };
-    responses: {
-      /** @description Condition updated */
-      200: {
-        content: {
-          'application/json': components['schemas']['ResponseCondtionDto'];
-        };
-      };
-      /** @description Bad request */
-      400: {
-        content: {
-          'application/json': components['schemas']['BadRequestResponse'];
-        };
-      };
-      /** @description Internal server error */
-      500: {
-        content: {
-          'application/json': components['schemas']['ClassicNestResponse'];
-        };
-      };
-    };
-  };
   /** Get all allergies */
   AllergyController_getAllergies: {
     responses: {
@@ -4797,8 +3760,7 @@ export interface operations {
       path: {
         /**
          * @description Unique allergy id.
-         * @example 6ad7bb9c-0ba8-485e-b0ac-b6f781bb3ba7
-         * @example 8d9ecd43-90e7-4db7-a7d7-956029b338d8
+         * @example dd964152-efdf-4848-be43-eeaeda1a7ccd
          */
         id: string;
       };
@@ -4830,8 +3792,7 @@ export interface operations {
       path: {
         /**
          * @description Unique allergy id.
-         * @example 9247b335-42c5-4364-97ce-10c43186fa58
-         * @example f18edfa7-4421-4210-b2e9-ede5eef01e96
+         * @example 934e4dc9-03b7-47cd-9521-b5918f280d6e
          */
         id: string;
       };
@@ -4867,8 +3828,7 @@ export interface operations {
       path: {
         /**
          * @description Unique allergy id.
-         * @example 3d1b63b9-089b-4cf6-bae9-9147a44538c3
-         * @example 3d885885-b59a-461a-bbb8-56931369cc9a
+         * @example 0d9aa1f0-5fc8-48ff-b63b-35d1a7937796
          */
         id: string;
       };
