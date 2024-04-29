@@ -1,10 +1,13 @@
 import type { RootState } from '@/app/store';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { IUser } from '@/dataTypes/User';
 import { createAppSlice } from '../createAppSlice';
-import { BloodType, Gender, type IPatient } from '@/dataTypes/Patient';
+import type { Condition, TPatient } from '@/dataTypes/Patient';
+import type { IUser } from '@/dataTypes/User';
+import type { IAllergy } from '@/dataTypes/Allergy';
 
-export type Patient = IPatient & IUser;
+type Patient = TPatient &
+  IUser & { conditions: Condition[]; vaccinations: string[]; allergies: IAllergy[]; twoFactorAuthToggle: boolean };
+
 interface PatientData {
   data: Patient;
   state: {
@@ -29,15 +32,15 @@ const initialState: PatientData = {
     weight: 75,
     height: 175,
     age: 75,
-    bloodType: BloodType.O_PLUS,
-    gender: Gender.MALE,
+    bloodType: 'O_PLUS',
+    gender: 'MALE',
     identityCardKey: '',
     country: '',
     state: '',
     city: '',
     street: '',
     apartment: '',
-    zipCode: '',
+    zipCode: 0,
     conditions: [],
     vaccinations: [],
     allergies: [],

@@ -1,34 +1,34 @@
 import { instance } from '@/api/axios.api';
-import { BloodType, Gender, type IPatient } from '@/dataTypes/Patient';
+import { type TPatient } from '@/dataTypes/Patient';
 import type { IUser } from '@/dataTypes/User';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { AxiosResponse } from 'axios';
 import api from '../api';
 import { setPatientData, setPatientState, updatePatientData } from './PatientSlice';
+import handleError from '@/api/handleError.api';
 
 export const getPatientData = createAsyncThunk('patient', async (id: string, { dispatch }) => {
   try {
-    const patientResponse: AxiosResponse<IPatient> = await instance.get(`/patient/${id}`);
-    if (patientResponse.status !== 200) {
+    const { data, error } = await api.GET('/patient/{id}', { params: { path: { id } } });
+
+    if (error) {
       throw new Error('Failed to fetch patient data GET /patient/:id');
     }
-    const { userId } = patientResponse.data;
-    const userResponse: AxiosResponse<IUser> = await instance.get(`/user/${userId}`);
-    if (patientResponse.status !== 200) {
-      throw new Error('Failed to fetch user data GET /user/:id');
-    }
-    dispatch(setPatientData({ ...patientResponse.data, ...userResponse.data }));
+
+    dispatch(updatePatientData({ ...data }));
+    //TODO: Delete the line above, and uncomment after PR #214 is merged
+    // dispatch(setPatientData({ ...data }));
   } catch (e) {
     const error = e as Error;
-    throw error;
+    handleError(error);
   }
 });
 
 export const patchPatientData = createAsyncThunk(
   'patient',
-  async ({ id, data }: { id: string; data: Partial<Omit<IPatient, 'userId'>> }, { dispatch }) => {
+  async ({ id, data }: { id: string; data: Partial<Omit<TPatient, 'userId'>> }, { dispatch }) => {
     try {
-      const response: AxiosResponse<IPatient> = await instance.patch(`/patient/${id}`, data);
+      const response: AxiosResponse<TPatient> = await instance.patch(`/patient/${id}`, data);
       if (response.status === 200) {
         dispatch(updatePatientData(response.data));
       }
@@ -76,9 +76,9 @@ export const authorizePatient = createAsyncThunk('patient', async (_void, { disp
     setPatientData({
       ...data,
       id: data.patientId,
-      bloodType: BloodType[data.bloodType],
-      gender: Gender[data.gender],
-      zipCode: data.zipCode?.toString() || '',
+      bloodType: data.bloodType,
+      gender: data.gender,
+      zipCode: data.zipCode ?? 0,
       allergies: [],
       conditions: [],
       vaccinations: [],

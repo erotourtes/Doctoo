@@ -26,7 +26,7 @@ const ProfilePage = () => {
 
           <StatsCard variant='input' title='Weight, kg' value={patient.weight.toString()} iconVariant='weight' />
 
-          {/*TODO: Add age icon when presen */}
+          {/*TODO: Add age icon when present */}
           <StatsCard variant='input' title='Age' value={patient.age.toString()} iconVariant='weight' />
 
           <StatsCard
