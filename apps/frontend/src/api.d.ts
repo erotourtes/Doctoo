@@ -3,258 +3,257 @@
  * Do not make direct changes to the file.
  */
 
-
 export interface paths {
-  "/auth/login/patient": {
+  '/auth/login/patient': {
     /** Login patient */
-    post: operations["AuthController_localLogin"];
+    post: operations['AuthController_localLogin'];
   };
-  "/auth/login/patient/mfa": {
+  '/auth/login/patient/mfa': {
     /** Login patient with MFA */
-    post: operations["AuthController_verifyMFA"];
+    post: operations['AuthController_verifyMFA'];
   };
-  "/auth/signup": {
+  '/auth/signup': {
     /** Sign up user */
-    post: operations["AuthController_signUpUserFirstStep"];
+    post: operations['AuthController_signUpUserFirstStep'];
   };
-  "/auth/signup/patient/{token}": {
+  '/auth/signup/patient/{token}': {
     /** Sign up patient */
-    post: operations["AuthController_signUpPatientSecondStep"];
+    post: operations['AuthController_signUpPatientSecondStep'];
   };
-  "/auth/login/google": {
+  '/auth/login/google': {
     /** Login with Google */
-    get: operations["AuthController_googleLogin"];
+    get: operations['AuthController_googleLogin'];
   };
-  "/auth/login/google/redirect": {
+  '/auth/login/google/redirect': {
     /** Login with Google redirect */
-    get: operations["AuthController_googleLoginRedirect"];
+    get: operations['AuthController_googleLoginRedirect'];
   };
-  "/auth/logout": {
+  '/auth/logout': {
     /** Logout */
-    get: operations["AuthController_logout"];
+    get: operations['AuthController_logout'];
   };
-  "/auth/password/change": {
+  '/auth/password/change': {
     /** Change password */
-    post: operations["AuthController_changePassword"];
+    post: operations['AuthController_changePassword'];
   };
-  "/auth/patient/me": {
+  '/auth/patient/me': {
     /** Get patient */
-    get: operations["AuthController_getPatient"];
+    get: operations['AuthController_getPatient'];
   };
-  "/user/{id}": {
+  '/user/{id}': {
     /** Get user */
-    get: operations["UserController_getUser"];
+    get: operations['UserController_getUser'];
     /** Delete user */
-    delete: operations["UserController_deleteUser"];
+    delete: operations['UserController_deleteUser'];
     /** Update user */
-    patch: operations["UserController_patchUser"];
+    patch: operations['UserController_patchUser'];
   };
-  "/user": {
+  '/user': {
     /** Create user */
-    post: operations["UserController_createUser"];
+    post: operations['UserController_createUser'];
   };
-  "/patient/{id}": {
+  '/patient/{id}': {
     /** Get patient */
-    get: operations["PatientController_getPatient"];
+    get: operations['PatientController_getPatient'];
     /** Delete patient */
-    delete: operations["PatientController_deletePatient"];
+    delete: operations['PatientController_deletePatient'];
     /** Update patient */
-    patch: operations["PatientController_patchPatient"];
+    patch: operations['PatientController_patchPatient'];
   };
-  "/patient": {
+  '/patient': {
     /** Create patient */
-    post: operations["PatientController_createPatient"];
+    post: operations['PatientController_createPatient'];
   };
-  "/patient/{id}/allergy": {
+  '/patient/{id}/allergy': {
     /** Get patient allergies */
-    get: operations["PatientController_getPatientAllergies"];
+    get: operations['PatientController_getPatientAllergies'];
     /** Create patient allergy */
-    post: operations["PatientController_createPatientAllergy"];
+    post: operations['PatientController_createPatientAllergy'];
   };
-  "/patient/{id}/condition": {
+  '/patient/{id}/condition': {
     /** Get patient conditions */
-    get: operations["PatientController_getPatientConditions"];
+    get: operations['PatientController_getPatientConditions'];
     /** Create patient condition */
-    post: operations["PatientController_createPatientCondition"];
+    post: operations['PatientController_createPatientCondition'];
   };
-  "/favorite": {
+  '/favorite': {
     /** Get favorites */
-    get: operations["FavoriteController_getFavorites"];
+    get: operations['FavoriteController_getFavorites'];
     /** Create favorite */
-    post: operations["FavoriteController_createFavorite"];
+    post: operations['FavoriteController_createFavorite'];
   };
-  "/favorite/{id}": {
+  '/favorite/{id}': {
     /** Get favorite */
-    get: operations["FavoriteController_getFovorite"];
+    get: operations['FavoriteController_getFovorite'];
     /** Delete favorite */
-    delete: operations["FavoriteController_deleteFavorite"];
+    delete: operations['FavoriteController_deleteFavorite'];
   };
-  "/doctor": {
+  '/doctor': {
     /** Get all doctors */
-    get: operations["DoctorController_getDoctors"];
+    get: operations['DoctorController_getDoctors'];
     /** Create doctor */
-    post: operations["DoctorController_createDoctor"];
+    post: operations['DoctorController_createDoctor'];
   };
-  "/doctor/doctors/{id}": {
+  '/doctor/doctors/{id}': {
     /** Get all doctors by patient */
-    get: operations["DoctorController_getPatientDoctors"];
+    get: operations['DoctorController_getPatientDoctors'];
   };
-  "/doctor/doctors/my": {
+  '/doctor/doctors/my': {
     /** Get my doctors */
-    get: operations["DoctorController_getMyDoctors"];
+    get: operations['DoctorController_getMyDoctors'];
   };
-  "/doctor/{id}": {
+  '/doctor/{id}': {
     /** Get doctor */
-    get: operations["DoctorController_getDoctor"];
+    get: operations['DoctorController_getDoctor'];
     /** Delete doctor */
-    delete: operations["DoctorController_deleteDoctor"];
+    delete: operations['DoctorController_deleteDoctor'];
     /** Update doctor */
-    patch: operations["DoctorController_patchDoctor"];
+    patch: operations['DoctorController_patchDoctor'];
   };
-  "/hospital": {
+  '/hospital': {
     /** Get all hospitals */
-    get: operations["HospitalController_getHospitals"];
+    get: operations['HospitalController_getHospitals'];
     /** Create hospital */
-    post: operations["HospitalController_createHospital"];
+    post: operations['HospitalController_createHospital'];
   };
-  "/hospital/{id}": {
+  '/hospital/{id}': {
     /** Get hospital */
-    get: operations["HospitalController_getHospital"];
+    get: operations['HospitalController_getHospital'];
     /** Delete hospital */
-    delete: operations["HospitalController_deleteHospital"];
+    delete: operations['HospitalController_deleteHospital'];
     /** Update hospital */
-    patch: operations["HospitalController_patchHospital"];
+    patch: operations['HospitalController_patchHospital'];
   };
-  "/specialization": {
+  '/specialization': {
     /** Get all specializations */
-    get: operations["SpecializationController_getSpecializations"];
+    get: operations['SpecializationController_getSpecializations'];
     /** Create specialization */
-    post: operations["SpecializationController_createSpecialization"];
+    post: operations['SpecializationController_createSpecialization'];
   };
-  "/specialization/{id}": {
+  '/specialization/{id}': {
     /** Get specialization */
-    get: operations["SpecializationController_getSpecialization"];
+    get: operations['SpecializationController_getSpecialization'];
     /** Delete specialization */
-    delete: operations["SpecializationController_deleteSpecialization"];
+    delete: operations['SpecializationController_deleteSpecialization'];
     /** Update specialization */
-    patch: operations["SpecializationController_patchSpecialization"];
+    patch: operations['SpecializationController_patchSpecialization'];
   };
-  "/file/upload": {
+  '/file/upload': {
     /** Upload file */
-    post: operations["FileController_uploadFile"];
+    post: operations['FileController_uploadFile'];
   };
-  "/file/{name}": {
+  '/file/{name}': {
     /** Get file */
-    get: operations["FileController_getFileByName"];
+    get: operations['FileController_getFileByName'];
     /** Delete file */
-    delete: operations["FileController_deleteFileByName"];
+    delete: operations['FileController_deleteFileByName'];
   };
-  "/appointment": {
+  '/appointment': {
     /** Get all appointments */
-    get: operations["AppointmentController_getAppointments"];
+    get: operations['AppointmentController_getAppointments'];
     /** Create an appointment */
-    post: operations["AppointmentController_createAppointment"];
+    post: operations['AppointmentController_createAppointment'];
   };
-  "/appointment/patient/{id}": {
+  '/appointment/patient/{id}': {
     /** Get all appointments by patient id */
-    get: operations["AppointmentController_getAppointmentsByPatientId"];
+    get: operations['AppointmentController_getAppointmentsByPatientId'];
   };
-  "/appointment/my": {
+  '/appointment/my': {
     /** Get my appointment */
-    get: operations["AppointmentController_getMyAppointments"];
+    get: operations['AppointmentController_getMyAppointments'];
   };
-  "/appointment/doctor/{id}": {
+  '/appointment/doctor/{id}': {
     /** Get all appointments by doctor id */
-    get: operations["AppointmentController_getAppointmentsByDoctorId"];
+    get: operations['AppointmentController_getAppointmentsByDoctorId'];
   };
-  "/appointment/{id}": {
+  '/appointment/{id}': {
     /** Get an appointment */
-    get: operations["AppointmentController_getAppointment"];
+    get: operations['AppointmentController_getAppointment'];
     /** Delete an appointment */
-    delete: operations["AppointmentController_deleteAppointment"];
+    delete: operations['AppointmentController_deleteAppointment'];
     /** Update an appointment */
-    patch: operations["AppointmentController_patchAppointment"];
+    patch: operations['AppointmentController_patchAppointment'];
   };
-  "/declaration": {
+  '/declaration': {
     /** Get declarations */
-    get: operations["DeclarationController_getDeclrations"];
+    get: operations['DeclarationController_getDeclrations'];
     /** Create declaration */
-    post: operations["DeclarationController_createDeclaration"];
+    post: operations['DeclarationController_createDeclaration'];
   };
-  "/declaration/{id}": {
+  '/declaration/{id}': {
     /** Get declaration */
-    get: operations["DeclarationController_getDeclaration"];
+    get: operations['DeclarationController_getDeclaration'];
     /** Delete declaration */
-    delete: operations["DeclarationController_deleteDeclaration"];
+    delete: operations['DeclarationController_deleteDeclaration'];
     /** Update declaration */
-    patch: operations["DeclarationController_patchDeclaration"];
+    patch: operations['DeclarationController_patchDeclaration'];
   };
-  "/review/doctor/{doctorId}": {
+  '/review/doctor/{doctorId}': {
     /** Get reviews by doctor */
-    get: operations["ReviewController_getReviewsByDoctorId"];
+    get: operations['ReviewController_getReviewsByDoctorId'];
     /** Create a new review */
-    post: operations["ReviewController_createReview"];
+    post: operations['ReviewController_createReview'];
   };
-  "/review": {
+  '/review': {
     /** Get reviews */
-    get: operations["ReviewController_getReviews"];
+    get: operations['ReviewController_getReviews'];
   };
-  "/review/doctor/{doctorId}/average": {
+  '/review/doctor/{doctorId}/average': {
     /** Get the average rating of a doctor */
-    get: operations["ReviewController_getAvgRateByDoctorId"];
+    get: operations['ReviewController_getAvgRateByDoctorId'];
   };
-  "/review/{id}": {
+  '/review/{id}': {
     /** Get review */
-    get: operations["ReviewController_getReview"];
+    get: operations['ReviewController_getReview'];
   };
-  "/review/{reviewId}": {
+  '/review/{reviewId}': {
     /** Delete a review */
-    delete: operations["ReviewController_deleteReview"];
+    delete: operations['ReviewController_deleteReview'];
     /** Update a review */
-    patch: operations["ReviewController_patchReview"];
+    patch: operations['ReviewController_patchReview'];
   };
-  "/condition": {
+  '/condition': {
     /**
      * Get all conditions
      * @description This endpoint retrieves all conditions.
      */
-    get: operations["ConditionController_findAll"];
+    get: operations['ConditionController_findAll'];
     /**
      * Create a new condition
      * @description This endpoint creates a new condition.
      */
-    post: operations["ConditionController_create"];
+    post: operations['ConditionController_create'];
   };
-  "/condition/{id}": {
+  '/condition/{id}': {
     /**
      * Get a condition by ID
      * @description This endpoint retrieves a condition object by ID.
      */
-    get: operations["ConditionController_findOne"];
+    get: operations['ConditionController_findOne'];
     /**
      * Delete a condition by ID
      * @description This endpoint deletes a condition object by ID.
      */
-    delete: operations["ConditionController_remove"];
+    delete: operations['ConditionController_remove'];
     /**
      * Update a condition by ID
      * @description This endpoint updates a condition object by ID.
      */
-    patch: operations["ConditionController_update"];
+    patch: operations['ConditionController_update'];
   };
-  "/allergy": {
+  '/allergy': {
     /** Get all allergies */
-    get: operations["AllergyController_getAllergies"];
+    get: operations['AllergyController_getAllergies'];
     /** Create allergy */
-    post: operations["AllergyController_createAllergy"];
+    post: operations['AllergyController_createAllergy'];
   };
-  "/allergy/{id}": {
+  '/allergy/{id}': {
     /** Get allergy */
-    get: operations["AllergyController_getAllergy"];
+    get: operations['AllergyController_getAllergy'];
     /** Delete allergy */
-    delete: operations["AllergyController_deleteAllergy"];
+    delete: operations['AllergyController_deleteAllergy'];
     /** Update allergy */
-    patch: operations["AllergyController_patchAllergy"];
+    patch: operations['AllergyController_patchAllergy'];
   };
 }
 
@@ -302,7 +301,7 @@ export interface components {
       /** @description Detailed description of the error. */
       message: string | string[];
       /** @description A list of all fields that failed validation. */
-      errors: components["schemas"]["ErrorValidationObject"][];
+      errors: components['schemas']['ErrorValidationObject'][];
     };
     ClassicNestResponse: {
       /**
@@ -375,7 +374,7 @@ export interface components {
     ResponseUserDto: {
       /**
        * @description Unique user id.
-       * @example 495af5a2-6d4d-4711-9ebc-af45c366573b
+       * @example e5e28ded-9323-43fc-864c-02872300e038
        */
       id: string;
       /**
@@ -410,7 +409,7 @@ export interface components {
       googleId?: string;
       /**
        * @description The unique file id of the file in S3 storage.
-       * @example a8d05941-10e7-437d-8ead-894209b69ea7.jpeg
+       * @example 6b819fe9-3b1c-449b-b97a-29fb419baf07.jpeg
        */
       avatarKey: string;
     };
@@ -435,13 +434,13 @@ export interface components {
        * @example AB_MINUS
        * @enum {string}
        */
-      bloodType: "O_PLUS" | "O_MINUS" | "A_PLUS" | "A_MINUS" | "B_PLUS" | "B_MINUS" | "AB_PLUS" | "AB_MINUS";
+      bloodType: 'O_PLUS' | 'O_MINUS' | 'A_PLUS' | 'A_MINUS' | 'B_PLUS' | 'B_MINUS' | 'AB_PLUS' | 'AB_MINUS';
       /**
        * @description Patient gender.
        * @example MALE
        * @enum {string}
        */
-      gender: "MALE" | "FEMALE";
+      gender: 'MALE' | 'FEMALE';
       /**
        * @description The country where the hospital is located.
        * @example USA
@@ -501,12 +500,12 @@ export interface components {
     ResponsePatientDto: {
       /**
        * @description Unique patient id.
-       * @example 1073a64a-be56-4f0c-b9f1-038af984cc57
+       * @example 1489ae5f-21f6-4f3d-8569-85f323728e51
        */
       id: string;
       /**
        * @description The unique user id of the user to which the patient is bound.
-       * @example c964d9e2-7eba-4b69-a324-b2bbfb00a570
+       * @example ce5234d6-56e1-42c7-b6e1-659beaf2a2bf
        */
       userId: string;
       /**
@@ -529,16 +528,16 @@ export interface components {
        * @example AB_MINUS
        * @enum {string}
        */
-      bloodType: "O_PLUS" | "O_MINUS" | "A_PLUS" | "A_MINUS" | "B_PLUS" | "B_MINUS" | "AB_PLUS" | "AB_MINUS";
+      bloodType: 'O_PLUS' | 'O_MINUS' | 'A_PLUS' | 'A_MINUS' | 'B_PLUS' | 'B_MINUS' | 'AB_PLUS' | 'AB_MINUS';
       /**
        * @description Patient gender.
        * @example MALE
        * @enum {string}
        */
-      gender: "MALE" | "FEMALE";
+      gender: 'MALE' | 'FEMALE';
       /**
        * @description A unique key to the patient identification file.
-       * @example bdd04008-981f-45bb-90ea-47be3263ea38
+       * @example 545ddbd1-4bdb-45ca-82ee-f6aa9f45615b
        */
       identityCardKey: string;
       /**
@@ -642,7 +641,7 @@ export interface components {
       googleId?: string;
       /**
        * @description The unique file id of the file in S3 storage.
-       * @example 71038b8f-6c21-44e3-8d86-9bf4b9d4c7a8.jpeg
+       * @example 692119a6-002d-4650-9bfc-82fb05a69adf.jpeg
        */
       avatarKey: string;
     };
@@ -669,14 +668,14 @@ export interface components {
       email?: string;
       /**
        * @description The unique file id of the file in S3 storage.
-       * @example 71038b8f-6c21-44e3-8d86-9bf4b9d4c7a8.jpeg
+       * @example 692119a6-002d-4650-9bfc-82fb05a69adf.jpeg
        */
       avatarKey?: string;
     };
     CreatePatientDto: {
       /**
        * @description The unique user id of the user to which the patient is bound.
-       * @example 919300f7-beae-48ae-ad2a-271e5bef2d0f
+       * @example 5ec0cea9-cd74-4819-a847-9304696a5f12
        */
       userId: string;
       /**
@@ -699,13 +698,13 @@ export interface components {
        * @example AB_MINUS
        * @enum {string}
        */
-      bloodType: "O_PLUS" | "O_MINUS" | "A_PLUS" | "A_MINUS" | "B_PLUS" | "B_MINUS" | "AB_PLUS" | "AB_MINUS";
+      bloodType: 'O_PLUS' | 'O_MINUS' | 'A_PLUS' | 'A_MINUS' | 'B_PLUS' | 'B_MINUS' | 'AB_PLUS' | 'AB_MINUS';
       /**
        * @description Patient gender.
        * @example MALE
        * @enum {string}
        */
-      gender: "MALE" | "FEMALE";
+      gender: 'MALE' | 'FEMALE';
       /**
        * @description The country where the hospital is located.
        * @example USA
@@ -758,13 +757,13 @@ export interface components {
        * @example AB_MINUS
        * @enum {string}
        */
-      bloodType?: "O_PLUS" | "O_MINUS" | "A_PLUS" | "A_MINUS" | "B_PLUS" | "B_MINUS" | "AB_PLUS" | "AB_MINUS";
+      bloodType?: 'O_PLUS' | 'O_MINUS' | 'A_PLUS' | 'A_MINUS' | 'B_PLUS' | 'B_MINUS' | 'AB_PLUS' | 'AB_MINUS';
       /**
        * @description Patient gender.
        * @example MALE
        * @enum {string}
        */
-      gender?: "MALE" | "FEMALE";
+      gender?: 'MALE' | 'FEMALE';
       /**
        * @description The country where the hospital is located.
        * @example USA
@@ -802,7 +801,7 @@ export interface components {
       declarationId?: string;
       /**
        * @description A unique key to the patient identification file.
-       * @example e0b8ac5c-184f-4d54-9a83-f7a21a088401
+       * @example 384015d7-e3d6-4bfd-8f0a-b2fa330d2ee9
        */
       identityCardKey?: string;
       /**
@@ -824,31 +823,31 @@ export interface components {
     CreatePatientAllergyDto: {
       /**
        * @description Unique allergy id.
-       * @example 8d0cba1e-87da-4f7a-a73d-b3660ff44f12
+       * @example f717ace5-455a-4023-a6a0-af9ea6c118e0
        */
       allergyId: string;
     };
     ResponsePatientAllergyDto: {
       /**
        * @description Unique patient allergy id.
-       * @example eac19c9d-54cd-418a-9b87-a0670f1df422
+       * @example d453cfdd-82b5-466c-9ddd-fd3f8ea0817a
        */
       id: string;
       /**
        * @description Unique patient id.
-       * @example cb992a29-4faa-4c36-8379-7c01a8163f2c
+       * @example b3c7bdaf-7f2f-41f9-ba42-338efc4c70d1
        */
       patientId: string;
       /**
        * @description Unique allergy id.
-       * @example af1eebb4-12e2-4e4b-a20a-42966729f7a5
+       * @example 1b4cae61-236a-463e-bba5-2dd4b90bbae4
        */
       allergyId: string;
     };
     ResponseAllergyDto: {
       /**
        * @description Unique allergy id.
-       * @example 6711e177-e731-4722-896b-cbdfd9509682
+       * @example 8eddce15-4602-4566-9720-949ed8c1a21f
        */
       id: string;
       /**
@@ -872,7 +871,7 @@ export interface components {
     ResponseConditionDto: {
       /**
        * @description Condition id
-       * @example ff7a0f6f-950f-4220-a033-b58a3bfb5ce0
+       * @example b67f1e3b-0434-494e-8c57-b9ff8403ee3f
        */
       id: string;
       /**
@@ -884,36 +883,36 @@ export interface components {
     CreateFavoriteDto: {
       /**
        * @description Unique doctor id.
-       * @example b71b4aaf-07f1-4329-b6a4-d4c26620c48a
+       * @example a07ff996-45d4-4ff2-b46a-5c17f348043c
        */
       doctorId: string;
       /**
        * @description Unique patient id.
-       * @example 9389bde2-4251-4114-97fe-2fc53596b74d
+       * @example a6e025b1-cf51-485c-9bb9-4fc5377ddbed
        */
       patientId: string;
     };
     ResponseFavoriteDto: {
       /**
        * @description Unique doctor id.
-       * @example b71b4aaf-07f1-4329-b6a4-d4c26620c48a
+       * @example a07ff996-45d4-4ff2-b46a-5c17f348043c
        */
       doctorId: string;
       /**
        * @description Unique patient id.
-       * @example 9389bde2-4251-4114-97fe-2fc53596b74d
+       * @example a6e025b1-cf51-485c-9bb9-4fc5377ddbed
        */
       patientId: string;
       /**
        * @description Unique favorite id.
-       * @example 1de7eaf0-3fcc-40ef-ba69-16160826f128
+       * @example 479034c0-4e41-47a3-ba69-dd2d47188bfc
        */
       id: string;
     };
     CreateDoctorDto: {
       /**
        * @description Unique user id.
-       * @example 44826448-5d34-4c13-b588-8df6be5e7d3c
+       * @example 25ddd0e4-f3aa-4226-9740-162720f68822
        */
       userId: string;
       /**
@@ -929,14 +928,14 @@ export interface components {
       /**
        * @description A list of ids specialties that the doctor covers.
        * @example [
-       *   "964598b0-38d0-4ac9-b410-5ac07cdd1749"
+       *   "adc95713-834d-4c12-83bc-be7072115747"
        * ]
        */
       specializationIds: string[];
       /**
        * @description List of hospitals where the doctor works.
        * @example [
-       *   "f7a18fc5-1442-4caf-b787-a0b385934ab1"
+       *   "c6f7e621-b8bd-4777-bb39-4891d9025317"
        * ]
        */
       hospitalIds: string[];
@@ -944,7 +943,7 @@ export interface components {
     ResponseHospitalDto: {
       /**
        * @description The hospital's unique id.
-       * @example 4cedd6cc-597d-4591-92b2-311dda0168c8
+       * @example 22b81422-e0d6-452f-8009-ef589cbc644e
        */
       id: string;
       /**
@@ -981,7 +980,7 @@ export interface components {
     ResponseSpecializationDto: {
       /**
        * @description Unique specialisation id.
-       * @example 51b61eb0-2195-4b85-a6c4-0ea572e9cdc4
+       * @example 42c2f9a4-2012-40f4-ada4-3237552d3fd3
        */
       id: string;
       /**
@@ -1037,9 +1036,9 @@ export interface components {
        */
       email: string;
       /** @description An array of hospitals associated with the doctor */
-      hospitals: components["schemas"]["ResponseHospitalDto"][];
+      hospitals: components['schemas']['ResponseHospitalDto'][];
       /** @description An array of specializations of the doctor */
-      specializations: components["schemas"]["ResponseSpecializationDto"][];
+      specializations: components['schemas']['ResponseSpecializationDto'][];
     };
     PatchDoctorDto: {
       /**
@@ -1134,29 +1133,29 @@ export interface components {
     ResponseFileDto: {
       /**
        * @description File Name.
-       * @example 491e8196-19de-4364-acc6-ca0a7d5fef29.png
+       * @example 3d782bb4-b65c-4fc7-bec5-d00612ec2381.png
        */
       name: string;
       /**
        * @description Full link in the S3 storage to get the file.
-       * @example https://storage.googleapis.com/bucket/491e8196-19de-4364-acc6-ca0a7d5fef29.png
+       * @example https://storage.googleapis.com/bucket/3d782bb4-b65c-4fc7-bec5-d00612ec2381.png
        */
       url: string;
     };
     CreateAppointmentDto: {
       /**
        * @description Unique doctor id.
-       * @example 2917c5e2-8120-4e5f-ba0c-f5894db1e3cf
+       * @example 446421a1-2660-4f82-b971-ddf14860afab
        */
       doctorId: string;
       /**
        * @description Unique patient id.
-       * @example 0d4388bc-b27b-4948-a282-8888475a4b23
+       * @example 907b5beb-119a-4d34-98c2-22d0315a0c59
        */
       patientId: string;
       /**
        * @description The date on which the meeting is scheduled.
-       * @example 2024-04-29T13:50:11.791Z
+       * @example 2024-04-29T17:55:11.097Z
        */
       assignedAt: string;
       /**
@@ -1164,7 +1163,7 @@ export interface components {
        * @example PLANNED
        * @enum {string}
        */
-      status: "PENDING_PAYMENT" | "PLANNED" | "COMPLETED" | "CANCELED";
+      status: 'PENDING_PAYMENT' | 'PLANNED' | 'COMPLETED' | 'CANCELED';
       /**
        * @description Additional comments left by the patient or doctor.
        * @example Get some blood pressure pills.
@@ -1172,12 +1171,12 @@ export interface components {
       notes?: string;
       /**
        * @description The unique Id of the billed payment.
-       * @example d7bad0e0-c886-41b1-8b6d-d7fd21653141
+       * @example 5b797331-4235-4e50-b83f-7f3d5827099e
        */
       paymentInvoiceKey?: string;
       /**
        * @description The unique id of the payment receipt.
-       * @example 2fea5792-bdb0-4d10-98e5-63d2f898098a
+       * @example 50e377f0-e421-414d-b593-7a71ea49c627
        */
       paymentReceiptKey?: string;
       /** @description The date and time the appointment started */
@@ -1188,30 +1187,30 @@ export interface components {
     ResponseAppointmentDto: {
       /**
        * @description Unique appointment id.
-       * @example 2215d381-3fa4-42e1-919e-0baa1a3fda27
+       * @example 8b96135a-47eb-4455-90c2-f75edd846607
        */
       id: string;
       /**
        * @description Unique doctor id.
-       * @example f45ba102-109d-40c2-8df1-f4afe7545389
+       * @example 7d368509-b683-42ae-8ae3-b7ec49e045e2
        */
       doctorId: string;
       /**
        * @description Unique patient id.
-       * @example 8f68bd35-b43c-4c89-ba44-b2eae6946fc2
+       * @example a2dae922-acca-40ce-bfe4-faccc6a1aac9
        */
       patientId: string;
       /**
        * Format: date-time
        * @description The date on which the meeting is scheduled.
-       * @example 2024-04-29T13:50:11.789Z
+       * @example 2024-04-29T17:55:11.096Z
        */
       assignedAt: string;
       /**
        * @description Current status of the appointment.
        * @enum {string}
        */
-      status: "PENDING_PAYMENT" | "PLANNED" | "COMPLETED" | "CANCELED";
+      status: 'PENDING_PAYMENT' | 'PLANNED' | 'COMPLETED' | 'CANCELED';
       /**
        * @description Additional comments left by the patient or doctor.
        * @example Get some blood pressure pills.
@@ -1219,41 +1218,41 @@ export interface components {
       notes: string;
       /**
        * @description The unique id of the billed payment.
-       * @example 2ff52ba6-abf8-48a6-abf4-c7be3a95cbd3
+       * @example cbaba691-73a6-44fb-84a4-a65085d4f975
        */
       paymentInvoiceKey: string;
       /** @description The unique id from the receipt file for the appointment. */
       paymentReceiptKey: string;
       /**
        * @description The unique id of the video chat recording.
-       * @example 97eccda9-84c5-4a64-9b33-0942bd493fa2.mp4
+       * @example 7038096f-b465-4867-b0b5-92e12b07808d.mp4
        */
       videoRecordKey: string;
       /**
        * @description The time when the appointment should start.
-       * @example 2024-04-29T13:50:11.789Z
+       * @example 2024-04-29T17:55:11.096Z
        */
       startedAt: string;
       /**
        * @description The time when the appointment should end.
-       * @example 2024-04-29T13:50:11.789Z
+       * @example 2024-04-29T17:55:11.096Z
        */
       endedAt: string;
     };
     PatchAppointmentDto: {
       /**
        * @description Unique doctor id.
-       * @example 2917c5e2-8120-4e5f-ba0c-f5894db1e3cf
+       * @example 446421a1-2660-4f82-b971-ddf14860afab
        */
       doctorId?: string;
       /**
        * @description Unique patient id.
-       * @example 0d4388bc-b27b-4948-a282-8888475a4b23
+       * @example 907b5beb-119a-4d34-98c2-22d0315a0c59
        */
       patientId?: string;
       /**
        * @description The date on which the meeting is scheduled.
-       * @example 2024-04-29T13:50:11.791Z
+       * @example 2024-04-29T17:55:11.097Z
        */
       assignedAt?: string;
       /**
@@ -1261,7 +1260,7 @@ export interface components {
        * @example PLANNED
        * @enum {string}
        */
-      status?: "PENDING_PAYMENT" | "PLANNED" | "COMPLETED" | "CANCELED";
+      status?: 'PENDING_PAYMENT' | 'PLANNED' | 'COMPLETED' | 'CANCELED';
       /**
        * @description Additional comments left by the patient or doctor.
        * @example Get some blood pressure pills.
@@ -1269,12 +1268,12 @@ export interface components {
       notes?: string;
       /**
        * @description The unique Id of the billed payment.
-       * @example d7bad0e0-c886-41b1-8b6d-d7fd21653141
+       * @example 5b797331-4235-4e50-b83f-7f3d5827099e
        */
       paymentInvoiceKey?: string;
       /**
        * @description The unique id of the payment receipt.
-       * @example 2fea5792-bdb0-4d10-98e5-63d2f898098a
+       * @example 50e377f0-e421-414d-b593-7a71ea49c627
        */
       paymentReceiptKey?: string;
       /** @description The date and time the appointment started */
@@ -1285,24 +1284,24 @@ export interface components {
     CreateDeclarationDto: {
       /**
        * @description Unique doctor id.
-       * @example 9f39d406-d10d-46c6-8390-2ccc4b09c97e
+       * @example d25b24cb-a217-4898-a669-3ce3e2b8f669
        */
       doctorId: string;
       /**
        * @description Unique patient id.
-       * @example 2c41e455-d015-42ca-807c-66bce0537c73
+       * @example 2e842951-5ee5-4054-bd48-a29cf1166a86
        */
       patientId: string;
     };
     ResponseDeclarationDto: {
       /**
        * @description Unique doctor id.
-       * @example 9f39d406-d10d-46c6-8390-2ccc4b09c97e
+       * @example d25b24cb-a217-4898-a669-3ce3e2b8f669
        */
       doctorId: string;
       /**
        * @description Unique patient id.
-       * @example 2c41e455-d015-42ca-807c-66bce0537c73
+       * @example 2e842951-5ee5-4054-bd48-a29cf1166a86
        */
       patientId: string;
       /**
@@ -1326,7 +1325,7 @@ export interface components {
     ResponseReviewDto: {
       /**
        * @description Unique rating id.
-       * @example 0a1e4ebd-251c-4c36-b3fe-ce0207e8c10a
+       * @example 44f0c170-0c6d-4888-86ae-d4558ba94032
        */
       id: string;
       /**
@@ -1341,26 +1340,26 @@ export interface components {
       text: string;
       /**
        * @description Unique doctor id.
-       * @example 3be48d99-221c-4973-95d4-fbc4132f8044
+       * @example 22f4aed2-0ff4-42fa-9019-259979d35d3c
        */
       doctorId: string;
       /**
        * Format: date-time
        * @description The date when the review was created.
-       * @example 2024-04-29T13:50:12.791Z
+       * @example 2024-04-29T17:55:11.457Z
        */
       createdAt: string;
       /**
        * Format: date-time
        * @description The date when the review was updated.
-       * @example 2024-04-29T13:50:12.791Z
+       * @example 2024-04-29T17:55:11.457Z
        */
       updatedAt: string;
     };
     ResponseReviewDtoWithNames: {
       /**
        * @description Unique rating id.
-       * @example 0a1e4ebd-251c-4c36-b3fe-ce0207e8c10a
+       * @example 44f0c170-0c6d-4888-86ae-d4558ba94032
        */
       id: string;
       /**
@@ -1375,7 +1374,7 @@ export interface components {
       text: string;
       /**
        * @description Unique doctor id.
-       * @example 3be48d99-221c-4973-95d4-fbc4132f8044
+       * @example 22f4aed2-0ff4-42fa-9019-259979d35d3c
        */
       doctorId: string;
       /**
@@ -1476,31 +1475,30 @@ export type $defs = Record<string, never>;
 export type external = Record<string, never>;
 
 export interface operations {
-
   /** Login patient */
   AuthController_localLogin: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["LocalLoginDto"];
+        'application/json': components['schemas']['LocalLoginDto'];
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["LocalLoginResponseDto"];
+          'application/json': components['schemas']['LocalLoginResponseDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1509,7 +1507,7 @@ export interface operations {
   AuthController_verifyMFA: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["LocalLoginTwoFactorDto"];
+        'application/json': components['schemas']['LocalLoginTwoFactorDto'];
       };
     };
     responses: {
@@ -1520,13 +1518,13 @@ export interface operations {
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1535,26 +1533,26 @@ export interface operations {
   AuthController_signUpUserFirstStep: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["SignUpUserDto"];
+        'application/json': components['schemas']['SignUpUserDto'];
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseUserDto"];
+          'application/json': components['schemas']['ResponseUserDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1568,7 +1566,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["SignUpPatientDto"];
+        'application/json': components['schemas']['SignUpPatientDto'];
       };
     };
     responses: {
@@ -1579,13 +1577,13 @@ export interface operations {
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1600,13 +1598,13 @@ export interface operations {
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1621,13 +1619,13 @@ export interface operations {
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1648,19 +1646,19 @@ export interface operations {
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       401: {
         content: {
-          "application/json": components["schemas"]["UnauthorizedResponse"];
+          'application/json': components['schemas']['UnauthorizedResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1675,7 +1673,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["ChangePasswordDto"];
+        'application/json': components['schemas']['ChangePasswordDto'];
       };
     };
     responses: {
@@ -1686,18 +1684,18 @@ export interface operations {
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       401: {
         content: {
-          "application/json": components["schemas"]["UnauthorizedResponse"];
+          'application/json': components['schemas']['UnauthorizedResponse'];
         };
       };
       500: {
         content: {
-          "application/json": components["schemas"]["BadRequestException"];
+          'application/json': components['schemas']['BadRequestException'];
         };
       };
     };
@@ -1714,25 +1712,25 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponsePatientDto"];
+          'application/json': components['schemas']['ResponsePatientDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       401: {
         content: {
-          "application/json": components["schemas"]["UnauthorizedResponse"];
+          'application/json': components['schemas']['UnauthorizedResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1743,7 +1741,7 @@ export interface operations {
       path: {
         /**
          * @description Unique user id.
-         * @example 86960bb2-f67d-46fe-9b80-6541abf199be
+         * @example 3855f410-760d-45d7-88ab-039d2a340377
          */
         id: string;
       };
@@ -1752,19 +1750,19 @@ export interface operations {
       /** @description Response if an error occurs while processing a request. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseUserDto"];
+          'application/json': components['schemas']['ResponseUserDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1775,7 +1773,7 @@ export interface operations {
       path: {
         /**
          * @description Unique user id.
-         * @example 548cde3e-fb04-458b-b6d0-de0ab3416bf6
+         * @example b9078b67-bb20-4c3b-b8d1-f315f5b19c17
          */
         id: string;
       };
@@ -1788,13 +1786,13 @@ export interface operations {
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1805,33 +1803,33 @@ export interface operations {
       path: {
         /**
          * @description Unique user id.
-         * @example 2eb6fead-5ad9-4716-80ce-2aa0d5081847
+         * @example 3b8232cf-6245-4106-a748-25a97dd0c1f2
          */
         id: string;
       };
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["PatchUserWithoutCredentialsDto"];
+        'application/json': components['schemas']['PatchUserWithoutCredentialsDto'];
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseUserDto"];
+          'application/json': components['schemas']['ResponseUserDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1840,26 +1838,26 @@ export interface operations {
   UserController_createUser: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateUserDto"];
+        'application/json': components['schemas']['CreateUserDto'];
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseUserDto"];
+          'application/json': components['schemas']['ResponseUserDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1870,7 +1868,7 @@ export interface operations {
       path: {
         /**
          * @description The patient's unique id.
-         * @example faf35c33-4f16-405e-a27f-a1c99506a9c5
+         * @example 9b8b6b42-3a71-401d-86ea-5da505180e1f
          */
         id: string;
       };
@@ -1879,19 +1877,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponsePatientDto"];
+          'application/json': components['schemas']['ResponsePatientDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1902,7 +1900,7 @@ export interface operations {
       path: {
         /**
          * @description The patient's unique id.
-         * @example 1e08672b-b8a2-4e1a-9a20-43f6df9f9858
+         * @example bef89a47-7a4b-4dbe-b67b-9ec3022ff4ec
          */
         id: string;
       };
@@ -1915,13 +1913,13 @@ export interface operations {
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1932,33 +1930,33 @@ export interface operations {
       path: {
         /**
          * @description The patient's unique id.
-         * @example fb146fa9-6557-4f39-9480-8dc51e98e7d8
+         * @example e62d000e-2793-4de4-a2ed-dc7df3ae0b98
          */
         id: string;
       };
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["PatchPatientDto"];
+        'application/json': components['schemas']['PatchPatientDto'];
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponsePatientDto"];
+          'application/json': components['schemas']['ResponsePatientDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1967,26 +1965,26 @@ export interface operations {
   PatientController_createPatient: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreatePatientDto"];
+        'application/json': components['schemas']['CreatePatientDto'];
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponsePatientDto"];
+          'application/json': components['schemas']['ResponsePatientDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -1997,7 +1995,7 @@ export interface operations {
       path: {
         /**
          * @description The patient's unique id.
-         * @example 8ef15b95-18e9-4f25-b990-b61c8ea677cf
+         * @example 529f0d87-e2fa-452d-b77e-04069b60ccc6
          */
         id: string;
       };
@@ -2006,19 +2004,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseAllergyDto"][];
+          'application/json': components['schemas']['ResponseAllergyDto'][];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2029,33 +2027,33 @@ export interface operations {
       path: {
         /**
          * @description The patient's unique id.
-         * @example 0df49f81-b30f-4d9e-a2a4-30ae900e8c9b
+         * @example 4c6833d2-3a20-4a39-9fd1-3f645f951ade
          */
         id: string;
       };
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreatePatientAllergyDto"];
+        'application/json': components['schemas']['CreatePatientAllergyDto'];
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponsePatientAllergyDto"];
+          'application/json': components['schemas']['ResponsePatientAllergyDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2066,7 +2064,7 @@ export interface operations {
       path: {
         /**
          * @description The patient's unique id.
-         * @example e7251e0c-530d-47ff-bf65-2c82a4357b9d
+         * @example 4d1b4a0e-fff8-4751-8bc3-09ddb7279c2d
          */
         id: string;
       };
@@ -2075,19 +2073,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseConditionDto"][];
+          'application/json': components['schemas']['ResponseConditionDto'][];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2098,33 +2096,33 @@ export interface operations {
       path: {
         /**
          * @description The patient's unique id.
-         * @example cc71d8e9-82ab-471b-8429-9c4704da4fd7
+         * @example e699e0d9-8956-48c7-8427-703d340fd606
          */
         id: string;
       };
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreatePatientConditionDto"];
+        'application/json': components['schemas']['CreatePatientConditionDto'];
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponsePatientConditionDto"];
+          'application/json': components['schemas']['ResponsePatientConditionDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2135,19 +2133,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseFavoriteDto"][];
+          'application/json': components['schemas']['ResponseFavoriteDto'][];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2156,26 +2154,26 @@ export interface operations {
   FavoriteController_createFavorite: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateFavoriteDto"];
+        'application/json': components['schemas']['CreateFavoriteDto'];
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseFavoriteDto"];
+          'application/json': components['schemas']['ResponseFavoriteDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2186,7 +2184,7 @@ export interface operations {
       path: {
         /**
          * @description Unique doctor id.
-         * @example 02824f99-2c9d-41ac-b98c-8ea6eee4c794
+         * @example 738ec4b8-0850-4a78-9d70-d5a204844a97
          */
         id: string;
       };
@@ -2195,19 +2193,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseFavoriteDto"];
+          'application/json': components['schemas']['ResponseFavoriteDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2218,7 +2216,7 @@ export interface operations {
       path: {
         /**
          * @description Unique doctor id.
-         * @example 6ba57749-a46c-4285-897f-da1052a296f2
+         * @example d2dcc646-7cb0-45da-8e4b-5b8b30029c80
          */
         id: string;
       };
@@ -2231,13 +2229,13 @@ export interface operations {
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2258,19 +2256,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseDoctorDto"][];
+          'application/json': components['schemas']['ResponseDoctorDto'][];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2279,26 +2277,26 @@ export interface operations {
   DoctorController_createDoctor: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateDoctorDto"];
+        'application/json': components['schemas']['CreateDoctorDto'];
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseDoctorDto"];
+          'application/json': components['schemas']['ResponseDoctorDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2309,7 +2307,7 @@ export interface operations {
       path: {
         /**
          * @description Unique patient id.
-         * @example f9e4684a-6a56-4d63-b5f9-b93b6f3e0ab2
+         * @example a3bfef33-ec2f-4522-bb7e-baf7139350c8
          */
         id: string;
       };
@@ -2318,19 +2316,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseDoctorDto"][];
+          'application/json': components['schemas']['ResponseDoctorDto'][];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2347,25 +2345,25 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseDoctorDto"][];
+          'application/json': components['schemas']['ResponseDoctorDto'][];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       401: {
         content: {
-          "application/json": components["schemas"]["UnauthorizedResponse"];
+          'application/json': components['schemas']['UnauthorizedResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2376,7 +2374,7 @@ export interface operations {
       path: {
         /**
          * @description Unique doctor id.
-         * @example b956268e-2884-4bdb-9e00-cec3634df497
+         * @example dd1a15cd-cfb5-4203-9edd-c84bcec0e173
          */
         id: string;
       };
@@ -2385,19 +2383,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseDoctorDto"];
+          'application/json': components['schemas']['ResponseDoctorDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2408,7 +2406,7 @@ export interface operations {
       path: {
         /**
          * @description Unique doctor id.
-         * @example 56cbee4f-a1e9-405a-bcd5-134927e5f96a
+         * @example b9decaf5-fecd-409d-89ed-8a0042dfaeb4
          */
         id: string;
       };
@@ -2421,13 +2419,13 @@ export interface operations {
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2438,33 +2436,33 @@ export interface operations {
       path: {
         /**
          * @description Unique doctor id.
-         * @example 17dacea5-8541-4ec0-9fb3-41dddea4101d
+         * @example 328273d2-819e-4012-b80e-6cfec19ef703
          */
         id: string;
       };
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["PatchDoctorDto"];
+        'application/json': components['schemas']['PatchDoctorDto'];
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseDoctorDto"];
+          'application/json': components['schemas']['ResponseDoctorDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2475,19 +2473,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseHospitalDto"][];
+          'application/json': components['schemas']['ResponseHospitalDto'][];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2496,26 +2494,26 @@ export interface operations {
   HospitalController_createHospital: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateHospitalDto"];
+        'application/json': components['schemas']['CreateHospitalDto'];
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseHospitalDto"];
+          'application/json': components['schemas']['ResponseHospitalDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2526,7 +2524,7 @@ export interface operations {
       path: {
         /**
          * @description The hospital's unique id.
-         * @example fc244b00-061d-456c-807e-be27ae51c886
+         * @example a86eabc4-d761-4dec-9a0a-0b058e1df831
          */
         id: string;
       };
@@ -2535,19 +2533,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseHospitalDto"];
+          'application/json': components['schemas']['ResponseHospitalDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2558,7 +2556,7 @@ export interface operations {
       path: {
         /**
          * @description The hospital's unique id.
-         * @example 9880ec6d-8fb9-4503-add3-52af819ecc25
+         * @example ee962dc2-7d5a-4a1a-8b63-fd6bea65ff02
          */
         id: string;
       };
@@ -2571,13 +2569,13 @@ export interface operations {
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2588,33 +2586,33 @@ export interface operations {
       path: {
         /**
          * @description The hospital's unique id.
-         * @example 6c9ac22a-e602-4c89-8163-67d196931ada
+         * @example 0bfdb641-0619-46ae-b100-c3f7b5c3db5d
          */
         id: string;
       };
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["PatchHospitalDto"];
+        'application/json': components['schemas']['PatchHospitalDto'];
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseHospitalDto"];
+          'application/json': components['schemas']['ResponseHospitalDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2625,19 +2623,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseSpecializationDto"][];
+          'application/json': components['schemas']['ResponseSpecializationDto'][];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
     };
@@ -2646,26 +2644,26 @@ export interface operations {
   SpecializationController_createSpecialization: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateSpecializationDto"];
+        'application/json': components['schemas']['CreateSpecializationDto'];
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseSpecializationDto"];
+          'application/json': components['schemas']['ResponseSpecializationDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
     };
@@ -2676,7 +2674,7 @@ export interface operations {
       path: {
         /**
          * @description Unique specialisation id.
-         * @example 0f03affc-312c-429a-bdf2-07665a6e98f5
+         * @example c568d2d3-fe07-47fb-9131-98a69c16fa28
          */
         id: string;
       };
@@ -2685,19 +2683,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseSpecializationDto"];
+          'application/json': components['schemas']['ResponseSpecializationDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
     };
@@ -2708,7 +2706,7 @@ export interface operations {
       path: {
         /**
          * @description Unique specialisation id.
-         * @example 48839aa0-34ac-412a-b326-7cbab68db954
+         * @example 78cd661c-990e-49de-ac27-aab388035e71
          */
         id: string;
       };
@@ -2721,13 +2719,13 @@ export interface operations {
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
     };
@@ -2738,33 +2736,33 @@ export interface operations {
       path: {
         /**
          * @description Unique specialisation id.
-         * @example 11ae6a39-d82b-4375-bd12-eb2712d20ca7
+         * @example 810651f6-3a55-4d50-9006-e1e0d97e414b
          */
         id: string;
       };
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["UpdateSpecializationDto"];
+        'application/json': components['schemas']['UpdateSpecializationDto'];
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseSpecializationDto"];
+          'application/json': components['schemas']['ResponseSpecializationDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
     };
@@ -2774,26 +2772,26 @@ export interface operations {
     /** @description The file to be uploaded. */
     requestBody: {
       content: {
-        "multipart/form-data": string;
+        'multipart/form-data': string;
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseFileDto"];
+          'application/json': components['schemas']['ResponseFileDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2804,7 +2802,7 @@ export interface operations {
       path: {
         /**
          * @description Unique file name.
-         * @example 2f0a0fc5-9d44-4b91-b945-86038d55c211.png
+         * @example 90c7b31a-8e1b-4c57-8177-8f674cf26bb3.png
          */
         name: string;
       };
@@ -2813,19 +2811,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseFileDto"];
+          'application/json': components['schemas']['ResponseFileDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2836,7 +2834,7 @@ export interface operations {
       path: {
         /**
          * @description Unique file name.
-         * @example 2cbe3ba7-55d3-475a-bea9-acba5ba73983.png
+         * @example e79edf6b-2905-4229-b3a3-7a6425624c79.png
          */
         name: string;
       };
@@ -2849,13 +2847,13 @@ export interface operations {
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2866,19 +2864,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseAppointmentDto"];
+          'application/json': components['schemas']['ResponseAppointmentDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2887,26 +2885,26 @@ export interface operations {
   AppointmentController_createAppointment: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateAppointmentDto"];
+        'application/json': components['schemas']['CreateAppointmentDto'];
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseAppointmentDto"];
+          'application/json': components['schemas']['ResponseAppointmentDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2917,7 +2915,7 @@ export interface operations {
       path: {
         /**
          * @description Unique patient id.
-         * @example 2e57866d-786b-4d43-89eb-f0f7eedbf4b2
+         * @example 41497814-9f91-4332-ad07-f45c1d92a8b7
          */
         id: string;
       };
@@ -2926,19 +2924,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseAppointmentDto"][];
+          'application/json': components['schemas']['ResponseAppointmentDto'][];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2955,25 +2953,25 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseAppointmentDto"][];
+          'application/json': components['schemas']['ResponseAppointmentDto'][];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       401: {
         content: {
-          "application/json": components["schemas"]["UnauthorizedResponse"];
+          'application/json': components['schemas']['UnauthorizedResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2984,7 +2982,7 @@ export interface operations {
       path: {
         /**
          * @description Unique doctor id.
-         * @example a3e4766c-dcb0-4359-b1fa-47f14090f1ee
+         * @example c3dd573d-9723-4641-a02c-3dbf6791c6d5
          */
         id: string;
       };
@@ -2993,19 +2991,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseAppointmentDto"];
+          'application/json': components['schemas']['ResponseAppointmentDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3016,7 +3014,7 @@ export interface operations {
       path: {
         /**
          * @description Unique appointment id.
-         * @example 9537b479-e427-4447-bc5f-c9c853397d60
+         * @example e2621ca2-ae29-4fc8-b5b1-e01c1f8565dc
          */
         id: string;
       };
@@ -3025,19 +3023,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseAppointmentDto"];
+          'application/json': components['schemas']['ResponseAppointmentDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3048,7 +3046,7 @@ export interface operations {
       path: {
         /**
          * @description Unique appointment id.
-         * @example 11fdecab-1ee1-4d0f-8ee8-bbc5053261b1
+         * @example 0530bbee-a041-4cb8-8e8e-32dea59074a1
          */
         id: string;
       };
@@ -3061,13 +3059,13 @@ export interface operations {
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3078,33 +3076,33 @@ export interface operations {
       path: {
         /**
          * @description Unique appointment id.
-         * @example fec5800e-8761-4b17-8370-ccc5fc0f520f
+         * @example da7856f5-4386-4fd5-b611-4a9e90d10875
          */
         id: string;
       };
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["PatchAppointmentDto"];
+        'application/json': components['schemas']['PatchAppointmentDto'];
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseAppointmentDto"];
+          'application/json': components['schemas']['ResponseAppointmentDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3115,19 +3113,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseDeclarationDto"][];
+          'application/json': components['schemas']['ResponseDeclarationDto'][];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3136,26 +3134,26 @@ export interface operations {
   DeclarationController_createDeclaration: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateDeclarationDto"];
+        'application/json': components['schemas']['CreateDeclarationDto'];
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseDeclarationDto"];
+          'application/json': components['schemas']['ResponseDeclarationDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3175,19 +3173,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseDeclarationDto"];
+          'application/json': components['schemas']['ResponseDeclarationDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3211,13 +3209,13 @@ export interface operations {
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3235,26 +3233,26 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateDeclarationDto"];
+        'application/json': components['schemas']['CreateDeclarationDto'];
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseDeclarationDto"][];
+          'application/json': components['schemas']['ResponseDeclarationDto'][];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3285,19 +3283,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseReviewDto"][];
+          'application/json': components['schemas']['ResponseReviewDto'][];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3315,32 +3313,32 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateReviewDto"];
+        'application/json': components['schemas']['CreateReviewDto'];
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseReviewDto"];
+          'application/json': components['schemas']['ResponseReviewDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       401: {
         content: {
-          "application/json": components["schemas"]["UnauthorizedResponse"];
+          'application/json': components['schemas']['UnauthorizedResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3370,19 +3368,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseReviewDtoWithNames"][];
+          'application/json': components['schemas']['ResponseReviewDtoWithNames'][];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3393,7 +3391,7 @@ export interface operations {
       path: {
         /**
          * @description Unique doctor id.
-         * @example 03bb25d3-ceb4-4828-b4eb-63539119f472
+         * @example 6d6be92c-fa65-4ccd-8007-7204313ef6d0
          */
         doctorId: string;
       };
@@ -3402,19 +3400,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["AvgRateResponse"];
+          'application/json': components['schemas']['AvgRateResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3425,7 +3423,7 @@ export interface operations {
       path: {
         /**
          * @description Unique review id.
-         * @example 1b254ebc-575d-4a86-8572-8deb97c3a555
+         * @example 27fe18d3-cd03-4eeb-afef-1569d2f03a7a
          */
         id: string;
       };
@@ -3434,19 +3432,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseReviewDto"];
+          'application/json': components['schemas']['ResponseReviewDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3470,19 +3468,19 @@ export interface operations {
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       401: {
         content: {
-          "application/json": components["schemas"]["UnauthorizedResponse"];
+          'application/json': components['schemas']['UnauthorizedResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3500,32 +3498,32 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["PatchReviewDto"];
+        'application/json': components['schemas']['PatchReviewDto'];
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseReviewDto"];
+          'application/json': components['schemas']['ResponseReviewDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       401: {
         content: {
-          "application/json": components["schemas"]["UnauthorizedResponse"];
+          'application/json': components['schemas']['UnauthorizedResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3539,19 +3537,19 @@ export interface operations {
       /** @description Return conditions list */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseCondtionDto"][];
+          'application/json': components['schemas']['ResponseCondtionDto'][];
         };
       };
       /** @description Bad request */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Internal server error */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3563,26 +3561,26 @@ export interface operations {
   ConditionController_create: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateConditionDto"];
+        'application/json': components['schemas']['CreateConditionDto'];
       };
     };
     responses: {
       /** @description Condition created */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseCondtionDto"];
+          'application/json': components['schemas']['ResponseCondtionDto'];
         };
       };
       /** @description Bad request */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Internal server error */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3605,19 +3603,19 @@ export interface operations {
       /** @description Return condition by id */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseCondtionDto"];
+          'application/json': components['schemas']['ResponseCondtionDto'];
         };
       };
       /** @description Bad request */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Internal server error */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3640,25 +3638,25 @@ export interface operations {
       /** @description Condition deleted */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseCondtionDto"];
+          'application/json': components['schemas']['ResponseCondtionDto'];
         };
       };
       /** @description Bad request */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Condition not found */
       404: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
       /** @description Internal server error */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3679,26 +3677,26 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["UpdateConditionDto"];
+        'application/json': components['schemas']['UpdateConditionDto'];
       };
     };
     responses: {
       /** @description Condition updated */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseCondtionDto"];
+          'application/json': components['schemas']['ResponseCondtionDto'];
         };
       };
       /** @description Bad request */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Internal server error */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3709,19 +3707,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseAllergyDto"][];
+          'application/json': components['schemas']['ResponseAllergyDto'][];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3730,26 +3728,26 @@ export interface operations {
   AllergyController_createAllergy: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateAllergyDto"];
+        'application/json': components['schemas']['CreateAllergyDto'];
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseAllergyDto"];
+          'application/json': components['schemas']['ResponseAllergyDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3760,7 +3758,7 @@ export interface operations {
       path: {
         /**
          * @description Unique allergy id.
-         * @example 44d9d4bd-09a3-457d-874c-367887d45de1
+         * @example efa4735e-0b71-4cdd-8c35-c3f1fb4511b5
          */
         id: string;
       };
@@ -3769,19 +3767,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseAllergyDto"];
+          'application/json': components['schemas']['ResponseAllergyDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3792,7 +3790,7 @@ export interface operations {
       path: {
         /**
          * @description Unique allergy id.
-         * @example c9cadcdf-83e3-434d-8b92-bbfab451afe1
+         * @example ce7b7cfc-17b6-411c-9cd2-3214b98a0312
          */
         id: string;
       };
@@ -3805,19 +3803,19 @@ export interface operations {
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       404: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3828,33 +3826,33 @@ export interface operations {
       path: {
         /**
          * @description Unique allergy id.
-         * @example 2bd1b64c-536f-49be-be9b-e755261f4add
+         * @example 58fb86d1-a6e7-4560-b7e0-48212bc4162a
          */
         id: string;
       };
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["UpdateAllergyDto"];
+        'application/json': components['schemas']['UpdateAllergyDto'];
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseAllergyDto"];
+          'application/json': components['schemas']['ResponseAllergyDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
