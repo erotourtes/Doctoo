@@ -1,12 +1,13 @@
+import type { components, paths } from '@/api';
 import { instance } from '@/api/axios.api';
+import handleError from '@/api/handleError.api';
+import type { TCondition } from '@/dataTypes/Condition';
 import { type TPatient } from '@/dataTypes/Patient';
 import type { IUser } from '@/dataTypes/User';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { AxiosResponse } from 'axios';
 import api from '../api';
 import { addPatientCondition, setPatientData, setPatientState, updatePatientData } from './PatientSlice';
-import handleError from '@/api/handleError.api';
-import type { TCondition } from '@/dataTypes/Condition';
 
 export const getPatientData = createAsyncThunk('patient', async (id: string, { dispatch }) => {
   try {
@@ -41,7 +42,6 @@ export const patchPatientData = createAsyncThunk(
 export const patchUserData = createAsyncThunk(
   'patient',
   async ({ id, data }: { id: string; data: Partial<IUser> }, { dispatch }) => {
-    console.log(data, id);
     try {
       const response: AxiosResponse<IUser> = await instance.patch(`/user/${id}`, data);
       if (response.status === 200) {
@@ -111,3 +111,12 @@ export const createPatientConditions = createAsyncThunk(
     }
   },
 );
+
+type ChangePasswordType = paths['/auth/password/change']['post']['requestBody']['content']['application/json'];
+type ErrorResponseType = components['schemas']['ClassicNestResponse'];
+
+export const changePassword = createAsyncThunk<ErrorResponseType, ChangePasswordType>('patient', async body => {
+  const { error } = await api.POST('/auth/password/change', { body });
+  // TODO: remove casting
+  return error as ErrorResponseType;
+});

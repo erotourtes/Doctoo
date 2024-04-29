@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Icon } from '@/components/UI';
+import { useClickOutside } from '../../../../hooks/useClickOutside';
 
 interface AppointmentsSelectButtonProps {
   defaultOption: string;
@@ -9,6 +10,9 @@ interface AppointmentsSelectButtonProps {
 const AppointmentsSelectButton = ({ defaultOption, setChosenOption }: AppointmentsSelectButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(defaultOption);
+
+  const dropdownRef = useRef(null);
+  useClickOutside(dropdownRef, () => setIsOpen(false));
 
   const handleClick = () => {
     setIsOpen(!isOpen);
@@ -23,11 +27,20 @@ const AppointmentsSelectButton = ({ defaultOption, setChosenOption }: Appointmen
   return (
     <div className='relative'>
       <button
-        className='flex w-[130px] cursor-pointer items-center gap-3 rounded-full bg-white p-0.5 pl-3 text-sm text-black hover:bg-grey-5 hover:text-main'
+        className='flex  cursor-pointer items-center gap-3 rounded-full bg-white
+        p-0.5 pl-3 text-sm text-black hover:bg-grey-5 hover:text-main'
         onClick={handleClick}
+        ref={dropdownRef}
       >
         {selectedOption}
-        <Icon variant={`shevron-mini-${isOpen ? 'open' : 'closed'}`} className='h-6 w-6 text-grey-3' />
+        <Icon
+          variant={`shevron-mini-${isOpen ? 'open' : 'closed'}`}
+          className='h-6 w-6 text-grey-3'
+          onClick={e => {
+            e.stopPropagation();
+            setIsOpen(prev => !prev);
+          }}
+        />
       </button>
 
       {isOpen && (
