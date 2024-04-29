@@ -1,24 +1,25 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import AppointmentsList from './AppointmentsList';
-import '@/index.css';
-import { Provider } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
-import AppointmentSlice from '@/app/appointment/AppointmentSlice';
+import type { IAppointment } from '@/dataTypes/Appointment';
 import { AppointmentStatus } from '@/dataTypes/Appointment';
+import '@/index.css';
+import { configureStore } from '@reduxjs/toolkit';
+import type { Meta, StoryObj } from '@storybook/react';
+import { Provider } from 'react-redux';
+import AppointmentSlice from '../../../../app/appointment/AppointmentSlice';
+import AppointmentsList from './AppointmentsList';
 
-const mockAppointments = [
+const mockAppointments: IAppointment[] = [
   {
     id: '1',
     doctorId: 'doc1',
     patientId: 'pat1',
     assignedAt: '2022-12-01T10:00:00.000Z',
-    notes: 'This is a mock appointment',
     status: AppointmentStatus.CANCELED,
-    videoRecordKey: 'video1',
-    startedAt: '2022-12-01T10:00:00.000Z',
-    endedAt: '2022-12-01T11:00:00.000Z',
+    notes: 'This is a mock appointment',
     paymentInvoiceKey: 'invoice1',
     paymentReceiptKey: 'receipt1',
+    videoRecordKey: 'video1',
+    startedAt: '2022-12-01T10:00:00.000Z',
+    endedAt: '2022-12-01T10:00:00.000Z',
     doctor: {
       id: 'doc1',
       userId: 'user1',

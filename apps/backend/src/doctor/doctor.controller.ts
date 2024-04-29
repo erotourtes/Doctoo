@@ -42,7 +42,7 @@ export class DoctorController {
     return this.doctorService.getDoctors(query);
   }
 
-  @Get('dactors/:id')
+  @Get('doctors/:id')
   @ApiOperation({ summary: 'Get all doctors by patient' })
   @ApiOkResponse({ type: ResponseDoctorDto, isArray: true, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })

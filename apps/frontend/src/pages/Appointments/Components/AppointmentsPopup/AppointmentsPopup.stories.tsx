@@ -1,13 +1,12 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import AppointmentsPopup from './AppointmentsPopup';
-import '@/index.css';
-import { Button } from '@/components/UI';
-import { useArgs } from '@storybook/preview-api';
-import { PopupDoctoo } from '@/components/UI';
-import { AppointmentStatus } from '@/dataTypes/Appointment';
-import { Provider } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
 import AppointmentSlice from '@/app/appointment/AppointmentSlice';
+import { Button, PopupDoctoo } from '@/components/UI';
+import { AppointmentStatus } from '@/dataTypes/Appointment';
+import '@/index.css';
+import { configureStore } from '@reduxjs/toolkit';
+import { useArgs } from '@storybook/preview-api';
+import type { Meta, StoryObj } from '@storybook/react';
+import { Provider } from 'react-redux';
+import AppointmentsPopup from './AppointmentsPopup';
 
 const mockAppointments = [
   {
