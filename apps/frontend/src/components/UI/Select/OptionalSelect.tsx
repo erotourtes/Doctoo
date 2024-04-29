@@ -1,10 +1,11 @@
 import type React from 'react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Icon from '../Icon/Icon';
 import { Checkbox } from '../Checkbox/Checkbox';
 import type { FieldValues, SubmitHandler } from 'react-hook-form';
 import { FormProvider, useForm } from 'react-hook-form';
 import './OptionalSelect.css';
+import { useClickOutside } from '../../../hooks/useClickOutside';
 
 interface SelectProps {
   options: { id: string; name: string }[];
@@ -14,6 +15,8 @@ interface SelectProps {
 
 const OptionalSelect: React.FC<SelectProps> = ({ options, defaultOption, setChosenOptions }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  useClickOutside(dropdownRef, () => setIsOpen(false));
 
   const methods = useForm({
     mode: 'onChange',
@@ -36,17 +39,23 @@ const OptionalSelect: React.FC<SelectProps> = ({ options, defaultOption, setChos
   return (
     <div className='relative'>
       <button
-        className='flex cursor-pointer items-center gap-3 rounded-full bg-white p-0.5 pl-3 text-sm text-black hover:bg-grey-5 hover:text-main'
-        onClick={() => setIsOpen(!isOpen)}
+        className='z-2 flex cursor-pointer items-center gap-3 rounded-full bg-white p-0.5 pl-3 text-sm text-black hover:bg-grey-5 hover:text-main'
+        onClick={() => setIsOpen(prev => !prev)}
+        ref={dropdownRef}
       >
         {defaultOption || 'Select'}
-        <Icon variant={`shevron-mini-${isOpen ? 'open' : 'closed'}`} className='h-6 w-6 text-grey-3' />
+        <Icon
+          variant={`shevron-mini-${isOpen ? 'open' : 'closed'}`}
+          className='h-6 w-6 text-grey-3'
+          onClick={e => {
+            e.stopPropagation();
+            setIsOpen(prev => !prev);
+          }}
+        />
       </button>
 
       {isOpen && (
         <div>
-          <div className='fixed inset-0 ' onClick={() => setIsOpen(false)}></div>
-
           <div
             className='absolute mb-5 mt-2 flex  w-[224px] justify-end rounded-md bg-white'
             onClick={e => e.stopPropagation()}
