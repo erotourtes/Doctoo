@@ -1,4 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { createPatientConditions } from '@/app/patient/PatientThunks';
 import { PopupDoctoo, Button, Tag } from '@/components/UI';
 import type { TCondition } from '@/dataTypes/Condition';
 import { useEffect, useState } from 'react';
@@ -10,6 +11,8 @@ type MedicalConditionPopupProps = {
 
 const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) => {
   const conditions = useAppSelector(state => state.condition.data);
+
+  const patient = useAppSelector(state => state.patient.data);
 
   const dispatch = useAppDispatch();
 
@@ -173,7 +176,7 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
             type='primary'
             onClick={() => {
               if (selectedConditions.length === 0) {
-                dispatch;
+                dispatch(createPatientConditions({ id: patient.id, body: selectedConditions }));
               }
               if (selectedAllergies.length === 0) {
                 return;

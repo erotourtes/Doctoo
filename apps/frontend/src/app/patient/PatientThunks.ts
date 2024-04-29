@@ -4,7 +4,7 @@ import type { IUser } from '@/dataTypes/User';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { AxiosResponse } from 'axios';
 import api from '../api';
-import { setPatientData, setPatientState, updatePatientData } from './PatientSlice';
+import { addPatientCondition, setPatientData, setPatientState, updatePatientData } from './PatientSlice';
 import handleError from '@/api/handleError.api';
 import type { TCondition } from '@/dataTypes/Condition';
 
@@ -16,9 +16,7 @@ export const getPatientData = createAsyncThunk('patient', async (id: string, { d
       throw new Error('Failed to fetch patient data GET /patient/:id');
     }
 
-    dispatch(updatePatientData({ ...data }));
-    //TODO: Delete the line above, and uncomment after PR #214 is merged
-    // dispatch(setPatientData({ ...data }));
+    dispatch(setPatientData({ ...data, allergies: [] }));
   } catch (e) {
     const error = e as Error;
     handleError(error);
@@ -93,7 +91,7 @@ export const logoutPatient = createAsyncThunk('patient', async (_void, { dispatc
   dispatch(setPatientState({ isFetched: false }));
 });
 
-export const createPatientAllergies = createAsyncThunk(
+export const createPatientConditions = createAsyncThunk(
   'patient',
   async (data: { body: TCondition[]; id: string }, { dispatch }) => {
     try {
@@ -107,7 +105,7 @@ export const createPatientAllergies = createAsyncThunk(
       if (error) throw new Error('Failed to create patient allergy');
 
       if (responseData === data.body.length) {
-        dispatch(addPatientAllergy(data.body));
+        dispatch(addPatientCondition(data.body));
         dispatch(setPatientState({ isLoading: false, isFetched: true }));
       }
     } catch (e) {

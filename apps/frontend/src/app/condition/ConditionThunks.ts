@@ -3,7 +3,7 @@ import { setConditionData } from './ConditionSlice';
 import handleError from '@/api/handleError.api';
 import api from '../api';
 
-export const getConditionData = createAsyncThunk('condition', async (_, { dispatch }) => {
+export const getAllConditions = createAsyncThunk('condition', async (_, { dispatch }) => {
   try {
     const { data, error } = await api.GET('/condition');
 
