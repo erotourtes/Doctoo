@@ -877,12 +877,16 @@ export interface components {
        * ]
        */
       allergyIds: string[];
+      allergyIds: string[];
     };
     ResponsePatientAllergyDto: {
       /**
        * @description How many allergies created for patient.
        * @example 1
+       * @description How many allergies created for patient.
+       * @example 1
        */
+      count: number;
       count: number;
     };
     CreatePatientConditionDto: {

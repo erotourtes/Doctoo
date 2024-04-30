@@ -7,8 +7,9 @@ import { PatchPatientDto } from './dto/patch.dto';
 import { ResponsePatientDto } from './dto/response.dto';
 import { ResponseAllergyDto } from './dto/responseAllergy.dto';
 import { ResponseConditionDto } from './dto/responseCondition.dto';
-import { ResponsePatientAllergyDto } from './dto/responsePatientAllergy.dto';
 import { CreatePatientConditionDto } from './dto/createPatientCondition.dto';
+import { ResponsePatientAllergyDto } from './dto/responsePatientAllergy.dto';
+import { ResponsePatientConditionsDto } from './dto/responsePatientConditions.dto';
 
 @Injectable()
 export class PatientService {
@@ -103,20 +104,19 @@ export class PatientService {
     return plainToInstance(ResponsePatientAllergyDto, allergies);
   }
 
-  async createPatientConditions(id: string, conditions: CreatePatientConditionDto[]): Promise<number> {
-    conditions.forEach(async ({ conditionId }) => {
-      const isPatientAlreadyHaveCondition = await this.prismaService.patientCondition.findUnique({
-        where: { id, conditionId },
-      });
-
-      if (isPatientAlreadyHaveCondition)
-        throw new BadRequestException('Patient with this Id already have condition with this Id.');
+  async createPatientConditions(id: string, body: CreatePatientConditionDto): Promise<ResponsePatientConditionsDto> {
+    const isConditionsAdded = await this.prismaService.patientCondition.findMany({
+      where: { id: { in: body.conditionIds } },
     });
 
-    const { count } = await this.prismaService.patientCondition.createMany({
-      data: conditions.map(({ conditionId }) => ({ patientId: id, conditionId })),
+    if (isConditionsAdded.length)
+      throw new BadRequestException('Patient already have some conditions from presented list.');
+
+    const conditions = await this.prismaService.patientCondition.createMany({
+      data: body.conditionIds.map(conditionId => ({ patientId: id, conditionId })),
     });
-    return count;
+
+    return plainToInstance(ResponsePatientConditionsDto, conditions);
   }
   async getPatientConditions(patientId: string): Promise<ResponseConditionDto[]> {
     await this.isPatientByIdExists(patientId);

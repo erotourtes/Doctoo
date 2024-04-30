@@ -1,4 +1,5 @@
 import type { components, paths } from '@/api';
+import type { components, paths } from '@/api';
 import { instance } from '@/api/axios.api';
 import handleError from '@/api/handleError.api';
 import type { TCondition } from '@/dataTypes/Condition';
