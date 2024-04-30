@@ -1,12 +1,9 @@
 import type { RootState } from '@/app/store';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '../createAppSlice';
-import type { TPatient } from '@/dataTypes/Patient';
 import type { TAllergy } from '@/dataTypes/Allergy';
 import type { TCondition } from '@/dataTypes/Condition';
 import type { TPatient } from '@/dataTypes/Patient';
-import type { IAllergy } from '@/dataTypes/Allergy';
-import type { TCondition } from '@/dataTypes/Condition';
 
 type Patient = TPatient & { conditions: TCondition[] };
 
@@ -61,9 +58,6 @@ export const patientSlice = createAppSlice({
     updatePatientData: (state, action: PayloadAction<Partial<Patient>>) => {
       state.data = { ...state.data, ...action.payload };
     },
-    addPatientCondition: (state, action: PayloadAction<TCondition>) => {
-      state.data.conditions.push(action.payload);
-    },
     addPatientAllergy: (state, action: PayloadAction<TAllergy[]>) => {
       action.payload.forEach(allergy => {
         if (state.data.allergies.some(a => a.id === allergy.id)) return;
@@ -84,14 +78,8 @@ export const patientSlice = createAppSlice({
   },
 });
 
-export const {
-  setPatientData,
-  updatePatientData,
-  setPatientState,
-  addPatientAllergy,
-  addPatientCondition,
-  addPatientCondition,
-} = patientSlice.actions;
+export const { setPatientData, updatePatientData, setPatientState, addPatientAllergy, addPatientCondition } =
+  patientSlice.actions;
 
 export const patientData = (state: RootState) => state.patient.data;
 
