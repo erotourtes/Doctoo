@@ -15,13 +15,13 @@ import { RESPONSE_STATUS } from '../utils/constants';
 import { CreatePatientDto } from './dto/create.dto';
 import { CreatePatientAllergyDto } from './dto/createPatientAllergy.dto';
 import { CreatePatientConditionDto } from './dto/createPatientCondition.dto';
-import { CreatePatientAllergyDto } from './dto/createPatientAllergy.dto';
-import { CreatePatientConditionDto } from './dto/createPatientCondition.dto';
 import { PatchPatientDto } from './dto/patch.dto';
 import { ResponsePatientDto } from './dto/response.dto';
 import { ResponseAllergyDto } from './dto/responseAllergy.dto';
 import { ResponseConditionDto } from './dto/responseCondition.dto';
 import { PatientService } from './patient.service';
+import { ResponsePatientAllergyDto } from './dto/responsePatientAllergy.dto';
+import { ResponsePatientConditionsDto } from './dto/responsePatientConditions.dto';
 
 @ApiTags('Patient Endpoints')
 @Controller('patient')
@@ -68,7 +68,6 @@ export class PatientController {
   @ApiBody({ type: CreatePatientAllergyDto })
   async createPatientAllergy(@Param('id') patientId: string, @Body() body: CreatePatientAllergyDto) {
     return this.patientService.createPatientAllergies(patientId, body);
-    return this.patientService.createPatientAllergies(patientId, body);
   }
 
   @Get(':id/allergy')
@@ -83,12 +82,12 @@ export class PatientController {
 
   @Post(':id/condition')
   @ApiOperation({ summary: 'Create patient conditions' })
-  @ApiOkResponse({ type: Number, description: RESPONSE_STATUS.SUCCESS })
+  @ApiOkResponse({ type: ResponsePatientConditionsDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiParam({ name: 'id', example: randomUUID(), description: "The patient's unique id." })
-  @ApiBody({ type: CreatePatientConditionDto, isArray: true })
-  async createPatientConditions(@Param('id') patientId: string, @Body() body: CreatePatientConditionDto[]) {
+  @ApiBody({ type: CreatePatientConditionDto })
+  async createPatientConditions(@Param('id') patientId: string, @Body() body: CreatePatientConditionDto) {
     return this.patientService.createPatientConditions(patientId, body);
   }
 
