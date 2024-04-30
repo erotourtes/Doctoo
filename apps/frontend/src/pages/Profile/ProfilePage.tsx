@@ -7,6 +7,7 @@ import AddressInfo from './components/AddressInfo/AddressInfo';
 import PaymentMethods from './components/PaymentMethods/PaymentMethods';
 import { capitalizeString } from '@/utils/capitalizeString';
 import { useEffect } from 'react';
+import { getAllConditions } from '@/app/condition/ConditionThunks';
 import { getAllAllergies } from '@/app/allergy/AllergyThunks';
 
 const ProfilePage = () => {
@@ -15,8 +16,9 @@ const ProfilePage = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    dispatch(getAllConditions());
     dispatch(getAllAllergies());
-  });
+  }, []);
 
   return (
     <div>

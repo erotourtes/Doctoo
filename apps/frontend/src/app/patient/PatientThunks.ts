@@ -1,13 +1,20 @@
 import type { components, paths } from '@/api';
 import { instance } from '@/api/axios.api';
 import handleError from '@/api/handleError.api';
+import type { TCondition } from '@/dataTypes/Condition';
 import type { TAllergy } from '@/dataTypes/Allergy';
 import { type TPatient } from '@/dataTypes/Patient';
 import type { IUser } from '@/dataTypes/User';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { AxiosResponse } from 'axios';
 import api from '../api';
-import { addPatientAllergy, setPatientData, setPatientState, updatePatientData } from './PatientSlice';
+import {
+  addPatientCondition,
+  addPatientAllergy,
+  setPatientData,
+  setPatientState,
+  updatePatientData,
+} from './PatientSlice';
 
 export const getPatientData = createAsyncThunk('patient', async (id: string, { dispatch }) => {
   try {
@@ -122,3 +129,28 @@ export const changePassword = createAsyncThunk<ErrorResponseType, ChangePassword
   // TODO: remove casting
   return error as ErrorResponseType;
 });
+
+export const createPatientConditions = createAsyncThunk(
+  'patient',
+  async (data: { body: TCondition[]; id: string }, { dispatch }) => {
+    try {
+      const body = data.body.map(condition => ({ conditionId: condition.id }));
+      dispatch(setPatientState({ isLoading: true }));
+      const { data: responseData, error } = await api.POST('/patient/{id}/condition', {
+        params: { path: { id: data.id } },
+        body,
+      });
+
+      if (error) throw new Error('Failed to create patient allergy');
+
+      if (responseData === data.body.length) {
+        dispatch(addPatientCondition(data.body));
+        dispatch(setPatientState({ isLoading: false, isFetched: true }));
+      }
+    } catch (e) {
+      dispatch(setPatientState({ isLoading: false }));
+      const error = e as Error;
+      handleError(error);
+    }
+  },
+);

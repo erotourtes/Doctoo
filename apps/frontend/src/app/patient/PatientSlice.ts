@@ -1,13 +1,12 @@
 import type { RootState } from '@/app/store';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '../createAppSlice';
-import type { TPatient } from '@/dataTypes/Patient';
 import type { TAllergy } from '@/dataTypes/Allergy';
 import type { TCondition } from '@/dataTypes/Condition';
+import type { TPatient } from '@/dataTypes/Patient';
 
-type Patient = TPatient & { conditions: TCondition[] };
 interface PatientData {
-  data: Patient;
+  data: TPatient;
   state: {
     isLoading: boolean;
     isFetched: boolean;
@@ -51,20 +50,24 @@ export const patientSlice = createAppSlice({
   name: 'patient',
   initialState,
   reducers: {
-    setPatientData: (state, action: PayloadAction<Patient>) => {
+    setPatientData: (state, action: PayloadAction<TPatient>) => {
       state.data = action.payload;
     },
-    updatePatientData: (state, action: PayloadAction<Partial<Patient>>) => {
+    updatePatientData: (state, action: PayloadAction<Partial<TPatient>>) => {
       state.data = { ...state.data, ...action.payload };
-    },
-    addPatientCondition: (state, action: PayloadAction<TCondition>) => {
-      state.data.conditions.push(action.payload);
     },
     addPatientAllergy: (state, action: PayloadAction<TAllergy[]>) => {
       action.payload.forEach(allergy => {
         if (state.data.allergies.some(a => a.id === allergy.id)) return;
 
         state.data.allergies.push(allergy);
+      });
+    },
+    addPatientCondition: (state, action: PayloadAction<TCondition[]>) => {
+      action.payload.forEach(condition => {
+        if (state.data.conditions.some(a => a.id === condition.id)) return;
+
+        state.data.conditions.push(condition);
       });
     },
     setPatientState: (state, action: PayloadAction<Partial<PatientData['state']>>) => {

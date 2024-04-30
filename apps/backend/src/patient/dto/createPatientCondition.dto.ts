@@ -4,5 +4,5 @@ import { IsString } from 'class-validator';
 export class CreatePatientConditionDto {
   @IsString()
   @ApiProperty({ description: 'Id of condition' })
-  readonly conditionId: string;
+  readonly conditionIds: string[];
 }

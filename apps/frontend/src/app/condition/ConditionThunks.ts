@@ -1,19 +1,17 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { instance } from '@/api/axios.api';
-import type { AxiosResponse } from 'axios';
-import type { TCondition } from '@/dataTypes/Condition';
 import { setConditionData } from './ConditionSlice';
 import handleError from '@/api/handleError.api';
+import api from '../api';
 
-export const getConditionData = createAsyncThunk('condition', async (_, { dispatch }) => {
+export const getAllConditions = createAsyncThunk('condition', async (_, { dispatch }) => {
   try {
-    const response: AxiosResponse<TCondition[]> = await instance.get('/condition');
+    const { data, error } = await api.GET('/condition');
 
-    if (response.status !== 200) {
+    if (error) {
       throw new Error('Failed to fetch condition data GET /condition');
     }
 
-    dispatch(setConditionData(response.data));
+    dispatch(setConditionData(data));
   } catch (e) {
     const error = e as Error;
     handleError(error);

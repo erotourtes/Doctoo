@@ -19,9 +19,9 @@ import { PatchPatientDto } from './dto/patch.dto';
 import { ResponsePatientDto } from './dto/response.dto';
 import { ResponseAllergyDto } from './dto/responseAllergy.dto';
 import { ResponseConditionDto } from './dto/responseCondition.dto';
-import { ResponsePatientAllergyDto } from './dto/responsePatientAllergy.dto';
-import { ResponsePatientConditionDto } from './dto/responsePatientCondition.dto';
 import { PatientService } from './patient.service';
+import { ResponsePatientAllergyDto } from './dto/responsePatientAllergy.dto';
+import { ResponsePatientConditionsDto } from './dto/responsePatientConditions.dto';
 
 @ApiTags('Patient Endpoints')
 @Controller('patient')
@@ -81,14 +81,14 @@ export class PatientController {
   }
 
   @Post(':id/condition')
-  @ApiOperation({ summary: 'Create patient condition' })
-  @ApiOkResponse({ type: ResponsePatientConditionDto, description: RESPONSE_STATUS.SUCCESS })
+  @ApiOperation({ summary: 'Create patient conditions' })
+  @ApiOkResponse({ type: ResponsePatientConditionsDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiParam({ name: 'id', example: randomUUID(), description: "The patient's unique id." })
   @ApiBody({ type: CreatePatientConditionDto })
-  async createPatientCondition(@Param('id') patientId: string, @Body() body: CreatePatientConditionDto) {
-    return this.patientService.createPatientCondition(patientId, body.conditionId);
+  async createPatientConditions(@Param('id') patientId: string, @Body() body: CreatePatientConditionDto) {
+    return this.patientService.createPatientConditions(patientId, body);
   }
 
   @Get(':id/condition')
