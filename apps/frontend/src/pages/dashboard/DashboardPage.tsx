@@ -3,7 +3,7 @@ import NearestAppointmentsComponent from './components/NerestAppointmentsCard/Ne
 import { Calendar } from '@/components/UI/Calendar/Calendar';
 import MyDoctorsCard from './components/MyDoctorsCard/MyDoctorsCard';
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
-import { getDoctorData } from '@/app/doctor/DoctorThunks';
+import { getMytDoctorData } from '@/app/doctor/DoctorThunks';
 import { useEffect, useState } from 'react';
 import NotificationsComponent from './components/NotificationsComponent/NotificationsComponent';
 import { AppointmentStatus, type IAppointment } from '@/dataTypes/Appointment';
@@ -15,9 +15,9 @@ const DashboardPage = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getDoctorData());
+    dispatch(getMytDoctorData());
     dispatch(getMyAppointments());
-  }, []);
+  }, [dispatch]);
 
   const [search, setSearch] = useState('');
 
