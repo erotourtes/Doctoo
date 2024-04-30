@@ -7,6 +7,7 @@ type PaginationProps = {
   currentPage: number;
   onClick: (pageNumber: number) => void;
   pageCountToShow?: number;
+  wrapperClassName?: string;
 };
 
 export const Pagination = ({
@@ -15,6 +16,7 @@ export const Pagination = ({
   currentPage,
   onClick,
   pageCountToShow = 4,
+  wrapperClassName,
 }: PaginationProps) => {
   const lastPageNumber = Math.ceil(totalItems / itemsPerPage);
   const firstPageNumberToShow = currentPage - (currentPage % pageCountToShow) || 1;
@@ -36,12 +38,12 @@ export const Pagination = ({
       <PageNumber onClick={() => onClick(lastPageNumber)}>{lastPageNumber}</PageNumber>,
     );
   return (
-    <div className='flex space-x-2'>
-      <PageNumber disabled={currentPage === 1} onClick={() => onClick(1)}>
+    <div className={cn('flex space-x-2', wrapperClassName)}>
+      <PageNumber disabled={currentPage === 1} onClick={() => onClick(currentPage - 1)}>
         <Icon variant='shevron-right' className='rotate-180' />
       </PageNumber>
       {pages}
-      <PageNumber disabled={currentPage === lastPageNumber} onClick={() => onClick(lastPageNumber)}>
+      <PageNumber disabled={currentPage === lastPageNumber} onClick={() => onClick(currentPage + 1)}>
         <Icon variant='shevron-right' />
       </PageNumber>
     </div>
