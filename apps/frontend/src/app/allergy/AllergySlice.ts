@@ -1,9 +1,9 @@
 import { createAppSlice } from '../createAppSlice';
-import type { IAllergy } from '@/dataTypes/Allergy';
+import type { TAllergy } from '@/dataTypes/Allergy';
 import type { RootState } from '../store';
 
 type AllergyData = {
-  data: IAllergy[];
+  data: TAllergy[];
 };
 
 const initialState: AllergyData = {

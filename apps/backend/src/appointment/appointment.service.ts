@@ -82,8 +82,6 @@ export class AppointmentService {
 
   async patchAppointment(id: string, body: PatchAppointmentDto): Promise<ResponseAppointmentDto> {
     await this.isAppointmentExists(id);
-    await this.doctorService.isDoctorByIdExists(body.doctorId);
-    await this.patientService.isPatientByIdExists(body.patientId);
 
     const appointment = await this.prismaService.appointment.update({ where: { id }, data: body });
 

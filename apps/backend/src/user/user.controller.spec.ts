@@ -43,7 +43,7 @@ describe('UserController', () => {
   it('Should return user object', async () => {
     const user = await controller.getUser(userId);
 
-    expect(Object.keys(user).length).toBe(8);
+    expect(Object.keys(user).length).toBe(9);
   });
 
   it('Should deleted user', async () => {

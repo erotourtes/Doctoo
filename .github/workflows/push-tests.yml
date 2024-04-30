@@ -14,6 +14,7 @@ jobs:
 
     runs-on: self-hosted-pr-helper
     name: Build Project
+    needs: test
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -27,6 +28,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm i -r

@@ -1,6 +1,6 @@
 import PageHeader from '../PageHeader';
 import StatsCard from './components/StatsCard/StatsCard';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppDispatch, useAppSelector } from '@/app/hooks';
 import PersonalInfo from './components/PersonalInfo/PersonalInfo';
 import MedicalCondition from './components/MedicalCondition/MedicalCondition';
 import AddressInfo from './components/AddressInfo/AddressInfo';
@@ -8,6 +8,7 @@ import PaymentMethods from './components/PaymentMethods/PaymentMethods';
 import { capitalizeString } from '@/utils/capitalizeString';
 import { useEffect } from 'react';
 import { getAllConditions } from '@/app/condition/ConditionThunks';
+import { getAllAllergies } from '@/app/allergy/AllergyThunks';
 
 const ProfilePage = () => {
   const patient = useAppSelector(state => state.patient.data);
@@ -16,6 +17,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     dispatch(getAllConditions());
+    dispatch(getAllAllergies());
   }, []);
 
   return (

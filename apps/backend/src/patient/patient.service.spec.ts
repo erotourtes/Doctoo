@@ -85,6 +85,7 @@ describe('PatientService', () => {
       street: 'Street Address',
       apartment: 'Apartment Number',
       zipCode: 12345,
+      allergies: [],
     };
 
     expect(result).toMatchObject(expected);
@@ -158,13 +159,11 @@ describe('PatientService', () => {
 
     const patient = await prisma.patient.create({ data: { ...patientStub(), user: { connect: { id: user.id } } } });
 
-    const allergy = await prisma.allergy.create({ data: { name: 'almond' } });
+    const allergy = await prisma.allergy.create({ data: { name: 'test' } });
 
-    const result = await patientService.createPatientAllergy(patient.id, allergy.id);
+    const result = await patientService.createPatientAllergies(patient.id, { allergyIds: [allergy.id] });
 
-    const expected = { allergyId: allergy.id, patientId: patient.id };
-
-    expect(result).toMatchObject(expected);
+    expect(result).toHaveProperty('count', 1);
   });
 
   it('should return a patient allergy list', async () => {

@@ -2,11 +2,12 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { plainToInstance } from 'class-transformer';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePatientDto } from './dto/create.dto';
+import { CreatePatientAllergyDto } from './dto/createPatientAllergy.dto';
 import { PatchPatientDto } from './dto/patch.dto';
 import { ResponsePatientDto } from './dto/response.dto';
 import { ResponseAllergyDto } from './dto/responseAllergy.dto';
-import { ResponsePatientAllergyDto } from './dto/responsePatientAllergy.dto';
 import { ResponseConditionDto } from './dto/responseCondition.dto';
+import { ResponsePatientAllergyDto } from './dto/responsePatientAllergy.dto';
 import { CreatePatientConditionDto } from './dto/createPatientCondition.dto';
 
 @Injectable()
@@ -35,13 +36,8 @@ export class PatientService {
     const patient = await this.prismaService.patient.findUnique({
       where: { id },
       include: {
-        user: {
-          select: {
-            firstName: true,
-            lastName: true,
-            avatarKey: true,
-          },
-        },
+        user: { select: { firstName: true, lastName: true, avatarKey: true } },
+        allergies: { select: { allergy: { select: { id: true, name: true } } } },
         conditions: {
           select: {
             condition: {
@@ -90,16 +86,21 @@ export class PatientService {
     return plainToInstance(ResponsePatientDto, patient);
   }
 
-  async createPatientAllergy(id: string, allergyId: string): Promise<ResponsePatientAllergyDto> {
-    const isPatientAlreadyHaveAllergy = await this.prismaService.patientAllergy.findUnique({
-      where: { id, allergyId },
+  async createPatientAllergies(id: string, body: CreatePatientAllergyDto): Promise<ResponsePatientAllergyDto> {
+    const isAllergiesAdded = await this.prismaService.patientAllergy.findMany({
+      where: { id: { in: body.allergyIds } },
     });
 
-    if (isPatientAlreadyHaveAllergy) throw new BadRequestException('Patient with this Id already have this allergy.');
+    if (isAllergiesAdded.length) {
+      throw new BadRequestException("Patient's already have some allergy from presented list.");
+    }
 
-    const allergy = await this.prismaService.patientAllergy.create({ data: { patientId: id, allergyId } });
+    const allergies = await this.prismaService.patientAllergy.createMany({
+      data: body.allergyIds.map(allergyId => ({ patientId: id, allergyId })),
+      skipDuplicates: true,
+    });
 
-    return plainToInstance(ResponsePatientAllergyDto, allergy);
+    return plainToInstance(ResponsePatientAllergyDto, allergies);
   }
 
   async createPatientConditions(id: string, conditions: CreatePatientConditionDto[]): Promise<number> {
@@ -118,16 +119,12 @@ export class PatientService {
     console.log(count);
     return count;
   }
-  async getPatientConditions(patientId: string) {
+  async getPatientConditions(patientId: string): Promise<ResponseConditionDto[]> {
     await this.isPatientByIdExists(patientId);
 
     const rawConditions = await this.prismaService.patientCondition.findMany({
       where: { patientId },
-      select: {
-        condition: {
-          select: { id: true, name: true },
-        },
-      },
+      select: { condition: { select: { id: true, name: true } } },
     });
 
     const conditions = rawConditions.map(record => record.condition);

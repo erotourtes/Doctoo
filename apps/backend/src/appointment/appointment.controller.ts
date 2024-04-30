@@ -21,11 +21,15 @@ import { ResponseAppointmentDto } from './dto/response.dto';
 import JWTGuard from 'src/auth/gaurds/jwt.guard';
 import { UserDec } from 'src/user/user.decorator';
 import { UnauthorizedResponse } from 'src/utils/UnauthorizedResponse';
+import { PatientService } from 'src/patient/patient.service';
 
 @ApiTags('Appointment Endpoints')
 @Controller('appointment')
 export class AppointmentController {
-  constructor(private readonly appointmentService: AppointmentService) {}
+  constructor(
+    private readonly appointmentService: AppointmentService,
+    private readonly patientService: PatientService,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'Create an appointment' })
@@ -46,16 +50,6 @@ export class AppointmentController {
     return this.appointmentService.getAppointments();
   }
 
-  @Get('patient/:id')
-  @ApiOperation({ summary: 'Get all appointments by patient id' })
-  @ApiOkResponse({ type: ResponseAppointmentDto, isArray: true, description: RESPONSE_STATUS.SUCCESS })
-  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique patient id.' })
-  getAppointmentsByPatientId(@Param('id') id: string) {
-    return this.appointmentService.getAppointmentsByPatientId(id);
-  }
-
   @UseGuards(JWTGuard)
   @Get('my')
   @ApiOperation({ summary: 'Get my appointment' })
@@ -64,8 +58,19 @@ export class AppointmentController {
   @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  getMyAppointments(@UserDec() userInfo) {
-    return this.appointmentService.getAppointmentsByPatientId(userInfo.id);
+  async getMyAppointments(@UserDec() userInfo) {
+    const result = await this.patientService.getPatientByUserId(userInfo.id);
+    return this.appointmentService.getAppointmentsByPatientId(result.id);
+  }
+
+  @Get('patient/:id')
+  @ApiOperation({ summary: 'Get all appointments by patient id' })
+  @ApiOkResponse({ type: ResponseAppointmentDto, isArray: true, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique patient id.' })
+  getAppointmentsByPatientId(@Param('id') id: string) {
+    return this.appointmentService.getAppointmentsByPatientId(id);
   }
 
   @Get('doctor/:id')

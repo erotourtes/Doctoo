@@ -30,7 +30,6 @@ export class UserService {
     await this.isUserExists(id);
 
     const user = await this.prismaService.user.findUnique({ where: { id } });
-
     return plainToInstance(ResponseUserDto, user);
   }
 

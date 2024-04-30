@@ -161,11 +161,14 @@ export class AuthService {
   }
 
   async changePassword(user: ResponseUserDto, body: ChangePasswordDto): Promise<void> {
-    const { password } = await this.userService.getUserByEmail(user.email);
+    const { password, googleId } = await this.userService.getUserByEmail(user.email);
 
-    const isPasswordValid = await this.verifyPassword(body.oldPassword, password);
+    if (!password && !googleId) throw Error('This should never happen');
+    if (password) {
+      const isPasswordValid = await this.verifyPassword(body.oldPassword, password);
 
-    if (!isPasswordValid) throw new BadRequestException('Invalid auth credentials.');
+      if (!isPasswordValid) throw new BadRequestException('Invalid auth credentials.');
+    }
 
     await this.userService.patchUser(user.id, { password: await this.hashPassword(body.newPassword) });
   }
