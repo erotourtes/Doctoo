@@ -8,4 +8,16 @@ export interface IReview {
   doctorId: string;
   rate: number;
   text: string;
+  doctor?: {
+    user: {
+      firstName: string;
+      lastName: string;
+    };
+  };
+  patient?: {
+    user: {
+      firstName: string;
+      lastName: string;
+    };
+  };
 }

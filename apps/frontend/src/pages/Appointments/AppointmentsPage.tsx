@@ -1,12 +1,13 @@
 import { Button } from '@/components/UI/Button/Button';
 import PageHeader from '../PageHeader';
 import InputSearch from '@/components/UI/Input/InputSearch';
-import { useState, useReducer } from 'react';
+import { useState, useReducer, useEffect } from 'react';
 import AppointmentsList from './Components/AppointmentsList/AppointmentsList';
 import { Calendar } from '@/components/UI/Calendar/Calendar';
-import { useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import dayjs from 'dayjs';
 import AppointmentsFilters from './Components/AppointmentsFilters/AppointmentsFilters';
+import { getAppointmentsByPatientId } from '@/app/appointment/AppointmentThunks';
 
 export type FilterState = {
   time: string[];
@@ -29,14 +30,18 @@ const initialFilterState: FilterState = {
 };
 
 export default function AppointmentsPage() {
+  const dispatch = useAppDispatch();
   const appointments = useAppSelector(state => state.appointment.appointments);
   const [filterState, dispatchFilterAction] = useReducer(filterReducer, initialFilterState);
+
+  useEffect(() => {
+    dispatch(getAppointmentsByPatientId('7'));
+  }, []);
 
   const meetingsForDay = appointments.map(appointment => ({
     date: dayjs(appointment.assignedAt).toDate(),
     status: appointment.status.toUpperCase(),
   }));
-  console.log(meetingsForDay);
 
   const [search, setSearch] = useState('');
 

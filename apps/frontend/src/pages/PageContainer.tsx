@@ -13,6 +13,7 @@ import SignUpPatientPage from './auth/signup/SignUpPatientPage';
 import DashboardPage from './dashboard/DashboardPage';
 import ProfilePage from './Profile/ProfilePage';
 import Settings from './settings/settingsPage/settingsPage';
+import ReviewsPage from './Reviews/ReviewsPage';
 
 // import page component
 
@@ -41,6 +42,7 @@ const PageContainer = () => {
           <Route path='/settings' Component={Settings} />
           <Route path='/payment' Component={PaymentPage} />
           <Route path='/my-doctors' Component={MyDoctorsPage} />
+          <Route path='/reviews' Component={ReviewsPage} />
           {/* <Route path='/calendar' Component={CalendarPage({ selectedDate: new Date() })} /> */}
           <Route path='/appointments' Component={AppointmentsPage} />
           <Route path='/logout' Component={LogoutPage} />

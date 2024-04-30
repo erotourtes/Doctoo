@@ -17,10 +17,6 @@ export default function ScheduleTestimonials({ review, patientName }: ScheduleTe
               <Icon key={i} variant='star' className='h-[18px] w-[18px] text-main-darker' />
             ))}
           </div>
-
-          <a href='#' className='text-black underline'>
-            128 reviews
-          </a>
         </div>
 
         {review}
@@ -35,10 +31,6 @@ export default function ScheduleTestimonials({ review, patientName }: ScheduleTe
               <Icon key={i} variant='star' className='h-[18px] w-[18px] text-main-darker' />
             ))}
           </div>
-
-          <a href='#' className='text-black underline'>
-            128 reviews
-          </a>
         </div>
 
         {review}

@@ -1,7 +1,22 @@
 import Icon from '@/components/UI/Icon/Icon';
-type PopupBodyProps = { fullName: string; avatarKey: string; openReschedule: () => void };
+import StarsRating from '@/components/UI/StarsRating/StarsRating';
+type PopupBodyProps = {
+  fullName: string;
+  avatarKey: string;
+  openReschedule: () => void;
+  doctorId: string;
+  rating: number;
+  reviewsCount: number;
+};
 
-export default function PopupBody({ fullName, avatarKey, openReschedule }: PopupBodyProps) {
+export default function PopupBody({
+  fullName,
+  avatarKey,
+  openReschedule,
+  doctorId,
+  rating,
+  reviewsCount,
+}: PopupBodyProps) {
   return (
     <>
       <div className='flex h-32 justify-start gap-x-6'>
@@ -27,17 +42,7 @@ export default function PopupBody({ fullName, avatarKey, openReschedule }: Popup
             <span className='select-none text-sm font-normal text-main-dark'>Top doctor placeholder</span>
           </div>
 
-          <div className='flex items-center gap-x-3'>
-            <div className='flex cursor-pointer gap-x-1'>
-              {Array.from({ length: 5 }, (_, i) => (
-                <Icon key={i} variant='star' className='h-[18px] w-[18px] text-main-darker' />
-              ))}
-            </div>
-
-            <a href='#' className='text-black underline'>
-              128 reviews (placeholder)
-            </a>
-          </div>
+          <StarsRating doctorId={doctorId} doctorRating={rating} doctorReviewsCount={reviewsCount} />
         </div>
       </div>
     </>
