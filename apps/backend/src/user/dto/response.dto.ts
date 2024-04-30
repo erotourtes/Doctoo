@@ -1,10 +1,9 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
 import { Exclude } from 'class-transformer';
-import { randomUUID } from 'crypto';
 
 export class ResponseUserDto {
-  @ApiProperty({ example: randomUUID(), description: 'Unique user id.' })
+  @ApiProperty({ example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique user id.' })
   readonly id: string;
 
   @ApiProperty({ example: 'John', description: "The user's real first name." })
@@ -25,7 +24,10 @@ export class ResponseUserDto {
   @ApiPropertyOptional({ example: 'G-123456789', description: 'Unique Google Id of the user.' })
   readonly googleId?: string;
 
-  @ApiProperty({ example: `${randomUUID()}.jpeg`, description: 'The unique file id of the file in S3 storage.' })
+  @ApiProperty({
+    example: '123e4567-e89b-12d3-a456-426614174000.jpeg',
+    description: 'The unique file id of the file in S3 storage.',
+  })
   readonly avatarKey: string;
 
   @ApiPropertyOptional({ example: `DOCTOR`, description: 'Represent user role ' })

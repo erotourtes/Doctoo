@@ -1,6 +1,5 @@
 import { ApiPropertyOptional, OmitType, PartialType } from '@nestjs/swagger';
 import { IsBoolean, IsNumber, IsOptional, IsUUID } from 'class-validator';
-import { randomUUID } from 'crypto';
 import { CreatePatientDto } from './create.dto';
 
 export class PatchPatientDto extends PartialType(OmitType(CreatePatientDto, ['userId'])) {
@@ -9,7 +8,10 @@ export class PatchPatientDto extends PartialType(OmitType(CreatePatientDto, ['us
   @IsNumber()
   readonly declarationId?: string;
 
-  @ApiPropertyOptional({ example: randomUUID(), description: 'A unique key to the patient identification file.' })
+  @ApiPropertyOptional({
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    description: 'A unique key to the patient identification file.',
+  })
   @IsOptional()
   @IsUUID(4)
   readonly identityCardKey: string;

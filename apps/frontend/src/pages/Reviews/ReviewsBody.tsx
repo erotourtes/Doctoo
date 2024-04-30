@@ -1,4 +1,4 @@
-import { IReview } from '@/dataTypes/Review';
+import type { IReview } from '@/dataTypes/Review';
 import { Icon } from '@/components/UI';
 
 type ReviewsBodyProps = { reviews: IReview[] };

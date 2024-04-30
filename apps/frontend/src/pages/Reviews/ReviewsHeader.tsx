@@ -1,5 +1,5 @@
 import { Button, Icon } from '@/components/UI';
-import { IDoctor } from '@/dataTypes/Doctor';
+import type { IDoctor } from '@/dataTypes/Doctor';
 
 type ReviewsHeader = {
   doctor: IDoctor;

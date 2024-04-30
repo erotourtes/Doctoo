@@ -8,7 +8,6 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { randomUUID } from 'crypto';
 import { BadRequestResponse } from '../utils/BadRequestResponse';
 import { ClassicNestResponse } from '../utils/ClassicNestResponse';
 import { RESPONSE_STATUS } from '../utils/constants';
@@ -46,7 +45,7 @@ export class HospitalController {
   @ApiOkResponse({ type: ResponseHospitalDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: "The hospital's unique id." })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: "The hospital's unique id." })
   getHospital(@Param('id') id: string) {
     return this.hospitalService.getHospital(id);
   }
@@ -56,7 +55,7 @@ export class HospitalController {
   @ApiOkResponse({ type: ResponseHospitalDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: "The hospital's unique id." })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: "The hospital's unique id." })
   @ApiBody({ type: PatchHospitalDto })
   patchHospital(@Param('id') id: string, @Body() body: PatchHospitalDto) {
     return this.hospitalService.patchHospital(id, body);
@@ -67,7 +66,7 @@ export class HospitalController {
   @ApiOkResponse({ description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: "The hospital's unique id." })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: "The hospital's unique id." })
   deleteHospital(@Param('id') id: string) {
     return this.hospitalService.deleteHospital(id);
   }

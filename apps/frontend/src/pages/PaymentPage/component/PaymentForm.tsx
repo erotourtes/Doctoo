@@ -1,22 +1,22 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
-import type { SubmitHandler, FieldValues } from 'react-hook-form';
-import { useForm, FormProvider } from 'react-hook-form';
-import Joi from 'joi';
-import { joiResolver } from '@hookform/resolvers/joi';
-import { CardCvcElement, CardExpiryElement, CardNumberElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import { getPaymentIntent } from '@/app/payment/paymentThunks';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { NewPaymentCardForm } from '@/pages/PaymentPage/component/NewPaymentCardForm';
+import { getPaymentIntent } from '@/app/payment/paymentThunks';
 import { Button } from '@/components/UI/Button/Button';
 import { Checkbox } from '@/components/UI/Checkbox/Checkbox';
 import Icon from '@/components/UI/Icon/Icon';
 import { RadioButton } from '@/components/UI/RadioButton/RadioButton';
-import { PaymentPopup } from '@/pages/PaymentPage/component/PaymentPopup';
 import { Checkout } from '@/pages/PaymentPage/component/Checkout';
+import { NewPaymentCardForm } from '@/pages/PaymentPage/component/NewPaymentCardForm';
+import { PaymentPopup } from '@/pages/PaymentPage/component/PaymentPopup';
+import { joiResolver } from '@hookform/resolvers/joi';
+import { CardCvcElement, CardExpiryElement, CardNumberElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import Joi from 'joi';
+import { useState } from 'react';
+import type { FieldValues, SubmitHandler } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
 
 const schema = Joi.object({
-  cardholderName: Joi.string().min(3).max(100).required(),
+  cardholderName: Joi.string().min(3).max(30).required(),
   agreedToTerms: Joi.boolean().valid(true).required(),
 });
 

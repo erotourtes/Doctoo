@@ -8,7 +8,6 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { randomUUID } from 'crypto';
 import { BadRequestResponse } from '../utils/BadRequestResponse';
 import { ClassicNestResponse } from '../utils/ClassicNestResponse';
 import { RESPONSE_STATUS } from '../utils/constants';
@@ -45,7 +44,7 @@ export class FavoriteController {
   @ApiOkResponse({ type: ResponseFavoriteDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique doctor id.' }) // TODO: doctor id??
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique doctor id.' }) // TODO: doctor id??
   getFovorite(@Param('id') id: string) {
     return this.favoriteService.getFavorite(id);
   }
@@ -55,7 +54,7 @@ export class FavoriteController {
   @ApiOkResponse({ description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique doctor id.' })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique doctor id.' })
   deleteFavorite(@Param('id') id: string) {
     return this.favoriteService.deleteFavorite(id);
   }

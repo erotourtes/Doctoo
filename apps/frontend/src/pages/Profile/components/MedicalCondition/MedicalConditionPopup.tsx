@@ -1,7 +1,6 @@
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { createPatientAllergies } from '@/app/patient/PatientThunks';
-import { createPatientConditions } from '@/app/patient/PatientThunks';
-import { PopupDoctoo, Button, Tag } from '@/components/UI';
+import { createPatientAllergies, createPatientConditions } from '@/app/patient/PatientThunks';
+import { Button, PopupDoctoo, Tag } from '@/components/UI';
 import type { TAllergy } from '@/dataTypes/Allergy';
 import type { TCondition } from '@/dataTypes/Condition';
 import { useState } from 'react';
@@ -147,6 +146,7 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
             onClick={() => {
               setSelectedConditions([]);
               setSuggestedConditions([]);
+              onClose();
             }}
             className='w-full sm:w-1/2'
           >

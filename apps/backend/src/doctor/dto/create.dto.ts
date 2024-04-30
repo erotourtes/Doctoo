@@ -1,11 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsNumber, IsUUID, Min } from 'class-validator';
-import { randomUUID } from 'crypto';
 import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
 
 export class CreateDoctorDto {
-  @ApiProperty({ example: randomUUID(), description: 'Unique user id.' })
+  @ApiProperty({ example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique user id.' })
   @IsUUID(4)
   userId: string;
 
@@ -22,11 +21,17 @@ export class CreateDoctorDto {
   @IsNotEmptyString()
   about: string;
 
-  @ApiProperty({ example: [randomUUID()], description: 'A list of ids specialties that the doctor covers.' })
+  @ApiProperty({
+    example: ['123e4567-e89b-12d3-a456-426614174000'],
+    description: 'A list of ids specialties that the doctor covers.',
+  })
   @IsUUID(4, { each: true, message: 'Each value must be in UUID format.' })
   specializationIds: string[];
 
-  @ApiProperty({ example: [randomUUID()], description: 'List of hospitals where the doctor works.' })
+  @ApiProperty({
+    example: ['123e4567-e89b-12d3-a456-426614174000'],
+    description: 'List of hospitals where the doctor works.',
+  })
   @IsUUID(4, { each: true, message: 'Each value must be in UUID format.' })
   hospitalIds: string[];
 }

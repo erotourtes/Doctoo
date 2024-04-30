@@ -1,9 +1,9 @@
-import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import SettingsPopup from '../settingsPopup/settingsPopup';
 import { Icon, Toggle } from '@/components/UI';
+import { useState } from 'react';
 import { patchPatientData } from '../../../app/patient/PatientThunks';
 import { ErrorMessage } from '../../auth/auth-components';
+import SettingsPopup from '../settingsPopup/settingsPopup';
 
 const Settings = () => {
   const [showPopup, setShowPopup] = useState(false);
@@ -57,9 +57,9 @@ const Settings = () => {
         </header>
 
         <section className='flex items-center justify-center'>
-          <div className='for-password h-[88px] w-11/12 w-full rounded-lg bg-white'>
+          <div className='for-password h-[88px] w-11/12 rounded-lg bg-white'>
             <div className='flex flex-col items-center justify-between gap-2 p-2 sm:flex-row sm:p-8'>
-              <span className='text-base text-lg font-medium text-dark-grey'>Password</span>
+              <span className='text-lg font-medium text-dark-grey'>Password</span>
               <a href='#' className='text-lg font-medium text-main ' onClick={() => setShowPopup(true)}>
                 Change password
               </a>
@@ -73,7 +73,7 @@ const Settings = () => {
               <div key={id} className='p-2 sm:px-2 sm:py-0'>
                 <div className={`${id !== 'billPayment' ? ' border-b border-grey-4' : ''}`}>
                   <div className='mb-3 flex items-center justify-between sm:mb-0 sm:px-0 sm:py-4'>
-                    <span className='text-base text-sm font-medium text-dark-grey sm:text-lg'>{label}</span>
+                    <span className='text-sm font-medium text-dark-grey sm:text-lg'>{label}</span>
                     <a href='#' className='text-lg text-main '>
                       <Toggle selected={toggleState} onSelectedChange={toggleHandler} label='' id={id} />
                     </a>

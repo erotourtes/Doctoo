@@ -5,9 +5,9 @@ import Joi from 'joi';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Navigate, useLocation, useNavigate } from 'react-router';
-import { AuthMainContainer, ErrorMessage } from '../auth-components';
 import api from '../../../app/api';
 import { BloodType, Gender } from '../../../dataTypes/Patient';
+import { AuthMainContainer, ErrorMessage } from '../auth-components';
 
 const SignUpPatientPage = () => {
   const { search } = useLocation();
@@ -29,9 +29,9 @@ type Patient = {
 };
 
 const patientScheme = Joi.object<Patient>({
-  weight: Joi.number().required(),
-  height: Joi.number().required(),
-  age: Joi.number().required(),
+  weight: Joi.number().max(1000).required(),
+  height: Joi.number().max(300).required(),
+  age: Joi.number().max(130).required(),
   bloodType: Joi.string()
     .valid(...Object.keys(BloodType))
     .required()
@@ -40,9 +40,9 @@ const patientScheme = Joi.object<Patient>({
     .valid(...Object.keys(Gender))
     .required()
     .messages({ 'any.only': 'Please select you gender' }),
-  country: Joi.string().required(),
-  city: Joi.string().required(),
-  street: Joi.string().required(),
+  country: Joi.string().min(3).required(),
+  city: Joi.string().min(3).required(),
+  street: Joi.string().min(3).required(),
 });
 
 const SignUpPageOrig = ({ token }: { token: string }) => {

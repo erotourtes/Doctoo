@@ -9,7 +9,6 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { randomUUID } from 'crypto';
 import { BadRequestResponse } from 'src/utils/BadRequestResponse';
 import { ClassicNestResponse } from 'src/utils/ClassicNestResponse';
 import { RESPONSE_STATUS } from '../utils/constants';
@@ -47,7 +46,7 @@ export class AllergyController {
   @ApiOkResponse({ type: ResponseAllergyDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique allergy id.' })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique allergy id.' })
   getAllergy(@Param('id') id: string) {
     return this.allergyService.getAllergy(id);
   }
@@ -57,7 +56,7 @@ export class AllergyController {
   @ApiOkResponse({ type: ResponseAllergyDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique allergy id.' })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique allergy id.' })
   @ApiBody({ type: UpdateAllergyDto })
   patchAllergy(@Param('id') id: string, @Body() body: UpdateAllergyDto) {
     return this.allergyService.patchAllergy(id, body);
@@ -69,7 +68,7 @@ export class AllergyController {
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiNotFoundResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique allergy id.' })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique allergy id.' })
   deleteAllergy(@Param('id') id: string) {
     return this.allergyService.deleteAllergy(id);
   }

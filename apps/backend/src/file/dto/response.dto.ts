@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { randomUUID } from 'crypto';
 
-const EXAMPLE_FILE_NAME = `${randomUUID()}.png`;
+const EXAMPLE_FILE_NAME = '123e4567-e89b-12d3-a456-426614174000.png';
 
 export class ResponseFileDto {
   @ApiProperty({ example: EXAMPLE_FILE_NAME, description: 'File Name.' })

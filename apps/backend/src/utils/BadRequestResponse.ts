@@ -3,13 +3,13 @@ import { ClassicNestResponse } from './ClassicNestResponse';
 
 class ErrorValidationObject {
   @ApiProperty({ example: 'name', description: 'The name of the field where validation failed.' })
-  proparty: string;
+  property: string;
 
   @ApiProperty({ example: 'Name is too short', description: 'Detailed description of the error.' })
   message: string;
 }
 
-export class BadRequestResponse extends OmitType(ClassicNestResponse, ['error']) {
+export class BadRequestResponse extends OmitType(ClassicNestResponse, ['error', 'statusCode']) {
   @ApiProperty({
     type: ErrorValidationObject,
     isArray: true,

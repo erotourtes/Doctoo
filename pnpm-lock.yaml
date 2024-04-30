@@ -123,9 +123,9 @@ importers:
       '@types/nodemailer':
         specifier: 6.4.14
         version: 6.4.14
-      '@types/passport-google-oauth2':
-        specifier: 0.1.8
-        version: 0.1.8
+      '@types/passport-google-oauth20':
+        specifier: 2.0.14
+        version: 2.0.14
       '@types/passport-local':
         specifier: 1.0.38
         version: 1.0.38
@@ -206,7 +206,7 @@ importers:
         version: 3.3.0
       axios:
         specifier: 1.6.8
-        version: 1.6.8(debug@4.3.4)
+        version: 1.6.8
       clsx:
         specifier: 2.1.0
         version: 2.1.0
@@ -2494,14 +2494,20 @@ packages:
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
 
+  '@types/oauth@0.9.4':
+    resolution: {integrity: sha512-qk9orhti499fq5XxKCCEbd0OzdPZuancneyse3KtR+vgMiHRbh+mn8M4G6t64ob/Fg+GZGpa565MF/2dKWY32A==}
+
   '@types/parse-json@4.0.2':
     resolution: {integrity: sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==}
 
-  '@types/passport-google-oauth2@0.1.8':
-    resolution: {integrity: sha512-0lgGOVbGNTw7NcmrPh3pRwtGJXf1XZG7FZkYtM5DuQ8HJjHzi5mMIq28x7v/q5NNDIrFvhjE0CnyTv7hn4DIjg==}
+  '@types/passport-google-oauth20@2.0.14':
+    resolution: {integrity: sha512-ZaZpRUAeMl3vy298ulKO1wGLn9SQtj/CyIfZL/Px5xU9pybMiQU3mhXDCBiWSbg0EK9uXT4ZoWC3ktuWY+5fwQ==}
 
   '@types/passport-local@1.0.38':
     resolution: {integrity: sha512-nsrW4A963lYE7lNTv9cr5WmiUD1ibYJvWrpE13oxApFsRt77b0RdtZvKbCdNIY4v/QZ6TRQWaDDEwV1kCTmcXg==}
+
+  '@types/passport-oauth2@1.4.15':
+    resolution: {integrity: sha512-9cUTP/HStNSZmhxXGuRrBJfEWzIEJRub2eyJu3CvkA+8HAMc9W3aKdFhVq+Qz1hi42qn+GvSAnz3zwacDSYWpw==}
 
   '@types/passport-strategy@0.2.38':
     resolution: {integrity: sha512-GC6eMqqojOooq993Tmnmp7AUTbbQSgilyvpCYQjT+H6JfG/g6RGc7nXEniZlp0zyKJ0WUdOiZWLBZft9Yug1uA==}
@@ -10692,17 +10698,29 @@ snapshots:
 
   '@types/normalize-package-data@2.4.4': {}
 
+  '@types/oauth@0.9.4':
+    dependencies:
+      '@types/node': 20.12.7
+
   '@types/parse-json@4.0.2': {}
 
-  '@types/passport-google-oauth2@0.1.8':
+  '@types/passport-google-oauth20@2.0.14':
     dependencies:
       '@types/express': 4.17.21
+      '@types/passport': 1.0.16
+      '@types/passport-oauth2': 1.4.15
 
   '@types/passport-local@1.0.38':
     dependencies:
       '@types/express': 4.17.21
       '@types/passport': 1.0.16
       '@types/passport-strategy': 0.2.38
+
+  '@types/passport-oauth2@1.4.15':
+    dependencies:
+      '@types/express': 4.17.21
+      '@types/oauth': 0.9.4
+      '@types/passport': 1.0.16
 
   '@types/passport-strategy@0.2.38':
     dependencies:
@@ -11401,6 +11419,14 @@ snapshots:
       - supports-color
 
   axe-core@4.7.0: {}
+
+  axios@1.6.8:
+    dependencies:
+      follow-redirects: 1.15.6
+      form-data: 4.0.0
+      proxy-from-env: 1.1.0
+    transitivePeerDependencies:
+      - debug
 
   axios@1.6.8(debug@4.3.4):
     dependencies:
@@ -13021,6 +13047,8 @@ snapshots:
   flatted@3.3.1: {}
 
   flow-parser@0.235.1: {}
+
+  follow-redirects@1.15.6: {}
 
   follow-redirects@1.15.6(debug@4.3.4):
     optionalDependencies:

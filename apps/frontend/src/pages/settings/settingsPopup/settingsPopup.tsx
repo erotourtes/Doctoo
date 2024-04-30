@@ -1,12 +1,12 @@
-import type React from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
-import { passwordRulesList } from '@/constants/passwordRulesList';
-import { InputPassword, Button, PopupDoctoo } from '@/components/UI';
-import Joi from 'joi';
-import { joiResolver } from '@hookform/resolvers/joi';
 import { useAppDispatch } from '@/app/hooks';
 import { changePassword } from '@/app/patient/PatientThunks';
+import { Button, InputPassword, PopupDoctoo } from '@/components/UI';
+import { passwordRulesList } from '@/constants/passwordRulesList';
+import { joiResolver } from '@hookform/resolvers/joi';
+import Joi from 'joi';
+import type React from 'react';
 import { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { ErrorMessage } from '../../auth/auth-components';
 
 export interface PopupProps {
@@ -19,22 +19,28 @@ type FormValues = {
   oldPassword: string;
 };
 
-const scheme = Joi.object<FormValues>({
+const schema = Joi.object<FormValues>({
   newPassword: Joi.string().min(8).required(),
   oldPassword: Joi.string().required(),
 });
 
 const SettingsPopup: React.FC<PopupProps> = ({ showPopup, handleClosePopup }) => {
   const form = useForm<FormValues>({
-    resolver: joiResolver(scheme),
+    resolver: joiResolver(schema),
     mode: 'onSubmit',
   });
   const [serverError, setServerError] = useState<string | null>(null);
   const dispatch = useAppDispatch();
 
   const handleSubmit = async (data: FormValues) => {
+    if (data.oldPassword === data.newPassword) {
+      return void setServerError('New password cannot be the same as old password.');
+    }
+
     const res = await dispatch(changePassword(data)).unwrap();
+
     if (res && res.message) return void setServerError(res.message as string);
+
     handleClosePopup();
   };
 

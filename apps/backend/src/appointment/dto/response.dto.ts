@@ -1,20 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { AppointmentStatus } from '@prisma/client';
 import { Expose, Transform, plainToInstance } from 'class-transformer';
-import { randomUUID } from 'crypto';
 import { ResponseDoctorDto } from 'src/doctor/dto/response.dto';
 
 export class ResponseAppointmentDto {
-  @ApiProperty({ example: randomUUID(), description: 'Unique appointment id.' })
+  @ApiProperty({ example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique appointment id.' })
   id: string;
 
-  @ApiProperty({ example: randomUUID(), description: 'Unique doctor id.' })
+  @ApiProperty({ example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique doctor id.' })
   readonly doctorId: string;
 
-  @ApiProperty({ example: randomUUID(), description: 'Unique patient id.' })
+  @ApiProperty({ example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique patient id.' })
   patientId: string;
 
-  @ApiProperty({ example: new Date(), description: 'The date on which the meeting is scheduled.' })
+  @ApiProperty({ example: '2024-04-30T15:06:19.140Z', description: 'The date on which the meeting is scheduled.' })
   assignedAt: Date;
 
   @ApiProperty({ enum: AppointmentStatus, description: 'Current status of the appointment.' })
@@ -26,19 +25,22 @@ export class ResponseAppointmentDto {
   })
   notes: string;
 
-  @ApiProperty({ example: randomUUID(), description: 'The unique id of the billed payment.' })
+  @ApiProperty({ example: '123e4567-e89b-12d3-a456-426614174000', description: 'The unique id of the billed payment.' })
   paymentInvoiceKey: string;
 
   @ApiProperty({ description: 'The unique id from the receipt file for the appointment.' })
   paymentReceiptKey?: string;
 
-  @ApiProperty({ example: `${randomUUID()}.mp4`, description: 'The unique id of the video chat recording.' })
+  @ApiProperty({
+    example: '123e4567-e89b-12d3-a456-426614174000.mp4',
+    description: 'The unique id of the video chat recording.',
+  })
   videoRecordKey: string;
 
-  @ApiProperty({ example: new Date().toISOString(), description: 'The time when the appointment should start.' })
+  @ApiProperty({ example: '2024-04-30T15:06:19.140Z', description: 'The time when the appointment should start.' })
   readonly startedAt: string;
 
-  @ApiProperty({ example: new Date().toISOString(), description: 'The time when the appointment should end.' })
+  @ApiProperty({ example: '2024-04-30T15:06:19.140Z', description: 'The time when the appointment should end.' })
   readonly endedAt: string;
 
   @Expose()

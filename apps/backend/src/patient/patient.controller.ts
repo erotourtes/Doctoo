@@ -8,7 +8,6 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { randomUUID } from 'crypto';
 import { BadRequestResponse } from '../utils/BadRequestResponse';
 import { ClassicNestResponse } from '../utils/ClassicNestResponse';
 import { RESPONSE_STATUS } from '../utils/constants';
@@ -19,9 +18,9 @@ import { PatchPatientDto } from './dto/patch.dto';
 import { ResponsePatientDto } from './dto/response.dto';
 import { ResponseAllergyDto } from './dto/responseAllergy.dto';
 import { ResponseConditionDto } from './dto/responseCondition.dto';
-import { PatientService } from './patient.service';
 import { ResponsePatientAllergyDto } from './dto/responsePatientAllergy.dto';
 import { ResponsePatientConditionsDto } from './dto/responsePatientConditions.dto';
+import { PatientService } from './patient.service';
 
 @ApiTags('Patient Endpoints')
 @Controller('patient')
@@ -33,7 +32,7 @@ export class PatientController {
   @ApiOkResponse({ type: ResponsePatientDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: "The patient's unique id." })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: "The patient's unique id." })
   async getPatient(@Param('id') id: string) {
     return this.patientService.getPatient(id);
   }
@@ -53,7 +52,7 @@ export class PatientController {
   @ApiOkResponse({ type: ResponsePatientDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: "The patient's unique id." })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: "The patient's unique id." })
   @ApiBody({ type: PatchPatientDto })
   async patchPatient(@Param('id') id: string, @Body() body: PatchPatientDto) {
     return this.patientService.patchPatient(id, body);
@@ -64,7 +63,7 @@ export class PatientController {
   @ApiOkResponse({ type: ResponsePatientAllergyDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: "The patient's unique id." })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: "The patient's unique id." })
   @ApiBody({ type: CreatePatientAllergyDto })
   async createPatientAllergy(@Param('id') patientId: string, @Body() body: CreatePatientAllergyDto) {
     return this.patientService.createPatientAllergies(patientId, body);
@@ -75,7 +74,7 @@ export class PatientController {
   @ApiOkResponse({ type: ResponseAllergyDto, isArray: true, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: "The patient's unique id." })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: "The patient's unique id." })
   async getPatientAllergies(@Param('id') patientId: string) {
     return this.patientService.getPatientAllergies(patientId);
   }
@@ -85,7 +84,7 @@ export class PatientController {
   @ApiOkResponse({ type: ResponsePatientConditionsDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: "The patient's unique id." })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: "The patient's unique id." })
   @ApiBody({ type: CreatePatientConditionDto })
   async createPatientConditions(@Param('id') patientId: string, @Body() body: CreatePatientConditionDto) {
     return this.patientService.createPatientConditions(patientId, body);
@@ -96,7 +95,7 @@ export class PatientController {
   @ApiOkResponse({ type: ResponseConditionDto, isArray: true, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: "The patient's unique id." })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: "The patient's unique id." })
   async getPatientConditions(@Param('id') patientId: string) {
     return this.patientService.getPatientConditions(patientId);
   }
@@ -106,7 +105,7 @@ export class PatientController {
   @ApiOkResponse({ description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: "The patient's unique id." })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: "The patient's unique id." })
   async deletePatient(@Param('id') id: string) {
     return this.patientService.deletePatient(id);
   }

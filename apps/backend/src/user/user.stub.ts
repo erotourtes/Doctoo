@@ -1,3 +1,5 @@
+import { Role } from '@prisma/client';
+
 export const userStub = () => {
   return {
     firstName: 'First Name',
@@ -6,5 +8,6 @@ export const userStub = () => {
     email: 'user@gmail.com',
     emailVerified: true,
     avatarKey: 'test',
+    role: Role.PATIENT,
   };
 };

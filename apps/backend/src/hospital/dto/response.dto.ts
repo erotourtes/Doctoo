@@ -1,8 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { randomUUID } from 'crypto';
 
 export class ResponseHospitalDto {
-  @ApiProperty({ example: randomUUID(), description: "The hospital's unique id." })
+  @ApiProperty({ example: '123e4567-e89b-12d3-a456-426614174000', description: "The hospital's unique id." })
   readonly id: string;
 
   @ApiProperty({ example: 'Ichilov and Assuta', description: 'The full name of the hospital is.' })

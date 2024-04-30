@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 import { ConditionService } from './condition.service';
 import { CreateConditionDto } from './dto/create.dto';
 import { UpdateConditionDto } from './dto/update.dto';

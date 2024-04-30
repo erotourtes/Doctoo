@@ -1,15 +1,17 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Allergy, BloodType, Condition, Gender, User } from '@prisma/client';
 import { Exclude, Expose, Transform } from 'class-transformer';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { randomUUID } from 'crypto';
 import { ResponseAllergyDto } from './responseAllergy.dto';
 import { ResponseConditionDto } from './responseCondition.dto';
 
 export class ResponsePatientDto {
-  @ApiProperty({ example: randomUUID(), description: 'Unique patient id.' })
+  @ApiProperty({ example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique patient id.' })
   readonly id: string;
 
-  @ApiProperty({ example: randomUUID(), description: 'The unique user id of the user to which the patient is bound.' })
+  @ApiProperty({
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    description: 'The unique user id of the user to which the patient is bound.',
+  })
   readonly userId: string;
 
   @ApiProperty({ example: 65, description: "Patient's weight." })
@@ -27,7 +29,10 @@ export class ResponsePatientDto {
   @ApiProperty({ enum: Gender, example: Gender.MALE, description: 'Patient gender.' })
   readonly gender: Gender;
 
-  @ApiProperty({ example: randomUUID(), description: 'A unique key to the patient identification file.' })
+  @ApiProperty({
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    description: 'A unique key to the patient identification file.',
+  })
   readonly identityCardKey: string;
 
   @ApiProperty({ example: 'USA', description: 'The country where the hospital is located.' })
@@ -105,7 +110,7 @@ export class ResponsePatientDto {
     type: ResponseAllergyDto,
     isArray: true,
     description: 'List of allergies of the patient.',
-    example: { id: randomUUID(), name: 'Peanuts' },
+    example: { id: '123e4567-e89b-12d3-a456-426614174000', name: 'Peanuts' },
   })
   readonly allergies: Allergy[];
 
@@ -117,7 +122,7 @@ export class ResponsePatientDto {
     type: ResponseConditionDto,
     isArray: true,
     description: 'List of conditions of the patient.',
-    example: { id: randomUUID(), name: 'Diabetes' },
+    example: { id: '123e4567-e89b-12d3-a456-426614174000', name: 'Diabetes' },
   })
   readonly conditions: Condition[];
 

@@ -2,20 +2,19 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { AppointmentStatus } from '@prisma/client';
 import { IsEnum, IsISO8601, IsOptional, IsUUID } from 'class-validator';
 import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
-import { randomUUID } from 'crypto';
 
 export class CreateAppointmentDto {
   @IsUUID(4)
-  @ApiProperty({ example: randomUUID(), description: 'Unique doctor id.' })
+  @ApiProperty({ example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique doctor id.' })
   @IsNotEmptyString()
   readonly doctorId: string;
 
-  @ApiProperty({ example: randomUUID(), description: 'Unique patient id.' })
+  @ApiProperty({ example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique patient id.' })
   @IsUUID(4)
   @IsNotEmptyString()
   readonly patientId: string;
 
-  @ApiProperty({ example: new Date(), description: 'The date on which the meeting is scheduled.' })
+  @ApiProperty({ example: '2024-04-30T15:06:19.140Z', description: 'The date on which the meeting is scheduled.' })
   @IsNotEmptyString()
   @IsISO8601({ strict: true })
   assignedAt: string;
@@ -36,13 +35,19 @@ export class CreateAppointmentDto {
   @IsNotEmptyString()
   notes: string;
 
-  @ApiPropertyOptional({ example: randomUUID(), description: 'The unique Id of the billed payment.' })
+  @ApiPropertyOptional({
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    description: 'The unique Id of the billed payment.',
+  })
   @IsOptional()
   @IsNotEmptyString()
   @IsUUID(4)
   readonly paymentInvoiceKey: string;
 
-  @ApiPropertyOptional({ example: randomUUID(), description: 'The unique id of the payment receipt.' })
+  @ApiPropertyOptional({
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    description: 'The unique id of the payment receipt.',
+  })
   @IsOptional()
   @IsNotEmptyString()
   @IsUUID(4)

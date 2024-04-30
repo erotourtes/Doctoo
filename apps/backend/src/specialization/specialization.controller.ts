@@ -8,7 +8,6 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { randomUUID } from 'crypto';
 import { BadRequestResponse } from '../utils/BadRequestResponse';
 import { RESPONSE_STATUS } from '../utils/constants';
 import { CreateSpecializationDto } from './dto/create.dto';
@@ -45,7 +44,7 @@ export class SpecializationController {
   @ApiOkResponse({ type: ResponseSpecializationDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique specialisation id.' })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique specialisation id.' })
   getSpecialization(@Param('id') id: string) {
     return this.specializationService.getSpecialization(id);
   }
@@ -55,7 +54,7 @@ export class SpecializationController {
   @ApiOkResponse({ type: ResponseSpecializationDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique specialisation id.' })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique specialisation id.' })
   @ApiBody({ type: UpdateSpecializationDto })
   patchSpecialization(@Param('id') id: string, @Body() body: UpdateSpecializationDto) {
     return this.specializationService.patchSpecialization(id, body);
@@ -66,7 +65,7 @@ export class SpecializationController {
   @ApiOkResponse({ description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique specialisation id.' })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique specialisation id.' })
   deleteSpecialization(@Param('id') id: string) {
     return this.specializationService.deleteSpecialization(id);
   }

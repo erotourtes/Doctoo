@@ -1,10 +1,10 @@
-import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { patchPatientData } from '@/app/patient/PatientThunks';
 import type { TPatient } from '@/dataTypes/Patient';
 import { capitalizeString } from '@/utils/capitalizeString';
 import Icon from '@UI/Icon/Icon';
 import type { IconVariant } from '@UI/Icon/types';
+import { useState } from 'react';
 
 type StatsCardProps = {
   iconVariant: IconVariant;
@@ -25,11 +25,7 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
       <div className='flex flex-col gap-4'>
         <p className='w-full text-grey-1'>{title}</p>
         <p className='group flex w-fit items-center text-black'>
-          <form
-            onSubmit={e => {
-              e.preventDefault();
-            }}
-          >
+          <form onSubmit={e => e.preventDefault()}>
             {variant === 'input' && (
               <input
                 onBlur={() => {
@@ -38,16 +34,21 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
                       if (parseInt(inputValue)) {
                         dispatch(patchPatientData({ id: patient.id, body: { height: parseInt(inputValue) } }));
                       }
+
                       break;
+
                     case 'Weight, kg':
                       if (parseInt(inputValue)) {
                         dispatch(patchPatientData({ id: patient.id, body: { weight: parseInt(inputValue) } }));
                       }
+
                       break;
+
                     case 'Age':
                       if (parseInt(inputValue)) {
                         dispatch(patchPatientData({ id: patient.id, body: { age: parseInt(inputValue) } }));
                       }
+
                       break;
                   }
                 }}
@@ -58,6 +59,7 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
                 onChange={e => setInputValue(e.target.value)}
               />
             )}
+
             {variant === 'select' && (
               <form>
                 <select
@@ -76,6 +78,7 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
                             gender = 'MALE';
                             break;
                         }
+
                         if (gender) dispatch(patchPatientData({ id: patient.id, body: { gender } }));
                         break;
                       case 'Blood type':

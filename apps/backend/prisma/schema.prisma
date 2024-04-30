@@ -41,19 +41,19 @@ enum NotificationAction {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  firstName     String    @map("first_name")
-  lastName      String    @map("last_name")
+  id            String   @id @default(uuid())
+  firstName     String   @map("first_name")
+  lastName      String   @map("last_name")
   phone         String
-  email         String    @unique
-  emailVerified Boolean   @default(false) @map("email_verified")
-  secretCode    String?   @map("secret_code")
+  email         String   @unique
+  emailVerified Boolean  @default(false) @map("email_verified")
+  secretCode    String?  @map("secret_code")
   password      String?
-  googleId      String?   @map("googleId")
-  avatarKey     String    @map("avatar_key")
-  role          Role?
-  doctors       Doctor[]
-  patients      Patient[]
+  googleId      String?  @map("google_id")
+  avatarKey     String   @map("avatar_key")
+  role          Role
+  doctor        Doctor?
+  patient       Patient?
 
   @@map("users")
 }

@@ -42,6 +42,8 @@ export class MinioService {
   }
 
   async upload(file: Express.Multer.File): Promise<ResponseFileDto> {
+    if (!file) throw new BadRequestException('file must be provided.');
+
     const allowedTypes = ['image/', 'video/', 'application/pdf'];
 
     if (!allowedTypes.some(format => file.mimetype.startsWith(format))) {
@@ -77,21 +79,24 @@ export class MinioService {
     await this.minioClient.removeObject(this.bucketName, name);
   }
 
-  async uploadByUrl(url: string): Promise<string> {
+  async uploadByUrl(imageUrl: string): Promise<ResponseFileDto> {
     let response: Response;
 
     try {
-      response = await fetch(url);
+      response = await fetch(imageUrl);
     } catch (err) {
       throw new BadRequestException('Invalid image url.');
     }
 
     const buffer = Buffer.from(await response.arrayBuffer());
 
-    const fileName = randomUUID();
+    const fileType = response.headers.get('content-type').split('/').pop();
+    const fileName = `${randomUUID()}.${fileType}`;
 
     await this.minioClient.putObject(this.bucketName, fileName, buffer);
 
-    return fileName;
+    const url = await this.getFileByName(fileName);
+
+    return plainToInstance(ResponseFileDto, { name: fileName, ...url });
   }
 }

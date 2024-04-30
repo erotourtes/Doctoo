@@ -36,6 +36,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
           googleId: id,
           phone: '', // TODO: Add phone to GoogleStrategy.
           avatarImgUrl: photos[0].value,
+          role: 'PATIENT',
         });
 
         return { isLoggedIn: false, user: newUser };

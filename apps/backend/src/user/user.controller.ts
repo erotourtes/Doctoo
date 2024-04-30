@@ -10,17 +10,16 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { randomUUID } from 'crypto';
+import JWTGuard from 'src/auth/gaurds/jwt.guard';
+import { UnauthorizedResponse } from 'src/utils/UnauthorizedResponse';
 import { BadRequestResponse } from '../utils/BadRequestResponse';
 import { ClassicNestResponse } from '../utils/ClassicNestResponse';
 import { RESPONSE_STATUS } from '../utils/constants';
 import { CreateUserDto } from './dto/create.dto';
 import { PatchUserWithoutCredentialsDto } from './dto/patchWithoutCredentials';
 import { ResponseUserDto } from './dto/response.dto';
-import { UserService } from './user.service';
-import JWTGuard from 'src/auth/gaurds/jwt.guard';
-import { UnauthorizedResponse } from 'src/utils/UnauthorizedResponse';
 import { UserDec } from './user.decorator';
+import { UserService } from './user.service';
 
 @ApiTags('User Enpoints')
 @Controller('user')
@@ -44,7 +43,7 @@ export class UserController {
   @ApiOkResponse({ type: ResponseUserDto, description: RESPONSE_STATUS.ERROR })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique user id.' })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique user id.' })
   getUser(@Param('id') id: string) {
     return this.userService.getUser(id);
   }
@@ -64,7 +63,7 @@ export class UserController {
   @ApiOkResponse({ type: ResponseUserDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique user id.' })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique user id.' })
   @ApiBody({ type: PatchUserWithoutCredentialsDto })
   patchUser(@Param('id') id: string, @Body() body: PatchUserWithoutCredentialsDto) {
     return this.userService.patchUser(id, body);
@@ -75,7 +74,7 @@ export class UserController {
   @ApiOkResponse({ description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique user id.' })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique user id.' })
   deleteUser(@Param('id') id: string) {
     return this.userService.deletedUser(id);
   }

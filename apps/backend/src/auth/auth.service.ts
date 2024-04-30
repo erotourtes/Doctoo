@@ -161,16 +161,17 @@ export class AuthService {
   }
 
   async changePassword(user: ResponseUserDto, body: ChangePasswordDto): Promise<void> {
-    const { password, googleId } = await this.userService.getUserByEmail(user.email);
+    const { password } = await this.userService.getUserByEmail(user.email);
 
-    if (!password && !googleId) throw Error('This should never happen');
     if (password) {
       const isPasswordValid = await this.verifyPassword(body.oldPassword, password);
 
-      if (!isPasswordValid) throw new BadRequestException('Invalid auth credentials.');
+      if (!isPasswordValid) throw new BadRequestException('Old password is not correct.');
     }
 
-    await this.userService.patchUser(user.id, { password: await this.hashPassword(body.newPassword) });
+    const hashedPassword = await this.hashPassword(body.newPassword);
+
+    await this.userService.patchUser(user.id, { password: hashedPassword });
   }
 
   private async signUpUserWithPassword(body: SignUpUserDto): Promise<ResponseUserDto> {
@@ -191,6 +192,16 @@ export class AuthService {
     const data = Object.assign(body, { password });
 
     const user = await this.createUser(data);
+
+    try {
+      const imageUrl = body?.avatarImgUrl ?? 'https://storage.googleapis.com/doctoo/user.png';
+
+      const { name } = await this.minioService.uploadByUrl(imageUrl);
+
+      await this.userService.patchUser(user.id, { avatarKey: name });
+    } catch (err) {
+      console.error(err);
+    }
 
     const token = await this.jwtService.signAsync({ sub: user.id }, { expiresIn: '1d' });
 
@@ -215,14 +226,17 @@ export class AuthService {
       phone: body.phone,
       googleId: body.googleId,
       avatarKey: '',
+      role: body.role,
     });
 
-    if (body?.avatarImgUrl) {
-      try {
-        this.minioService.uploadByUrl(body.avatarImgUrl).then(fileName => {
-          this.userService.patchUser(user.id, { avatarKey: fileName });
-        });
-      } catch (err) {}
+    try {
+      const imageUrl = body?.avatarImgUrl ?? 'https://storage.googleapis.com/doctoo/user.png';
+
+      const { name } = await this.minioService.uploadByUrl(imageUrl);
+
+      await this.userService.patchUser(user.id, { avatarKey: name });
+    } catch (err) {
+      console.error(err);
     }
 
     return plainToInstance(ResponseUserDto, user);
@@ -267,7 +281,7 @@ export class AuthService {
   }
 
   private async createUser(body: SignUpUserDto): Promise<ResponseUserDto> {
-    const { email, firstName, lastName, phone, googleId, password } = body;
+    const { email, firstName, lastName, phone, googleId, password, role } = body;
 
     const user = await this.userService.createUser({
       email,
@@ -277,6 +291,7 @@ export class AuthService {
       googleId,
       ...(password ? { password } : {}),
       avatarKey: '',
+      role,
     });
 
     return plainToInstance(ResponseUserDto, user);

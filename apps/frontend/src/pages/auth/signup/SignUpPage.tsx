@@ -1,36 +1,43 @@
+import { Button, Icon, Input, InputPassword, PopupDoctoo } from '@/components/UI';
 import {
+  AuthLogInIntoAccount,
   AuthMainContainer,
+  ErrorMessage,
   LogoWithTitle,
   Separator,
-  AuthLogInIntoAccount,
-  ErrorMessage,
 } from '@/pages/auth/auth-components';
-import { FormProvider, useForm } from 'react-hook-form';
-import Joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
+import Joi from 'joi';
 import { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { API_URL, instance } from '../../../api/axios.api';
-import { Button, Icon, Input, InputPassword, PopupDoctoo } from '@/components/UI';
 
 type SignUpType = {
   email: string;
   password: string;
   fullName: string;
+  phone: string;
 };
 
 const userSignUpSchema = Joi.object<SignUpType>({
   email: Joi.string()
-    .email({ tlds: { allow: false } })
+    .email({ tlds: false })
     .messages({
       'string.email': 'Please enter a valid email',
       'string.empty': 'Please enter your email',
     })
     .required(),
-  password: Joi.string().min(6).required().messages({
+  password: Joi.string().min(8).required().messages({
     'string.min': 'Password must be at least 6 characters',
     'string.empty': 'Please enter your password',
   }),
+  phone: Joi.string()
+    .regex(/^\+?\d{10,}$/)
+    .messages({ 'string.pattern.base': 'Phone number must have 10 digits.' })
+    .required(),
   fullName: Joi.string()
+    .min(3)
+    .max(30)
     .regex(/^\w+\s+\w+$/)
     .required()
     .messages({
@@ -58,7 +65,8 @@ const SignUpPage = () => {
           lastName: lastName,
           email: data.email,
           password: data.password,
-          phone: '+380995698142',
+          phone: data.phone,
+          role: 'PATIENT',
         },
         {
           withCredentials: true,
@@ -124,6 +132,13 @@ const SignUpPage = () => {
                 id='email'
                 placeholder='john@gmail.com'
                 errorMessage={errors.email?.message}
+              />
+              <Input
+                type='phone'
+                label='Phone'
+                id='phone'
+                placeholder='+380501804050'
+                errorMessage={errors.phone?.message}
               />
               <InputPassword label='Password' id='password' errorMessage={errors.password?.message} />
             </div>

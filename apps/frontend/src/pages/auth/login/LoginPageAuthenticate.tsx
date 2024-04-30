@@ -1,9 +1,9 @@
 import { Button } from '@/components/UI/Button/Button';
-import { LogoWithTitle, AuthMainContainer, AuthCreateAccount, ErrorMessage } from '@/pages/auth/auth-components';
-import InputCode from '../../../components/UI/Input/InputCode';
+import { AuthCreateAccount, AuthMainContainer, ErrorMessage, LogoWithTitle } from '@/pages/auth/auth-components';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import api from '../../../app/api';
+import InputCode from '../../../components/UI/Input/InputCode';
 import { joinError } from '../../../utils/errors';
 
 const EMAIL_VERIFICATION_CODE_LEN = 6;

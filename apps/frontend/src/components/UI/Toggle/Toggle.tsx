@@ -22,7 +22,7 @@ export const Toggle = ({ selected, onSelectedChange, label, id }: ToggleProps) =
           )}
         />
       </button>
-      <input type='checkbox' className='pointer-events-none hidden' checked={selected} id={id} />
+      <input type='checkbox' className='pointer-events-none hidden' defaultChecked={selected} id={id} />
     </div>
   );
 };

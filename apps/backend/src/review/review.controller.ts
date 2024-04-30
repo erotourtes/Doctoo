@@ -22,7 +22,6 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { randomUUID } from 'crypto';
 import JWTGuard from '../auth/gaurds/jwt.guard';
 import { PatientService } from '../patient/patient.service';
 import { BadRequestResponse } from '../utils/BadRequestResponse';
@@ -127,7 +126,7 @@ export class ReviewController {
   @ApiOkResponse({ type: AvgRateResponse, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'doctorId', example: randomUUID(), description: 'Unique doctor id.' })
+  @ApiParam({ name: 'doctorId', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique doctor id.' })
   async getAvgRateByDoctorId(@Param('doctorId') doctorId: string) {
     return this.reviewService.getAvgRateByDoctorId(doctorId);
   }
@@ -137,7 +136,7 @@ export class ReviewController {
   @ApiOkResponse({ type: ResponseReviewDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique review id.' })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique review id.' })
   async getReview(@Param('id') id: string) {
     const review = await this.reviewService.getReview(id);
 

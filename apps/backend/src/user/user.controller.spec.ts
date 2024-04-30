@@ -27,6 +27,7 @@ describe('UserController', () => {
       phone: '+380501804050',
       avatarKey: 'ABCD-DEFG',
       password: '$2y$10$rcDPr0lHPIa4iwZeZWunBeamx7ruC.g0hFl9QrEEARRaAQpRX3MhC',
+      role: 'PATIENT',
     });
 
     userId = user.id;

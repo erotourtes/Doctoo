@@ -6,8 +6,8 @@ import { fetchReviewsByDoctor } from '@/app/review/ReviewThunks';
 import { getDoctorData } from '@/app/doctor/DoctorThunks';
 import Schedule from '@/components/UI/Schedule/Schedule';
 import ReviewsBody from './ReviewsBody';
-import { IDoctor } from '@/dataTypes/Doctor';
-import { IReview } from '@/dataTypes/Review';
+import type { IDoctor } from '@/dataTypes/Doctor';
+import type { IReview } from '@/dataTypes/Review';
 import { Pagination } from '@/components/UI/Pagination/Pagination';
 
 function useQuery() {

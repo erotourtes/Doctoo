@@ -1,30 +1,27 @@
 import type { components, paths } from '@/api';
 import { instance } from '@/api/axios.api';
 import handleError from '@/api/handleError.api';
-import type { TCondition } from '@/dataTypes/Condition';
 import type { TAllergy } from '@/dataTypes/Allergy';
+import type { TCondition } from '@/dataTypes/Condition';
 import { type TPatient } from '@/dataTypes/Patient';
 import type { TUser } from '@/dataTypes/User';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { AxiosResponse } from 'axios';
 import api from '../api';
 import {
-  addPatientCondition,
   addPatientAllergy,
+  addPatientCondition,
   setPatientData,
   setPatientState,
   updatePatientData,
 } from './PatientSlice';
-import { joinError } from '../../utils/errors';
 
 export const getPatientData = createAsyncThunk('patient', async (id: string, { dispatch }) => {
+  const { data, error } = await api.GET('/patient/{id}', { params: { path: { id } } });
+
+  if (error) throw new Error('Failed to fetch patient data GET /patient/:id');
+
   try {
-    const { data, error } = await api.GET('/patient/{id}', { params: { path: { id } } });
-
-    if (error) {
-      throw new Error('Failed to fetch patient data GET /patient/:id');
-    }
-
     dispatch(setPatientData({ ...data }));
   } catch (e) {
     const error = e as Error;
@@ -35,14 +32,17 @@ export const getPatientData = createAsyncThunk('patient', async (id: string, { d
 export const patchPatientData = createAsyncThunk(
   'patient',
   async ({ id, body }: { id: string; body: Partial<Omit<TPatient, 'userId'>> }, { dispatch }) => {
-    const { data, error } = await api.PATCH('/patient/{id}', {
-      params: { path: { id } },
-      body,
-    });
+    const { data, error, response } = await api.PATCH('/patient/{id}', { params: { path: { id } }, body });
 
-    if (error) throw new Error(joinError(error.message));
+    if (error && response.status === 400) {
+      alert((error as components['schemas']['BadRequestResponse']).errors.map(error => error.message).join(', '));
 
-    dispatch(updatePatientData({ ...data }));
+      return;
+    } else if (response.status !== 200) {
+      alert(error?.message || 'Something went wrong');
+    } else {
+      dispatch(updatePatientData({ ...data }));
+    }
   },
 );
 
@@ -80,7 +80,6 @@ export const authorizePatient = createAsyncThunk('patient', async (_void, { disp
   const { data, error } = await api.GET('/auth/patient/me');
   if (error || !data) return void dispatch(setPatientState({ isLoading: false }));
 
-  console.log(data);
   dispatch(
     setPatientData({
       ...data,
@@ -123,8 +122,6 @@ export const createPatientAllergies = createAsyncThunk(
     }
   },
 );
-type ChangePasswordType = paths['/auth/password/change']['post']['requestBody']['content']['application/json'];
-type ErrorResponseType = components['schemas']['ClassicNestResponse'];
 
 export const changePassword = createAsyncThunk<ErrorResponseType, ChangePasswordType>('patient', async body => {
   const { error } = await api.POST('/auth/password/change', { body });
@@ -156,3 +153,6 @@ export const createPatientConditions = createAsyncThunk(
     }
   },
 );
+
+type ChangePasswordType = paths['/auth/password/change']['post']['requestBody']['content']['application/json'];
+type ErrorResponseType = components['schemas']['ClassicNestResponse'];

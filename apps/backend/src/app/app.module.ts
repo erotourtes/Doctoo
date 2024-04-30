@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { AllergyModule } from 'src/allergy/allergy.module';
+import { ConditionModule } from 'src/declaration/condition/condition.module';
 import { AppointmentModule } from '../appointment/appointment.module';
 import { AuthModule } from '../auth/auth.module';
 import auth from '../config/auth';
@@ -18,8 +20,6 @@ import { PaymentModule } from '../payment/payment.module';
 import { ReviewModule } from '../review/review.module';
 import { SpecializationModule } from '../specialization/specialization.module';
 import { UserModule } from '../user/user.module';
-import { ConditionModule } from 'src/condition/condition.module';
-import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [

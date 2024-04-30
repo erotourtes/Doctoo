@@ -10,20 +10,19 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { randomUUID } from 'crypto';
+import { PatientService } from 'src/patient/patient.service';
+import JWTGuard from '../auth/gaurds/jwt.guard';
+import { UserDec } from '../user/user.decorator';
 import { BadRequestResponse } from '../utils/BadRequestResponse';
 import { ClassicNestResponse } from '../utils/ClassicNestResponse';
+import { UnauthorizedResponse } from '../utils/UnauthorizedResponse';
 import { RESPONSE_STATUS } from '../utils/constants';
 import { DoctorService } from './doctor.service';
 import { CreateDoctorDto } from './dto/create.dto';
 import { GetDoctorsQuery } from './dto/get.query';
 import { PatchDoctorDto } from './dto/patch.dto';
-import { ResponseDoctorDto } from './dto/response.dto';
-import JWTGuard from '../auth/gaurds/jwt.guard';
-import { UserDec } from '../user/user.decorator';
-import { UnauthorizedResponse } from '../utils/UnauthorizedResponse';
 import { ResponseDoctorListDto } from './dto/response-list.dto';
-import { PatientService } from 'src/patient/patient.service';
+import { ResponseDoctorDto } from './dto/response.dto';
 
 @ApiTags('Doctor Endpoints')
 @Controller('doctor')
@@ -52,6 +51,16 @@ export class DoctorController {
     return this.doctorService.getDoctors(query);
   }
 
+  @Get('doctors/:id')
+  @ApiOperation({ summary: 'Get all doctors by patient' })
+  @ApiOkResponse({ type: ResponseDoctorDto, isArray: true, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique patient id.' })
+  async getPatientDoctors(@Param('id') id: string): Promise<ResponseDoctorDto[]> {
+    return await this.doctorService.getPatientDoctors(id);
+  }
+
   @Get('doctors/my')
   @UseGuards(JWTGuard)
   @ApiOperation({ summary: 'Get my doctors' })
@@ -65,22 +74,12 @@ export class DoctorController {
     return await this.doctorService.getPatientDoctors(patient.id);
   }
 
-  @Get('doctors/:id')
-  @ApiOperation({ summary: 'Get all doctors by patient' })
-  @ApiOkResponse({ type: ResponseDoctorDto, isArray: true, description: RESPONSE_STATUS.SUCCESS })
-  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique patient id.' })
-  async getPatientDoctors(@Param('id') id: string): Promise<ResponseDoctorDto[]> {
-    return await this.doctorService.getPatientDoctors(id);
-  }
-
   @Get(':id')
   @ApiOperation({ summary: 'Get doctor' })
   @ApiOkResponse({ type: ResponseDoctorDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique doctor id.' })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique doctor id.' })
   getDoctor(@Param('id') id: string) {
     return this.doctorService.getDoctor(id);
   }
@@ -90,7 +89,7 @@ export class DoctorController {
   @ApiOkResponse({ type: ResponseDoctorDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique doctor id.' })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique doctor id.' })
   @ApiBody({ type: PatchDoctorDto })
   patchDoctor(@Param('id') id: string, @Body() body: PatchDoctorDto) {
     return this.doctorService.patchDoctor(id, body);
@@ -101,7 +100,7 @@ export class DoctorController {
   @ApiOkResponse({ description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique doctor id.' })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique doctor id.' })
   deleteDoctor(@Param('id') id: string) {
     return this.doctorService.deleteDoctor(id);
   }
