@@ -88,14 +88,15 @@ export class DoctorService {
     const itemsPerPage = query.itemsPerPage || 10;
     const offset = (page - 1) * itemsPerPage;
 
-    const hospitalFilter: { id?: string } = {};
-    const specializationFilter: { id?: string } = {};
+    const hospitalFilter: { id?: any } = {};
+    const specializationFilter: { id?: any } = {};
     const statusFilter: { rating?: any } = {};
     const searchFilters = [];
 
-    if (hospitalId) hospitalFilter.id = hospitalId;
+    if (hospitalId) hospitalFilter.id = Array.isArray(hospitalId) ? { in: hospitalId } : hospitalId;
 
-    if (specializationId) specializationFilter.id = specializationId;
+    if (specializationId)
+      specializationFilter.id = Array.isArray(specializationId) ? { in: specializationId } : specializationId;
 
     if (status) statusFilter.rating = { gte: 4.5 };
 
