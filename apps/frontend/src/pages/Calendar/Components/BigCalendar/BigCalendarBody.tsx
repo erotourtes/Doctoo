@@ -1,109 +1,91 @@
-import type { Dayjs } from 'dayjs';
+import { useState } from 'react';
 import dayjs from 'dayjs';
+import type { Dayjs } from 'dayjs';
+import type { IAppointment } from '@/dataTypes/Appointment';
+import useWindowWide from '@/hooks/useWindowWide';
 import { getMonthDays } from '@/utils/getMonthDays';
-import type { AppointmentsListItemProps } from '../AppointmentsWidget/AppointmentsListItem';
-
-const weeks = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+import { daysOfWeek } from '@/constants/daysOfWeek';
 
 interface BigCalendarBodyProps {
-  meetingsForDay?: AppointmentsListItemProps[];
-  currentMonth: Dayjs | null;
-  chooseDate: React.Dispatch<React.SetStateAction<Date>>;
-  setAppointmentsForDay: React.Dispatch<React.SetStateAction<AppointmentsListItemProps[]>>;
+  meetingsForDay: IAppointment[];
+  currentMonth: Dayjs;
+  handleDateChange: (newDate: Date) => void;
 }
 
-export default function BigCalendarBody({
-  meetingsForDay,
-  currentMonth,
-  chooseDate,
-  setAppointmentsForDay,
-}: BigCalendarBodyProps) {
+export default function BigCalendarBody({ meetingsForDay, currentMonth, handleDateChange }: BigCalendarBodyProps) {
+  const mobileWidth = useWindowWide(768);
   const days = getMonthDays(currentMonth as Dayjs);
   const today = dayjs();
+  const [selectedDate, setSelectedDate] = useState<Dayjs>(today);
 
-  function chooseAppointments(date: Dayjs, appointments: AppointmentsListItemProps[]) {
-    chooseDate(date.toDate());
-    appointments && appointments.length > 0 && setAppointmentsForDay(appointments);
+  function chooseAppointments(date: Dayjs) {
+    setSelectedDate(date);
+    handleDateChange(date.toDate());
   }
 
   return (
-    <div
-      className='h-[85%] overflow-y-scroll'
-      style={{
-        msOverflowStyle: 'none',
-        scrollbarColor: 'transparent transparent',
-      }}
-    >
+    <>
       <div className='grid grid-cols-7'>
-        {weeks.map(day => (
+        {daysOfWeek.map(day => (
           <time
             key={day}
-            style={{
-              color: '#B0B0B0',
-            }}
-            className='mb-2 pr-4 text-right text-base font-medium'
+            className='mb-2 pr-4 text-right text-[10px] font-medium uppercase text-middle-grey md:text-base'
           >
             {day}
           </time>
         ))}
       </div>
 
-      <div className='grid grid-cols-7 gap-x-[13.17px] gap-y-4 rounded-xl pl-1 pr-1'>
+      <div className='grid grid-cols-7 gap-1 rounded-xl pl-1 pr-1 sm:gap-[13px]'>
         {days.map((day, index) => {
           const meetings =
-            meetingsForDay && meetingsForDay.filter(meeting => day.isSame(meeting.date, 'day')).slice(0, 3);
+            meetingsForDay && meetingsForDay.filter(meeting => day.isSame(meeting.assignedAt, 'day')).slice(0, 3);
 
-          const calls =
-            meetings && meetings.length > 1
-              ? 'Calls'
-              : meetings!.length === 1
-                ? meetings![0].doctor.name.length > 11
-                  ? `${meetings![0].doctor.name.substring(0, 11)}...`
-                  : meetings![0].doctor.name
-                : '';
+          const isToday = day.isSame(today, 'day');
+          const hasMeetings = meetings && meetings.length > 0;
+          const doctorName =
+            meetings && meetings.length > 0
+              ? `Dr. ${meetings[0]?.doctor?.firstName || ''} ${meetings[0]?.doctor?.lastName || ''}`
+              : '';
 
           return (
             <div
-              onClick={() => chooseAppointments(day, meetings || [])}
-              className={`grid-rows-auto grid text-base
-              font-normal
-              ${day.month() === currentMonth?.month() ? 'text-text' : 'text-grey-3'}
-              h-[116px]
-              w-[116px]
-              cursor-pointer
-              select-none rounded-xl
-            bg-white
-              hover:ring-1
-            hover:ring-main
-            `}
+              onClick={() => chooseAppointments(day)}
+              className={`flex aspect-[1] h-auto min-h-[35px]
+              w-auto min-w-[35px] cursor-pointer select-none flex-col justify-between rounded-xl border border-transparent bg-white text-base font-normal hover:border hover:border-main md:p-1 lg:px-2.5 lg:pb-3 lg:pt-2.5 xl:h-[116px] xl:w-[116px] ${day.month() === currentMonth?.month() ? 'text-text' : 'text-grey-3'}  ${selectedDate && selectedDate.isSame(day, 'day') && 'border-[#089BAB]'}`}
               key={index}
             >
-              <time
-                className={`mr-[10px] mt-[10px] flex self-start justify-self-end px-2 py-1
-                ${day.isSame(today, 'day') && 'rounded-full bg-main text-white'}
-              `}
+              <p
+                className={`mr-1 mt-1 max-h-fit max-w-fit self-end text-xs sm:text-base sm:font-medium ${isToday && '!m-px max-h-[26px] max-w-[26px] rounded-full bg-main p-0.5 text-white'}`}
               >
-                {day.format('D')}
-              </time>
+                <time className={`flex h-full w-full items-start justify-center`}>{day.format('D')}</time>
+              </p>
 
-              {meetings && meetings.length > 0 && (
-                <div
-                  key={index}
-                  className={`mb-3 flex h-7 w-24 items-center bg-main-light ${calls !== 'Calls' ? 'justify-center' : 'justify-between'} self-end justify-self-center rounded-2xl px-3 py-1
-                     `}
-                >
-                  <span className='whitespace-nowrap text-sm font-medium text-black'>{calls}</span>
-                  {meetings.length > 1 && (
-                    <span className='flex h-5 w-5 items-center justify-center rounded-full bg-white text-sm font-normal text-black'>
-                      {meetings.length}
-                    </span>
-                  )}
-                </div>
-              )}
+              {hasMeetings &&
+                (!mobileWidth ? (
+                  <p className='aspect-[1] max-h-[40%] max-w-[40%] rounded-full bg-main-light text-[3vw] text-black sm:max-h-6 sm:max-w-6 sm:text-base '>
+                    <span className='flex h-full w-full items-center justify-center'>{meetings.length}</span>
+                  </p>
+                ) : (
+                  <div
+                    key={index}
+                    className={`flex h-full max-h-7 w-full max-w-[92px] items-center self-center rounded-2xl bg-main-light px-2 py-1 
+                    ${meetings.length >= 2 ? 'flex-row justify-between' : 'justify-center md:justify-start'}`}
+                  >
+                    <p className='overflow-hidden text-ellipsis whitespace-nowrap text-xs font-medium text-black xl:text-sm'>
+                      {meetings && meetings.length > 1 ? 'Calls' : doctorName}
+                    </p>
+                    {meetings.length > 1 && (
+                      <p className='flex h-5 w-5 items-center justify-center rounded-full bg-white text-sm font-medium'>
+                        {meetings.length}
+                      </p>
+                    )}
+                  </div>
+                ))}
             </div>
           );
         })}
       </div>
-    </div>
+    </>
   );
 }

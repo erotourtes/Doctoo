@@ -3,6 +3,7 @@ import Sidemenu from '@components/Sidemenu/Sidemenu';
 import Header from '@components/UI/Header/Header';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import AppointmentsPage from './Appointments/AppointmentsPage';
+import CalendarPage from './Calendar/CalendarPage';
 import MyDoctorsPage from './MyDoctors/MyDoctorsPage';
 import { PaymentPage } from './PaymentPage/PaymentPage';
 import ProfilePage from './Profile/ProfilePage';
@@ -25,8 +26,8 @@ const PageContainer = () => {
           <Route path='/settings' Component={Settings} />
           <Route path='/payment' Component={PaymentPage} />
           <Route path='/my-doctors' Component={MyDoctorsPage} />
+          <Route path='/calendar' Component={CalendarPage} />
           <Route path='/reviews' Component={ReviewsPage} />
-          {/* <Route path='/calendar' Component={CalendarPage({ selectedDate: new Date() })} /> */}
           <Route path='/appointments' Component={AppointmentsPage} />
           <Route path='/logout' Component={LogoutPage} />
           <Route path='/protected/1' element={'pr 1'} />

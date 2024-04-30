@@ -1,8 +1,8 @@
 import type { Dayjs } from 'dayjs';
 
 type BigCalendarHeaderProps = {
-  currentMonth: Dayjs | null;
-  setCurrentMonth: React.Dispatch<React.SetStateAction<Dayjs | null>>;
+  currentMonth: Dayjs;
+  setCurrentMonth: React.Dispatch<React.SetStateAction<Dayjs>>;
 };
 
 export default function BigCalendarHeader({ currentMonth, setCurrentMonth }: BigCalendarHeaderProps) {
@@ -21,8 +21,8 @@ export default function BigCalendarHeader({ currentMonth, setCurrentMonth }: Big
   const currentDate = `${currentMonth?.format('MMMM')} ${currentMonth?.format('YYYY')}`;
 
   return (
-    <div className='flex items-center gap-x-4 text-lg text-black'>
-      <h3 className='min-w-[146px] text-lg font-medium not-italic leading-6 text-black'>{currentDate}</h3>
+    <div className='flex items-center justify-between gap-x-4 text-lg text-black sm:justify-start'>
+      <h3 className='text-lg font-medium not-italic leading-6 text-black'>{currentDate}</h3>
 
       <div className='flex items-center gap-2'>
         <button onClick={prevMonth} className='h-6 w-6'>

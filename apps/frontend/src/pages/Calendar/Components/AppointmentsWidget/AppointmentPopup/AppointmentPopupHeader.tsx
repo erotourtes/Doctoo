@@ -4,7 +4,7 @@ type AppointmentPopupHeaderProps = { appointmentTime: string; appointmentStatus:
 
 export default function AppointmentPopupHeader({ appointmentTime, appointmentStatus }: AppointmentPopupHeaderProps) {
   return (
-    <div className='mt-5 flex h-9 items-end justify-between'>
+    <div className='flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center'>
       <div className='flex items-center gap-3'>
         <Icon variant='date' className='h-10 w-10 rounded-full bg-background p-[6px] pb-2  text-main' />
         <span className='h-6 text-xl font-semibold  text-black'>{appointmentTime}</span>

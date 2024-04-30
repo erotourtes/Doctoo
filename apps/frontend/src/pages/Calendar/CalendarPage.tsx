@@ -1,79 +1,36 @@
 import dayjs from 'dayjs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PageHeader from '../PageHeader';
 import BigCalendar from './Components/BigCalendar/BigCalendar';
 import AppointmentsWidget from './Components/AppointmentsWidget/AppointmentsWidget';
-import type { AppointmentsListItemProps } from './Components/AppointmentsWidget/AppointmentsListItem';
 import { Button, Icon } from '@/components/UI';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { getMyAppointments } from '@/app/appointment/AppointmentThunks';
+import type { IAppointment } from '@/dataTypes/Appointment';
 
-const appointments: AppointmentsListItemProps[] = [
-  {
-    doctor: {
-      avatar: 'https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_1.png',
-      name: 'Dr. Olololo Lolo',
-      rating: 5,
-      reviews: 128,
+export default function CalendarPage() {
+  const today = new Date();
+  const dispatch = useAppDispatch();
 
-      specialization: 'Cardiologist',
-    },
-    date: dayjs().toDate(),
-    status: 'Planned',
-  },
-  {
-    doctor: {
-      avatar: 'https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_6.png',
-      name: 'Dr. Bibi Bebe',
-      rating: 5,
-      reviews: 128,
+  const [appointmentsForDay, setAppointmentsForDay] = useState<IAppointment[]>([]);
+  const [selectedDate, setSelectedDate] = useState<Date>(today);
 
-      specialization: 'Psychiatrist',
-    },
-    date: dayjs().toDate(),
-    status: 'Planned',
-  },
-  {
-    doctor: {
-      avatar: 'https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_3.png',
-      name: 'Dr. Bobo Baba',
-      rating: 4,
-      reviews: 108,
-      specialization: 'Neurologist',
-    },
-    date: dayjs().add(1, 'day').toDate(),
-    status: 'Planned',
-  },
-  {
-    doctor: {
-      avatar: 'https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_18.png',
-      name: 'Dr. Beebee Bubu',
-      rating: 5,
-      reviews: 128,
-      specialization: 'Cardiologist',
-    },
-    date: dayjs().subtract(1, 'day').toDate(),
-    status: 'Planned',
-  },
-];
+  const allAppointments = useAppSelector(state => state.appointment.appointments);
 
-export default function CalendarPageWrapper() {
-  const todayAppointment = appointments.filter(appointment => dayjs(appointment.date).isSame(dayjs(), 'day'));
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  useEffect(() => {
+    dispatch(getMyAppointments());
+  }, [dispatch]);
 
-  return (
-    <CalendarPage todayAppointment={todayAppointment} selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-  );
-}
+  useEffect(() => {
+    const filteredAppointments = allAppointments.filter(appointment =>
+      dayjs(appointment.assignedAt).isSame(selectedDate, 'day'),
+    );
+    setAppointmentsForDay(filteredAppointments);
+  }, [selectedDate, allAppointments]);
 
-export function CalendarPage({
-  todayAppointment,
-  selectedDate,
-  setSelectedDate,
-}: {
-  todayAppointment: AppointmentsListItemProps[];
-  selectedDate: Date;
-  setSelectedDate: React.Dispatch<React.SetStateAction<Date>>;
-}) {
-  const [appointmentsForDay, setAppointmentsForDay] = useState<AppointmentsListItemProps[]>(todayAppointment);
+  function handleDateChange(newDate: Date) {
+    setSelectedDate(newDate);
+  }
 
   function exportSchedule() {
     console.log('Export');
@@ -84,25 +41,25 @@ export function CalendarPage({
   }
 
   return (
-    <div className='overflow-hidden'>
-      <PageHeader iconVariant='date' title='Calendar'>
-        <Button className='flex items-center justify-center bg-white' onClick={exportSchedule} type='secondary'>
+    <div className='max-w-[1286px]'>
+      <PageHeader iconVariant='date' title='Calendar' className='flex flex-col gap-2 sm:flex-row'>
+        <Button
+          className=' flex items-center justify-center bg-white p-2 sm:px-6'
+          onClick={exportSchedule}
+          type='secondary'
+        >
           <Icon variant='download' className='mr-2 items-center justify-center' />
           Export
         </Button>
 
-        <Button onClick={findDoctor} type='primary'>
+        <Button onClick={findDoctor} type='primary' className='p-2 sm:px-6'>
           Find a doctor
         </Button>
       </PageHeader>
 
-      <section className='flex h-full w-full justify-between'>
+      <section className='flex w-full flex-col-reverse gap-12 sm:flex-col md:justify-between md:gap-4 lg:flex-row'>
         <AppointmentsWidget appointmentsForDay={appointmentsForDay} selectedDate={selectedDate} />
-        <BigCalendar
-          meetingsForDay={appointments}
-          chooseDate={setSelectedDate}
-          setAppointmentsForDay={setAppointmentsForDay}
-        />
+        <BigCalendar meetingsForDay={allAppointments} chooseDate={handleDateChange} />
       </section>
     </div>
   );

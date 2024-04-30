@@ -1,12 +1,11 @@
+import { useState } from 'react';
+import dayjs from 'dayjs';
+import type { Dayjs } from 'dayjs';
+import weekdayPlugin from 'dayjs/plugin/weekday';
 import { getMeetingStatusColor } from '@/utils/getMeetingStatusColor';
 import { getMonthDays } from '@/utils/getMonthDays';
-import type { Dayjs } from 'dayjs';
-import dayjs from 'dayjs';
-import weekdayPlugin from 'dayjs/plugin/weekday';
-import { useState } from 'react';
-import { cn } from '../../../utils/cn';
-
-const weeks = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+import { cn } from '@/utils/cn';
+import { daysOfWeek } from '@/constants/daysOfWeek';
 
 interface CalendarProps {
   meetingsForDay?: {
@@ -64,7 +63,7 @@ export const Calendar = ({ meetingsForDay }: CalendarProps) => {
         </div>
       </div>
 
-      {weeks.map(day => (
+      {daysOfWeek.map(day => (
         <div key={day} className='mb-2 text-center text-xs font-normal not-italic leading-4 text-grey-2'>
           {day}
         </div>

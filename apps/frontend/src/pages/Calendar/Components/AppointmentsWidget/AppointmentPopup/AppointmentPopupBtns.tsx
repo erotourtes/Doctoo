@@ -5,7 +5,7 @@ type AppointmentPopupButtonsProps = { cancelAppointment: () => void; bookAgain: 
 
 export default function AppointmentPopupButtons({ cancelAppointment, bookAgain }: AppointmentPopupButtonsProps) {
   return (
-    <div className='mt-5 flex h-10 gap-x-4 self-end text-base font-normal'>
+    <div className='flex flex-col-reverse justify-center gap-4 text-base font-normal sm:flex-row sm:self-end'>
       <Button className='!border-error !text-error' onClick={cancelAppointment} type={ButtonTypes.SECONDARY}>
         Cancel appointment
       </Button>

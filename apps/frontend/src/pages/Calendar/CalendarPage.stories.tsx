@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { CalendarPage } from './CalendarPage';
+import { Provider } from 'react-redux';
+import { store } from '@/app/store';
+import CalendarPage from './CalendarPage';
 import '@/index.css';
 
 const meta: Meta<typeof CalendarPage> = {
@@ -15,12 +17,14 @@ const meta: Meta<typeof CalendarPage> = {
   },
   decorators: [
     Story => (
-      <div className='flex h-screen w-screen overflow-hidden bg-background'>
-        <nav className='sidemenu h-full w-20 bg-main'></nav>
-        <main className='main-wrapper flex h-full w-full flex-col gap-6 overflow-auto p-8'>
-          <Story />
-        </main>
-      </div>
+      <Provider store={store}>
+        <div className='flex h-screen w-screen overflow-hidden bg-background'>
+          <nav className='sidemenu h-full w-20 bg-main'></nav>
+          <main className='main-wrapper flex h-full w-full flex-col gap-6 overflow-auto p-8'>
+            <Story />
+          </main>
+        </div>
+      </Provider>
     ),
   ],
 };

@@ -1,27 +1,19 @@
 import Icon from '@UI/Icon/Icon';
-import { useEffect } from 'react';
-import Popup from 'reactjs-popup';
-import type { AppointmentsListItemProps } from '../AppointmentsListItem';
 import AppointmentPopupButtons from './AppointmentPopupBtns';
 import AppointmentPopupHeader from './AppointmentPopupHeader';
 import dayjs from 'dayjs';
+import { PopupDoctoo, Tag } from '@/components/UI';
+import type { IAppointment } from '@/dataTypes/Appointment';
+import type { IDoctor } from '@/dataTypes/Doctor';
 
 type AppointmentPopupProps = {
   appointmentModal: boolean;
   closeModal: () => void;
-  selectedAppointment: AppointmentsListItemProps | undefined;
+  selectedAppointment: IAppointment;
 };
 
 export default function AppointmentPopup({ appointmentModal, closeModal, selectedAppointment }: AppointmentPopupProps) {
-  useEffect(() => {
-    if (appointmentModal) {
-      document.body.classList.add('overflow-hidden');
-    } else {
-      document.body.classList.remove('overflow-hidden');
-    }
-  }, [appointmentModal]);
-
-  const appointmentTime = dayjs(selectedAppointment?.date).format('MMMM D, h:mm a');
+  const appointmentTime = dayjs(selectedAppointment?.assignedAt).format('MMMM D, h:mm a');
   const appointmentStatus = selectedAppointment?.status;
 
   function cancelAppointment() {
@@ -32,53 +24,45 @@ export default function AppointmentPopup({ appointmentModal, closeModal, selecte
     console.log('Book again');
   }
 
+  const doctor = selectedAppointment?.doctor;
+  const { avatarKey, firstName, lastName, specializations, reviewsCount } = doctor as IDoctor;
+  const name = `Dr. ${firstName} ${lastName}`;
+
   return (
     selectedAppointment && (
-      <Popup open={appointmentModal} onClose={closeModal}>
-        <div className='flex h-screen w-screen bg-black opacity-20' onClick={closeModal}></div>
+      <PopupDoctoo
+        popupIsOpen={appointmentModal}
+        closePopup={closeModal}
+        modalFullClassName='max-w-[700px]'
+        modalBodyClassName='flex max-w-[604px] flex-col gap-7'
+      >
+        <AppointmentPopupHeader appointmentTime={appointmentTime} appointmentStatus={appointmentStatus!} />
 
-        <article className='absolute left-1/4 top-1/4 flex h-2/4 w-3/4 max-w-[700px] flex-col justify-between rounded-xl bg-white p-12'>
-          {/* Close icon */}
-          <div className='-m-8 self-end'>
-            <Icon variant='close' onClick={closeModal} className='cursor-pointer  text-grey-1' />
-          </div>
+        <div className='flex flex-col gap-6 sm:flex-row sm:justify-start'>
+          <img src={avatarKey} alt={name} className='max-h-28 max-w-28 rounded-lg' />
 
-          {/* Header */}
-          <AppointmentPopupHeader appointmentTime={appointmentTime} appointmentStatus={appointmentStatus!} />
+          <div className='flex w-full flex-col gap-4'>
+            <div className='flex flex-col gap-y-2'>
+              <div className='flex flex-col-reverse items-start justify-between gap-4 text-lg sm:flex-row'>
+                <p className='font-medium text-black'>
+                  Appointment with <span className='font-semibold text-main'>{name}</span>
+                </p>
 
-          {/* Details */}
-          <div className='flex h-32 justify-start gap-x-6'>
-            {/* Avatar */}
-            <img
-              src={selectedAppointment.doctor.avatar}
-              alt={selectedAppointment.doctor.name}
-              className='max-h-28 max-w-28 rounded-lg'
-            />
-
-            {/* Details */}
-            <div className='flex w-full flex-col'>
-              <div className='flex flex-col gap-y-2'>
-                {/* Appointment with */}
-                <div className='flex h-6 flex-row justify-between text-lg'>
-                  <span className='font-medium text-black'>
-                    Appointment with <span className='font-semibold text-main'>{selectedAppointment.doctor.name}</span>
-                  </span>
-                  {/* Reschedule */}
-                  <div className='flex cursor-pointer items-end justify-center gap-x-1'>
-                    <Icon variant='edit' className='h-[18px] w-[18px] text-grey-1' />
-                    <span className='h-5 text-sm font-medium text-grey-1'>Reschedule</span>
-                  </div>
-                </div>
-
-                {/* Specialization */}
-                <span className='text-base font-medium text-grey-1'>{selectedAppointment.doctor.specialization}</span>
+                <button className='flex items-end justify-center gap-x-1'>
+                  <Icon variant='edit' className='h-[18px] w-[18px] text-grey-1' />
+                  <span className='text-sm font-medium text-grey-1'>Reschedule</span>
+                </button>
               </div>
 
-              <div className='my-4 flex h-fit w-fit items-center justify-center rounded-2xl bg-main-light px-3 py-1 pb-1'>
-                <span className='select-none text-sm font-normal text-main-dark'>Top doctor</span>
-              </div>
+              <span className='text-base font-medium text-grey-1'>
+                {specializations ? specializations[0]?.name : 'Doctor'}
+              </span>
+            </div>
 
-              <div className='flex items-center gap-x-3'>
+            <Tag icon={false} text='Top doctor' className='w-fit' />
+
+            {reviewsCount > 0 && (
+              <div className='flex flex-col items-start gap-3 sm:flex-row sm:items-center'>
                 <div className='flex cursor-pointer gap-x-1'>
                   {Array.from({ length: 5 }, (_, i) => (
                     <Icon key={i} variant='star' className='h-[18px] w-[18px] text-main-darker' />
@@ -86,16 +70,15 @@ export default function AppointmentPopup({ appointmentModal, closeModal, selecte
                 </div>
 
                 <a href='#' className='text-black underline'>
-                  128 reviews
+                  {reviewsCount}
                 </a>
               </div>
-            </div>
+            )}
           </div>
+        </div>
 
-          {/* Buttons */}
-          <AppointmentPopupButtons bookAgain={bookAgain} cancelAppointment={cancelAppointment} />
-        </article>
-      </Popup>
+        <AppointmentPopupButtons bookAgain={bookAgain} cancelAppointment={cancelAppointment} />
+      </PopupDoctoo>
     )
   );
 }

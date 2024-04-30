@@ -7,7 +7,9 @@ import { deleteAppointment, setAppointments, setChangeAppointmentStatus, setNewA
 
 export const getAppointmentsByPatientId = createAsyncThunk('appointment', async (patient_id: string, { dispatch }) => {
   try {
-    const { error, data } = await api.GET(`/appointment/patient/{id}`, { params: { path: { id: patient_id } } });
+    const { error, data } = await api.GET(`/appointment/patient/{id}`, {
+      params: { path: { id: patient_id } },
+    });
     if (!error) {
       const res: IAppointment[] = data;
 

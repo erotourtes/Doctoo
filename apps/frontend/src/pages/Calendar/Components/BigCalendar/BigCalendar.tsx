@@ -1,32 +1,25 @@
+import { useState } from 'react';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import weekdayPlugin from 'dayjs/plugin/weekday';
-
 import BigCalendarBody from './BigCalendarBody';
 import BigCalendarHeader from './BigCalendarHeader';
-import { useState } from 'react';
-import type { AppointmentsListItemProps } from '../AppointmentsWidget/AppointmentsListItem';
+import type { IAppointment } from '@/dataTypes/Appointment';
 
 type BigCalendar = {
-  chooseDate: React.Dispatch<React.SetStateAction<Date>>;
-  setAppointmentsForDay: React.Dispatch<React.SetStateAction<AppointmentsListItemProps[]>>;
-  meetingsForDay: AppointmentsListItemProps[];
+  chooseDate: (newDate: Date) => void;
+  meetingsForDay: IAppointment[];
 };
 
-export default function BigCalendar({ chooseDate, meetingsForDay, setAppointmentsForDay }: BigCalendar) {
+export default function BigCalendar({ chooseDate, meetingsForDay }: BigCalendar) {
   dayjs.extend(weekdayPlugin);
-  const [currentMonth, setCurrentMonth] = useState<Dayjs | null>(dayjs());
+  const [currentMonth, setCurrentMonth] = useState<Dayjs>(dayjs());
 
   return (
-    <time className='flex flex-col gap-y-4'>
+    <section className='flex w-full flex-col gap-y-4'>
       <BigCalendarHeader currentMonth={currentMonth} setCurrentMonth={setCurrentMonth} />
 
-      <BigCalendarBody
-        currentMonth={currentMonth}
-        meetingsForDay={meetingsForDay}
-        chooseDate={chooseDate}
-        setAppointmentsForDay={setAppointmentsForDay}
-      />
-    </time>
+      <BigCalendarBody currentMonth={currentMonth} meetingsForDay={meetingsForDay} handleDateChange={chooseDate} />
+    </section>
   );
 }

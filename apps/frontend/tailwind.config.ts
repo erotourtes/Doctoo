@@ -25,6 +25,7 @@ export default <Config>{
       'grey-3': '#AFBCBD',
       'grey-4': '#CAD7D9',
       'grey-5': '#E5EBEC',
+      'middle-grey': '#B0B0B0',
       'dark-grey': '#454950',
       background: '#F1F6F9',
       main: '#089BAB',
