@@ -3,8 +3,8 @@ import { LogoWithTitle, AuthMainContainer, AuthCreateAccount, ErrorMessage } fro
 import InputCode from '../../../components/UI/Input/InputCode';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
-import { instance } from '../../../api/axios.api';
-import handleError from '../../../api/handleError.api';
+import api from '../../../app/api';
+import { joinError } from '../../../utils/errors';
 
 const EMAIL_VERIFICATION_CODE_LEN = 6;
 
@@ -16,16 +16,9 @@ const LoginPageAuthenticate = () => {
   const [serverError, setServerError] = useState<string | null>(null);
 
   const onSubmit = async () => {
-    await instance
-      .post('/auth/login/patient/2fa', { ...credentials, code }, { withCredentials: true })
-      .then(() => {
-        navigate('/', { replace: true });
-      })
-      .catch(e => {
-        if (e.response) setServerError(e.response.data.message);
-        else setServerError('Something went wrong');
-        handleError(e);
-      });
+    const { error } = await api.POST('/auth/login/patient/mfa', { body: { ...credentials, code } });
+    if (error) return void setServerError(joinError(error.message));
+    navigate('/', { replace: true });
   };
 
   const onBack = () => {

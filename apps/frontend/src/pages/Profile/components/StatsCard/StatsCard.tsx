@@ -36,17 +36,17 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
                   switch (title) {
                     case 'Height, cm':
                       if (parseInt(inputValue)) {
-                        dispatch(patchPatientData({ id: patient.id, data: { height: parseInt(inputValue) } }));
+                        dispatch(patchPatientData({ id: patient.id, body: { height: parseInt(inputValue) } }));
                       }
                       break;
                     case 'Weight, kg':
                       if (parseInt(inputValue)) {
-                        dispatch(patchPatientData({ id: patient.id, data: { weight: parseInt(inputValue) } }));
+                        dispatch(patchPatientData({ id: patient.id, body: { weight: parseInt(inputValue) } }));
                       }
                       break;
                     case 'Age':
                       if (parseInt(inputValue)) {
-                        dispatch(patchPatientData({ id: patient.id, data: { age: parseInt(inputValue) } }));
+                        dispatch(patchPatientData({ id: patient.id, body: { age: parseInt(inputValue) } }));
                       }
                       break;
                   }
@@ -76,7 +76,7 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
                             gender = 'MALE';
                             break;
                         }
-                        if (gender) dispatch(patchPatientData({ id: patient.id, data: { gender } }));
+                        if (gender) dispatch(patchPatientData({ id: patient.id, body: { gender } }));
                         break;
                       case 'Blood type':
                         switch (inputValue.toLowerCase()) {
@@ -105,7 +105,7 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
                             bloodType = 'O_PLUS';
                             break;
                         }
-                        if (bloodType) dispatch(patchPatientData({ id: patient.id, data: { bloodType } }));
+                        if (bloodType) dispatch(patchPatientData({ id: patient.id, body: { bloodType } }));
                         break;
                     }
                   }}

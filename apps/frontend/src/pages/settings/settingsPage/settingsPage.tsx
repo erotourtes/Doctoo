@@ -1,32 +1,32 @@
 import { useState } from 'react';
-import { useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import SettingsPopup from '../settingsPopup/settingsPopup';
 import { Icon, Toggle } from '@/components/UI';
+import { patchPatientData } from '../../../app/patient/PatientThunks';
+import { ErrorMessage } from '../../auth/auth-components';
 
 const Settings = () => {
   const [showPopup, setShowPopup] = useState(false);
-  const [patient, setPatient] = useState(useAppSelector(state => state.patient.data));
+  const patient = useAppSelector(state => state.patient.data);
+  const dispatch = useAppDispatch();
+  const [error, setError] = useState<string | null>(null);
 
-  const handleEmailNotificationToggleChange = () => {
-    setPatient(prevPatient => ({
-      ...prevPatient,
-      emailNotificationToggle: !prevPatient.emailNotificationToggle,
-    }));
+  const handleEmailNotificationToggleChange = () => {};
+
+  const handleTwoFactorAuthToggleChange = async () => {
+    await dispatch(
+      patchPatientData({
+        id: patient.id,
+        body: { twoFactorAuthToggle: !patient.twoFactorAuthToggle },
+      }),
+    )
+      .unwrap()
+      .catch(err => {
+        setError(err.message);
+      });
   };
 
-  const handleTwoFactorAuthToggleChange = () => {
-    setPatient(prevPatient => ({
-      ...prevPatient,
-      twoFactorAuthToggle: !prevPatient.twoFactorAuthToggle,
-    }));
-  };
-
-  const handleBillPaymentToggleChange = () => {
-    setPatient(prevPatient => ({
-      ...prevPatient,
-      requestBillPaymentApproval: !prevPatient.requestBillPaymentApproval,
-    }));
-  };
+  const handleBillPaymentToggleChange = () => {};
 
   const settingsData = [
     {
@@ -81,6 +81,7 @@ const Settings = () => {
                 </div>
               </div>
             ))}
+            <ErrorMessage message={error} />
           </div>
         </section>
       </div>

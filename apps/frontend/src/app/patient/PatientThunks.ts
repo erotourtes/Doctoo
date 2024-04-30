@@ -15,6 +15,7 @@ import {
   setPatientState,
   updatePatientData,
 } from './PatientSlice';
+import { joinError } from '../../utils/errors';
 
 export const getPatientData = createAsyncThunk('patient', async (id: string, { dispatch }) => {
   try {
@@ -33,16 +34,15 @@ export const getPatientData = createAsyncThunk('patient', async (id: string, { d
 
 export const patchPatientData = createAsyncThunk(
   'patient',
-  async ({ id, data }: { id: string; data: Partial<Omit<TPatient, 'userId'>> }, { dispatch }) => {
-    try {
-      const response: AxiosResponse<TPatient> = await instance.patch(`/patient/${id}`, data);
-      if (response.status === 200) {
-        dispatch(updatePatientData(response.data));
-      }
-    } catch (e) {
-      const error = e as Error;
-      throw error;
-    }
+  async ({ id, body }: { id: string; body: Partial<Omit<TPatient, 'userId'>> }, { dispatch }) => {
+    const { data, error } = await api.PATCH('/patient/{id}', {
+      params: { path: { id } },
+      body,
+    });
+
+    if (error) throw new Error(joinError(error.message));
+
+    dispatch(updatePatientData({ ...data }));
   },
 );
 
@@ -134,16 +134,16 @@ export const createPatientConditions = createAsyncThunk(
   'patient',
   async (data: { body: TCondition[]; id: string }, { dispatch }) => {
     try {
-      const body = data.body.map(condition => ({ conditionId: condition.id }));
+      const body = data.body.map(condition => condition.id);
       dispatch(setPatientState({ isLoading: true }));
       const { data: responseData, error } = await api.POST('/patient/{id}/condition', {
         params: { path: { id: data.id } },
-        body,
+        body: { conditionIds: body },
       });
 
       if (error) throw new Error('Failed to create patient allergy');
 
-      if (responseData === data.body.length) {
+      if (responseData.count === data.body.length) {
         dispatch(addPatientCondition(data.body));
         dispatch(setPatientState({ isLoading: false, isFetched: true }));
       }

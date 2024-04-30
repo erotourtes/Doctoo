@@ -9,10 +9,12 @@ import {
 import { joiResolver } from '@hookform/resolvers/joi';
 import Joi from 'joi';
 import { useState } from 'react';
-import type { FieldValues, SubmitHandler } from 'react-hook-form';
+import type { SubmitHandler } from 'react-hook-form';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router';
-import { API_URL, instance } from '../../../api/axios.api';
+import { API_URL } from '../../../api/axios.api';
+import api from '../../../app/api';
+import { joinError } from '../../../utils/errors';
 
 type SignInType = {
   email: string;
@@ -37,7 +39,6 @@ const userLogInSchema = Joi.object<SignInType>({
 
 const LoginPage = () => {
   const location = useLocation();
-  console.log(location);
   const form = useForm<SignInType>({
     mode: 'onSubmit',
     defaultValues: {
@@ -50,18 +51,13 @@ const LoginPage = () => {
   const [serverError, setServerError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const onLogin: SubmitHandler<FieldValues> = async credentials => {
-    await instance
-      .post('/auth/login/patient', credentials, { withCredentials: true })
-      .then(body => {
-        const is2faEnabled: boolean = body.data.is2faEnabled;
-        if (is2faEnabled) navigate(`/login/authenticate`, { state: { credentials } });
-        else navigate('/', { replace: true });
-      })
-      .catch(e => {
-        if (e.response) setServerError(e.response.data.message);
-        else setServerError('Something went wrong');
-      });
+  const onLogin: SubmitHandler<SignInType> = async body => {
+    const { data, error } = await api.POST('/auth/login/patient', { body });
+    if (error) return void setServerError(joinError(error.message));
+
+    const is2faEnabled: boolean = data.isMFAEnabled;
+    if (is2faEnabled) navigate(`/login/authenticate`, { state: { credentials: body } });
+    else navigate('/', { replace: true });
   };
 
   const onGoogleLogin = () => {

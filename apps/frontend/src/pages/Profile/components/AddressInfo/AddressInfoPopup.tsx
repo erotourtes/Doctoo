@@ -46,7 +46,7 @@ const AddressInfoPopup = ({ isOpen, onClose }: AddressInfoPopupProps) => {
       ...data,
       zipCode: typeof zipCode === 'number' ? zipCode : 0,
     };
-    dispatch(patchPatientData({ id: patient.id, data: patientData }));
+    dispatch(patchPatientData({ id: patient.id, body: patientData }));
   }
 
   return (
