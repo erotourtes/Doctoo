@@ -24,7 +24,7 @@ export const getPatientData = createAsyncThunk('patient', async (id: string, { d
       throw new Error('Failed to fetch patient data GET /patient/:id');
     }
 
-    dispatch(setPatientData({ ...data }));
+    dispatch(setPatientData({ ...data, conditions: [] }));
   } catch (e) {
     const error = e as Error;
     handleError(error);
