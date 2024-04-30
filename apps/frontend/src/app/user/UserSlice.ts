@@ -1,4 +1,3 @@
-import type { RootState } from '@/app/store';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '../createAppSlice';
 import type { IUser } from '@/dataTypes/User';
@@ -36,7 +35,5 @@ export const userSlice = createAppSlice({
 });
 
 export const { setUserData } = userSlice.actions;
-
-export const doctorData = (state: RootState) => state.doctor.doctors;
 
 export default userSlice.reducer;

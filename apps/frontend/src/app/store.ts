@@ -6,7 +6,7 @@ import paymentSlice from './payment/paymentSlice';
 import { allergySlice } from './allergy/AllergySlice';
 import conditionSlice from './condition/ConditionSlice';
 import reviewSlice from './review/ReviewSlice';
-import userSlice from './user/UserSlice';
+import { userSlice } from './user/UserSlice';
 
 export const store = configureStore({
   reducer: {
@@ -17,7 +17,7 @@ export const store = configureStore({
     allergy: allergySlice.reducer,
     condition: conditionSlice,
     review: reviewSlice,
-    user: userSlice,
+    user: userSlice.reducer,
   },
 });
 

@@ -24,7 +24,6 @@ const DashboardPage = () => {
   function handleSubmit(value: string) {
     setSearch(value);
   }
-
   const doctors = useAppSelector(state => state.doctor.doctors);
   const appointments = useAppSelector(state => state.appointment.appointments);
   const nearestAppointments = appointments
