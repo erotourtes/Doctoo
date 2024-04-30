@@ -4,7 +4,7 @@ import handleError from '@/api/handleError.api';
 import type { TCondition } from '@/dataTypes/Condition';
 import type { TAllergy } from '@/dataTypes/Allergy';
 import { type TPatient } from '@/dataTypes/Patient';
-import type { IUser } from '@/dataTypes/User';
+import type { TUser } from '@/dataTypes/User';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { AxiosResponse } from 'axios';
 import api from '../api';
@@ -25,7 +25,7 @@ export const getPatientData = createAsyncThunk('patient', async (id: string, { d
       throw new Error('Failed to fetch patient data GET /patient/:id');
     }
 
-    dispatch(setPatientData({ ...data, conditions: [] }));
+    dispatch(setPatientData({ ...data }));
   } catch (e) {
     const error = e as Error;
     handleError(error);
@@ -48,12 +48,14 @@ export const patchPatientData = createAsyncThunk(
 
 export const patchUserData = createAsyncThunk(
   'patient',
-  async ({ id, data }: { id: string; data: Partial<IUser> }, { dispatch }) => {
+  async ({ id, data }: { id: string; data: Partial<TUser> }, { dispatch }) => {
     try {
-      const response: AxiosResponse<IUser> = await instance.patch(`/user/${id}`, data);
-      if (response.status === 200) {
-        dispatch(updatePatientData(response.data));
+      if (!data) throw new Error('Data is empty');
+      const { data: responseData, error } = await api.PATCH('/user/{id}', { params: { path: { id } }, body: data });
+      if (error) {
+        throw new Error('Failed to update user data PATCH /user/:id');
       }
+      dispatch(updatePatientData(responseData));
     } catch (e) {
       const error = e as Error;
       throw error;
@@ -134,11 +136,11 @@ export const createPatientConditions = createAsyncThunk(
   'patient',
   async (data: { body: TCondition[]; id: string }, { dispatch }) => {
     try {
-      const body = data.body.map(condition => condition.id);
+      const body = { conditionIds: data.body.map(({ id }) => id) };
       dispatch(setPatientState({ isLoading: true }));
       const { data: responseData, error } = await api.POST('/patient/{id}/condition', {
         params: { path: { id: data.id } },
-        body: { conditionIds: body },
+        body,
       });
 
       if (error) throw new Error('Failed to create patient allergy');

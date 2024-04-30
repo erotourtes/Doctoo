@@ -3,7 +3,7 @@ import { patchUserData } from '@/app/patient/PatientThunks';
 import { Button } from '@/components/UI/Button/Button';
 import Input from '@/components/UI/Input/Input';
 import PopupDoctoo from '@/components/UI/Popup/Popup';
-import type { IUser } from '@/dataTypes/User';
+import type { TUser } from '@/dataTypes/User';
 import Icon from '@UI/Icon/Icon';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Joi from 'joi';
@@ -44,15 +44,18 @@ const PersonalInfoPopup = ({ isOpen, onClose }: PersonalInfoPopupProps) => {
     const [firstName, lastName] = data.fullname.split(' ');
     const phone = data.countryIndex + data.phone;
     const { email } = data;
-    const userData: Partial<IUser> = {
+    const userData: Partial<TUser> = {
       email,
       phone,
       firstName,
       lastName,
     };
 
-    console.log(userData);
     dispatch(patchUserData({ id: patient.userId, data: userData }));
+
+    setTimeout(() => {
+      onClose();
+    }, 1000);
   }
   return (
     <PopupDoctoo
@@ -105,7 +108,7 @@ const PersonalInfoPopup = ({ isOpen, onClose }: PersonalInfoPopupProps) => {
               {/* TODO: Add select input after it's ready */}
               <p className='text-md mb-2 block text-grey-1'>Phone</p>
               <div className='flex w-full gap-1 sm:gap-4'>
-                <div className='relative w-1/5'>
+                <div className='relative w-1/2 sm:w-1/4'>
                   <select
                     {...methods.register('countryIndex')}
                     className='flex w-full appearance-none items-center justify-center rounded-md border border-transparent bg-background px-4 py-2 text-grey-1 outline-none focus:border-text'
@@ -130,7 +133,7 @@ const PersonalInfoPopup = ({ isOpen, onClose }: PersonalInfoPopupProps) => {
                     </option>
                   </select>
                   <svg
-                    className='pointer-events-none absolute right-4 top-1/2 -translate-y-1/2'
+                    className='pointer-events-none absolute right-2 top-1/2 -translate-y-1/2'
                     width='24'
                     height='24'
                     viewBox='0 0 24 24'

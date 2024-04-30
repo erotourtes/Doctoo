@@ -3,11 +3,6 @@ export enum Role {
   PATIENT = 'PATIENT',
 }
 
-export interface IUser {
-  firstName: string;
-  lastName: string;
-  phone: string;
-  email: string;
-  avatarKey: string;
-  role?: Role | any;
-}
+import type { paths } from '@/api';
+
+export type TUser = paths['/user/{id}']['get']['responses']['200']['content']['application/json'];

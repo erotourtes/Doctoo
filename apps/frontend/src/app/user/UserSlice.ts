@@ -1,9 +1,9 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '../createAppSlice';
-import type { IUser } from '@/dataTypes/User';
+import type { TUser } from '@/dataTypes/User';
 
 interface UserData {
-  data: IUser;
+  data: TUser;
   state: {
     isLoading: boolean;
     isFetched: boolean;
@@ -16,11 +16,13 @@ const initialState: UserData = {
     isFetched: false,
   },
   data: {
+    id: '1',
     firstName: '',
     lastName: '',
     phone: '',
     email: '',
     avatarKey: '',
+    emailVerified: false,
   },
 };
 
@@ -28,7 +30,7 @@ export const userSlice = createAppSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUserData: (state, action: PayloadAction<IUser>) => {
+    setUserData: (state, action: PayloadAction<TUser>) => {
       state.data = action.payload;
     },
   },
