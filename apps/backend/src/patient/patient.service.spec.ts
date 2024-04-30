@@ -189,7 +189,7 @@ describe('PatientService', () => {
 
     const condition = await prisma.condition.create({ data: { name: 'test' } });
 
-    const result = await patientService.createPatientConditions(patient.id, [{ conditionId: condition.id }]);
+    const result = await patientService.createPatientConditions(patient.id, { conditionIds: [condition.id] });
 
     const expected = 1;
 
