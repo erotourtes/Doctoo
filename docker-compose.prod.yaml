@@ -54,6 +54,7 @@ services:
       MAIL_PORT: ${MAIL_PORT}
       MAIL_SECURE: ${MAIL_SECURE}
       FRONTEND_SIGNUP_PATH: ${FRONTEND_SIGNUP_PATH}
+      FRONTEND_CHANGE_EMAIL_PATH: ${FRONTEND_CHANGE_EMAIL_PATH}
     depends_on:
       - postgres
     networks:
