@@ -1,13 +1,13 @@
-import { instance } from '@/api/axios.api';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { setAllergyData } from './AllergySlice';
+import api from '../api';
 
 export const getAllAllergies = createAsyncThunk('allergy', async (_, { dispatch }) => {
-  const response = await instance.get('/allergies');
+  const { data, error } = await api.GET('/allergy');
 
-  if (response.status !== 200) {
+  if (error) {
     throw new Error('Failed to fetch allergies');
   }
 
-  dispatch(setAllergyData(response.data));
+  dispatch(setAllergyData(data));
 });

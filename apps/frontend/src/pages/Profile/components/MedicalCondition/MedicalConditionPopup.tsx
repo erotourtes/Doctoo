@@ -3,7 +3,7 @@ import { createPatientAllergies, createPatientConditions } from '@/app/patient/P
 import { Button, PopupDoctoo, Tag } from '@/components/UI';
 import type { TAllergy } from '@/dataTypes/Allergy';
 import type { TCondition } from '@/dataTypes/Condition';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type MedicalConditionPopupProps = {
   isOpen: boolean;
@@ -18,6 +18,11 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
   const patient = useAppSelector(state => state.patient.data);
 
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    setAllConditions(conditions);
+    setAllAllergies(allergies);
+  }, [conditions, allergies]);
 
   const [allConditions, setAllConditions] = useState<TCondition[]>(conditions);
   const [suggestedConditions, setSuggestedConditions] = useState<TCondition[]>([]);
@@ -70,7 +75,7 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
                   });
                 }}
                 id='condition'
-                className='w-full bg-transparent px-4 py-2 outline-none'
+                className='grow bg-transparent px-4 py-2 outline-none max-[400px]:w-full'
               />
             </div>
             {suggestedConditions.map(condition => (
@@ -155,10 +160,10 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
           <Button
             type='primary'
             onClick={() => {
-              if (selectedConditions.length === 0) {
+              if (selectedConditions.length !== 0) {
                 dispatch(createPatientConditions({ id: patient.id, body: selectedConditions }));
               }
-              if (selectedAllergies.length === 0) {
+              if (selectedAllergies.length !== 0) {
                 dispatch(createPatientAllergies({ body: selectedAllergies, id: patient.id }));
               }
             }}

@@ -9,6 +9,7 @@ import { capitalizeString } from '@/utils/capitalizeString';
 import { useEffect } from 'react';
 import { getAllConditions } from '@/app/condition/ConditionThunks';
 import { getAllAllergies } from '@/app/allergy/AllergyThunks';
+import { getPatientData } from '@/app/patient/PatientThunks';
 
 const ProfilePage = () => {
   const patient = useAppSelector(state => state.patient.data);
@@ -16,6 +17,7 @@ const ProfilePage = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    dispatch(getPatientData(patient.id));
     dispatch(getAllConditions());
     dispatch(getAllAllergies());
   }, []);

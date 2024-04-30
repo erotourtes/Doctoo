@@ -17,12 +17,14 @@ import {
 } from './PatientSlice';
 
 export const getPatientData = createAsyncThunk('patient', async (id: string, { dispatch }) => {
-  const { data, error } = await api.GET('/patient/{id}', { params: { path: { id } } });
-
-  if (error) throw new Error('Failed to fetch patient data GET /patient/:id');
-
   try {
-    dispatch(setPatientData({ ...data }));
+    const { data, error } = await api.GET('/patient/{id}', { params: { path: { id } } });
+
+    if (error) {
+      throw new Error('Failed to fetch patient data GET /patient/:id');
+    }
+
+    dispatch(updatePatientData({ ...data }));
   } catch (e) {
     const error = e as Error;
     handleError(error);
@@ -141,7 +143,6 @@ export const createPatientConditions = createAsyncThunk(
       });
 
       if (error) throw new Error('Failed to create patient allergy');
-
       if (responseData.count === data.body.length) {
         dispatch(addPatientCondition(data.body));
         dispatch(setPatientState({ isLoading: false, isFetched: true }));

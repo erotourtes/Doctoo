@@ -3,12 +3,12 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchReviewsByDoctor } from '@/app/review/ReviewThunks';
 import { Pagination } from '@/components/UI/Pagination/Pagination';
 import Schedule from '@/components/UI/Schedule/Schedule';
-import type { IDoctor } from '@/dataTypes/Doctor';
-import type { IReview } from '@/dataTypes/Review';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import ReviewsBody from './ReviewsBody';
 import ReviewsHeader from './ReviewsHeader';
+import type { IDoctor } from '@/dataTypes/Doctor';
+import type { IReview } from '@/dataTypes/Review';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
