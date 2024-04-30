@@ -23,6 +23,17 @@ export class ResponseDoctorDto {
   })
   about: string;
 
+  @ApiProperty({ description: 'The rating of the doctor', example: 4.7 })
+  readonly rating: number;
+
+  @Exclude()
+  readonly _count: any;
+
+  @ApiProperty({ description: 'The count of reviews of the doctor', example: 100 })
+  @Expose()
+  @Transform(({ obj }) => obj._count && obj._count.reviews)
+  readonly reviewsCount: number;
+
   @Expose()
   @Transform(({ obj }) => obj.user && obj.user.firstName)
   @ApiProperty({

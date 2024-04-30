@@ -8,15 +8,19 @@ import { userStub } from '../user/user.stub';
 import { DoctorService } from './doctor.service';
 import { CreateDoctorDto } from './dto/create.dto';
 import { PatchDoctorDto } from './dto/patch.dto';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ReviewService } from '../review/review.service';
 
 describe('DoctorService', () => {
   let doctorService: DoctorService;
   let prisma: PrismaService;
 
+  const mockReviewService = {};
+
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
-      imports: [UserModule, HospitalModule, SpecializationModule],
-      providers: [DoctorService, PrismaService],
+      imports: [UserModule, HospitalModule, SpecializationModule, EventEmitterModule.forRoot()],
+      providers: [DoctorService, PrismaService, { provide: ReviewService, useValue: mockReviewService }],
     }).compile();
 
     doctorService = moduleRef.get<DoctorService>(DoctorService);

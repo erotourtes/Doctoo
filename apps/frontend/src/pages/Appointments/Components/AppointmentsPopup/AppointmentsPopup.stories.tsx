@@ -31,6 +31,8 @@ const mockAppointments = [
       avatarKey: 'https://i.pravatar.cc/300',
       email: 'dr.mock@example.com',
       phone: '+1234567890',
+      rating: 4.5,
+      reviewsCount: 30,
       specializations: [
         {
           id: 'spec1',
@@ -110,6 +112,8 @@ export const Default: Story = {
         avatarKey: 'https://i.pravatar.cc/300',
         email: 'dr.mock@example.com',
         phone: '+1234567890',
+        rating: 4.5,
+        reviewsCount: 30,
         specializations: [
           {
             id: 'spec1',

@@ -25,6 +25,8 @@ export const Default: Story = {
       avatarKey: 'https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_15.png',
       specializations: [],
       hospitals: [],
+      rating: 4.5,
+      reviewsCount: 30,
     },
   },
 };
@@ -44,6 +46,8 @@ export const WithCostomStyles: Story = {
       avatarKey: 'https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_15.png',
       specializations: [],
       hospitals: [],
+      rating: 4.5,
+      reviewsCount: 30,
     },
   },
 };

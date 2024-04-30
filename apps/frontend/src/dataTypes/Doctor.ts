@@ -25,4 +25,6 @@ export interface IDoctor {
   phone: string;
   specializations: Specialization[];
   hospitals: Hospital[];
+  rating: number;
+  reviewsCount: number;
 }

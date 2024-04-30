@@ -22,6 +22,7 @@ import { ResponseDoctorDto } from './dto/response.dto';
 import JWTGuard from '../auth/gaurds/jwt.guard';
 import { UserDec } from '../user/user.decorator';
 import { UnauthorizedResponse } from '../utils/UnauthorizedResponse';
+import { ResponseDoctorListDto } from './dto/response-list.dto';
 
 @ApiTags('Doctor Endpoints')
 @Controller('doctor')
@@ -40,7 +41,7 @@ export class DoctorController {
 
   @Get()
   @ApiOperation({ summary: 'Get all doctors' })
-  @ApiOkResponse({ type: ResponseDoctorDto, isArray: true, description: RESPONSE_STATUS.SUCCESS })
+  @ApiOkResponse({ type: ResponseDoctorListDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
   getDoctors(@Query() query: GetDoctorsQuery) {

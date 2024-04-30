@@ -1,23 +1,13 @@
 import { Module } from '@nestjs/common';
-import { DoctorService } from '../doctor/doctor.service';
-import { HospitalService } from '../hospital/hospital.service';
-import { PatientService } from '../patient/patient.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { SpecializationService } from '../specialization/specialization.service';
-import { UserService } from '../user/user.service';
 import { AppointmentController } from './appointment.controller';
 import { AppointmentService } from './appointment.service';
+import { PatientModule } from '../patient/patient.module';
+import { DoctorModule } from '../doctor/doctor.module';
 
 @Module({
+  imports: [PatientModule, DoctorModule],
   controllers: [AppointmentController],
-  providers: [
-    AppointmentService,
-    PrismaService,
-    DoctorService,
-    PatientService,
-    UserService,
-    HospitalService,
-    SpecializationService,
-  ],
+  providers: [AppointmentService, PrismaService],
 })
 export class AppointmentModule {}
