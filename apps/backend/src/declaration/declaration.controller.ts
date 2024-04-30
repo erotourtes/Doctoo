@@ -1,12 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
+  ApiHeader,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { BadRequestResponse } from '../utils/BadRequestResponse';
 import { ClassicNestResponse } from '../utils/ClassicNestResponse';
@@ -15,11 +17,19 @@ import { DeclarationService } from './declaration.service';
 import { CreateDeclarationDto } from './dto/create.dto';
 import { ResponseDeclarationDto } from './dto/response.dto';
 import { UpdateDeclarationDto } from './dto/update.dto';
+import { randomUUID } from 'crypto';
+import JWTGuard from '../auth/gaurds/jwt.guard';
+import { UnauthorizedResponse } from '../utils/UnauthorizedResponse';
+import { UserDec } from '../user/user.decorator';
+import { PatientService } from '../patient/patient.service';
 
 @ApiTags('Declaration Endpoints')
 @Controller('declaration')
 export class DeclarationController {
-  constructor(private readonly declarationService: DeclarationService) {}
+  constructor(
+    private readonly declarationService: DeclarationService,
+    private readonly patientService: PatientService,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'Create declaration' })
@@ -31,13 +41,17 @@ export class DeclarationController {
     return this.declarationService.createDeclaration(body);
   }
 
-  @Get()
-  @ApiOperation({ summary: 'Get declarations' })
+  @UseGuards(JWTGuard)
+  @Get('my')
+  @ApiOperation({ summary: 'Get my appointment' })
+  @ApiHeader({ name: 'Cookie', example: 'jwt=eyJhbGci...', description: 'JWT token' })
   @ApiOkResponse({ type: ResponseDeclarationDto, isArray: true, description: RESPONSE_STATUS.SUCCESS })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  getDeclrations() {
-    return this.declarationService.getDeclarations();
+  async getMyAppointments(@UserDec() userInfo) {
+    const result = await this.patientService.getPatientByUserId(userInfo.id);
+    return this.declarationService.getDeclarationByPatientId(result.id);
   }
 
   @Get(':id')
@@ -48,6 +62,35 @@ export class DeclarationController {
   @ApiParam({ name: 'id', example: '1', description: 'Unique declaration id.' })
   getDeclaration(@Param('id') id: string) {
     return this.declarationService.getDeclaration(+id);
+  }
+
+  @Get()
+  @ApiOperation({ summary: 'Get declarations' })
+  @ApiOkResponse({ type: ResponseDeclarationDto, isArray: true, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  getDeclarations() {
+    return this.declarationService.getDeclarations();
+  }
+
+  @Get('patient/:id')
+  @ApiOperation({ summary: 'Get declaration by patient id' })
+  @ApiOkResponse({ type: ResponseDeclarationDto, isArray: true, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique patient id.' })
+  getDeclarationByPatientId(@Param('id') id: string) {
+    return this.declarationService.getDeclarationByPatientId(id);
+  }
+
+  @Get('doctor/:id')
+  @ApiOperation({ summary: 'Get declaration by doctor id' })
+  @ApiOkResponse({ type: ResponseDeclarationDto, isArray: true, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique doctor id.' })
+  getDeclarationByDoctorId(@Param('id') id: string) {
+    return this.declarationService.getDeclarationByDoctorId(id);
   }
 
   @Patch(':id')

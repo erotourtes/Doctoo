@@ -6,7 +6,10 @@ import paymentSlice from './payment/paymentSlice';
 import { allergySlice } from './allergy/AllergySlice';
 import conditionSlice from './condition/ConditionSlice';
 import reviewSlice from './review/ReviewSlice';
+import { declarationSlice } from './declaration/DeclarationSlice';
+import { hospitalSlice } from './hospital/HospitalSlice';
 import { userSlice } from './user/UserSlice';
+
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +20,8 @@ export const store = configureStore({
     allergy: allergySlice.reducer,
     condition: conditionSlice,
     review: reviewSlice,
+    declaration: declarationSlice.reducer,
+    hospital: hospitalSlice.reducer,
     user: userSlice.reducer,
   },
 });

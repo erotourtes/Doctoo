@@ -57,7 +57,7 @@ const OptionalSelect: React.FC<SelectProps> = ({ options, defaultOption, setChos
       {isOpen && (
         <div>
           <div
-            className='absolute mb-5 mt-2 flex  w-[224px] justify-end rounded-md bg-white'
+            className='absolute mb-5 mt-2 flex w-[224px] justify-end  rounded-md bg-white shadow-md '
             onClick={e => e.stopPropagation()}
           >
             <div className='mr-1 mt-4 w-[210px]'>

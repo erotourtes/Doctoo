@@ -1,12 +1,19 @@
-import { useState } from 'react';
-import { useAppSelector } from '@/app/hooks';
+import { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import MedicalConditionPopup from './MedicalConditionPopup';
 import { Icon } from '@/components/UI';
+import { getMyDeclarations } from '../../../../app/declaration/DeclarationThunks';
 
 const MedicalCondition = () => {
   const patient = useAppSelector(state => state.patient.data);
-
   const { conditions, allergies } = patient;
+  const dispatch = useAppDispatch();
+
+  const declaration = useAppSelector(state => state.declaration.data[0]);
+
+  useEffect(() => {
+    dispatch(getMyDeclarations());
+  }, []);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -14,8 +21,9 @@ const MedicalCondition = () => {
     <div className='flex h-full flex-col justify-between gap-4 rounded-xl bg-white p-3 md:p-7'>
       <div className='flex w-full flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between'>
         <p className='text-grey-1'>Declaration number</p>
-        {/*TODO"where should be declaration id?? */}
-        <div className='rounded-lg bg-main-light  px-4 py-2 font-medium text-black'>{123498}</div>
+        <div className='rounded-lg bg-main-light  px-4 py-2 font-medium text-black'>
+          {declaration && declaration.id ? declaration.id : '-'}
+        </div>
       </div>
 
       <div className='flex w-full flex-col items-start justify-between sm:flex-row sm:items-center'>

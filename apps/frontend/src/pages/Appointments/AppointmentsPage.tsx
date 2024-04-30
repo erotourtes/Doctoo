@@ -43,6 +43,7 @@ export default function AppointmentsPage() {
     status: appointment.status.toUpperCase(),
   }));
 
+
   const [search, setSearch] = useState('');
 
   function handleSubmit(value: string) {

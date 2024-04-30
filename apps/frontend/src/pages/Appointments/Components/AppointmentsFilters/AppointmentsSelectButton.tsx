@@ -44,7 +44,7 @@ const AppointmentsSelectButton = ({ defaultOption, setChosenOption }: Appointmen
       </button>
 
       {isOpen && (
-        <div className='absolute mb-5 mt-2 flex w-[224px] justify-end rounded-md bg-white'>
+        <div className='absolute mb-5 mt-2 flex w-[224px] justify-end rounded-md bg-white shadow-md'>
           <div className='h- mr-1 mt-4 w-[210px]'>
             <ul className='cursor-pointer'>
               <li

@@ -40,15 +40,6 @@ export class AppointmentController {
     return this.appointmentService.createAppointment(body);
   }
 
-  @Get()
-  @ApiOperation({ summary: 'Get all appointments' })
-  @ApiOkResponse({ type: ResponseAppointmentDto, description: RESPONSE_STATUS.SUCCESS })
-  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  getAppointments() {
-    return this.appointmentService.getAppointments();
-  }
-
   @UseGuards(JWTGuard)
   @Get('my')
   @ApiOperation({ summary: 'Get my appointment' })
@@ -60,6 +51,15 @@ export class AppointmentController {
   async getMyAppointments(@UserDec() userInfo) {
     const result = await this.patientService.getPatientByUserId(userInfo.id);
     return this.appointmentService.getAppointmentsByPatientId(result.id);
+  }
+
+  @Get()
+  @ApiOperation({ summary: 'Get all appointments' })
+  @ApiOkResponse({ type: ResponseAppointmentDto, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  getAppointments() {
+    return this.appointmentService.getAppointments();
   }
 
   @Get('patient/:id')

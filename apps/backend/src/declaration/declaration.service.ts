@@ -17,20 +17,43 @@ export class DeclarationService {
     return true;
   }
 
+  private async isDeclarationBetweenPatientAndDoctorExist(patientId: string, doctorId: string): Promise<boolean> {
+    const declaration = await this.prismaService.declaration.findUnique({ where: { patientId, doctorId } });
+
+    if (declaration) throw new BadRequestException('Declaration already exists.');
+
+    return true;
+  }
+
+  private async isDoctorAndPatientExist(doctorId: string, patientId: string): Promise<boolean> {
+    const doctor = await this.prismaService.doctor.findUnique({ where: { id: doctorId } });
+    const patient = await this.prismaService.patient.findUnique({ where: { id: patientId } });
+
+    if (!doctor) throw new NotFoundException('Doctor with that id not found');
+    if (!patient) throw new NotFoundException('Patient with that id not found');
+
+    return true;
+  }
+
+  private async isPatientExist(patientId: string): Promise<boolean> {
+    const patient = await this.prismaService.patient.findUnique({ where: { id: patientId } });
+
+    if (!patient) throw new NotFoundException('Patient with that id not found');
+
+    return true;
+  }
+
+  private async isDoctorExist(doctorId: string): Promise<boolean> {
+    const doctor = await this.prismaService.doctor.findUnique({ where: { id: doctorId } });
+
+    if (!doctor) throw new NotFoundException('Doctor with that id not found');
+
+    return true;
+  }
+
   async createDeclaration(body: CreateDeclarationDto): Promise<ResponseDeclarationDto> {
-    // const doctorPromise = await this.prismaService.doctor.findUnique({ where: { id: body.doctorId } });
-    // const patientPromise = await this.prismaService.patient.findUnique({ where: { id: body.patientId } });
-
-    // const [doctorExist, patientExist] = await Promise.all([doctorPromise, patientPromise]);
-
-    // if (!doctorExist) {
-    //   throw new NotFoundException('Doctor with that id not found');
-    // }
-
-    // if (!patientExist) {
-    //   throw new NotFoundException('Patient with that id not found');
-    // }
-    // TODO: Call is... from special services.
+    await this.isDoctorAndPatientExist(body.doctorId, body.patientId);
+    await this.isDeclarationBetweenPatientAndDoctorExist(body.patientId, body.doctorId);
 
     const declaration = await this.prismaService.declaration.create({ data: body });
 
@@ -49,6 +72,22 @@ export class DeclarationService {
     const declaration = await this.prismaService.declaration.findUnique({ where: { id } });
 
     return plainToInstance(ResponseDeclarationDto, declaration);
+  }
+
+  async getDeclarationByPatientId(patientId: string): Promise<ResponseDeclarationDto[]> {
+    await this.isPatientExist(patientId);
+
+    const declarations = await this.prismaService.declaration.findMany({ where: { patientId } });
+
+    return plainToInstance(ResponseDeclarationDto, declarations);
+  }
+
+  async getDeclarationByDoctorId(doctorId: string): Promise<ResponseDeclarationDto[]> {
+    await this.isDoctorExist(doctorId);
+
+    const declarations = await this.prismaService.declaration.findMany({ where: { doctorId } });
+
+    return plainToInstance(ResponseDeclarationDto, declarations);
   }
 
   async patchDeclaration(id: number, body: UpdateDeclarationDto): Promise<ResponseDeclarationDto> {
