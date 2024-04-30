@@ -1,6 +1,7 @@
 import type { components, paths } from '@/api';
 import { instance } from '@/api/axios.api';
 import handleError from '@/api/handleError.api';
+import type { TCondition } from '@/dataTypes/Condition';
 import type { TAllergy } from '@/dataTypes/Allergy';
 import { type TPatient } from '@/dataTypes/Patient';
 import type { IUser } from '@/dataTypes/User';
@@ -154,3 +155,12 @@ export const createPatientConditions = createAsyncThunk(
     }
   },
 );
+
+type ChangePasswordType = paths['/auth/password/change']['post']['requestBody']['content']['application/json'];
+type ErrorResponseType = components['schemas']['ClassicNestResponse'];
+
+export const changePassword = createAsyncThunk<ErrorResponseType, ChangePasswordType>('patient', async body => {
+  const { error } = await api.POST('/auth/password/change', { body });
+  // TODO: remove casting
+  return error as ErrorResponseType;
+});

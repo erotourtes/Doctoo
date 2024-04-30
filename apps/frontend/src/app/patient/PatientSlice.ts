@@ -5,10 +5,8 @@ import type { TAllergy } from '@/dataTypes/Allergy';
 import type { TCondition } from '@/dataTypes/Condition';
 import type { TPatient } from '@/dataTypes/Patient';
 
-type Patient = TPatient & { conditions: TCondition[] };
-
 interface PatientData {
-  data: Patient;
+  data: TPatient;
   state: {
     isLoading: boolean;
     isFetched: boolean;
@@ -52,10 +50,10 @@ export const patientSlice = createAppSlice({
   name: 'patient',
   initialState,
   reducers: {
-    setPatientData: (state, action: PayloadAction<Patient>) => {
+    setPatientData: (state, action: PayloadAction<TPatient>) => {
       state.data = action.payload;
     },
-    updatePatientData: (state, action: PayloadAction<Partial<Patient>>) => {
+    updatePatientData: (state, action: PayloadAction<Partial<TPatient>>) => {
       state.data = { ...state.data, ...action.payload };
     },
     addPatientAllergy: (state, action: PayloadAction<TAllergy[]>) => {

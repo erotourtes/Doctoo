@@ -116,7 +116,6 @@ export class PatientService {
     const { count } = await this.prismaService.patientCondition.createMany({
       data: conditions.map(({ conditionId }) => ({ patientId: id, conditionId })),
     });
-    console.log(count);
     return count;
   }
   async getPatientConditions(patientId: string): Promise<ResponseConditionDto[]> {

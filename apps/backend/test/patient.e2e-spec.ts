@@ -1,12 +1,12 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { BloodType, Gender } from '@prisma/client';
-import { randomUUID } from 'crypto';
 import * as request from 'supertest';
-import { PatientModule } from '../src/patient/patient.module';
-import { patientStub } from '../src/patient/patient.stub';
+import { randomUUID } from 'crypto';
+import { BloodType, Gender } from '@prisma/client';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { userStub } from '../src/user/user.stub';
+import { PatientModule } from '../src/patient/patient.module';
+import { patientStub } from '../src/patient/patient.stub';
 
 describe('PatientController (e2e)', () => {
   let app: INestApplication;
@@ -105,13 +105,18 @@ describe('PatientController (e2e)', () => {
       const patient = await prisma.patient.create({ data: { ...patientStub(), user: { connect: { id: user.id } } } });
       const allergy = await prisma.allergy.create({ data: { name: 'almond' } });
 
+      const data = {
+        patientId: patient.id,
+        allergyId: allergy.id,
+      };
+
       return await request(app.getHttpServer())
         .post(`/patient/${patient.id}/allergy`)
-        .send({ allergyIds: [allergy.id] })
+        .send(data)
         .expect(201)
         .expect('Content-Type', /json/)
         .expect(res => {
-          expect(res.body).toHaveProperty('count', 1);
+          expect(res.body).toMatchObject(data);
         });
     });
   });
@@ -120,7 +125,6 @@ describe('PatientController (e2e)', () => {
     it('should return a patient allergy list', async () => {
       const patient = await prisma.patient.create({ data: { ...patientStub(), user: { connect: { id: user.id } } } });
       const allergy = await prisma.allergy.create({ data: { name: 'almond' } });
-
       await prisma.patientAllergy.create({ data: { patientId: patient.id, allergyId: allergy.id } });
 
       const data = [{ id: allergy.id, name: allergy.name }];
@@ -130,7 +134,7 @@ describe('PatientController (e2e)', () => {
         .expect(200)
         .expect('Content-Type', /json/)
         .expect(res => {
-          expect(res.body).toContainEqual(expect.objectContaining({ name: data[0].name }));
+          expect(res.body).toMatchObject(data);
         });
     });
   });
