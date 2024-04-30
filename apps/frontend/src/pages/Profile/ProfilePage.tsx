@@ -1,6 +1,6 @@
 import PageHeader from '../PageHeader';
 import StatsCard from './components/StatsCard/StatsCard';
-import { useAppDispatch, useAppDispatch, useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import PersonalInfo from './components/PersonalInfo/PersonalInfo';
 import MedicalCondition from './components/MedicalCondition/MedicalCondition';
 import AddressInfo from './components/AddressInfo/AddressInfo';
