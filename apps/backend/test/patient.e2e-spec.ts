@@ -140,18 +140,13 @@ describe('PatientController (e2e)', () => {
       const patient = await prisma.patient.create({ data: { ...patientStub(), user: { connect: { id: user.id } } } });
       const condition = await prisma.condition.create({ data: { name: 'test' } });
 
-      const data = {
-        patientId: patient.id,
-        conditionId: condition.id,
-      };
-
       return await request(app.getHttpServer())
         .post(`/patient/${patient.id}/condition`)
-        .send(data)
+        .send({ conditionIds: [condition.id] })
         .expect(201)
         .expect('Content-Type', /json/)
         .expect(res => {
-          expect(res.body).toMatchObject(data);
+          expect(res.body).toHaveProperty('count', 1);
         });
     });
   });
