@@ -10,7 +10,6 @@ import { declarationSlice } from './declaration/DeclarationSlice';
 import { hospitalSlice } from './hospital/HospitalSlice';
 import { userSlice } from './user/UserSlice';
 
-
 export const store = configureStore({
   reducer: {
     doctor: doctorSlice.reducer,

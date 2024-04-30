@@ -9,6 +9,7 @@ import { PrismaService } from '../src/prisma/prisma.service';
 import { specializationStub } from '../src/specialization/specialization.stub';
 import { userStub } from '../src/user/user.stub';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { mockConfigs, pipe } from '../src/utils/test-injection-mock';
 
 describe('DoctorController (e2e)', () => {
   let app: INestApplication;
@@ -18,7 +19,9 @@ describe('DoctorController (e2e)', () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [DoctorModule, EventEmitterModule.forRoot()],
       providers: [PrismaService],
-    }).compile();
+    })
+      .useMocker(pipe(mockConfigs))
+      .compile();
 
     app = moduleFixture.createNestApplication();
 

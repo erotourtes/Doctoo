@@ -7,4 +7,5 @@ export default registerAs('config', () => ({
   APP_URL: getOrThrow('BACKEND_URL'),
   FRONTEND_URL: getOrThrow('FRONTEND_URL'),
   FRONTEND_SIGNUP_PATH: getOrThrow('FRONTEND_SIGNUP_PATH'),
+  FRONTEND_CHANGE_EMAIL_PATH: getOrThrow('FRONTEND_CHANGE_EMAIL_PATH'),
 }));

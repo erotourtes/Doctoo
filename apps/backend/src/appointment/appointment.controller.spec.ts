@@ -2,19 +2,22 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../prisma/prisma.service';
 import { AppointmentController } from './appointment.controller';
 import { AppointmentService } from './appointment.service';
-import { PatientModule } from '../patient/patient.module';
-import { DoctorModule } from '../doctor/doctor.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { PatientService } from '../patient/patient.service';
+import { DoctorService } from '../doctor/doctor.service';
+import { mockConfigs, mockUndefined, pipe } from '../utils/test-injection-mock';
 
 describe('AppointmentController', () => {
   let controller: AppointmentController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [PatientModule, DoctorModule, EventEmitterModule.forRoot()],
+      imports: [EventEmitterModule.forRoot()],
       controllers: [AppointmentController],
-      providers: [AppointmentService, PrismaService],
-    }).compile();
+      providers: [AppointmentService, PrismaService, PatientService, DoctorService],
+    })
+      .useMocker(pipe(mockConfigs, mockUndefined))
+      .compile();
 
     controller = module.get<AppointmentController>(AppointmentController);
   });

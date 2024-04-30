@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
+import { mockUndefined, pipe } from '../utils/test-injection-mock';
 
 // TODO: Cover a large area of code with tests.
 describe('UserController', () => {
@@ -12,7 +13,9 @@ describe('UserController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
       providers: [UserService, PrismaService],
-    }).compile();
+    })
+      .useMocker(pipe(mockUndefined))
+      .compile();
 
     controller = module.get<UserController>(UserController);
   });

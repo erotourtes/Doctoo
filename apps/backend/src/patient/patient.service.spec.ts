@@ -3,13 +3,13 @@ import { Test } from '@nestjs/testing';
 import { BloodType, Gender } from '@prisma/client';
 import { AllergyModule } from '../allergy/allergy.module';
 import { PrismaService } from '../prisma/prisma.service';
-import { UserModule } from '../user/user.module';
 import { userStub } from '../user/user.stub';
 import { CreatePatientDto } from './dto/create.dto';
 import { PatchPatientDto } from './dto/patch.dto';
-import { PatientModule } from './patient.module';
 import { PatientService } from './patient.service';
 import { patientStub } from './patient.stub';
+import { UserService } from '../user/user.service';
+import { mockConfigs, mockUndefined, pipe } from '../utils/test-injection-mock';
 
 describe('PatientService', () => {
   let patientService: PatientService;
@@ -17,9 +17,11 @@ describe('PatientService', () => {
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
-      imports: [UserModule, AllergyModule, PatientModule],
-      providers: [PatientService, PrismaService],
-    }).compile();
+      imports: [AllergyModule],
+      providers: [PatientService, PrismaService, UserService, PatientService],
+    })
+      .useMocker(pipe(mockConfigs, mockUndefined))
+      .compile();
 
     patientService = moduleRef.get<PatientService>(PatientService);
     prisma = moduleRef.get<PrismaService>(PrismaService);

@@ -5,6 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { ReviewController } from './review.controller';
 import { ReviewService } from './review.service';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { mockConfigs, mockUndefined, pipe } from '../utils/test-injection-mock';
 
 describe('ReviewController', () => {
   let controller: ReviewController;
@@ -14,7 +15,9 @@ describe('ReviewController', () => {
       imports: [PatientModule, DoctorModule, EventEmitterModule.forRoot()],
       controllers: [ReviewController],
       providers: [PrismaService, ReviewService],
-    }).compile();
+    })
+      .useMocker(pipe(mockConfigs, mockUndefined))
+      .compile();
 
     controller = module.get<ReviewController>(ReviewController);
   });

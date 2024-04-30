@@ -4,6 +4,7 @@ import Header from '@components/UI/Header/Header';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import AppointmentsPage from './Appointments/AppointmentsPage';
 import CalendarPage from './Calendar/CalendarPage';
+import EmailChangePage from './EmailChange/EmailChangePage';
 import MyDoctorsPage from './MyDoctors/MyDoctorsPage';
 import { PaymentPage } from './PaymentPage/PaymentPage';
 import ProfilePage from './Profile/ProfilePage';
@@ -30,8 +31,6 @@ const PageContainer = () => {
           <Route path='/reviews' Component={ReviewsPage} />
           <Route path='/appointments' Component={AppointmentsPage} />
           <Route path='/logout' Component={LogoutPage} />
-          <Route path='/protected/1' element={'pr 1'} />
-          <Route path='/protected/2' element={'pr 2'} />
         </Route>
       </Routes>
     </main>
@@ -73,6 +72,7 @@ const Navigation = () => {
       <Route path='/signup/patient' Component={SignUpPatientPage} />
       <Route path='/login/authenticate' Component={LoginPageAuthenticate} />
       <Route path='/login' Component={LoginPage} />
+      <Route path='/change-email' Component={EmailChangePage} />
     </Routes>
   );
 };

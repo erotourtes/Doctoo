@@ -30,4 +30,17 @@ export class MailService {
       context: { name, code },
     });
   }
+
+  async sendEmailChangeMail(to: string, oldEmail: string, name: string, token: string): Promise<void> {
+    await this.mailerService.sendMail({
+      to,
+      subject: 'Change email',
+      template: './change-email',
+      context: {
+        name,
+        oldEmail,
+        url: `${this.configObject.FRONTEND_URL}/${this.configObject.FRONTEND_CHANGE_EMAIL_PATH}?token=${token}`,
+      },
+    });
+  }
 }

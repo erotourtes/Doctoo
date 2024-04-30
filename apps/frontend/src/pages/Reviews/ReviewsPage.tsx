@@ -1,14 +1,14 @@
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import ReviewsHeader from './ReviewsHeader';
-import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router';
-import { fetchReviewsByDoctor } from '@/app/review/ReviewThunks';
 import { getDoctorData } from '@/app/doctor/DoctorThunks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { fetchReviewsByDoctor } from '@/app/review/ReviewThunks';
+import { Pagination } from '@/components/UI/Pagination/Pagination';
 import Schedule from '@/components/UI/Schedule/Schedule';
-import ReviewsBody from './ReviewsBody';
 import type { IDoctor } from '@/dataTypes/Doctor';
 import type { IReview } from '@/dataTypes/Review';
-import { Pagination } from '@/components/UI/Pagination/Pagination';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
+import ReviewsBody from './ReviewsBody';
+import ReviewsHeader from './ReviewsHeader';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);

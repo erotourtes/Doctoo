@@ -7,6 +7,7 @@ import { PatientModule } from '../src/patient/patient.module';
 import { patientStub } from '../src/patient/patient.stub';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { userStub } from '../src/user/user.stub';
+import { mockConfigs, pipe } from '../src/utils/test-injection-mock';
 
 describe('PatientController (e2e)', () => {
   let app: INestApplication;
@@ -17,7 +18,9 @@ describe('PatientController (e2e)', () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [PatientModule],
       providers: [PrismaService],
-    }).compile();
+    })
+      .useMocker(pipe(mockConfigs))
+      .compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();

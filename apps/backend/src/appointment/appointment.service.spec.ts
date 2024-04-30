@@ -1,9 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../prisma/prisma.service';
 import { AppointmentService } from './appointment.service';
-import { UserModule } from '../user/user.module';
 import { PatientModule } from '../patient/patient.module';
-import { DoctorModule } from '../doctor/doctor.module';
 import { userStub } from '../user/user.stub';
 import { patientStub } from '../patient/patient.stub';
 import { doctorStub } from '../doctor/doctor.stub';
@@ -12,6 +10,9 @@ import { AppointmentStatus } from '@prisma/client';
 import { CreateAppointmentDto } from './dto/create.dto';
 import { PatchAppointmentDto } from './dto/patch.dto';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { UserService } from '../user/user.service';
+import { DoctorService } from '../doctor/doctor.service';
+import { mockConfigs, mockUndefined, pipe } from '../utils/test-injection-mock';
 
 describe('AppointmentService', () => {
   let appointmentService: AppointmentService;
@@ -22,9 +23,11 @@ describe('AppointmentService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [UserModule, PatientModule, DoctorModule, EventEmitterModule.forRoot()],
-      providers: [AppointmentService, PrismaService],
-    }).compile();
+      imports: [EventEmitterModule.forRoot()],
+      providers: [AppointmentService, PrismaService, UserService, DoctorService, PatientModule],
+    })
+      .useMocker(pipe(mockConfigs, mockUndefined))
+      .compile();
 
     appointmentService = module.get<AppointmentService>(AppointmentService);
     prisma = module.get<PrismaService>(PrismaService);

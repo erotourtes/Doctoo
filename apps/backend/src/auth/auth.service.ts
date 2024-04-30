@@ -10,12 +10,18 @@ import { MinioService } from '../minio/minio.service';
 import { ResponsePatientDto } from '../patient/dto/response.dto';
 import { PatientService } from '../patient/patient.service';
 import { ResponseUserDto } from '../user/dto/response.dto';
-import { UserService } from '../user/user.service';
+import { JwtEmailPayload, UserService } from '../user/user.service';
 import { ChangePasswordDto } from './dto/changePassword.dto';
 import { LocalLoginTwoFactorDto } from './dto/localLoginTwoFactor.dto';
 import { SignUpPatientDto } from './dto/signUpPatient.dto';
 import { SignUpUserDto } from './dto/signUpUser.dto';
 import { JwtPayload } from './strategies/jwt';
+
+// TODO: refactor this service;
+// there are 3 concerns to consider:
+// 1. Local auth
+// 2. Google auth
+// 3. Helper functions for password hashing, password verification, MFA code generation and verification
 
 @Injectable()
 export class AuthService {
@@ -160,6 +166,17 @@ export class AuthService {
     return user;
   }
 
+  async changeEmail(user: ResponseUserDto, token: string): Promise<void> {
+    const verified = await this.jwtService.verifyAsync<JwtEmailPayload>(token).catch(() => {
+      throw new BadRequestException('Invalid token.');
+    });
+    const { sub, newEmail } = verified;
+    if (sub !== user.id) throw new BadRequestException('Token is not valid for this user.');
+    if (!newEmail) throw new BadRequestException('Invalid token.');
+
+    await this.userService.changeEmail(user.id, newEmail);
+  }
+
   async changePassword(user: ResponseUserDto, body: ChangePasswordDto): Promise<void> {
     const { password } = await this.userService.getUserByEmail(user.email);
 
@@ -199,9 +216,7 @@ export class AuthService {
       const { name } = await this.minioService.uploadByUrl(imageUrl);
 
       await this.userService.patchUser(user.id, { avatarKey: name });
-    } catch (err) {
-      console.error(err);
-    }
+    } catch (err) {}
 
     const token = await this.jwtService.signAsync({ sub: user.id }, { expiresIn: '1d' });
 
@@ -235,9 +250,7 @@ export class AuthService {
       const { name } = await this.minioService.uploadByUrl(imageUrl);
 
       await this.userService.patchUser(user.id, { avatarKey: name });
-    } catch (err) {
-      console.error(err);
-    }
+    } catch (err) {}
 
     return plainToInstance(ResponseUserDto, user);
   }
