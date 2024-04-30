@@ -15,7 +15,6 @@ import {
   setPatientState,
   updatePatientData,
 } from './PatientSlice';
-import type { TCondition } from '@/dataTypes/Condition';
 
 export const getPatientData = createAsyncThunk('patient', async (id: string, { dispatch }) => {
   try {
@@ -155,12 +154,3 @@ export const createPatientConditions = createAsyncThunk(
     }
   },
 );
-
-type ChangePasswordType = paths['/auth/password/change']['post']['requestBody']['content']['application/json'];
-type ErrorResponseType = components['schemas']['ClassicNestResponse'];
-
-export const changePassword = createAsyncThunk<ErrorResponseType, ChangePasswordType>('patient', async body => {
-  const { error } = await api.POST('/auth/password/change', { body });
-  // TODO: remove casting
-  return error as ErrorResponseType;
-});
