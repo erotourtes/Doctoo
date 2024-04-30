@@ -7,29 +7,9 @@ import { Calendar } from '@/components/UI/Calendar/Calendar';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import dayjs from 'dayjs';
 import AppointmentsFilters from './Components/AppointmentsFilters/AppointmentsFilters';
-import { getAppointmentsByPatientId } from '@/app/appointment/AppointmentThunks';
+import { getMyAppointments } from '@/app/appointment/AppointmentThunks';
 import NoAppointments from './NoAppointments';
-import { filterReducer } from './filterReducer';
-
-export type FilterState = {
-  time: string[];
-  statuses: string[];
-  doctors: string[];
-  order: string[];
-};
-
-export type FilterAction =
-  | { type: 'SET_TIME'; payload: string[] }
-  | { type: 'SET_STATUSES'; payload: string[] }
-  | { type: 'SET_DOCTORS'; payload: string[] }
-  | { type: 'SET_ORDER'; payload: string[] };
-
-const initialFilterState: FilterState = {
-  time: ['All time'],
-  statuses: ['All statuses'],
-  doctors: ['All doctors'],
-  order: ['Latest to oldest'],
-};
+import { filterReducer, initialFilterState } from './filterReducer';
 
 export default function AppointmentsPage() {
   const dispatch = useAppDispatch();
@@ -37,7 +17,7 @@ export default function AppointmentsPage() {
   const [filterState, dispatchFilterAction] = useReducer(filterReducer, initialFilterState);
 
   useEffect(() => {
-    dispatch(getAppointmentsByPatientId('7'));
+    dispatch(getMyAppointments());
   }, []);
 
   const meetingsForDay = appointments.map(appointment => ({
