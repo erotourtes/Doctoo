@@ -9,7 +9,7 @@ import TimePicker from './ScheduleBookComponents/TimePicker';
 import WeekPicker from './ScheduleBookComponents/WeekPicker';
 import { AppointmentStatus } from '@/dataTypes/Appointment';
 import type { ICreateAppointment } from '@/dataTypes/Appointment';
-import { createAppointment } from '@/app/appointment/AppointmentThunks';
+import { createAppointment, rescheduleAppointment } from '@/app/appointment/AppointmentThunks';
 
 dayjs.extend(utc);
 
@@ -20,9 +20,18 @@ type ScheduleBookProps = {
   patientId: string;
   closePopup: () => void;
   currentDay?: Dayjs;
+  rescheduling?: boolean;
+  appointmentId?: string;
 };
 
-export default function ScheduleBook({ closePopup, currentDay = dayjs(), doctorId, patientId }: ScheduleBookProps) {
+export default function ScheduleBook({
+  closePopup,
+  currentDay = dayjs(),
+  doctorId,
+  patientId,
+  rescheduling,
+  appointmentId,
+}: ScheduleBookProps) {
   const dispatch = useAppDispatch();
 
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
@@ -105,24 +114,30 @@ export default function ScheduleBook({ closePopup, currentDay = dayjs(), doctorI
   }, [currentDate]);
 
   useEffect(() => {
-    if (!selectedDate) return;
+    if (!rescheduling) {
+      if (!selectedDate) return;
+      const createNewAppointment: ICreateAppointment = {
+        doctorId: doctorId,
+        patientId: patientId,
+        assignedAt: dayjs().toISOString(),
+        status: AppointmentStatus.PENDING_PAYMENT,
+        startedAt: selectedDate.format('YYYY-MM-DDTHH:mm:ss[Z]'),
+        endedAt: selectedDate.add(1, 'hour').format('YYYY-MM-DDTHH:mm:ss[Z]'),
+      };
 
-    const createNewAppointment: ICreateAppointment = {
-      doctorId: doctorId,
-      patientId: patientId,
-      assignedAt: selectedDate.format('YYYY-MM-DDTHH:mm:ss[Z]'),
-      status: AppointmentStatus.PENDING_PAYMENT,
-      startedAt: selectedDate.format('YYYY-MM-DDTHH:mm:ss[Z]'),
-      endedAt: selectedDate.add(1, 'hour').format('YYYY-MM-DDTHH:mm:ss[Z]'),
-    };
-
-    setNewAppointment(createNewAppointment);
+      setNewAppointment(createNewAppointment);
+    }
   }, [selectedDate]);
 
   function handleBookAppointment() {
     if (!selectedDate) return;
 
-    dispatch(createAppointment(newAppointment));
+    if (rescheduling && appointmentId) {
+      dispatch(rescheduleAppointment({ id: appointmentId, newDate: selectedDate.format('YYYY-MM-DDTHH:mm:ss[Z]') }));
+    } else {
+      dispatch(createAppointment(newAppointment));
+    }
+
     closePopup();
     setSuccessfullModal(true);
   }
@@ -152,7 +167,11 @@ export default function ScheduleBook({ closePopup, currentDay = dayjs(), doctorI
           selectDate={selectDate}
         />
 
-        <BookAppointmentBtn selectDate={selectedDate} handleBookAppointment={handleBookAppointment} />
+        <BookAppointmentBtn
+          selectDate={selectedDate}
+          handleBookAppointment={handleBookAppointment}
+          rescheduling={rescheduling}
+        />
       </div>
 
       <ScheduleSuccessModal

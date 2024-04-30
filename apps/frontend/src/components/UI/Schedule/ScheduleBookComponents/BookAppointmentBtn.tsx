@@ -4,9 +4,14 @@ import { Button } from '../../Button/Button';
 type BookAppointmentButtonProps = {
   selectDate: Dayjs | null;
   handleBookAppointment: () => void;
+  rescheduling?: boolean;
 };
 
-export default function BookAppointmentButton({ selectDate, handleBookAppointment }: BookAppointmentButtonProps) {
+export default function BookAppointmentButton({
+  selectDate,
+  handleBookAppointment,
+  rescheduling,
+}: BookAppointmentButtonProps) {
   return (
     <div className='px-12'>
       <Button
@@ -16,7 +21,7 @@ export default function BookAppointmentButton({ selectDate, handleBookAppointmen
         className={`w-full ${selectDate === undefined && 'cursor-not-allowed'}`}
         onClick={handleBookAppointment}
       >
-        Book appointment
+        {rescheduling ? 'Reshedule appointment' : 'Book appointment'}
       </Button>
     </div>
   );

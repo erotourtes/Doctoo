@@ -2,6 +2,7 @@ import type { RootState } from '@/app/store';
 import type { AppointmentStatus, IAppointment } from '@/dataTypes/Appointment';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '../createAppSlice';
+import dayjs from 'dayjs';
 
 type AppointmentData = {
   appointments: IAppointment[];
@@ -30,14 +31,28 @@ export const appointmentSlice = createAppSlice({
       }
     },
 
+    setResheduleAppointment: (state, action: PayloadAction<{ id: string; newDate: string }>) => {
+      const appointment = state.appointments.find(appointment => appointment.id === action.payload.id);
+      if (appointment) {
+        appointment.startedAt = action.payload.newDate;
+        const startedAt = dayjs(appointment.startedAt);
+        appointment.endedAt = startedAt.add(1, 'hour').format('YYYY-MM-DDTHH:mm:ss[Z]');
+      }
+    },
+
     deleteAppointment: (state, action: PayloadAction<string>) => {
       state.appointments = state.appointments.filter(appointment => appointment.id !== action.payload);
     },
   },
 });
 
-export const { setAppointments, setNewAppointment, deleteAppointment, setChangeAppointmentStatus } =
-  appointmentSlice.actions;
+export const {
+  setAppointments,
+  setNewAppointment,
+  deleteAppointment,
+  setChangeAppointmentStatus,
+  setResheduleAppointment,
+} = appointmentSlice.actions;
 
 export const appointmentData = (state: RootState) => state.appointment.appointments;
 

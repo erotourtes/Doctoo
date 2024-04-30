@@ -6,11 +6,6 @@ export default function AppointmentLinks({ videoRecordKey, notes }: AppointmentL
       {videoRecordKey && <a href={videoRecordKey}>video recording</a>}
       {videoRecordKey && notes && ', '}
       {notes && <a href={notes}>notes</a>}
-      {/* 
-      {videoRecordKey && pdfKey && ', '}
-      {pdfKey && <a href={pdfKey}>PDF files</a>}
-      {(videoRecordKey || pdfKey) && notes && ', '}
-      */}
     </div>
   );
 }

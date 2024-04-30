@@ -1,19 +1,71 @@
-import { useAppSelector } from '@/app/hooks';
 import AppointmentsListItem from './AppointmentsListItem';
 import PopupDoctoo from '@/components/UI/Popup/Popup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AppointmentsPopup from '../AppointmentsPopup/AppointmentsPopup';
 import type { IAppointment } from '@/dataTypes/Appointment';
-import type { FilterState } from '../../AppointmentsPage';
+import type { FilterState } from '../../filterReducer';
 import dayjs from 'dayjs';
 import { filterConfig } from '../AppointmentsFilters/AppointmentsFilters';
+import { useAppDispatch } from '@/app/hooks';
+import { getAppointmentsByPatientId } from '@/app/appointment/AppointmentThunks';
 
-type AppointmentsListProps = { filters: FilterState };
+type AppointmentsListProps = {
+  filters: FilterState;
+  appointments: IAppointment[];
+};
 
-export default function AppointmentsList({ filters }: AppointmentsListProps) {
-  const appointments = useAppSelector(state => state.appointment.appointments);
+function filterAppointments(appointment: IAppointment, filters: FilterState): boolean {
+  const appointmentTime = dayjs.utc(appointment.startedAt).format('hh:mm a');
+
+  const passesTimeFilter =
+    filters.time.includes(filterConfig.time.defaultValue) || filters.time.includes(appointmentTime);
+
+  const passesStatusFilter =
+    filters.statuses.includes(filterConfig.statuses.defaultValue) || filters.statuses.includes(appointment.status);
+
+  if (!appointment.doctor) return false;
+
+  const fullName = `Dr. ${appointment.doctor!.firstName} ${appointment.doctor!.lastName}`;
+  const passesDoctorFilter =
+    filters.doctors.includes(filterConfig.doctors.defaultValue) || filters.doctors.includes(fullName);
+
+  return passesTimeFilter && passesStatusFilter && passesDoctorFilter;
+}
+
+function sortAppointments(a: IAppointment, b: IAppointment, filters: FilterState): number {
+  if (filters.order.includes('Latest to oldest')) {
+    return dayjs(b.startedAt).valueOf() - dayjs(a.startedAt).valueOf();
+  } else {
+    return dayjs(a.startedAt).valueOf() - dayjs(b.startedAt).valueOf();
+  }
+}
+
+export default function AppointmentsList({ filters, appointments }: AppointmentsListProps) {
+  const dispatch = useAppDispatch();
   const [modal, setModal] = useState(false);
   const [appointment, setAppointment] = useState<IAppointment>();
+  const [filteredAppointments, setFilteredAppointments] = useState<IAppointment[]>([]);
+  const [hasFetchedAppointments, setHasFetchedAppointments] = useState(false);
+
+  useEffect(() => {
+    setAppointment(appointments.find(app => app.id === appointment?.id));
+  }, [appointments]);
+
+  useEffect(() => {
+    dispatch(getAppointmentsByPatientId('2b7bb740-3aa5-4090-94c8-1a8e2ebd9c0a')).then(() =>
+      setHasFetchedAppointments(true),
+    );
+  }, [appointments.length, dispatch]);
+
+  useEffect(() => {
+    if (hasFetchedAppointments) {
+      const filtered = appointments
+        .filter(app => filterAppointments(app, filters))
+        .sort((a, b) => sortAppointments(a, b, filters));
+
+      setFilteredAppointments(filtered);
+    }
+  }, [appointments, filters, hasFetchedAppointments]);
 
   function closeModal(): void {
     setModal(false);
@@ -24,44 +76,12 @@ export default function AppointmentsList({ filters }: AppointmentsListProps) {
     setModal(true);
   }
 
-  const hideScrollbarStyle: React.CSSProperties = {
-    overflowY: 'scroll',
-    scrollbarWidth: 'none',
-    msOverflowStyle: 'none',
-  };
-
-  function filterAppointments(appointment: IAppointment): boolean {
-    const appointmentTime = dayjs.utc(appointment.assignedAt).format('hh:mm a');
-
-    const passesTimeFilter =
-      filters.time.includes(filterConfig.time.defaultValue) || filters.time.includes(appointmentTime);
-
-    const passesStatusFilter =
-      filters.statuses.includes(filterConfig.statuses.defaultValue) || filters.statuses.includes(appointment.status);
-
-    const fullName = `Dr. ${appointment.doctor!.firstName} ${appointment.doctor!.lastName}`;
-    const passesDoctorFilter =
-      filters.doctors.includes(filterConfig.doctors.defaultValue) || filters.doctors.includes(fullName);
-
-    return passesTimeFilter && passesStatusFilter && passesDoctorFilter;
-  }
-
-  function sortAppointments(a: IAppointment, b: IAppointment): number {
-    if (filters.order.includes('Latest to oldest')) {
-      return dayjs(b.assignedAt).valueOf() - dayjs(a.assignedAt).valueOf();
-    } else {
-      return dayjs(a.assignedAt).valueOf() - dayjs(b.assignedAt).valueOf();
-    }
-  }
-
-  const filteredAppointments = appointments.filter(filterAppointments).sort(sortAppointments);
-
   return (
     <>
-      <div style={hideScrollbarStyle} className='flex flex-1 flex-col gap-y-4 p-1'>
+      <div className='no-scrollbar flex flex-1 flex-col gap-y-4 overflow-y-scroll p-1'>
         {filteredAppointments.map(appointment => (
           <li key={appointment.id}>
-            <AppointmentsListItem appointment={appointment} openModal={() => openModal(appointment)} />
+            <AppointmentsListItem appointment={appointment} openModal={openModal} />
           </li>
         ))}
       </div>

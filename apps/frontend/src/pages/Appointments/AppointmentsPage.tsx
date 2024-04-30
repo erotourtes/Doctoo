@@ -8,6 +8,8 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import dayjs from 'dayjs';
 import AppointmentsFilters from './Components/AppointmentsFilters/AppointmentsFilters';
 import { getAppointmentsByPatientId } from '@/app/appointment/AppointmentThunks';
+import NoAppointments from './NoAppointments';
+import { filterReducer } from './filterReducer';
 
 export type FilterState = {
   time: string[];
@@ -39,7 +41,7 @@ export default function AppointmentsPage() {
   }, []);
 
   const meetingsForDay = appointments.map(appointment => ({
-    date: dayjs(appointment.assignedAt).toDate(),
+    date: dayjs(appointment.startedAt).toDate(),
     status: appointment.status.toUpperCase(),
   }));
 
@@ -47,36 +49,6 @@ export default function AppointmentsPage() {
 
   function handleSubmit(value: string) {
     setSearch(value);
-  }
-
-  function filterReducer(state: FilterState, action: FilterAction): FilterState {
-    switch (action.type) {
-      case 'SET_TIME':
-        return { ...state, time: action.payload };
-      case 'SET_STATUSES':
-        return { ...state, statuses: action.payload };
-      case 'SET_DOCTORS':
-        return { ...state, doctors: action.payload };
-      case 'SET_ORDER':
-        return { ...state, order: action.payload };
-      default:
-        return state;
-    }
-  }
-
-  function NoAppointments() {
-    return (
-      <div className='flex h-full flex-col items-center justify-center gap-y-4 bg-white'>
-        <div className='text-center'>
-          <p className='text-base font-normal text-text'>Seems like you don’t have any appointments.</p>
-          <p className='text-base font-normal text-text'>Let’s find a doctor and book one </p>
-        </div>
-
-        <Button type='secondary' btnType='button'>
-          Find a doctor
-        </Button>
-      </div>
-    );
   }
 
   return (
@@ -92,7 +64,11 @@ export default function AppointmentsPage() {
       <section className='flex h-screen justify-between gap-x-5'>
         <div className='flex h-4/5 flex-1 flex-col gap-y-6'>
           <AppointmentsFilters state={filterState} dispatch={dispatchFilterAction} appointments={appointments} />
-          {appointments.length === 0 ? <NoAppointments /> : <AppointmentsList filters={filterState} />}
+          {appointments.length === 0 ? (
+            <NoAppointments findDoctor={() => {}} />
+          ) : (
+            <AppointmentsList appointments={appointments} filters={filterState} />
+          )}
         </div>
 
         <div className=''>

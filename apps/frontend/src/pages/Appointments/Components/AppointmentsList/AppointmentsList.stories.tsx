@@ -92,6 +92,7 @@ export const Default: Story = {
         time: ['All time'],
         order: ['Oldest to latest'],
       }}
+      appointments={[]}
     />
   ),
 };

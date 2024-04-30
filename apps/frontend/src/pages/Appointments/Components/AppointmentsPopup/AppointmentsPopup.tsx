@@ -10,6 +10,7 @@ type AppointmentPopupProps = { appointment: IAppointment };
 
 export default function AppointmentsPopup({ appointment }: AppointmentPopupProps) {
   const [rescheduleIsOpen, setRescheduleIsOpen] = useState(false);
+
   function closeReschedule() {
     setRescheduleIsOpen(false);
   }
@@ -17,7 +18,7 @@ export default function AppointmentsPopup({ appointment }: AppointmentPopupProps
     setRescheduleIsOpen(true);
   }
 
-  const { doctor, assignedAt, status, videoRecordKey, notes, patientId, doctorId, id } = appointment;
+  const { doctor, startedAt, status, videoRecordKey, notes, patientId, doctorId, id } = appointment;
   const { firstName, lastName, avatarKey, payrate, about, rating, reviewsCount } = doctor!;
   const fullName = `Dr. ${firstName} ${lastName}`;
 
@@ -25,7 +26,7 @@ export default function AppointmentsPopup({ appointment }: AppointmentPopupProps
     <>
       <div className='flex flex-col justify-between gap-y-8'>
         <div className='flex flex-col gap-y-4'>
-          <PopupHeader assignedAt={assignedAt} status={status} />
+          <PopupHeader startTime={startedAt} status={status} />
           <PopupBody
             openReschedule={openReschedule}
             fullName={fullName}
@@ -45,7 +46,7 @@ export default function AppointmentsPopup({ appointment }: AppointmentPopupProps
         </div>
 
         <div className='flex gap-x-4 self-end'>
-          <AppointmentButtons componentName='popup' status={status} appointmentId={id} />
+          <AppointmentButtons componentName='popup' appointment={appointment} openBookModal={openReschedule} />
         </div>
       </div>
 
@@ -55,6 +56,7 @@ export default function AppointmentsPopup({ appointment }: AppointmentPopupProps
         scheduleInfo={{
           patientId: patientId,
           doctorId: doctorId,
+          appointmentId: id,
           doctorFirstName: firstName,
           doctorLastName: lastName,
           payrate: payrate,
@@ -63,6 +65,7 @@ export default function AppointmentsPopup({ appointment }: AppointmentPopupProps
           rating: 5,
           reviewsCount: 128,
         }}
+        rescheduling={true}
       />
     </>
   );

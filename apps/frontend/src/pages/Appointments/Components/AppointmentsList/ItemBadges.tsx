@@ -9,26 +9,24 @@ type StatusColors = {
 const statusColors: StatusColors = {
   PENDING_PAYMENT: { badgeColor: 'bg-orange-light', labelColor: 'text-orange' },
   PLANNED: { badgeColor: 'bg-main-light', labelColor: 'text-main' },
-  COMPLETED: { badgeColor: 'bg-orange-light', labelColor: 'text-orange' },
+  COMPLETED: { badgeColor: 'bg-main-light', labelColor: 'text-main' },
   CANCELED: { badgeColor: 'bg-error-light', labelColor: 'text-error' },
 };
 
-type AppointmentBadgesProps = { status: AppointmentStatus; paymentInvoiceKey?: string; paymentReceiptKey?: string };
+type AppointmentBadgesProps = { status: AppointmentStatus; paymentReceiptKey?: string };
 
-export default function AppointmentBadges({ status, paymentInvoiceKey, paymentReceiptKey }: AppointmentBadgesProps) {
+export default function AppointmentBadges({ status, paymentReceiptKey }: AppointmentBadgesProps) {
   return (
     <div className='flex gap-x-3'>
       <Badge badgeColor={statusColors[status].badgeColor} labelColor={statusColors[status].labelColor}>
-        {status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()}
+        {status === 'PENDING_PAYMENT'
+          ? 'Waiting for payment'
+          : status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()}
       </Badge>
-      {paymentReceiptKey !== undefined && (
-        <Badge badgeColor={statusColors['COMPLETED'].badgeColor} labelColor={statusColors['COMPLETED'].labelColor}>
+
+      {paymentReceiptKey !== null && status !== 'PENDING_PAYMENT' && (
+        <Badge badgeColor='bg-orange-light' labelColor='text-orange'>
           Paid
-        </Badge>
-      )}
-      {paymentInvoiceKey !== undefined && paymentReceiptKey === undefined && (
-        <Badge badgeColor={statusColors['PLANNED'].badgeColor} labelColor={statusColors['PLANNED'].labelColor}>
-          Waiting for payment
         </Badge>
       )}
     </div>

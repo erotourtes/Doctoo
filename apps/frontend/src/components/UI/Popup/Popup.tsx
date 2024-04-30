@@ -30,7 +30,7 @@ export default function PopupDoctoo({
   }, [popupIsOpen]);
 
   return (
-    <Popup open={popupIsOpen} onClose={closePopup}>
+    <Popup open={popupIsOpen} onClose={closePopup} closeOnDocumentClick={false}>
       <div className={`flex h-screen w-screen bg-black opacity-20 ${backdropClassName}`} onClick={closePopup}></div>
 
       <article

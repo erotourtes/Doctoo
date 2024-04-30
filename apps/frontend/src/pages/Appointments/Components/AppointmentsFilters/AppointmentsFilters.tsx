@@ -1,9 +1,17 @@
 import OptionalSelect from '@/components/UI/Select/OptionalSelect';
-import type { FilterState, FilterAction } from '../../AppointmentsPage';
+import type { FilterState, FilterAction } from '../../filterReducer';
 import type { IAppointment } from '@/dataTypes/Appointment';
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
 import AppointmentsSelectButton from './AppointmentsSelectButton';
+
+function toTitleCase(str: string) {
+  return str
+    .toLowerCase()
+    .split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
 
 type AppointmentsFiltersProps = {
   state: FilterState;
@@ -25,7 +33,7 @@ export const filterConfig: FilterConfig = {
   time: {
     defaultValue: 'All time',
     getOptions: (appointments: IAppointment[]) => [
-      ...new Set(appointments.map(appointment => dayjs.utc(appointment.assignedAt).format('hh:mm a'))),
+      ...new Set(appointments.map(appointment => dayjs.utc(appointment.startedAt).format('hh:mm a'))),
     ],
   },
   statuses: {
@@ -36,7 +44,9 @@ export const filterConfig: FilterConfig = {
     defaultValue: 'All doctors',
     getOptions: (appointments: IAppointment[]) => [
       ...new Set(
-        appointments.map(appointment => `Dr. ${appointment.doctor!.firstName} ${appointment.doctor!.lastName}`),
+        appointments
+          .filter(appointment => appointment.doctor)
+          .map(appointment => `Dr. ${appointment.doctor!.firstName} ${appointment.doctor!.lastName}`),
       ),
     ],
   },
@@ -59,7 +69,10 @@ export default function AppointmentsFilters({ state, dispatch, appointments }: A
 
     for (const filterType of Object.keys(filterTypeToActionType)) {
       const filterOptions = filterConfig[filterType].getOptions(appointments);
-      options[filterType] = filterOptions.map((option, index) => ({ id: `${filterType}-${index}`, name: option }));
+      options[filterType] = filterOptions.map((option, index) => ({
+        id: `${filterType}-${index}`,
+        name: filterType === 'statuses' ? toTitleCase(option) : option,
+      }));
     }
 
     return options;

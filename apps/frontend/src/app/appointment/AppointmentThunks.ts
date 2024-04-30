@@ -1,9 +1,16 @@
-import { instance } from '@/api/axios.api';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import type { AxiosResponse } from 'axios';
+import type { AxiosError } from 'axios';
 import type { AppointmentStatus, IAppointment, ICreateAppointment } from '../../dataTypes/Appointment';
 import api from '../api';
-import { deleteAppointment, setAppointments, setChangeAppointmentStatus, setNewAppointment } from './AppointmentSlice';
+import {
+  deleteAppointment,
+  setAppointments,
+  setChangeAppointmentStatus,
+  setNewAppointment,
+  setResheduleAppointment,
+} from './AppointmentSlice';
+import dayjs from 'dayjs';
+import handleError from '@/api/handleError.api';
 
 export const getAppointmentsByPatientId = createAsyncThunk('appointment', async (patient_id: string, { dispatch }) => {
   try {
@@ -16,8 +23,7 @@ export const getAppointmentsByPatientId = createAsyncThunk('appointment', async 
       dispatch(setAppointments(res));
     }
   } catch (e) {
-    const error = e as Error;
-    throw error;
+    handleError(e as Error | AxiosError);
   }
 });
 
@@ -30,8 +36,7 @@ export const getMyAppointments = createAsyncThunk('appointment', async (_, { dis
       dispatch(setAppointments(res));
     }
   } catch (e) {
-    const error = e as Error;
-    throw error;
+    handleError(e as Error | AxiosError);
   }
 });
 
@@ -39,43 +44,64 @@ export const createAppointment = createAsyncThunk(
   'appointment',
   async (appointment: ICreateAppointment, { dispatch }) => {
     try {
-      const response: AxiosResponse<IAppointment> = await instance.post(`/appointment`, appointment);
-      if (response.status === 201) {
-        dispatch(setNewAppointment(response.data));
+      const { error, data } = await api.POST(`/appointment`, {
+        body: { ...appointment },
+      });
+      if (!error) {
+        dispatch(setNewAppointment(data));
       }
     } catch (e) {
-      const error = e as Error;
-      throw error;
+      handleError(e as Error | AxiosError);
     }
   },
 );
 
 export const changeAppointmentStatus = createAsyncThunk(
   'appointment',
-
   async (data: { id: string; status: AppointmentStatus }, { dispatch }) => {
     try {
-      const response: AxiosResponse<string> = await instance.patch(`/appointment/${data.id}`, {
-        status: data.status,
+      const { error, data: responseData } = await api.PATCH(`/appointment/{id}`, {
+        params: { path: { id: data.id } },
+        body: { status: data.status },
       });
-      if (response.status === 200) {
-        dispatch(setChangeAppointmentStatus(data));
+      if (!error) {
+        dispatch(setChangeAppointmentStatus({ id: responseData.id, status: responseData.status as AppointmentStatus }));
       }
     } catch (e) {
-      const error = e as Error;
-      throw error;
+      handleError(e as Error | AxiosError);
+    }
+  },
+);
+
+export const rescheduleAppointment = createAsyncThunk(
+  'appointment',
+  async (request: { id: string; newDate: string }, { dispatch }) => {
+    try {
+      const startedAt = dayjs.utc(request.newDate);
+      const endedAt = startedAt.add(1, 'hour').format('YYYY-MM-DDTHH:mm:ss[Z]');
+
+      const { error, data } = await api.PATCH(`/appointment/{id}`, {
+        params: { path: { id: request.id } },
+        body: { startedAt: startedAt.format('YYYY-MM-DDTHH:mm:ss[Z]'), endedAt },
+      });
+      if (!error) {
+        dispatch(setResheduleAppointment({ id: data.id, newDate: data.startedAt }));
+      }
+    } catch (e) {
+      handleError(e as Error | AxiosError);
     }
   },
 );
 
 export const deleteAppointmentById = createAsyncThunk('appointment', async (appointment_id: string, { dispatch }) => {
   try {
-    const response = await instance.delete(`/appointment/${appointment_id}`);
-    if (response.status === 204) {
+    const { error } = await api.DELETE(`/appointment/{id}`, {
+      params: { path: { id: appointment_id } },
+    });
+    if (!error) {
       dispatch(deleteAppointment(appointment_id));
     }
   } catch (e) {
-    const error = e as Error;
-    throw error;
+    handleError(e as Error | AxiosError);
   }
 });

@@ -19,12 +19,21 @@ type ScheduleProps = {
     about: string;
     rating: number;
     reviewsCount: number;
+    appointmentId?: string;
   };
   currentDay?: Dayjs;
+  rescheduling?: boolean;
 };
 
-export default function Schedule({ scheduleInfo, closePopup, scheduleIsOpen, currentDay = dayjs() }: ScheduleProps) {
-  const { doctorFirstName, doctorLastName, payrate, avatarKey, about, doctorId, patientId } = scheduleInfo;
+export default function Schedule({
+  scheduleInfo,
+  closePopup,
+  scheduleIsOpen,
+  currentDay = dayjs(),
+  rescheduling,
+}: ScheduleProps) {
+  const { doctorFirstName, doctorLastName, payrate, avatarKey, about, doctorId, patientId, appointmentId } =
+    scheduleInfo;
   const doctorFullName = `Dr. ${doctorFirstName} ${doctorLastName}`;
 
   return (
@@ -43,7 +52,14 @@ export default function Schedule({ scheduleInfo, closePopup, scheduleIsOpen, cur
         specialization='Specialization'
       />
 
-      <ScheduleBook currentDay={currentDay} doctorId={doctorId} patientId={patientId} closePopup={closePopup} />
+      <ScheduleBook
+        currentDay={currentDay}
+        doctorId={doctorId}
+        patientId={patientId}
+        closePopup={closePopup}
+        appointmentId={appointmentId}
+        rescheduling={rescheduling}
+      />
 
       <ScheduleAbout about={about} />
 

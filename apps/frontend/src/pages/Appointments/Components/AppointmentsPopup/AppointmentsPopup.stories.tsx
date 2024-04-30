@@ -7,6 +7,7 @@ import { useArgs } from '@storybook/preview-api';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Provider } from 'react-redux';
 import AppointmentsPopup from './AppointmentsPopup';
+import { BrowserRouter } from 'react-router-dom';
 
 const mockAppointments = [
   {
@@ -146,7 +147,7 @@ export const Default: Story = {
     }
 
     return (
-      <>
+      <BrowserRouter>
         <Button type='primary' onClick={openPopup}>
           Open Pop Up
         </Button>
@@ -159,7 +160,7 @@ export const Default: Story = {
         >
           <AppointmentsPopup appointment={appointment} />
         </PopupDoctoo>
-      </>
+      </BrowserRouter>
     );
   },
 };
