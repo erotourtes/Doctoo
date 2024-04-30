@@ -191,9 +191,7 @@ describe('PatientService', () => {
 
     const result = await patientService.createPatientConditions(patient.id, { conditionIds: [condition.id] });
 
-    const expected = 1;
-
-    expect(result).toEqual(expected);
+    expect(result).toHaveProperty('count', 1);
   });
 
   it('should return a patient condition list', async () => {
