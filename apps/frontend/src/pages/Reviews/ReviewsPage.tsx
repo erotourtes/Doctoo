@@ -6,9 +6,9 @@ import { fetchReviewsByDoctor } from '@/app/review/ReviewThunks';
 import { getDoctorData } from '@/app/doctor/DoctorThunks';
 import Schedule from '@/components/UI/Schedule/Schedule';
 import ReviewsBody from './ReviewsBody';
-import ReviewsPagination from './ReviewsPagination';
 import { IDoctor } from '@/dataTypes/Doctor';
 import { IReview } from '@/dataTypes/Review';
+import { Pagination } from '@/components/UI/Pagination/Pagination';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -28,7 +28,6 @@ export default function ReviewsPage() {
   const [totalReviewsCount, setTotalReviewsCount] = useState(0);
 
   const reviewsPerPage = 3;
-  const totalPages = Math.ceil(totalReviewsCount / reviewsPerPage);
 
   function openSchedule() {
     setScheduleOpened(true);
@@ -68,7 +67,14 @@ export default function ReviewsPage() {
 
           <ReviewsBody reviews={reviews} />
 
-          <ReviewsPagination currentPage={currentPage} onPageChange={handlePageChange} totalPages={totalPages} />
+          <div className='self-center'>
+            <Pagination
+              totalItems={totalReviewsCount}
+              itemsPerPage={reviewsPerPage}
+              currentPage={currentPage}
+              onClick={handlePageChange}
+            />
+          </div>
 
           <Schedule
             closePopup={closeSchedule}
