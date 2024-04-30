@@ -23,11 +23,15 @@ import JWTGuard from '../auth/gaurds/jwt.guard';
 import { UserDec } from '../user/user.decorator';
 import { UnauthorizedResponse } from '../utils/UnauthorizedResponse';
 import { ResponseDoctorListDto } from './dto/response-list.dto';
+import { PatientService } from 'src/patient/patient.service';
 
 @ApiTags('Doctor Endpoints')
 @Controller('doctor')
 export class DoctorController {
-  constructor(private readonly doctorService: DoctorService) {}
+  constructor(
+    private readonly doctorService: DoctorService,
+    private readonly patientService: PatientService,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'Create doctor' })
@@ -48,16 +52,6 @@ export class DoctorController {
     return this.doctorService.getDoctors(query);
   }
 
-  @Get('doctors/:id')
-  @ApiOperation({ summary: 'Get all doctors by patient' })
-  @ApiOkResponse({ type: ResponseDoctorDto, isArray: true, description: RESPONSE_STATUS.SUCCESS })
-  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique patient id.' })
-  async getPatientDoctors(@Param('id') id: string): Promise<ResponseDoctorDto[]> {
-    return await this.doctorService.getPatientDoctors(id);
-  }
-
   @Get('doctors/my')
   @UseGuards(JWTGuard)
   @ApiOperation({ summary: 'Get my doctors' })
@@ -67,7 +61,18 @@ export class DoctorController {
   @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
   async getMyDoctors(@UserDec() userInfo): Promise<ResponseDoctorDto[]> {
-    return await this.doctorService.getPatientDoctors(userInfo.id);
+    const patient = await this.patientService.getPatientByUserId(userInfo.id);
+    return await this.doctorService.getPatientDoctors(patient.id);
+  }
+
+  @Get('doctors/:id')
+  @ApiOperation({ summary: 'Get all doctors by patient' })
+  @ApiOkResponse({ type: ResponseDoctorDto, isArray: true, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique patient id.' })
+  async getPatientDoctors(@Param('id') id: string): Promise<ResponseDoctorDto[]> {
+    return await this.doctorService.getPatientDoctors(id);
   }
 
   @Get(':id')
