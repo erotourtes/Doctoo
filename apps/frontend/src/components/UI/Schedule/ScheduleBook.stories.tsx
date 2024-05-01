@@ -40,7 +40,7 @@ export const Default: Story = {
     closePopup: () => {},
     currentDay: dayjs('2024-04-28'),
     openSuccessulModal: () => {},
-    setAppointmentSelectedDate: () => {}
+    setAppointmentSelectedDate: () => {},
   },
   render: function Render({ patientId, currentDay }) {
     const dispatch = useAppDispatch();
@@ -49,6 +49,15 @@ export const Default: Story = {
       dispatch(getAppointmentsByPatientId(patientId));
     }, [dispatch]);
 
-    return <ScheduleBook currentDay={currentDay} doctorId='3' patientId='7' closePopup={() => {}} openSuccessulModal={() => {}} setAppointmentSelectedDate={() => {}} />;
+    return (
+      <ScheduleBook
+        currentDay={currentDay}
+        doctorId='3'
+        patientId='7'
+        closePopup={() => {}}
+        openSuccessulModal={() => {}}
+        setAppointmentSelectedDate={() => {}}
+      />
+    );
   },
 };
