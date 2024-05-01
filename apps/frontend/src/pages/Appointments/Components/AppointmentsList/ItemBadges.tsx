@@ -8,7 +8,7 @@ type StatusColors = {
 
 const statusColors: StatusColors = {
   PENDING_PAYMENT: { badgeColor: 'bg-orange-light', labelColor: 'text-orange' },
-  PLANNED: { badgeColor: 'bg-main-light', labelColor: 'text-main' },
+  PLANNED: { badgeColor: 'bg-orange-light', labelColor: 'text-orange' },
   COMPLETED: { badgeColor: 'bg-main-light', labelColor: 'text-main' },
   CANCELED: { badgeColor: 'bg-error-light', labelColor: 'text-error' },
 };

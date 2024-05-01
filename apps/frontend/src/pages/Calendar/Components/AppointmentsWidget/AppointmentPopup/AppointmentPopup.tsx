@@ -1,10 +1,11 @@
-import Icon from '@UI/Icon/Icon';
-import AppointmentPopupButtons from './AppointmentPopupBtns';
-import AppointmentPopupHeader from './AppointmentPopupHeader';
-import dayjs from 'dayjs';
-import { PopupDoctoo, Tag } from '@/components/UI';
+import CalendarPopupBtns from './CalendarPopupBtns';
+import { PopupDoctoo } from '@/components/UI';
 import type { IAppointment } from '@/dataTypes/Appointment';
 import type { IDoctor } from '@/dataTypes/Doctor';
+import CalendarPopupHeader from './CalendarPopupHeader';
+import CalendarPopupBody from './CalendarPopupBody';
+import Schedule from '@/components/UI/Schedule/Schedule';
+import { useState } from 'react';
 
 type AppointmentPopupProps = {
   appointmentModal: boolean;
@@ -13,72 +14,81 @@ type AppointmentPopupProps = {
 };
 
 export default function AppointmentPopup({ appointmentModal, closeModal, selectedAppointment }: AppointmentPopupProps) {
-  const appointmentTime = dayjs(selectedAppointment?.assignedAt).format('MMMM D, h:mm a');
-  const appointmentStatus = selectedAppointment?.status;
+  const [rescheduleIsOpen, setRescheduleIsOpen] = useState(false);
+  const [bookAgainIsOpen, setBookAgainIsOpen] = useState(false);
+  const [bookMode, setBookMode] = useState({
+    book: false,
+    reschedule: false,
+  });
 
-  function cancelAppointment() {
-    console.log('Appointment cancelled');
+  function closeReschedule() {
+    setRescheduleIsOpen(false);
   }
 
-  function bookAgain() {
-    console.log('Book again');
+  function openReschedule() {
+    setBookMode({ book: false, reschedule: true });
+    setRescheduleIsOpen(true);
   }
 
-  const doctor = selectedAppointment?.doctor;
-  const { avatarKey, firstName, lastName, specializations, reviewsCount } = doctor as IDoctor;
-  const name = `Dr. ${firstName} ${lastName}`;
+  function openBookAgain() {
+    setBookMode({ book: true, reschedule: false });
+    setBookAgainIsOpen(true);
+  }
+
+  function closeBookAgain() {
+    setBookAgainIsOpen(false);
+  }
+
+  const { startedAt, status, doctorId, patientId, id } = selectedAppointment;
+
+  const doctor = selectedAppointment.doctor;
+  const { avatarKey, firstName, lastName, reviewsCount, rating, about, payrate } = doctor as IDoctor;
+  const fullName = `Dr. ${firstName} ${lastName}`;
 
   return (
     selectedAppointment && (
-      <PopupDoctoo
-        popupIsOpen={appointmentModal}
-        closePopup={closeModal}
-        modalFullClassName='max-w-[700px]'
-        modalBodyClassName='flex max-w-[604px] flex-col gap-7'
-      >
-        <AppointmentPopupHeader appointmentTime={appointmentTime} appointmentStatus={appointmentStatus!} />
+      <>
+        <PopupDoctoo
+          popupIsOpen={appointmentModal}
+          closePopup={closeModal}
+          modalFullClassName='max-w-[700px]'
+          modalBodyClassName='flex max-w-[604px] flex-col gap-y-8'
+        >
+          <div>
+            <CalendarPopupHeader startTime={startedAt} status={status} />
 
-        <div className='flex flex-col gap-6 sm:flex-row sm:justify-start'>
-          <img src={avatarKey} alt={name} className='max-h-28 max-w-28 rounded-lg' />
-
-          <div className='flex w-full flex-col gap-4'>
-            <div className='flex flex-col gap-y-2'>
-              <div className='flex flex-col-reverse items-start justify-between gap-4 text-lg sm:flex-row'>
-                <p className='font-medium text-black'>
-                  Appointment with <span className='font-semibold text-main'>{name}</span>
-                </p>
-
-                <button className='flex items-end justify-center gap-x-1'>
-                  <Icon variant='edit' className='h-[18px] w-[18px] text-grey-1' />
-                  <span className='text-sm font-medium text-grey-1'>Reschedule</span>
-                </button>
-              </div>
-
-              <span className='text-base font-medium text-grey-1'>
-                {specializations ? specializations[0]?.name : 'Doctor'}
-              </span>
-            </div>
-
-            <Tag icon={false} text='Top doctor' className='w-fit' />
-
-            {reviewsCount > 0 && (
-              <div className='flex flex-col items-start gap-3 sm:flex-row sm:items-center'>
-                <div className='flex cursor-pointer gap-x-1'>
-                  {Array.from({ length: 5 }, (_, i) => (
-                    <Icon key={i} variant='star' className='h-[18px] w-[18px] text-main-darker' />
-                  ))}
-                </div>
-
-                <a href='#' className='text-black underline'>
-                  {reviewsCount}
-                </a>
-              </div>
-            )}
+            <CalendarPopupBody
+              fullName={fullName}
+              avatarKey={avatarKey}
+              openReschedule={openReschedule}
+              doctorId={doctorId}
+              rating={rating}
+              reviewsCount={reviewsCount}
+              status={status}
+            />
           </div>
-        </div>
 
-        <AppointmentPopupButtons bookAgain={bookAgain} cancelAppointment={cancelAppointment} />
-      </PopupDoctoo>
+          <CalendarPopupBtns openBookModal={openBookAgain} appointmentId={id} />
+        </PopupDoctoo>
+
+        <Schedule
+          closePopup={bookMode.reschedule ? closeReschedule : closeBookAgain}
+          scheduleIsOpen={bookMode.reschedule ? rescheduleIsOpen : bookAgainIsOpen}
+          scheduleInfo={{
+            patientId: patientId,
+            doctorId: doctorId,
+            appointmentId: id,
+            doctorFirstName: firstName,
+            doctorLastName: lastName,
+            payrate: payrate,
+            avatarKey: avatarKey,
+            about: about,
+            rating: 5,
+            reviewsCount: 128,
+          }}
+          rescheduling={bookMode.reschedule}
+        />
+      </>
     )
   );
 }

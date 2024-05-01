@@ -39,7 +39,7 @@ export default function BigCalendarBody({ meetingsForDay, currentMonth, handleDa
       <div className='grid grid-cols-7 gap-1 rounded-xl pl-1 pr-1 sm:gap-[13px]'>
         {days.map((day, index) => {
           const meetings =
-            meetingsForDay && meetingsForDay.filter(meeting => day.isSame(meeting.assignedAt, 'day')).slice(0, 3);
+            meetingsForDay && meetingsForDay.filter(meeting => day.isSame(meeting.startedAt, 'day')).slice(0, 3);
 
           const isToday = day.isSame(today, 'day');
           const hasMeetings = meetings && meetings.length > 0;
@@ -47,12 +47,11 @@ export default function BigCalendarBody({ meetingsForDay, currentMonth, handleDa
             meetings && meetings.length > 0
               ? `Dr. ${meetings[0]?.doctor?.firstName || ''} ${meetings[0]?.doctor?.lastName || ''}`
               : '';
-
           return (
             <div
               onClick={() => chooseAppointments(day)}
               className={`flex aspect-[1] h-auto min-h-[35px]
-              w-auto min-w-[35px] cursor-pointer select-none flex-col justify-between rounded-xl border border-transparent bg-white text-base font-normal hover:border hover:border-main md:p-1 lg:px-2.5 lg:pb-3 lg:pt-2.5 xl:h-[116px] xl:w-[116px] ${day.month() === currentMonth?.month() ? 'text-text' : 'text-grey-3'}  ${selectedDate && selectedDate.isSame(day, 'day') && 'border-[#089BAB]'}`}
+              w-auto min-w-[35px] cursor-pointer select-none flex-col justify-between rounded-xl border border-transparent bg-white text-base font-normal hover:border hover:border-main md:p-1 lg:px-2.5 lg:pb-3 lg:pt-2.5 xl:h-[116px] xl:w-[116px] ${day.month() === currentMonth?.month() ? 'text-text' : 'text-grey-3'}  ${selectedDate && selectedDate.isSame(day, 'day') && 'ring-2 ring-main'}`}
               key={index}
             >
               <p

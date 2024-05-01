@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import PageHeader from '../PageHeader';
 import BigCalendar from './Components/BigCalendar/BigCalendar';
 import AppointmentsWidget from './Components/AppointmentsWidget/AppointmentsWidget';
@@ -15,18 +15,24 @@ export default function CalendarPage() {
   const [appointmentsForDay, setAppointmentsForDay] = useState<IAppointment[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date>(today);
 
-  const allAppointments = useAppSelector(state => state.appointment.appointments);
+  const appointments = useAppSelector(state => state.appointment.appointments);
+
+  const allPlannedAppointments = useMemo(
+    () => appointments.filter(appointment => appointment.status === 'PLANNED'),
+    [appointments],
+  );
 
   useEffect(() => {
     dispatch(getMyAppointments());
   }, [dispatch]);
 
   useEffect(() => {
-    const filteredAppointments = allAppointments.filter(appointment =>
-      dayjs(appointment.assignedAt).isSame(selectedDate, 'day'),
+    const filteredAppointments = allPlannedAppointments.filter(appointment =>
+      dayjs(appointment.startedAt).isSame(selectedDate, 'day'),
     );
+
     setAppointmentsForDay(filteredAppointments);
-  }, [selectedDate, allAppointments]);
+  }, [selectedDate, allPlannedAppointments]);
 
   function handleDateChange(newDate: Date) {
     setSelectedDate(newDate);
@@ -59,7 +65,7 @@ export default function CalendarPage() {
 
       <section className='flex w-full flex-col-reverse gap-12 sm:flex-col md:justify-between md:gap-4 lg:flex-row'>
         <AppointmentsWidget appointmentsForDay={appointmentsForDay} selectedDate={selectedDate} />
-        <BigCalendar meetingsForDay={allAppointments} chooseDate={handleDateChange} />
+        <BigCalendar meetingsForDay={allPlannedAppointments} chooseDate={handleDateChange} />
       </section>
     </div>
   );
