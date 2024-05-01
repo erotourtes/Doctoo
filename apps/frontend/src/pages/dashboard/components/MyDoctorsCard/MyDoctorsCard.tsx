@@ -1,7 +1,7 @@
 import { Button } from '@/components/UI/Button/Button';
 import Icon from '@/components/UI/Icon/Icon';
 import type { IDoctor } from '@/dataTypes/Doctor';
-import DoctorCard from '../DoctorCard/DoctorCard';
+import ShortInfoCard from '../ShortInfoCard/ShortInfoCard';
 import { useNavigate } from 'react-router-dom';
 
 type AppointmentCardProps = {
@@ -17,7 +17,7 @@ export default function MyDoctorsCard({ doctors }: AppointmentCardProps) {
           <h3 className='text-lg font-medium leading-6'>My doctors</h3>
           {doctors && doctors?.length > 0 ? (
             <Button
-              className='ml-auto mr-0  h-[28px]  rounded-2xl border-none bg-[#F1F6F9] px-[18px] text-[#454F50]'
+              className='ml-auto mr-0 h-[28px] rounded-2xl border-none bg-[#F1F6F9] px-[18px] text-[#454F50]'
               type={'secondary'}
               onClick={() => navigate(`/my-doctors`)}
             >
@@ -34,7 +34,13 @@ export default function MyDoctorsCard({ doctors }: AppointmentCardProps) {
             {doctors
               ?.slice(0, 2)
               .map((doctor: IDoctor, key: number) => (
-                <DoctorCard doctor={doctor} classNames='bg-[#f1f6f9] w-full rounded-xl mb-[14px]' key={key} />
+                <ShortInfoCard
+                  fullName={`Dr. ${doctor.firstName + ' ' + doctor.lastName}`}
+                  about={doctor.about}
+                  avatarKey={doctor.avatarKey}
+                  classNames='bg-[#f1f6f9] w-full rounded-xl mb-[14px]'
+                  key={key}
+                />
               ))}
           </div>
         ) : (

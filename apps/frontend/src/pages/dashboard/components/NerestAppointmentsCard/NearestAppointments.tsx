@@ -13,7 +13,7 @@ export default function NearestAppointmentsComponent({ appointments }: Appointme
         <h3>Nearest appointments</h3>
         {appointments?.length > 0 ? (
           appointments.map(currentAppointment => (
-            <AppointmentCard appointment={currentAppointment} key={currentAppointment.id} />
+            <AppointmentCard appointment={currentAppointment} key={currentAppointment.id} withQuickNotes={false} />
           ))
         ) : (
           <div

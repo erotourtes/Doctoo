@@ -1,76 +1,10 @@
-import PageHeader from '../PageHeader';
-import NearestAppointmentsComponent from './components/NerestAppointmentsCard/NearestAppointments';
-import { Calendar } from '@/components/UI/Calendar/Calendar';
-import MyDoctorsCard from './components/MyDoctorsCard/MyDoctorsCard';
-import { useAppSelector, useAppDispatch } from '@/app/hooks';
-import { getMyDoctorData } from '@/app/doctor/DoctorThunks';
-import { useEffect, useState } from 'react';
-import NotificationsComponent from './components/NotificationsComponent/NotificationsComponent';
-import { AppointmentStatus, type IAppointment } from '@/dataTypes/Appointment';
-import dayjs from 'dayjs';
-import { Button, InputSearch } from '@/components/UI';
-import { getMyAppointments } from '@/app/appointment/AppointmentThunks';
+import { useAppSelector } from '@/app/hooks';
+import PatientDashboard from './components/PatientDashboard/PatientDashboard';
+import { Role } from '@/dataTypes/User';
+import DoctorDashboard from './components/DoctorDashboard/DoctorDashboard';
 
 const DashboardPage = () => {
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(getMyDoctorData());
-    dispatch(getMyAppointments());
-  }, [dispatch]);
-
-  const [search, setSearch] = useState('');
-
-  function handleSubmit(value: string) {
-    setSearch(value);
-  }
-
-  const doctors = useAppSelector(state => state.doctor.doctors);
-  const appointments = useAppSelector(state => state.appointment.appointments);
-
-  const nearestAppointments = appointments
-    .filter((appointment: IAppointment) => {
-      const appointmentDate = dayjs(appointment.assignedAt);
-      const nextSevenDays = dayjs().add(7, 'day');
-      return (
-        appointment.status === AppointmentStatus.PLANNED &&
-        (appointmentDate.isBefore(nextSevenDays) || appointmentDate.isSame(nextSevenDays, 'day'))
-      );
-    })
-    .sort((a: IAppointment, b: IAppointment) => {
-      return dayjs(a.assignedAt).diff(dayjs(b.assignedAt));
-    })
-    .slice(0, 5);
-
-  return (
-    <div>
-      <PageHeader iconVariant={'dashboard'} title='Dashboard'>
-        <InputSearch value={search} setValue={handleSubmit} variant='white' placeholder='Search by doctor, symptom' />
-
-        <Button type='primary' btnType='button'>
-          Find a doctor
-        </Button>
-      </PageHeader>
-
-      <div className='flex flex-row'>
-        <section className='flex w-full min-w-[694px] flex-col  overflow-y-auto bg-background pt-7'>
-          <NearestAppointmentsComponent appointments={nearestAppointments} />
-
-          <NotificationsComponent />
-        </section>
-
-        <section className='flex flex-col pt-7'>
-          <Calendar
-            meetingsForDay={nearestAppointments.map((appointment: IAppointment) => ({
-              date: new Date(appointment.startedAt),
-              status: appointment.status,
-            }))}
-          />
-
-          <MyDoctorsCard doctors={doctors} />
-        </section>
-      </div>
-    </div>
-  );
+  const user = useAppSelector(state => state.user.data);
+  return <div>{user.role == Role.PATIENT ? <PatientDashboard /> : <DoctorDashboard />}</div>;
 };
 export default DashboardPage;
