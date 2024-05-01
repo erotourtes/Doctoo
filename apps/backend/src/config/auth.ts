@@ -1,14 +1,38 @@
 import { registerAs } from '@nestjs/config';
-import { getOrThrow } from './utils';
+import { IsNumber, IsString } from 'class-validator';
+import { validate } from './utils';
+import { Expose } from 'class-transformer';
 
-export default registerAs('auth', () => ({
-  JWT_SECRET: getOrThrow('JWT_SECRET'),
-  JWT_EXPIRATION_DAYS: getOrThrow('JWT_EXPIRATION_DAYS'),
-  JWT_EXPIRATION_TRESHOLD_SECONDS: +getOrThrow('JWT_EXPIRATION_TRESHOLD_SECONDS'),
+class AuthConfig {
+  @Expose()
+  @IsString()
+  JWT_SECRET: string;
 
-  GOOGLE_CLIENT_ID: getOrThrow('GOOGLE_CLIENT_ID'),
-  GOOGLE_CLIENT_SECRET: getOrThrow('GOOGLE_CLIENT_SECRET'),
-  googleRedirectURL: getOrThrow('GOOGLE_REDIRECT_URL'),
+  @Expose()
+  @IsString()
+  JWT_EXPIRATION_DAYS: string;
 
-  SALT_ROUNDS: +getOrThrow('SALT_ROUNDS'),
-}));
+  @Expose()
+  @IsNumber()
+  JWT_EXPIRATION_TRESHOLD_SECONDS: number;
+
+  @Expose()
+  @IsString()
+  GOOGLE_CLIENT_ID: string;
+
+  @Expose()
+  @IsString()
+  GOOGLE_CLIENT_SECRET: string;
+
+  @Expose()
+  @IsString()
+  GOOGLE_REDIRECT_URL: string;
+
+  @Expose()
+  @IsNumber()
+  SALT_ROUNDS: number;
+}
+
+export default registerAs('auth', () => {
+  return validate(AuthConfig);
+});

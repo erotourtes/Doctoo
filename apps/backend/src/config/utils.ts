@@ -1,8 +1,16 @@
-// TODO: Use envalid package for easy evnironment management.
-export const getOrThrow = (key: string): string => {
-  const value = process.env[key];
+import { ClassConstructor, plainToInstance } from 'class-transformer';
+import { validateSync } from 'class-validator';
 
-  if (!value) throw new Error(`Missing environment variable: ${key}`);
+export const validate = <T extends object>(schema: ClassConstructor<T>) => {
+  const validatedConfig = plainToInstance(schema, process.env, {
+    enableImplicitConversion: true,
+    excludeExtraneousValues: true,
+  });
 
-  return value;
+  const errors = validateSync(validatedConfig);
+  if (errors.length > 0) throw new Error(errors.toString());
+
+  console.log(validatedConfig);
+
+  return validatedConfig;
 };
