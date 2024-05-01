@@ -8,6 +8,10 @@ export interface paths {
     /** Login patient */
     post: operations['AuthController_localLogin'];
   };
+  '/auth/login/doctor': {
+    /** Login doctor */
+    post: operations['AuthController_localDoctorLogin'];
+  };
   '/auth/login/patient/mfa': {
     /** Login patient with MFA */
     post: operations['AuthController_verifyMFA'];
@@ -102,13 +106,13 @@ export interface paths {
     /** Create doctor */
     post: operations['DoctorController_createDoctor'];
   };
-  '/doctor/doctors/{id}': {
-    /** Get all doctors by patient */
-    get: operations['DoctorController_getPatientDoctors'];
-  };
   '/doctor/doctors/my': {
     /** Get my doctors */
     get: operations['DoctorController_getMyDoctors'];
+  };
+  '/doctor/doctors/{id}': {
+    /** Get all doctors by patient */
+    get: operations['DoctorController_getPatientDoctors'];
   };
   '/doctor/{id}': {
     /** Get doctor */
@@ -1336,7 +1340,7 @@ export interface components {
        */
       patientId: string;
       /**
-       * @description The date on which the meeting is scheduled.
+       * @description The date when appointment was created
        * @example 2024-04-30T15:06:19.140Z
        */
       createdAt: string;
@@ -1362,7 +1366,7 @@ export interface components {
        */
       paymentReceiptKey?: string;
       /** @description The date and time the appointment started */
-      startedAt?: string;
+      startedAt: string;
       /** @description The date and time the appointment ended */
       endedAt?: string;
     };
@@ -1433,7 +1437,7 @@ export interface components {
        */
       patientId?: string;
       /**
-       * @description The date on which the meeting is scheduled.
+       * @description The date when appointment was created
        * @example 2024-04-30T15:06:19.140Z
        */
       createdAt?: string;
@@ -1558,6 +1562,32 @@ export interface operations {
         content: {
           'application/json': components['schemas']['LocalLoginResponseDto'];
         };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /** Login doctor */
+  AuthController_localDoctorLogin: {
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['LocalLoginDto'];
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: never;
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
@@ -2446,38 +2476,6 @@ export interface operations {
       };
     };
   };
-  /** Get all doctors by patient */
-  DoctorController_getPatientDoctors: {
-    parameters: {
-      path: {
-        /**
-         * @description Unique patient id.
-         * @example 123e4567-e89b-12d3-a456-426614174000
-         */
-        id: string;
-      };
-    };
-    responses: {
-      /** @description Response when the request is successfully processed. */
-      200: {
-        content: {
-          'application/json': components['schemas']['ResponseDoctorDto'][];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      400: {
-        content: {
-          'application/json': components['schemas']['BadRequestResponse'];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      500: {
-        content: {
-          'application/json': components['schemas']['ClassicNestResponse'];
-        };
-      };
-    };
-  };
   /** Get my doctors */
   DoctorController_getMyDoctors: {
     parameters: {
@@ -2503,6 +2501,38 @@ export interface operations {
       401: {
         content: {
           'application/json': components['schemas']['UnauthorizedResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /** Get all doctors by patient */
+  DoctorController_getPatientDoctors: {
+    parameters: {
+      path: {
+        /**
+         * @description Unique patient id.
+         * @example 123e4567-e89b-12d3-a456-426614174000
+         */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseDoctorDto'][];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
