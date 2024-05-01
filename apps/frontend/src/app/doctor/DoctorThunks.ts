@@ -1,6 +1,13 @@
 import { instance } from '@/api/axios.api';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { setDeleteDoctor, setDoctorData, setNewDoctor, setPatchDoctorData, setPatientDoctorData } from './DoctorSlice';
+import {
+  setDeleteDoctor,
+  setDoctorData,
+  setFamilyDoctor,
+  setNewDoctor,
+  setPatchDoctorData,
+  setPatientDoctorData,
+} from './DoctorSlice';
 import type { paths } from '../../api';
 import api from '../api';
 import type { IDoctor } from '../../dataTypes/Doctor';
@@ -82,6 +89,19 @@ export const getMyDoctorData = createAsyncThunk('doctor', async (_, { dispatch }
       const res: paths['/doctor/doctors/my']['get']['responses']['200']['content']['application/json'] = data;
 
       dispatch(setPatientDoctorData(res));
+    }
+  } catch (e) {
+    const error = e as Error;
+    throw error;
+  }
+});
+
+export const getFamilyDoctor = createAsyncThunk('doctor', async (doctor_id: string, { dispatch }) => {
+  try {
+    const response = await instance.get(`/doctor/${doctor_id}`);
+    if (response.status === 200) {
+      dispatch(setFamilyDoctor(response.data));
+      console.log('Family doctor: ', response.data);
     }
   } catch (e) {
     const error = e as Error;

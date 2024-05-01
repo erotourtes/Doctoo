@@ -44,3 +44,8 @@ INSERT INTO doctor_specializations (id, doctor_id, specialization_id)
 VALUES 
 ('uuid-docspec1', 'uuid-doctor1', 'uuid-spec1'),
 ('uuid-docspec2', 'uuid-doctor1', 'uuid-spec2');
+
+
+INSERT INTO declarations (id, patient_id, doctor_id)
+VALUES 
+('676767', 'uuid-patient1', 'uuid-doctor1');

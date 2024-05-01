@@ -7,11 +7,13 @@ import type { GetDoctorDataPayload } from './DoctorThunks';
 interface DoctorData {
   doctors: IDoctor[];
   totalCount: number;
+  familyDoctor: IDoctor | null;
 }
 
 const initialState: DoctorData = {
   doctors: [],
   totalCount: 0,
+  familyDoctor: null,
 };
 
 export const doctorSlice = createAppSlice({
@@ -42,11 +44,21 @@ export const doctorSlice = createAppSlice({
     setDeleteDoctor: (state, action: PayloadAction<string>) => {
       state.doctors = state.doctors.filter(doctor => doctor.id !== action.payload);
     },
+
+    setFamilyDoctor: (state, action: PayloadAction<IDoctor>) => {
+      state.familyDoctor = action.payload;
+    },
   },
 });
 
-export const { setDoctorData, setNewDoctor, setDeleteDoctor, setPatchDoctorData, setPatientDoctorData } =
-  doctorSlice.actions;
+export const {
+  setDoctorData,
+  setNewDoctor,
+  setDeleteDoctor,
+  setPatchDoctorData,
+  setPatientDoctorData,
+  setFamilyDoctor,
+} = doctorSlice.actions;
 
 export const doctorData = (state: RootState) => state.doctor.doctors;
 

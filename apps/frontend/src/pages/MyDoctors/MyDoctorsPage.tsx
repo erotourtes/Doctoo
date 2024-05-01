@@ -21,6 +21,7 @@ const MyDoctorsPage = () => {
     dispatch(getMyDoctorData());
     dispatch(getMyAppointments());
   }, []);
+
   const [chosenOptions, setChosenOptions] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
 
