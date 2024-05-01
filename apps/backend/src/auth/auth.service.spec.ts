@@ -160,7 +160,6 @@ describe('AuthService', () => {
 
   it('Should not change password', async () => {
     const password = bcrypt.hashSync(user.password, 10);
-
     const newUser: Partial<ResponseUserDto> = {
       id: '1',
       ...user,
@@ -176,5 +175,60 @@ describe('AuthService', () => {
         newPassword: 'new_password',
       });
     }).rejects.toThrow();
+  });
+
+  it('signUpPatient: should not signup with invalid token', async () => {
+    await expect(authService.signUpPatient({ ...patient }, 'invalid_token')).rejects.toThrow();
+  });
+
+  it('signUpPatient: should signup patient', async () => {
+    patientServiceMock.createPatient = jest.fn().mockResolvedValue({ ...patient, id: '2' });
+    userServiceMock.updateEmailVerifiedStatus = jest.fn().mockReturnThis();
+    const token = await authService.signJwtToken('1');
+
+    await authService.signUpPatient({ ...patient }, token);
+
+    expect(patientServiceMock.createPatient).toHaveBeenCalledWith({ ...patient, userId: '1' });
+    expect(userServiceMock.updateEmailVerifiedStatus).toHaveBeenCalledWith('1', true);
+  });
+
+  it('signUpUser: should not signup user without passoword', async () => {
+    await expect(authService.signUpUser({ ...user, password: null })).rejects.toThrow();
+  });
+
+  it('validatePatientByEmail: should not return not existed user', async () => {
+    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue(null);
+
+    await expect(authService.validatePatientByEmail(user.email, user.password)).resolves.toMatchObject({
+      patient: null,
+      isMFAEnabled: false,
+    });
+  });
+
+  it('validatePatientByEmail: should not validate verified user without password', async () => {
+    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue({ ...user, password: null, emailVerified: true });
+
+    await expect(authService.validatePatientByEmail(user.email, user.password)).rejects.toThrow();
+  });
+
+  it('validateGoogleUser: should not valiaed with user is not found', async () => {
+    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue(null);
+    await expect(authService.validateGoogleUser(user.email, 'googleId')).resolves.toBeNull();
+  });
+
+  it('validateGoogleUser: should not valiaed with patient is not found', async () => {
+    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue(user);
+    patientServiceMock.getPatientByUserId = jest.fn().mockResolvedValue(null);
+    await expect(authService.validateGoogleUser(user.email, 'googleId')).resolves.toBeNull();
+  });
+
+  it('validateGoogleUser: should valiaed registered user without google_id', async () => {
+    user.googleId = null;
+    userServiceMock.getUserByEmail = jest.fn().mockResolvedValue({ ...user, id: '1' });
+    userServiceMock.patchUser = jest.fn().mockReturnThis();
+    patientServiceMock.getPatientByUserId = jest.fn().mockResolvedValue(patient);
+
+    await expect(authService.validateGoogleUser(user.email, 'googleId')).resolves.toMatchObject(user);
+    expect(userServiceMock.patchUser).toHaveBeenCalledWith('1', { googleId: 'googleId' });
   });
 });
