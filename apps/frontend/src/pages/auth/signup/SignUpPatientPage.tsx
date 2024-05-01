@@ -29,9 +29,9 @@ type Patient = {
 };
 
 const patientScheme = Joi.object<Patient>({
-  weight: Joi.number().max(1000).required(),
-  height: Joi.number().max(300).required(),
-  age: Joi.number().max(130).required(),
+  weight: Joi.number().min(30).max(1000).required(),
+  height: Joi.number().min(50).max(300).required(),
+  age: Joi.number().min(18).max(130).required(),
   bloodType: Joi.string()
     .valid(...Object.keys(BloodType))
     .required()
@@ -40,9 +40,9 @@ const patientScheme = Joi.object<Patient>({
     .valid(...Object.keys(Gender))
     .required()
     .messages({ 'any.only': 'Please select you gender' }),
-  country: Joi.string().min(3).required(),
-  city: Joi.string().min(3).required(),
-  street: Joi.string().min(3).required(),
+  country: Joi.string().min(3).max(100).required(),
+  city: Joi.string().min(3).max(100).required(),
+  street: Joi.string().min(3).max(100).required(),
 });
 
 const SignUpPageOrig = ({ token }: { token: string }) => {
