@@ -24,7 +24,7 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
     <div className='flex w-full justify-between gap-4 rounded-lg bg-white p-3 pb-4 text-start md:p-7'>
       <div className='flex flex-col gap-4'>
         <p className='w-full text-grey-1'>{title}</p>
-        <p className='group flex w-fit items-center text-black'>
+        <div className='group flex w-fit items-center text-black'>
           <form onSubmit={e => e.preventDefault()}>
             {variant === 'input' && (
               <input
@@ -61,7 +61,7 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
             )}
 
             {variant === 'select' && (
-              <form>
+              <div>
                 <select
                   onChange={e => {
                     setInputValue(e.target.value);
@@ -121,7 +121,7 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
                       </option>
                     ))}
                 </select>
-              </form>
+              </div>
             )}
           </form>
           <Icon
@@ -129,7 +129,7 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
             variant='edit'
             className='cursor-pointer text-lg text-grey-1 opacity-0 transition-opacity duration-300 group-hover:opacity-100'
           />
-        </p>
+        </div>
       </div>
       <div className='h-fit rounded-lg bg-background p-2 text-grey-1 '>
         <Icon variant={iconVariant} className='h-7 w-7' />
