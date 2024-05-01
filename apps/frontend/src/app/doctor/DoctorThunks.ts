@@ -75,7 +75,7 @@ export const deleteDoctor = createAsyncThunk('doctor', async (doctor_id: string,
   }
 });
 
-export const getMytDoctorData = createAsyncThunk('doctor', async (_, { dispatch }) => {
+export const getMyDoctorData = createAsyncThunk('doctor', async (_, { dispatch }) => {
   try {
     const { error, data } = await api.GET(`/doctor/doctors/my`, {});
     if (!error) {

@@ -9,7 +9,7 @@ type AppointmentCardProps = {
 };
 
 export default function AppointmentCard({ appointment }: AppointmentCardProps) {
-  const appointmentDate = dayjs(appointment.assignedAt);
+  const appointmentDate = dayjs(appointment.startedAt);
   const isLate = appointmentDate.diff(new Date(), 'minutes') <= 0;
   return (
     <>
@@ -33,7 +33,7 @@ export default function AppointmentCard({ appointment }: AppointmentCardProps) {
               />
               <p
                 className={`font-semibold ${isLate ? 'text-[#ED5252]' : 'text-[#067C88]'}`}
-              >{`Starts in ${isLate ? 0 : appointmentDate.diff(new Date(), 'minutes')} min`}</p>
+              >{`Starts in ${isLate ? 0 : appointmentDate.diff(dayjs(), 'minutes')} min`}</p>
               <Button type={'primary'} className='ml-[64px] w-[148px]'>
                 <div className='flex font-normal'>
                   <Icon variant='plus' />
