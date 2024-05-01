@@ -61,6 +61,18 @@ export class AuthController {
     return { isMFAEnabled };
   }
 
+  @Post('login/doctor')
+  @ApiOperation({ summary: 'Login doctor' })
+  @ApiOkResponse({ type: undefined, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiBody({ type: LocalLoginDto })
+  async localDoctorLogin(@Res({ passthrough: true }) res: Response, @Body() body: LocalLoginDto): Promise<void> {
+    const user = await this.authService.loginDoctor(body.email, body.password);
+    const token = await this.authService.signJwtToken(user.id);
+    this.requestHelper.attachJwtTokenToCookie(res, token);
+  }
+
   @Post('login/patient/mfa')
   @ApiOperation({ summary: 'Login patient with MFA' })
   @ApiOkResponse({ description: RESPONSE_STATUS.SUCCESS })

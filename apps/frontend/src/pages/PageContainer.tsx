@@ -16,6 +16,7 @@ import SignUpPage from './auth/signup/SignUpPage';
 import SignUpPatientPage from './auth/signup/SignUpPatientPage';
 import DashboardPage from './dashboard/DashboardPage';
 import Settings from './settings/settingsPage/settingsPage';
+import DoctorLoginPage from './auth/login/DoctorLoginPage';
 
 const PageContainer = () => {
   return (
@@ -72,6 +73,7 @@ const Navigation = () => {
       <Route path='/signup/patient' Component={SignUpPatientPage} />
       <Route path='/login/authenticate' Component={LoginPageAuthenticate} />
       <Route path='/login' Component={LoginPage} />
+      <Route path='/login/doctor' Component={DoctorLoginPage} />
       <Route path='/change-email' Component={EmailChangePage} />
     </Routes>
   );

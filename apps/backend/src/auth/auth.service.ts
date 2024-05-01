@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
@@ -92,6 +92,17 @@ export class AuthService {
     }
 
     return { isMFAEnabled: patient.twoFactorAuthToggle, patient };
+  }
+
+  async loginDoctor(email: string, password: string): Promise<ResponseUserDto | null> {
+    const user = await this.userService.getUserByEmail(email);
+    // TODO: add role when it is implemented
+    if (!user) throw new NotFoundException("User with this email doesn't exist");
+
+    const isValidPassword = await this.verifyPassword(password, user.password);
+    if (!isValidPassword) throw new BadRequestException('Invalid auth credentials.');
+
+    return user;
   }
 
   async validateGoogleUser(email: string, googleId: string): Promise<ResponseUserDto | null> {
@@ -263,6 +274,7 @@ export class AuthService {
   }
 
   private async verifyPassword(password: string, hash: string): Promise<boolean> {
+    if (!password || !hash) return false;
     const isValidPassword = await bcrypt.compare(password, hash);
 
     return isValidPassword;
