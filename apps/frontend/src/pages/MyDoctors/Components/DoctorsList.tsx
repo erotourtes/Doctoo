@@ -29,9 +29,9 @@ const DoctorsList = ({ doctors, chosenOptions }: DoctorsListProps) => {
         <div className=''>
           <h3 className='mb-4 flex justify-start text-lg font-medium text-black'>My doctors ({doctorsList.length})</h3>
           <div className='flex flex-col gap-4'>
-            {doctorsList.map(doctor => (
+            {doctorsList.map((doctor, idx) => (
               <MyDoctorCard
-                key={Math.random()}
+                key={`doctors-list-${idx}`}
                 avatarKey={doctor.avatarKey}
                 name={doctor.firstName + ' ' + doctor.lastName}
                 specializations={doctor.specializations}

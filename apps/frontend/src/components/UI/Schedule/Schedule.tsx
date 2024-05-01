@@ -7,21 +7,20 @@ import ScheduleTestimonials from './ScheduleTestimonials';
 import dayjs from 'dayjs';
 import ScheduleSuccessModal from './ScheduleSuccessModal';
 import { useState } from 'react';
+import type { IDoctor } from '@/dataTypes/Doctor';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import type { IReview } from '@/dataTypes/Review';
+import { useEffect } from 'react';
+import { fetchReviewsByDoctor } from '@/app/review/ReviewThunks';
 
 type ScheduleProps = {
   closePopup: () => void;
   scheduleIsOpen: boolean;
   scheduleInfo: {
     patientId: string;
-    doctorId: string;
-    doctorFirstName: string;
-    doctorLastName: string;
-    payrate: number;
-    avatarKey: string;
-    about: string;
-    rating: number;
-    reviewsCount: number;
     appointmentId?: string;
+    doctorId: string;
+    doctor: IDoctor;
   };
   currentDay?: Dayjs;
   rescheduling?: boolean;
@@ -34,9 +33,22 @@ export default function Schedule({
   currentDay = dayjs(),
   rescheduling,
 }: ScheduleProps) {
-  const { doctorFirstName, doctorLastName, payrate, avatarKey, about, doctorId, patientId, appointmentId } =
-    scheduleInfo;
-  const doctorFullName = `Dr. ${doctorFirstName} ${doctorLastName}`;
+  const { doctorId, patientId, appointmentId, doctor } = scheduleInfo;
+  const { avatarKey, firstName, lastName, payrate, rating, reviewsCount, about, specializations } = doctor;
+
+  const doctorFullName = `Dr. ${firstName} ${lastName}`;
+
+  const dispatch = useAppDispatch();
+  const reviews = useAppSelector(state => state.review.reviews).filter(
+    (review: IReview) => review.doctorId === doctorId,
+  );
+
+  useEffect(() => {
+    if (!doctorId) return;
+
+    dispatch(fetchReviewsByDoctor({ doctorId, includeNames: 'true', skip: '0', take: '2' }));
+  }, [doctorId, dispatch]);
+
   const [appointmentSelectedDate, setAppointmentSelectedDate] = useState<Dayjs | undefined>(undefined);
   const [successfullModal, setSuccessfullModal] = useState(false);
 
@@ -56,9 +68,10 @@ export default function Schedule({
           fullName={doctorFullName}
           avatar={avatarKey}
           payrate={payrate}
-          // rating={4.5}
-          reviewsCount={128}
-          specialization='Specialization'
+          rating={rating}
+          reviewsCount={reviewsCount}
+          doctorId={doctorId}
+          specialization={specializations[0].name}
         />
 
         <ScheduleBook
@@ -74,10 +87,7 @@ export default function Schedule({
 
         <ScheduleAbout about={about} />
 
-        <ScheduleTestimonials
-          review='Dr Alexander was great! Very knowledgeable about my concerns! Full of helpful information and suggestions! My experience was awesome!'
-          patientName='Patient Name'
-        />
+        <ScheduleTestimonials reviews={reviews} doctorId={doctorId} />
       </PopupDoctoo>
 
       {appointmentSelectedDate && (

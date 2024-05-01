@@ -24,11 +24,12 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    avatar: 'https://via.placeholder.com/112',
-    fullName: 'Dr. John Doe',
-    // rating: 4.5,
-    reviewsCount: 100,
-    specialization: 'General Practitioner',
+    fullName: `Dr. John Doe`,
+    avatar: `https://randomuser.me/api/portraits`,
+    rating: 5,
+    reviewsCount: 128,
+    specialization: `Cardiologist`,
     payrate: 100,
+    doctorId: `123`,
   },
 };

@@ -42,7 +42,7 @@ export default function AppointmentPopup({ appointmentModal, closeModal, selecte
   const { startedAt, status, doctorId, patientId, id } = selectedAppointment;
 
   const doctor = selectedAppointment.doctor;
-  const { avatarKey, firstName, lastName, reviewsCount, rating, about, payrate } = doctor as IDoctor;
+  const { avatarKey, firstName, lastName, reviewsCount, rating } = doctor as IDoctor;
   const fullName = `Dr. ${firstName} ${lastName}`;
 
   return (
@@ -78,13 +78,7 @@ export default function AppointmentPopup({ appointmentModal, closeModal, selecte
             patientId: patientId,
             doctorId: doctorId,
             appointmentId: id,
-            doctorFirstName: firstName,
-            doctorLastName: lastName,
-            payrate: payrate,
-            avatarKey: avatarKey,
-            about: about,
-            rating: 5,
-            reviewsCount: 128,
+            doctor: doctor as IDoctor,
           }}
           rescheduling={bookMode.reschedule}
         />

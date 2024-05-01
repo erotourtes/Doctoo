@@ -19,7 +19,6 @@ export default function AppointmentsPopup({ appointment }: AppointmentPopupProps
   }
 
   const { doctor, startedAt, status, videoRecordKey, notes, patientId, doctorId, id } = appointment;
-  const { firstName, lastName, avatarKey, payrate, about, rating, reviewsCount } = doctor!;
 
   return (
     <>
@@ -49,13 +48,7 @@ export default function AppointmentsPopup({ appointment }: AppointmentPopupProps
           patientId: patientId,
           doctorId: doctorId,
           appointmentId: id,
-          doctorFirstName: firstName,
-          doctorLastName: lastName,
-          payrate: payrate,
-          avatarKey: avatarKey,
-          about: about,
-          rating: rating,
-          reviewsCount: reviewsCount,
+          doctor: doctor!,
         }}
         rescheduling={true}
       />

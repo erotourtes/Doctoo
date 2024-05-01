@@ -1,21 +1,23 @@
-import Icon from '../Icon/Icon';
+import StarsRating from '../StarsRating/StarsRating';
 
 type ScheduleHeader = {
   fullName: string;
   avatar: string;
-  // rating: number;
+  rating: number;
   reviewsCount: number;
   specialization: string;
   payrate: number;
+  doctorId: string;
 };
 
 export default function ScheduleHeader({
   fullName,
   avatar,
-  // rating,
+  rating,
   reviewsCount,
   specialization,
   payrate,
+  doctorId,
 }: ScheduleHeader) {
   return (
     <div className='flex items-center gap-x-6'>
@@ -33,17 +35,7 @@ export default function ScheduleHeader({
         <div className='flex flex-col gap-y-2'>
           <span className='text-base font-medium text-grey-1'>{specialization}</span>
 
-          <div className='flex items-center gap-x-3'>
-            <div className='flex cursor-pointer gap-x-1'>
-              {Array.from({ length: 5 }, (_, i) => (
-                <Icon key={i} variant='star' className='h-[18px] w-[18px] text-main-darker' />
-              ))}
-            </div>
-
-            <a href='#' className='text-black underline'>
-              {reviewsCount} reviews
-            </a>
-          </div>
+          <StarsRating doctorRating={rating} doctorReviewsCount={reviewsCount} doctorId={doctorId} />
         </div>
       </div>
     </div>

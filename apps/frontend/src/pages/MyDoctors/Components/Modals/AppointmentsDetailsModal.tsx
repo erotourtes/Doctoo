@@ -54,7 +54,6 @@ const AppointmentDetailsPopup = ({
       >
         <div className='flex flex-col gap-8'>
           <MyDoctorCard
-            key={Math.random()}
             avatarKey={avatarKey}
             name={name}
             specializations={specializations}

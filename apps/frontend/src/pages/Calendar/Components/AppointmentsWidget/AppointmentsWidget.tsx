@@ -33,14 +33,14 @@ export default function AppointmentsWidget({ appointmentsForDay, selectedDate }:
 
         {appointmentsForDay.length > 0 ? (
           <ul className='flex w-full flex-col gap-y-3'>
-            {appointmentsForDay.map(appointment => {
+            {appointmentsForDay.map((appointment, idx) => {
               const { startedAt, doctor } = appointment;
 
               return (
                 <li
                   onClick={() => openAppointmentModal(appointment)}
                   className='flex cursor-pointer flex-col items-center gap-2 gap-x-2 rounded-xl bg-background p-4 hover:bg-grey-5 sm:flex-row sm:py-2'
-                  key={`${Math.random()}`}
+                  key={`appointment-widget-${idx}`}
                 >
                   <AppointmentsListItem doctor={doctor} date={startedAt} />
                 </li>

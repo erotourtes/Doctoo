@@ -36,16 +36,23 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     scheduleInfo: {
-      doctorFirstName: 'John',
-      doctorLastName: 'Doe',
-      payrate: 100,
-      avatarKey: 'https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_1.png',
-      about:
-        'It is important to have a doctor who is interested in your long-term health and happiness. My hope is that every person I talk to feels that I am interested in them personally and want to do all that I can to help them feel better now, and provide suggestions for ongoing wellness. My advice to everyone? Laugh at least once a day… humor is truly the best medicine!',
       doctorId: '3',
       patientId: '7',
-      rating: 4,
-      reviewsCount: 80,
+      doctor: {
+        avatarKey: 'avatar',
+        firstName: 'John',
+        lastName: 'Doe',
+        payrate: 100,
+        rating: 4.5,
+        reviewsCount: 10,
+        about: 'About John Doe',
+        specializations: [{ name: 'Dentist', id: '1' }],
+        id: '',
+        userId: '',
+        email: '',
+        phone: '',
+        hospitals: [],
+      },
     },
     scheduleIsOpen: true,
     closePopup: () => {},

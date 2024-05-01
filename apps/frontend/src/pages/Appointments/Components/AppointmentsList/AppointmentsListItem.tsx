@@ -24,7 +24,7 @@ export default function AppointmentsListItem({ appointment, openModal }: Appoint
   }
 
   const { patientId, doctorId, doctor, videoRecordKey, notes, status, paymentReceiptKey, id, startedAt } = appointment;
-  const { firstName, lastName, about, avatarKey, payrate, specializations } = doctor!;
+  const { firstName, lastName, specializations } = doctor!;
   const fullName = `Dr. ${firstName} ${lastName}`;
 
   return (
@@ -72,13 +72,7 @@ export default function AppointmentsListItem({ appointment, openModal }: Appoint
           patientId: patientId,
           doctorId: doctorId,
           appointmentId: id,
-          doctorFirstName: firstName,
-          doctorLastName: lastName,
-          payrate: payrate,
-          avatarKey: avatarKey,
-          about: about,
-          rating: 5,
-          reviewsCount: 128,
+          doctor: doctor!,
         }}
       />
     </>

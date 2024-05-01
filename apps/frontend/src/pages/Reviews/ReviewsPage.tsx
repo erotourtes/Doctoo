@@ -82,13 +82,7 @@ export default function ReviewsPage() {
             scheduleInfo={{
               patientId: '',
               doctorId: doctor.id,
-              doctorFirstName: doctor.firstName,
-              doctorLastName: doctor.lastName,
-              payrate: doctor.payrate,
-              avatarKey: doctor.avatarKey,
-              about: doctor.about,
-              rating: doctor.rating,
-              reviewsCount: doctor.reviewsCount,
+              doctor: doctor,
             }}
           />
         </>
