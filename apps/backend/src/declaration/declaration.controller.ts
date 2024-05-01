@@ -10,18 +10,17 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import JWTGuard from '../auth/gaurds/jwt.guard';
+import { PatientService } from '../patient/patient.service';
+import { UserDec } from '../user/user.decorator';
 import { BadRequestResponse } from '../utils/BadRequestResponse';
 import { ClassicNestResponse } from '../utils/ClassicNestResponse';
+import { UnauthorizedResponse } from '../utils/UnauthorizedResponse';
 import { RESPONSE_STATUS } from '../utils/constants';
 import { DeclarationService } from './declaration.service';
 import { CreateDeclarationDto } from './dto/create.dto';
 import { ResponseDeclarationDto } from './dto/response.dto';
 import { UpdateDeclarationDto } from './dto/update.dto';
-import { randomUUID } from 'crypto';
-import JWTGuard from '../auth/gaurds/jwt.guard';
-import { UnauthorizedResponse } from '../utils/UnauthorizedResponse';
-import { UserDec } from '../user/user.decorator';
-import { PatientService } from '../patient/patient.service';
 
 @ApiTags('Declaration Endpoints')
 @Controller('declaration')
@@ -78,7 +77,7 @@ export class DeclarationController {
   @ApiOkResponse({ type: ResponseDeclarationDto, isArray: true, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique patient id.' })
+  @ApiParam({ name: 'id', example: '154c3773-5130-4970-8a94-ded9a01cd0ec', description: 'Unique patient id.' })
   getDeclarationByPatientId(@Param('id') id: string) {
     return this.declarationService.getDeclarationByPatientId(id);
   }
@@ -88,7 +87,7 @@ export class DeclarationController {
   @ApiOkResponse({ type: ResponseDeclarationDto, isArray: true, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiParam({ name: 'id', example: randomUUID(), description: 'Unique doctor id.' })
+  @ApiParam({ name: 'id', example: '154c3773-5130-4970-8a94-ded9a01cd0ec', description: 'Unique doctor id.' })
   getDeclarationByDoctorId(@Param('id') id: string) {
     return this.declarationService.getDeclarationByDoctorId(id);
   }

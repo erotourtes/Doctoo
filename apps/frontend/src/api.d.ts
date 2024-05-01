@@ -916,7 +916,12 @@ export interface components {
       count: number;
     };
     CreatePatientConditionDto: {
-      /** @description Id of condition */
+      /**
+       * @description Unique allergy id.
+       * @example [
+       *   "123e4567-e89b-12d3-a456-426614174000"
+       * ]
+       */
       conditionIds: string[];
     };
     ResponsePatientConditionsDto: {
@@ -3733,7 +3738,7 @@ export interface operations {
       path: {
         /**
          * @description Unique patient id.
-         * @example e40bd323-2a86-4dff-afa5-51afee4c16ae
+         * @example 154c3773-5130-4970-8a94-ded9a01cd0ec
          */
         id: string;
       };
@@ -3765,7 +3770,7 @@ export interface operations {
       path: {
         /**
          * @description Unique doctor id.
-         * @example 838ccd08-11f3-422c-9f64-18866fc118b6
+         * @example 154c3773-5130-4970-8a94-ded9a01cd0ec
          */
         id: string;
       };

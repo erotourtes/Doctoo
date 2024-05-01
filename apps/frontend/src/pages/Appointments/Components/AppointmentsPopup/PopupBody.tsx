@@ -1,7 +1,7 @@
 import { Badge } from '@/components/UI';
 import Icon from '@/components/UI/Icon/Icon';
 import StarsRating from '@/components/UI/StarsRating/StarsRating';
-import { IDoctor } from '@/dataTypes/Doctor';
+import type { IDoctor } from '@/dataTypes/Doctor';
 type PopupBodyProps = {
   openReschedule: () => void;
   doctorId: string;
