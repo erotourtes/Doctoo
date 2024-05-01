@@ -95,8 +95,6 @@ export interface paths {
     post: operations['FavoriteController_createFavorite'];
   };
   '/favorite/{id}': {
-    /** Get favorite */
-    get: operations['FavoriteController_getFovorite'];
     /** Delete favorite */
     delete: operations['FavoriteController_deleteFavorite'];
   };
@@ -941,11 +939,6 @@ export interface components {
        * @example 123e4567-e89b-12d3-a456-426614174000
        */
       doctorId: string;
-      /**
-       * @description Unique patient id.
-       * @example 123e4567-e89b-12d3-a456-426614174000
-       */
-      patientId: string;
     };
     ResponseFavoriteDto: {
       /**
@@ -953,11 +946,6 @@ export interface components {
        * @example 123e4567-e89b-12d3-a456-426614174000
        */
       doctorId: string;
-      /**
-       * @description Unique patient id.
-       * @example 123e4567-e89b-12d3-a456-426614174000
-       */
-      patientId: string;
       /**
        * @description Unique favorite id.
        * @example 123e4567-e89b-12d3-a456-426614174000
@@ -2328,38 +2316,6 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': components['schemas']['CreateFavoriteDto'];
-      };
-    };
-    responses: {
-      /** @description Response when the request is successfully processed. */
-      200: {
-        content: {
-          'application/json': components['schemas']['ResponseFavoriteDto'];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      400: {
-        content: {
-          'application/json': components['schemas']['BadRequestResponse'];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      500: {
-        content: {
-          'application/json': components['schemas']['ClassicNestResponse'];
-        };
-      };
-    };
-  };
-  /** Get favorite */
-  FavoriteController_getFovorite: {
-    parameters: {
-      path: {
-        /**
-         * @description Unique doctor id.
-         * @example 123e4567-e89b-12d3-a456-426614174000
-         */
-        id: string;
       };
     };
     responses: {
