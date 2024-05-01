@@ -16,12 +16,17 @@ type AppointmentsListProps = {
 
 function filterAppointments(appointment: IAppointment, filters: FilterState): boolean {
   const appointmentTime = dayjs.utc(appointment.startedAt).format('hh:mm a');
+  const appointmentStatus = appointment.status
+    .toLowerCase()
+    .split('_')
+    .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
 
   const passesTimeFilter =
     filters.time.includes(filterConfig.time.defaultValue) || filters.time.includes(appointmentTime);
 
   const passesStatusFilter =
-    filters.statuses.includes(filterConfig.statuses.defaultValue) || filters.statuses.includes(appointment.status);
+    filters.statuses.includes(filterConfig.statuses.defaultValue) || filters.statuses.includes(appointmentStatus);
 
   if (!appointment.doctor) return false;
 

@@ -89,7 +89,7 @@ export default function AppointmentsFilters({ state, dispatch, appointments }: A
         selectedOptions.length === allOptions.length
           ? filterConfig[filterType].defaultValue
           : selectedOptions.length > 1
-            ? 'Hover to view filters'
+            ? 'Click to see filters'
             : selectedOptions[0];
     }
 
