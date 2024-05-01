@@ -51,11 +51,11 @@ export default function BigCalendarBody({ meetingsForDay, currentMonth, handleDa
             <div
               onClick={() => chooseAppointments(day)}
               className={`flex aspect-[1] h-auto min-h-[35px]
-              w-auto min-w-[35px] cursor-pointer select-none flex-col justify-between rounded-xl border border-transparent bg-white text-base font-normal hover:border hover:border-main md:p-1 lg:px-2.5 lg:pb-3 lg:pt-2.5 xl:h-[116px] xl:w-[116px] ${day.month() === currentMonth?.month() ? 'text-text' : 'text-grey-3'}  ${selectedDate && selectedDate.isSame(day, 'day') && 'ring-2 ring-main'}`}
+              w-auto min-w-[35px] cursor-pointer select-none flex-col justify-between rounded-xl border border-transparent bg-white text-base font-normal hover:border hover:border-main md:p-1 lg:px-2.5 lg:pb-3 lg:pt-2.5 xl:h-[116px] xl:w-[116px] ${day.month() === currentMonth?.month() ? 'text-text' : 'text-grey-3'}  ${selectedDate && selectedDate.isSame(day, 'day') && 'ring-1 ring-main'}`}
               key={index}
             >
               <p
-                className={`mr-1 mt-1 max-h-fit max-w-fit self-end text-xs sm:text-base sm:font-medium ${isToday && '!m-px max-h-[26px] max-w-[26px] rounded-full bg-main p-0.5 text-white'}`}
+                className={`mr-1 mt-1 self-end text-xs sm:text-base sm:font-medium lg:mr-0 lg:mt-0 ${isToday && '!m-px h-[19px] w-[19px] rounded-full bg-main p-0.5 text-white sm:h-[26px] sm:w-[26px]'}`}
               >
                 <time className={`flex h-full w-full items-start justify-center`}>{day.format('D')}</time>
               </p>
