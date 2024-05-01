@@ -7,7 +7,7 @@ import type { FilterState } from '../../filterReducer';
 import dayjs from 'dayjs';
 import { filterConfig } from '../AppointmentsFilters/AppointmentsFilters';
 import { useAppDispatch } from '@/app/hooks';
-import { getAppointmentsByPatientId } from '@/app/appointment/AppointmentThunks';
+import { getMyAppointments } from '@/app/appointment/AppointmentThunks';
 
 type AppointmentsListProps = {
   filters: FilterState;
@@ -52,9 +52,7 @@ export default function AppointmentsList({ filters, appointments }: Appointments
   }, [appointments]);
 
   useEffect(() => {
-    dispatch(getAppointmentsByPatientId('2b7bb740-3aa5-4090-94c8-1a8e2ebd9c0a')).then(() =>
-      setHasFetchedAppointments(true),
-    );
+    dispatch(getMyAppointments()).then(() => setHasFetchedAppointments(true));
   }, [appointments.length, dispatch]);
 
   useEffect(() => {

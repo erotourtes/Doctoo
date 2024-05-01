@@ -34,6 +34,7 @@ export default function AppointmentsPopup({ appointment }: AppointmentPopupProps
             doctorId={doctorId}
             rating={rating}
             reviewsCount={reviewsCount}
+            status={status}
           />
         </div>
 

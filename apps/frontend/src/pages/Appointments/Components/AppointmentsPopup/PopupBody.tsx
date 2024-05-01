@@ -7,6 +7,7 @@ type PopupBodyProps = {
   doctorId: string;
   rating: number;
   reviewsCount: number;
+  status: string;
 };
 
 export default function PopupBody({
@@ -16,6 +17,7 @@ export default function PopupBody({
   doctorId,
   rating,
   reviewsCount,
+  status,
 }: PopupBodyProps) {
   return (
     <>
@@ -29,13 +31,12 @@ export default function PopupBody({
                 Appointment with <span className='font-semibold text-main'>{fullName}</span>
               </span>
 
-              {status === 'PLANNED' ||
-                (status === 'PENDING_PAYMENT' && (
-                  <div className='flex cursor-pointer items-end justify-center gap-x-1' onClick={openReschedule}>
-                    <Icon variant='edit' className='h-[18px] w-[18px] text-grey-1' />
-                    <span className='h-5 text-sm font-medium text-grey-1'>Reschedule</span>
-                  </div>
-                ))}
+              {(status === 'PLANNED' || status === 'PENDING_PAYMENT') && (
+                <div className='flex cursor-pointer items-end justify-center gap-x-1' onClick={openReschedule}>
+                  <Icon variant='edit' className='h-[18px] w-[18px] text-grey-1' />
+                  <span className='h-5 text-sm font-medium text-grey-1'>Reschedule</span>
+                </div>
+              )}
             </div>
 
             <span className='text-base font-medium text-grey-1'>{'placeholder'}</span>
