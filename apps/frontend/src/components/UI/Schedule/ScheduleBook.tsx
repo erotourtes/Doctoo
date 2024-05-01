@@ -3,14 +3,13 @@ import type { Dayjs } from 'dayjs';
 import { useEffect, useMemo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import utc from 'dayjs/plugin/utc';
-import ScheduleSuccessModal from './ScheduleSuccessModal';
 import BookAppointmentBtn from './ScheduleBookComponents/BookAppointmentBtn';
 import TimePicker from './ScheduleBookComponents/TimePicker';
 import WeekPicker from './ScheduleBookComponents/WeekPicker';
 import { AppointmentStatus } from '@/dataTypes/Appointment';
 import type { ICreateAppointment } from '@/dataTypes/Appointment';
 import { createAppointment, rescheduleAppointment } from '@/app/appointment/AppointmentThunks';
-
+import type { Dispatch, SetStateAction } from 'react';
 dayjs.extend(utc);
 
 const weeks = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -22,6 +21,8 @@ type ScheduleBookProps = {
   currentDay?: Dayjs;
   rescheduling?: boolean;
   appointmentId?: string;
+  openSuccessulModal: () => void;
+  setAppointmentSelectedDate: Dispatch<SetStateAction<Dayjs | undefined>>;
 };
 
 export default function ScheduleBook({
@@ -31,6 +32,8 @@ export default function ScheduleBook({
   patientId,
   rescheduling,
   appointmentId,
+  openSuccessulModal,
+  setAppointmentSelectedDate,
 }: ScheduleBookProps) {
   const dispatch = useAppDispatch();
 
@@ -44,8 +47,6 @@ export default function ScheduleBook({
     endedAt: '',
     startedAt: '',
   });
-
-  const [successfullModal, setSuccessfullModal] = useState(false);
 
   const appointments = useAppSelector(state => state.appointment.appointments);
 
@@ -139,7 +140,8 @@ export default function ScheduleBook({
     }
 
     closePopup();
-    setSuccessfullModal(true);
+    setAppointmentSelectedDate(selectedDate!);
+    openSuccessulModal();
   }
 
   function selectDate(date: Dayjs, time: string, isPlanned: boolean) {
@@ -173,12 +175,6 @@ export default function ScheduleBook({
           rescheduling={rescheduling}
         />
       </div>
-
-      <ScheduleSuccessModal
-        popupIsOpen={successfullModal}
-        closePopup={() => setSuccessfullModal(false)}
-        date={selectedDate!}
-      />
     </>
   );
 }
