@@ -57,7 +57,7 @@ const Settings = () => {
         </header>
 
         <section className='flex items-center justify-center'>
-          <div className='for-password h-[88px] w-full rounded-lg bg-white'>
+          <div className='for-password w-full rounded-lg bg-white'>
             <div className='flex flex-col items-center justify-between gap-2 p-2 sm:flex-row sm:p-8'>
               <span className='text-lg font-medium text-dark-grey'>Password</span>
               <a href='#' className='text-lg font-medium text-main ' onClick={() => setShowPopup(true)}>

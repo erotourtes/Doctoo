@@ -1,8 +1,7 @@
-import { Button } from '@/components/UI/Button/Button';
-import Icon from '@/components/UI/Icon/Icon';
-import type { IDoctor } from '@/dataTypes/Doctor';
-import ShortInfoCard from '../ShortInfoCard/ShortInfoCard';
 import { useNavigate } from 'react-router-dom';
+import type { IDoctor } from '@/dataTypes/Doctor';
+import Icon from '@/components/UI/Icon/Icon';
+import ShortInfoCard from '../ShortInfoCard/ShortInfoCard';
 
 type AppointmentCardProps = {
   doctors: IDoctor[] | undefined;
@@ -10,23 +9,22 @@ type AppointmentCardProps = {
 
 export default function MyDoctorsCard({ doctors }: AppointmentCardProps) {
   const navigate = useNavigate();
+
   return (
     <>
-      <aside className='m-w-[302px] mt-[24px] h-[236px] min-h-[236px] w-[302px] rounded-xl bg-[#ffffff] p-[24px]'>
-        <div className={`flex flex-row ${doctors && doctors?.length > 0 ? 'mb-[24px]' : 'pb-0'}`}>
+      <aside
+        className={`h-full min-h-[236px] w-full rounded-xl bg-white p-2 sm:p-6 lg:max-w-[302px] ${doctors && doctors?.length > 0 ? 'flex flex-col gap-6' : 'grid'} `}
+      >
+        <div className='flex flex-row items-center justify-between'>
           <h3 className='text-lg font-medium leading-6'>My doctors</h3>
-          {doctors && doctors?.length > 0 ? (
-            <Button
-              className='ml-auto mr-0 h-[28px] rounded-2xl border-none bg-[#F1F6F9] px-[18px] text-[#454F50]'
-              type={'secondary'}
+          {doctors && doctors?.length > 0 && (
+            <button
+              className='flex h-fit w-fit items-center justify-center gap-1 rounded-2xl border-none bg-background px-1 py-1 text-text sm:px-4'
               onClick={() => navigate(`/my-doctors`)}
             >
-              <div className='flex flex-row text-sm font-normal'>
-                <p>{`View all (${doctors?.length})`}</p> <Icon variant={'arrow-right'} />
-              </div>
-            </Button>
-          ) : (
-            <></>
+              <p>{`View all (${doctors?.length})`}</p>
+              <Icon variant={'arrow-right'} />
+            </button>
           )}
         </div>
         {doctors && doctors?.length > 0 ? (
@@ -38,16 +36,13 @@ export default function MyDoctorsCard({ doctors }: AppointmentCardProps) {
                   fullName={`Dr. ${doctor.firstName + ' ' + doctor.lastName}`}
                   about={doctor.about}
                   avatarKey={doctor.avatarKey}
-                  classNames='bg-[#f1f6f9] w-full rounded-xl mb-[14px]'
+                  classNames='bg-background] w-full rounded-xl mb-[14px]'
                   key={key}
                 />
               ))}
           </div>
         ) : (
-          <div className='flex h-full flex-col items-center justify-center'>
-            <p className='font-normal leading-6'>Your doctors will be</p>
-            <p className='font-normal leading-6'>displayed here</p>
-          </div>
+          <p className='text-center font-normal leading-6 lg:px-4'>Your doctors will be displayed here</p>
         )}
       </aside>
     </>

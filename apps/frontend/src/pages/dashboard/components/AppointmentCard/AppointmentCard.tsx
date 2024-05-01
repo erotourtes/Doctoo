@@ -12,36 +12,36 @@ type AppointmentCardProps = {
 export default function AppointmentCard({ appointment, withQuickNotes = false }: AppointmentCardProps) {
   const appointmentDate = dayjs(appointment.startedAt);
   const isLate = appointmentDate.diff(new Date(), 'minutes') <= 0;
+
   return (
     <>
-      <article className='flex h-[64px] min-h-[64px] w-[646px] min-w-[646px] flex-row rounded-xl  bg-[#f1f6f9] '>
+      <article className='flex w-full max-w-[646px] flex-col items-center justify-between gap-y-8 rounded-xl bg-background px-4 py-2 xl:flex-row xl:items-center'>
         <ShortInfoCard
-          classNames=''
           fullName={`Dr. ${appointment.doctor!.firstName + ' ' + appointment.doctor!.lastName}`}
           about={appointment.doctor!.about}
           avatarKey={appointment.doctor!.avatarKey}
+          classNames='justify-center xl:justify-start xl:after:w-px xl:after:h-12 xl:after:bg-main-medium'
         />
-        <div className='my-[8px] border-r border-[#6BC3CD]'></div>
-        <div className='flex h-full w-3/5  flex-row items-center'>
+        <div className='flex w-full flex-row items-center justify-center xl:justify-start'>
           {appointmentDate.diff(new Date(), 'minutes', true) > 5 ? (
-            <div className='ml-[16px] flex items-center'>
-              <p className='ml-[8px] border-r border-[#6BC3CD] pr-[16px] font-semibold'>
-                {appointmentDate.format('MMM D')}
-              </p>
-              <Icon variant='timer' className='ml-[8px] mr-[8px] size-6 shrink-0 text-[#AFBCBD]' />
+            <div className='flex items-center'>
+              <p className='border-r border-main-medium pr-4 font-semibold'>{appointmentDate.format('MMM D')}</p>
+              <Icon variant='timer' className='ml-[8px] mr-[8px] size-6 shrink-0 text-grey-3' />
               <p>{appointmentDate.format('h:mm A')}</p>
             </div>
           ) : (
-            <div className='flex items-center justify-between'>
-              <Icon
-                variant='timer'
-                className={`ml-[8px] mr-[8px] size-6 shrink-0 ${isLate ? 'text-[#ED5252]' : 'text-[#FFC249]'}`}
-              />
-              <p
-                className={`font-semibold ${isLate ? 'text-[#ED5252]' : 'text-[#067C88]'}`}
-              >{`Starts in ${isLate ? 0 : appointmentDate.diff(new Date(), 'minutes')} min`}</p>
+            <div className='flex w-full flex-col items-center justify-center gap-4 sm:flex-row xl:justify-between'>
+              <div className='flex items-center justify-center gap-2'>
+                <Icon variant='timer' className={`h-6 w-6 shrink-0 ${isLate ? 'text-error' : 'text-[#FFC249]'}`} />
+                <p
+                  className={`font-semibold ${isLate ? 'text-error' : 'text-[#067C88]'}`}
+                >{`Starts in ${isLate ? 0 : appointmentDate.diff(new Date(), 'minutes')} min`}</p>
+              </div>
               {withQuickNotes ? <Icon variant='quick-notes' className='ml-[16px] text-[#067C88]' /> : <></>}
-              <Button type={'primary'} className={`ml-[64px] max-w-[148px] ${withQuickNotes ? 'px-2 ' : ''}`}>
+              <Button
+                type={'primary'}
+                className={`flex w-full items-center justify-center gap-2 sm:max-w-[148px] ${withQuickNotes ? 'px-2 ' : ''}`}
+              >
                 <div className={`${withQuickNotes ? '' : 'flex'} 'font-normal'`}>
                   {withQuickNotes ? <></> : <Icon variant='plus' />}
                   <p>Join now</p>

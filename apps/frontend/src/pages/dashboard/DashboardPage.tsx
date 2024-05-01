@@ -7,4 +7,5 @@ const DashboardPage = () => {
   const user = useAppSelector(state => state.user.data);
   return <div>{user.role == Role.PATIENT ? <PatientDashboard /> : <DoctorDashboard />}</div>;
 };
+
 export default DashboardPage;

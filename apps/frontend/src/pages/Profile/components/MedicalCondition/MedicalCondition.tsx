@@ -42,7 +42,7 @@ const MedicalCondition = () => {
             </p>
           </div>
           <button
-            className='flex items-center self-end text-sm text-grey-1 sm:self-start'
+            className='flex items-center gap-2 self-end text-sm text-grey-1 sm:self-start'
             onClick={() => setIsOpen(!isOpen)}
           >
             <Icon variant={'edit'} />

@@ -1,6 +1,7 @@
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { useEffect, useState } from 'react';
-import { AppointmentStatus, type IAppointment } from '@/dataTypes/Appointment';
+import type { IAppointment } from '@/dataTypes/Appointment';
+import { AppointmentStatus } from '@/dataTypes/Appointment';
 import dayjs from 'dayjs';
 import { Button, Calendar, InputSearch } from '@/components/UI';
 import { getMyAppointments } from '@/app/appointment/AppointmentThunks';
@@ -9,8 +10,10 @@ import MyDoctorsCard from '../MyDoctorsCard/MyDoctorsCard';
 import NearestAppointmentsComponent from '../NerestAppointmentsCard/NearestAppointments';
 import NotificationsComponent from '../NotificationsComponent/NotificationsComponent';
 import { getMyDoctorData } from '@/app/doctor/DoctorThunks';
+import useWindowWide from '@/hooks/useWindowWide';
 
 const PatientDashboard = () => {
+  const mobileWidth = useWindowWide(768);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -38,21 +41,30 @@ const PatientDashboard = () => {
       return dayjs(a.startedAt).diff(dayjs(b.startedAt));
     })
     .slice(0, 5);
+
   return (
     <div>
-      <PageHeader iconVariant={'dashboard'} title='Dashboard'>
-        <InputSearch value={search} setValue={handleSubmit} variant='white' placeholder='Search by doctor, symptom' />
+      <PageHeader iconVariant='dashboard' title='Dashboard' className='flex-col gap-4 lg:flex-row'>
+        <div className='flex w-full flex-col gap-4 sm:flex-row'>
+          <InputSearch
+            value={search}
+            setValue={handleSubmit}
+            variant='white'
+            placeholder={`${mobileWidth ? 'Search by doctor, symptom' : 'Search by doctor'}`}
+            className='w-full'
+          />
 
-        <Button type='primary' btnType='button'>
-          Find a doctor
-        </Button>
+          <Button type='primary' btnType='button' className='flex items-center justify-center whitespace-nowrap'>
+            Find a doctor
+          </Button>
+        </div>
       </PageHeader>
-      <div className='flex flex-row'>
-        <section className='flex w-full min-w-[694px] flex-col  overflow-y-auto bg-background pt-7'>
+      <div className='flex flex-col gap-6 lg:flex-row'>
+        <section className='flex w-full flex-col gap-6 bg-background'>
           <NearestAppointmentsComponent appointments={nearestAppointments} />
           <NotificationsComponent />
         </section>
-        <section className='flex flex-col pt-7'>
+        <section className='flex flex-col gap-6'>
           <Calendar
             meetingsForDay={appointments.map((appointment: IAppointment) => ({
               date: new Date(appointment.startedAt),
@@ -65,4 +77,5 @@ const PatientDashboard = () => {
     </div>
   );
 };
+
 export default PatientDashboard;

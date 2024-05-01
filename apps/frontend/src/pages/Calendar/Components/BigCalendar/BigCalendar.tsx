@@ -16,7 +16,7 @@ export default function BigCalendar({ chooseDate, meetingsForDay }: BigCalendar)
   const [currentMonth, setCurrentMonth] = useState<Dayjs>(dayjs());
 
   return (
-    <section className='flex w-full flex-col gap-y-4'>
+    <section className='flex w-full max-w-[900px] flex-col gap-y-4'>
       <BigCalendarHeader currentMonth={currentMonth} setCurrentMonth={setCurrentMonth} />
 
       <BigCalendarBody currentMonth={currentMonth} meetingsForDay={meetingsForDay} handleDateChange={chooseDate} />

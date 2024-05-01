@@ -47,23 +47,21 @@ export default function CalendarPage() {
   }
 
   return (
-    <div className='max-w-[1286px]'>
-      <PageHeader iconVariant='date' title='Calendar' className='flex flex-col gap-2 sm:flex-row'>
-        <Button
-          className=' flex items-center justify-center bg-white p-2 sm:px-6'
-          onClick={exportSchedule}
-          type='secondary'
-        >
-          <Icon variant='download' className='mr-2 items-center justify-center' />
-          Export
-        </Button>
+    <div className='grid gap-6'>
+      <PageHeader iconVariant='date' title='Calendar' className='!mb-0 flex flex-col gap-6 sm:flex-row sm:gap-2'>
+        <div className='flex w-full flex-col-reverse gap-2 sm:flex-row'>
+          <Button className='flex items-center justify-center bg-white' onClick={exportSchedule} type='secondary'>
+            <Icon variant='download' className='mr-2 items-center justify-center' />
+            Export
+          </Button>
 
-        <Button onClick={findDoctor} type='primary' className='p-2 sm:px-6'>
-          Find a doctor
-        </Button>
+          <Button onClick={findDoctor} type='primary'>
+            Find a doctor
+          </Button>
+        </div>
       </PageHeader>
 
-      <section className='flex w-full flex-col-reverse gap-12 sm:flex-col md:justify-between md:gap-4 lg:flex-row'>
+      <section className='flex w-full flex-col-reverse gap-6 sm:flex-col md:justify-between md:gap-8 lg:flex-row 2xl:gap-24'>
         <AppointmentsWidget appointmentsForDay={appointmentsForDay} selectedDate={selectedDate} />
         <BigCalendar meetingsForDay={allPlannedAppointments} chooseDate={handleDateChange} />
       </section>

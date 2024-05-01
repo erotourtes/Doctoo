@@ -36,8 +36,8 @@ export const Calendar = ({ meetingsForDay }: CalendarProps) => {
   const days = getMonthDays(currentMonth as Dayjs);
 
   return (
-    <div className='grid w-full max-w-[302px] select-none grid-cols-[repeat(7,1fr)] rounded-xl bg-white p-6'>
-      <div className='col-[1_/_span_7] mb-5 flex items-center justify-between'>
+    <div className='grid w-full select-none grid-cols-[repeat(7,1fr)] rounded-xl bg-white p-2 max-lg:aspect-[1] sm:p-6 lg:max-w-[302px]'>
+      <div className='col-span-7 col-start-1 mb-5 flex items-center gap-4 lg:justify-between'>
         <h3 className='text-lg font-medium not-italic leading-6 text-black'>{currentDate}</h3>
         <div className='flex items-center gap-2'>
           <button onClick={prevMonth}>
@@ -64,7 +64,10 @@ export const Calendar = ({ meetingsForDay }: CalendarProps) => {
       </div>
 
       {daysOfWeek.map(day => (
-        <div key={day} className='mb-2 text-center text-xs font-normal not-italic leading-4 text-grey-2'>
+        <div
+          key={day}
+          className='mb-2 text-center text-[3vw] font-normal not-italic leading-4 text-grey-2 sm:text-[2vw] lg:text-xs'
+        >
           {day}
         </div>
       ))}
@@ -73,28 +76,40 @@ export const Calendar = ({ meetingsForDay }: CalendarProps) => {
         const meetings =
           meetingsForDay && meetingsForDay.filter(meeting => day.isSame(meeting.date, 'day')).slice(0, 3);
 
+        const meetingsByStatus =
+          meetings &&
+          meetings.reduce((acc, meeting) => {
+            return {
+              ...acc,
+              [meeting.status]: meeting,
+            };
+          }, {});
+
         return (
           <div
             className={cn(
               day.month() === currentMonth?.month() ? 'text-black' : 'text-grey-4',
-              'grid h-11 w-[36.3px] grid-rows-[6px_30px_2px_6px] justify-items-center text-base font-normal leading-6',
+              'grid grid-rows-[6px_30px_2px_6px] justify-items-center font-normal leading-6 lg:h-11 lg:w-[36.3px] lg:text-base',
             )}
             key={index}
           >
             <p
               className={cn(
                 day.isSame(today, 'day') && 'rounded-full bg-main-light',
-                'col-[1_/_1] row-[2_/_2] flex h-8 w-8 items-center justify-center',
+                'col-start-1 col-end-1 row-start-2 row-end-2 flex h-8 w-8 items-center justify-center',
+                'text-[4vw] sm:text-[3vw] md:text-[2vw] lg:text-base',
+                'min-[500px]:h-12 min-[500px]:w-12 lg:h-8 lg:w-8',
               )}
             >
               {day.format('D')}
             </p>
 
             {meetings && (
-              <ul className='col-[1_/_1] row-[3_/_5] flex items-center gap-1'>
-                {meetings.map((meeting, i) => (
-                  <li key={i} className={cn(getMeetingStatusColor(meeting.status), 'h-2 w-2 rounded-full')} />
-                ))}
+              <ul className='col-start-1 col-end-1 row-start-3 row-end-6 flex items-center gap-1'>
+                {meetingsByStatus &&
+                  Object.keys(meetingsByStatus).map(status => (
+                    <li key={status} className={cn(getMeetingStatusColor(status), 'h-2 w-2 rounded-full')} />
+                  ))}
               </ul>
             )}
           </div>
