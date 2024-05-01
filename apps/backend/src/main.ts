@@ -6,6 +6,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
 import * as swaggerStats from 'swagger-stats';
 import { AppModule } from './app/app.module';
+import { LoggerInterceptor } from './app-logger/logger.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -39,6 +40,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, swaggerConfig);
 
   app.use(swaggerStats.getMiddleware({ swaggerSpec: document }));
+
+  app.useGlobalInterceptors(app.get(LoggerInterceptor));
 
   RedocModule.setup('/', app, document, {});
 
