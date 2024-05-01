@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Icon from '../Icon/Icon';
 import { Checkbox } from '../Checkbox/Checkbox';
 import type { FieldValues, SubmitHandler } from 'react-hook-form';
@@ -11,9 +11,10 @@ interface SelectProps {
   options: { id: string; name: string }[];
   defaultOption: string | '';
   setChosenOptions: (value: string[]) => void;
+  selectedOptions?: string[];
 }
 
-const OptionalSelect: React.FC<SelectProps> = ({ options, defaultOption, setChosenOptions }) => {
+const OptionalSelect: React.FC<SelectProps> = ({ options, defaultOption, setChosenOptions, selectedOptions }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   useClickOutside(dropdownRef, () => setIsOpen(false));
@@ -36,10 +37,17 @@ const OptionalSelect: React.FC<SelectProps> = ({ options, defaultOption, setChos
     onSubmit(methods.getValues());
   };
 
+  useEffect(() => {
+    for (const option of options) {
+      const value = selectedOptions?.includes(option.id);
+      methods.setValue(option.id, value);
+    }
+  }, [selectedOptions]);
+
   return (
     <div className='relative'>
       <button
-        className='z-2 flex cursor-pointer items-center gap-3 rounded-full bg-white p-0.5 pl-3 text-sm text-black hover:bg-grey-5 hover:text-main'
+        className='flex cursor-pointer items-center gap-3 rounded-full bg-white p-0.5 pl-3 text-base text-black hover:bg-grey-5 hover:text-main'
         onClick={() => setIsOpen(prev => !prev)}
         ref={dropdownRef}
       >
@@ -57,10 +65,10 @@ const OptionalSelect: React.FC<SelectProps> = ({ options, defaultOption, setChos
       {isOpen && (
         <div>
           <div
-            className='absolute mb-5 mt-2 flex w-[224px] justify-end  rounded-md bg-white shadow-md '
+            className='absolute z-50 mb-5 mt-2 flex w-fit min-w-[224px] justify-end rounded-md bg-white shadow-md'
             onClick={e => e.stopPropagation()}
           >
-            <div className='mr-1 mt-4 w-[210px]'>
+            <div className='mr-1 mt-4 min-w-[210px]'>
               <FormProvider {...methods}>
                 <form onSubmit={handleFormSubmit}>
                   <div style={{ overflowY: 'auto' }} className='custom-scrollbar max-h-[150px]'>
