@@ -2,7 +2,7 @@ import { AppointmentStatus } from '@prisma/client';
 
 export const appointmentStub = () => {
   return {
-    assignedAt: '2024-04-29T07:58:54.171Z',
+    createdAt: '2024-04-29T07:58:54.171Z',
     status: AppointmentStatus.PLANNED,
     notes: '',
     paymentInvoiceKey: '3cc2c795-323c-49e0-aee4-489874f68da6',

@@ -1339,7 +1339,7 @@ export interface components {
        * @description The date on which the meeting is scheduled.
        * @example 2024-04-30T15:06:19.140Z
        */
-      assignedAt: string;
+      createdAt: string;
       /**
        * @description Current status of the appointment.
        * @example PLANNED
@@ -1387,7 +1387,7 @@ export interface components {
        * @description The date on which the meeting is scheduled.
        * @example 2024-04-30T15:06:19.140Z
        */
-      assignedAt: string;
+      createdAt: string;
       /**
        * @description Current status of the appointment.
        * @enum {string}
@@ -1436,7 +1436,7 @@ export interface components {
        * @description The date on which the meeting is scheduled.
        * @example 2024-04-30T15:06:19.140Z
        */
-      assignedAt?: string;
+      createdAt?: string;
       /**
        * @description Current status of the appointment.
        * @example PLANNED

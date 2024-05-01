@@ -43,7 +43,7 @@ describe('AppointmentController (e2e)', () => {
       const data = {
         doctorId: doctor.id,
         patientId: patient.id,
-        assignedAt: '2024-04-29T07:58:54.171Z',
+        createdAt: '2024-04-29T07:58:54.171Z',
         status: AppointmentStatus.PLANNED,
         notes: '',
         paymentInvoiceKey: '3cc2c795-323c-49e0-aee4-489874f68da6',
@@ -74,7 +74,7 @@ describe('AppointmentController (e2e)', () => {
           id: appointment.id,
           doctorId: doctor.id,
           patientId: patient.id,
-          assignedAt: '2024-04-29T07:58:54.171Z',
+          createdAt: '2024-04-29T07:58:54.171Z',
           status: AppointmentStatus.PLANNED,
           notes: '',
           paymentInvoiceKey: '3cc2c795-323c-49e0-aee4-489874f68da6',
@@ -109,7 +109,7 @@ describe('AppointmentController (e2e)', () => {
             hospitals: [],
           },
           patientId: patient.id,
-          assignedAt: '2024-04-29T07:58:54.171Z',
+          createdAt: '2024-04-29T07:58:54.171Z',
           status: AppointmentStatus.PLANNED,
           notes: '',
           paymentInvoiceKey: '3cc2c795-323c-49e0-aee4-489874f68da6',
@@ -142,7 +142,7 @@ describe('AppointmentController (e2e)', () => {
           patient: {
             ...patient,
           },
-          assignedAt: '2024-04-29T07:58:54.171Z',
+          createdAt: '2024-04-29T07:58:54.171Z',
           status: AppointmentStatus.PLANNED,
           notes: '',
           paymentInvoiceKey: '3cc2c795-323c-49e0-aee4-489874f68da6',
@@ -168,7 +168,7 @@ describe('AppointmentController (e2e)', () => {
       });
 
       const expected = {
-        assignedAt: '2024-04-29T07:58:54.171Z',
+        createdAt: '2024-04-29T07:58:54.171Z',
         status: AppointmentStatus.PLANNED,
         notes: '',
         paymentInvoiceKey: '3cc2c795-323c-49e0-aee4-489874f68da6',

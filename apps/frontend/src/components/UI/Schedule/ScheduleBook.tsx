@@ -42,7 +42,7 @@ export default function ScheduleBook({
   const [newAppointment, setNewAppointment] = useState<ICreateAppointment>({
     doctorId: '',
     patientId: '',
-    assignedAt: '',
+    createdAt: '',
     status: AppointmentStatus.PLANNED,
     endedAt: '',
     startedAt: '',
@@ -53,7 +53,7 @@ export default function ScheduleBook({
   const plannedAppointments = useMemo(() => {
     return appointments
       .filter(appointment => appointment.status === 'Planned')
-      .map(appointment => dayjs.utc(dayjs(appointment.assignedAt).format('YYYY-MM-DD hh:mm a')));
+      .map(appointment => dayjs.utc(dayjs(appointment.startedAt).format('YYYY-MM-DD hh:mm a')));
   }, [appointments]);
 
   const isAppointmentPlanned = (date: Dayjs, time: string) => {
@@ -120,7 +120,7 @@ export default function ScheduleBook({
       const createNewAppointment: ICreateAppointment = {
         doctorId: doctorId,
         patientId: patientId,
-        assignedAt: dayjs().toISOString(),
+        createdAt: dayjs().toISOString(),
         status: AppointmentStatus.PENDING_PAYMENT,
         startedAt: selectedDate.format('YYYY-MM-DDTHH:mm:ss[Z]'),
         endedAt: selectedDate.add(1, 'hour').format('YYYY-MM-DDTHH:mm:ss[Z]'),

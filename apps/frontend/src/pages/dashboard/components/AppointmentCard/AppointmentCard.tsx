@@ -10,7 +10,7 @@ type AppointmentCardProps = {
 };
 
 export default function AppointmentCard({ appointment, withQuickNotes = false }: AppointmentCardProps) {
-  const appointmentDate = dayjs(appointment.assignedAt);
+  const appointmentDate = dayjs(appointment.startedAt);
   const isLate = appointmentDate.diff(new Date(), 'minutes') <= 0;
   return (
     <>

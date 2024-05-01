@@ -45,7 +45,7 @@ describe('AppointmentService', () => {
     const appointmentDto: CreateAppointmentDto = {
       doctorId: doctor.id,
       patientId: patient.id,
-      assignedAt: '2024-04-29T07:58:54.171Z',
+      createdAt: '2024-04-29T07:58:54.171Z',
       status: AppointmentStatus.PLANNED,
       notes: '',
       paymentInvoiceKey: '3cc2c795-323c-49e0-aee4-489874f68da6',
@@ -77,7 +77,7 @@ describe('AppointmentService', () => {
         id: appointment.id,
         doctorId: doctor.id,
         patientId: patient.id,
-        assignedAt: '2024-04-29T07:58:54.171Z',
+        createdAt: '2024-04-29T07:58:54.171Z',
         status: AppointmentStatus.PLANNED,
         notes: '',
         paymentInvoiceKey: '3cc2c795-323c-49e0-aee4-489874f68da6',
@@ -108,7 +108,7 @@ describe('AppointmentService', () => {
           hospitals: [],
         },
         patientId: patient.id,
-        assignedAt: '2024-04-29T07:58:54.171Z',
+        createdAt: '2024-04-29T07:58:54.171Z',
         status: AppointmentStatus.PLANNED,
         notes: '',
         paymentInvoiceKey: '3cc2c795-323c-49e0-aee4-489874f68da6',
@@ -137,7 +137,7 @@ describe('AppointmentService', () => {
         patient: {
           ...patient,
         },
-        assignedAt: '2024-04-29T07:58:54.171Z',
+        createdAt: '2024-04-29T07:58:54.171Z',
         status: AppointmentStatus.PLANNED,
         notes: '',
         paymentInvoiceKey: '3cc2c795-323c-49e0-aee4-489874f68da6',
@@ -159,7 +159,7 @@ describe('AppointmentService', () => {
     const result = await appointmentService.getAppointment(appointment.id);
 
     const expected = {
-      assignedAt: '2024-04-29T07:58:54.171Z',
+      createdAt: '2024-04-29T07:58:54.171Z',
       status: AppointmentStatus.PLANNED,
       notes: '',
       paymentInvoiceKey: '3cc2c795-323c-49e0-aee4-489874f68da6',

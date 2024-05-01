@@ -27,7 +27,7 @@ const PatientDashboard = () => {
   const appointments = useAppSelector(state => state.appointment.appointments);
   const nearestAppointments = appointments
     .filter((appointment: IAppointment) => {
-      const appointmentDate = dayjs(appointment.assignedAt);
+      const appointmentDate = dayjs(appointment.startedAt);
       const nextSevenDays = dayjs().add(7, 'day');
       return (
         appointmentDate.isBefore(nextSevenDays) ||
@@ -35,7 +35,7 @@ const PatientDashboard = () => {
       );
     })
     .sort((a: IAppointment, b: IAppointment) => {
-      return dayjs(a.assignedAt).diff(dayjs(b.assignedAt));
+      return dayjs(a.startedAt).diff(dayjs(b.startedAt));
     })
     .slice(0, 5);
   return (
@@ -55,7 +55,7 @@ const PatientDashboard = () => {
         <section className='flex flex-col pt-7'>
           <Calendar
             meetingsForDay={appointments.map((appointment: IAppointment) => ({
-              date: new Date(appointment.assignedAt),
+              date: new Date(appointment.startedAt),
               status: appointment.status,
             }))}
           />

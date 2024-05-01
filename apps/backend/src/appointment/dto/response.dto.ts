@@ -14,7 +14,7 @@ export class ResponseAppointmentDto {
   patientId: string;
 
   @ApiProperty({ example: '2024-04-30T15:06:19.140Z', description: 'The date on which the meeting is scheduled.' })
-  assignedAt: Date;
+  createdAt: Date;
 
   @ApiProperty({ enum: AppointmentStatus, description: 'Current status of the appointment.' })
   status: AppointmentStatus;

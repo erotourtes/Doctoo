@@ -12,7 +12,7 @@ const mockAppointments: IAppointment[] = [
     id: '1',
     doctorId: 'doc1',
     patientId: 'pat1',
-    assignedAt: '2022-12-01T10:00:00.000Z',
+    createdAt: '2022-12-01T10:00:00.000Z',
     status: AppointmentStatus.CANCELED,
     notes: 'This is a mock appointment',
     paymentInvoiceKey: 'invoice1',

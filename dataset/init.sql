@@ -25,12 +25,22 @@ VALUES
 ('uuid-hospitaldoctor1', 'uuid-hospital1', 'uuid-doctor1');
 
 -- Insert data into Appointments
-INSERT INTO appointments (id, patient_id, doctor_id, assigned_at, status, notes)
+INSERT INTO appointments (id, patient_id, doctor_id, created_at, status, notes, started_at)
 VALUES 
-('uuid-appointment1', 'uuid-patient1', 'uuid-doctor1', '2024-05-01 14:00:00+00', 'PLANNED', 'Initial consultation for skin checkup.');
+('uuid-appointment1', 'uuid-patient1', 'uuid-doctor1', '2024-05-01 14:00:00+00', 'PLANNED', 'Initial consultation for skin checkup.','2024-05-01 14:00:00+00');
 
 -- Insert data into Reviews
 INSERT INTO reviews (id, text, rate, doctor_id, patient_id, created_at, updated_at)
 VALUES 
 ('uuid-review1', 'Very professional and friendly.', 5, 'uuid-doctor1', 'uuid-patient1', '2024-05-01 16:30:00+00', '2024-05-01 16:30:00+00');
 
+INSERT INTO specializations (id, name)
+VALUES 
+('uuid-spec1', 'Pediatrics'),
+('uuid-spec2', 'Developmental Disorders');
+
+-- Insert data into DoctorSpecializations (associating doctors with specializations)
+INSERT INTO doctor_specializations (id, doctor_id, specialization_id)
+VALUES 
+('uuid-docspec1', 'uuid-doctor1', 'uuid-spec1'),
+('uuid-docspec2', 'uuid-doctor1', 'uuid-spec2');

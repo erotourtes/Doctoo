@@ -11,7 +11,7 @@ export interface IAppointment {
   id: string;
   doctorId: string;
   patientId: string;
-  assignedAt: string;
+  createdAt: string;
   notes: string;
   status?: AppointmentStatus | any;
   videoRecordKey: string;
@@ -24,14 +24,14 @@ export interface IAppointment {
 
 export interface IPlannedAppointment {
   id: string;
-  assignedAt: string;
+  createdAt: string;
   notes: string;
 }
 
 export interface ICreateAppointment {
   doctorId: string;
   patientId: string;
-  assignedAt: string;
+  createdAt: string;
   status: AppointmentStatus;
   startedAt: string;
   endedAt: string;

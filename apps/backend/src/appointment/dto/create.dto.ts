@@ -14,10 +14,11 @@ export class CreateAppointmentDto {
   @IsNotEmptyString()
   readonly patientId: string;
 
-  @ApiProperty({ example: '2024-04-30T15:06:19.140Z', description: 'The date on which the meeting is scheduled.' })
+  @ApiProperty({ example: '2024-04-30T15:06:19.140Z', description: 'The date when appointment was created' })
   @IsNotEmptyString()
   @IsISO8601({ strict: true })
-  assignedAt: string;
+  @IsOptional()
+  createdAt: string;
 
   @ApiProperty({
     enum: AppointmentStatus,
@@ -53,11 +54,10 @@ export class CreateAppointmentDto {
   @IsUUID(4)
   readonly paymentReceiptKey: string;
 
-  @ApiPropertyOptional({ description: 'The date and time the appointment started' })
-  @IsOptional()
+  @ApiProperty({ description: 'The date and time the appointment started' })
   @IsISO8601({ strict: true })
   @IsNotEmptyString()
-  readonly startedAt?: string;
+  readonly startedAt: string;
 
   @ApiPropertyOptional({ description: 'The date and time the appointment ended' })
   @IsOptional()
