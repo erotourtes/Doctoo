@@ -71,7 +71,7 @@ export default function Schedule({
           rating={rating}
           reviewsCount={reviewsCount}
           doctorId={doctorId}
-          specialization={specializations[0].name}
+          specialization={specializations && specializations[0].name}
         />
 
         <ScheduleBook

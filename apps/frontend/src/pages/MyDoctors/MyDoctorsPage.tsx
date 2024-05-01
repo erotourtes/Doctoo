@@ -2,27 +2,35 @@ import { Button } from '@/components/UI/Button/Button';
 import { Calendar } from '@/components/UI/Calendar/Calendar';
 import { fn } from '@storybook/test';
 import PageHeader from '../PageHeader';
-import DoctorsList from './Components/DoctorsList';
 import { useAppSelector } from '@/app/hooks';
 import { useAppDispatch } from '@/app/hooks';
 import { useEffect } from 'react';
-import { getPatientDoctorData } from '@/app/doctor/DoctorThunks';
+import { getMyDoctorData } from '@/app/doctor/DoctorThunks';
 import MyDoctorsFilters from './Components/Filters/MyDoctorsFilters';
 import { useState } from 'react';
 import { InputSearch } from '@/components/UI';
+import DoctorsList from './Components/DoctorsList';
+import { getMyAppointments } from '@/app/appointment/AppointmentThunks';
+import dayjs from 'dayjs';
 
 const MyDoctorsPage = () => {
   const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(getPatientDoctorData('7'));
-  }, []);
+  const appointments = useAppSelector(state => state.appointment.appointments);
   const doctors = useAppSelector(state => state.doctor.doctors);
+  useEffect(() => {
+    dispatch(getMyDoctorData());
+    dispatch(getMyAppointments());
+  }, []);
   const [chosenOptions, setChosenOptions] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
 
+  const meetingsForDay = appointments.map(appointment => ({
+    date: dayjs(appointment.startedAt).toDate(),
+    status: appointment.status.toUpperCase(),
+  }));
+
   return (
-    <div className=''>
+    <div>
       <header className='bg-background'>
         <PageHeader iconVariant={'my-doctors'} title='My doctors'>
           <InputSearch
@@ -43,7 +51,7 @@ const MyDoctorsPage = () => {
               <MyDoctorsFilters doctors={doctors} chosenOptions={chosenOptions} setChosenOptions={setChosenOptions} />
             </ul>
             {doctors?.length ? (
-              <DoctorsList doctors={doctors} chosenOptions={chosenOptions} />
+              <DoctorsList doctors={doctors} appointments={appointments} chosenOptions={chosenOptions} />
             ) : (
               <div className='flex h-[594px] w-full items-center justify-center rounded-xl bg-white text-center text-text'>
                 <span className='flex flex-col items-center gap-4'>
@@ -60,7 +68,7 @@ const MyDoctorsPage = () => {
             )}
           </div>
           <div>
-            <Calendar />
+            <Calendar meetingsForDay={meetingsForDay} />
           </div>
         </div>
       </section>

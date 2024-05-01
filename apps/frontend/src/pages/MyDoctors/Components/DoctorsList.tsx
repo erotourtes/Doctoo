@@ -1,14 +1,14 @@
-import MyDoctorCard from './Card/MyDoctorCard';
 import type { IDoctor } from '@/dataTypes/Doctor';
+import DoctorsListItem from './DoctorsListItem';
+import type { IAppointment } from '@/dataTypes/Appointment';
 
 interface DoctorsListProps {
   doctors: IDoctor[];
   chosenOptions: string[];
+  appointments: IAppointment[];
 }
 
-const DoctorsList = ({ doctors, chosenOptions }: DoctorsListProps) => {
-  console.log(doctors);
-
+const DoctorsList = ({ doctors, appointments, chosenOptions }: DoctorsListProps) => {
   const filterdDoctors = () => {
     const result: IDoctor[] = [];
     chosenOptions.forEach(option => {
@@ -24,29 +24,22 @@ const DoctorsList = ({ doctors, chosenOptions }: DoctorsListProps) => {
   const doctorsList = chosenOptions.length ? filterdDoctors() : doctors;
 
   return (
-    <div className='flex flex-col gap-6'>
-      {doctors && (
-        <div className=''>
-          <h3 className='mb-4 flex justify-start text-lg font-medium text-black'>My doctors ({doctorsList.length})</h3>
-          <div className='flex flex-col gap-4'>
-            {doctorsList.map((doctor, idx) => (
-              <MyDoctorCard
-                key={`doctors-list-${idx}`}
-                avatarKey={doctor.avatarKey}
-                name={doctor.firstName + ' ' + doctor.lastName}
-                specializations={doctor.specializations}
-                tags={['Best Doctor']}
-                reviewsNumber={0}
-                rating={0}
-                variant={'withBookButton'}
-                bookPrice={doctor.payrate}
-                about={doctor.about}
-              />
-            ))}
+    <>
+      <div className='flex flex-col gap-6'>
+        {doctors && (
+          <div className=''>
+            <h3 className='mb-4 flex justify-start text-lg font-medium text-black'>
+              My doctors ({doctorsList.length})
+            </h3>
+            <div className='flex flex-col gap-4'>
+              {doctorsList.map(doctor => (
+                <DoctorsListItem key={doctor.id} doctor={doctor} appointments={appointments} />
+              ))}
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 };
 
