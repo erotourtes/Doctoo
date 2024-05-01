@@ -20,22 +20,13 @@ export default function AppointmentsPopup({ appointment }: AppointmentPopupProps
 
   const { doctor, startedAt, status, videoRecordKey, notes, patientId, doctorId, id } = appointment;
   const { firstName, lastName, avatarKey, payrate, about, rating, reviewsCount } = doctor!;
-  const fullName = `Dr. ${firstName} ${lastName}`;
 
   return (
     <>
       <div className='flex flex-col justify-between gap-y-8'>
         <div className='flex flex-col gap-y-4'>
           <PopupHeader startTime={startedAt} status={status} />
-          <PopupBody
-            openReschedule={openReschedule}
-            fullName={fullName}
-            avatarKey={avatarKey}
-            doctorId={doctorId}
-            rating={rating}
-            reviewsCount={reviewsCount}
-            status={status}
-          />
+          {doctor && <PopupBody openReschedule={openReschedule} doctorId={doctorId} status={status} doctor={doctor} />}
         </div>
 
         <div className='flex items-center justify-between'>
@@ -63,8 +54,8 @@ export default function AppointmentsPopup({ appointment }: AppointmentPopupProps
           payrate: payrate,
           avatarKey: avatarKey,
           about: about,
-          rating: 5,
-          reviewsCount: 128,
+          rating: rating,
+          reviewsCount: reviewsCount,
         }}
         rescheduling={true}
       />

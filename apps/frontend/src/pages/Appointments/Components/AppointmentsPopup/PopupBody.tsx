@@ -1,24 +1,18 @@
+import { Badge } from '@/components/UI';
 import Icon from '@/components/UI/Icon/Icon';
 import StarsRating from '@/components/UI/StarsRating/StarsRating';
+import { IDoctor } from '@/dataTypes/Doctor';
 type PopupBodyProps = {
-  fullName: string;
-  avatarKey: string;
   openReschedule: () => void;
   doctorId: string;
-  rating: number;
-  reviewsCount: number;
   status: string;
+  doctor: IDoctor;
 };
 
-export default function PopupBody({
-  fullName,
-  avatarKey,
-  openReschedule,
-  doctorId,
-  rating,
-  reviewsCount,
-  status,
-}: PopupBodyProps) {
+export default function PopupBody({ openReschedule, doctorId, status, doctor }: PopupBodyProps) {
+  const { firstName, lastName, avatarKey, rating, reviewsCount, specializations } = doctor;
+  const fullName = `Dr. ${firstName} ${lastName}`;
+
   return (
     <>
       <div className='flex h-32 justify-start gap-x-6'>
@@ -39,12 +33,12 @@ export default function PopupBody({
               )}
             </div>
 
-            <span className='text-base font-medium text-grey-1'>{'placeholder'}</span>
+            <span className='text-base font-medium text-grey-1'>{specializations[0].name}</span>
           </div>
 
-          <div className='my-4 flex h-fit w-fit items-center justify-center rounded-2xl bg-main-light px-3 py-1 pb-1'>
-            <span className='select-none text-sm font-normal text-main-dark'>Top doctor placeholder</span>
-          </div>
+          <Badge badgeColor='bg-main-light' labelColor='text-main'>
+            Top doctor
+          </Badge>
 
           <StarsRating doctorId={doctorId} doctorRating={rating} doctorReviewsCount={reviewsCount} />
         </div>

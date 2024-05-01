@@ -24,7 +24,7 @@ export default function AppointmentsListItem({ appointment, openModal }: Appoint
   }
 
   const { patientId, doctorId, doctor, videoRecordKey, notes, status, paymentReceiptKey, id, startedAt } = appointment;
-  const { firstName, lastName, about, avatarKey, payrate } = doctor!;
+  const { firstName, lastName, about, avatarKey, payrate, specializations } = doctor!;
   const fullName = `Dr. ${firstName} ${lastName}`;
 
   return (
@@ -42,7 +42,9 @@ export default function AppointmentsListItem({ appointment, openModal }: Appoint
               </span>
             </div>
 
-            <span className='text-base font-medium text-black'>{fullName} (placeholder)</span>
+            <span className='text-base font-medium text-black'>
+              {fullName} ({specializations[0].name})
+            </span>
           </div>
 
           <div className='flex gap-x-3 gap-y-4'>
