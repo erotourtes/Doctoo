@@ -1,10 +1,9 @@
 import type { IDoctor } from '@/dataTypes/Doctor';
-import { useEffect, useState } from 'react';
 import Schedule from '@/components/UI/Schedule/Schedule';
 import { DoctorCard } from '@/components/UI';
 import type { IAppointment } from '@/dataTypes/Appointment';
-import { authorizePatient } from '../../../app/patient/PatientThunks';
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { useAppSelector } from '../../../app/hooks';
+import { useState } from 'react';
 
 interface DoctorsListItemProps {
   key: string;
@@ -15,13 +14,7 @@ interface DoctorsListItemProps {
 const DoctorsListItem = ({ key, doctor }: DoctorsListItemProps) => {
   const [schedulePopupIsOpen, setSchedulePopupIsOpen] = useState(false);
 
-  const dispatch = useAppDispatch();
-
   const patient = useAppSelector(state => state.patient);
-
-  useEffect(() => {
-    dispatch(authorizePatient());
-  }, []);
 
   function closeSchedulePopup() {
     setSchedulePopupIsOpen(false);
