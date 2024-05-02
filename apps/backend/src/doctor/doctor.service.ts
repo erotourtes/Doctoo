@@ -132,6 +132,22 @@ export class DoctorService {
     return plainToInstance(ResponseDoctorListDto, { doctors, count });
   }
 
+  async getDoctorByUserId(userId: string): Promise<ResponseDoctorDto> {
+    const doctor = await this.prismaService.doctor.findUnique({
+      where: { userId },
+      include: {
+        user: { select: { firstName: true, lastName: true, avatarKey: true } },
+        hospitals: { select: { hospital: true } },
+        specializations: { select: { specialization: true } },
+        _count: { select: { reviews: true } },
+      },
+    });
+
+    if (!doctor) throw new NotFoundException({ message: 'Doctor with this Id not found.' });
+
+    return plainToInstance(ResponseDoctorDto, doctor);
+  }
+
   async getDoctor(id: string): Promise<ResponseDoctorDto> {
     const doctor = await this.prismaService.doctor.findUnique({
       where: { id },

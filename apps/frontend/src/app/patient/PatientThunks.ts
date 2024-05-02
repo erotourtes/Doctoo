@@ -8,13 +8,7 @@ import type { TUser } from '@/dataTypes/User';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { AxiosResponse } from 'axios';
 import api from '../api';
-import {
-  addPatientAllergy,
-  addPatientCondition,
-  setPatientData,
-  setPatientState,
-  updatePatientData,
-} from './PatientSlice';
+import { addPatientAllergy, addPatientCondition, setPatientState, updatePatientData } from './PatientSlice';
 
 export const getPatientData = createAsyncThunk('patient', async (id: string, { dispatch }) => {
   try {
@@ -75,29 +69,6 @@ export const deletePatient = createAsyncThunk('patient', async (id: string) => {
     const error = e as Error;
     throw error;
   }
-});
-
-export const authorizePatient = createAsyncThunk('patient', async (_void, { dispatch }) => {
-  dispatch(setPatientState({ isLoading: true }));
-  const { data, error } = await api.GET('/auth/patient/me');
-  if (error || !data) return void dispatch(setPatientState({ isLoading: false }));
-
-  dispatch(
-    setPatientData({
-      ...data,
-      bloodType: data.bloodType,
-      gender: data.gender,
-      zipCode: data.zipCode ?? 0,
-      conditions: [],
-    }),
-  );
-  dispatch(setPatientState({ isFetched: true, isLoading: false }));
-});
-
-export const logoutPatient = createAsyncThunk('patient', async (_void, { dispatch }) => {
-  const { error } = await api.GET('/auth/logout');
-  if (error) throw new Error('Failed to logout');
-  dispatch(setPatientState({ isFetched: false }));
 });
 
 export const createPatientAllergies = createAsyncThunk(

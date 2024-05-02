@@ -1,14 +1,14 @@
 import { useAppDispatch } from '@/app/hooks';
-import { logoutPatient } from '@/app/patient/PatientThunks';
 import { Button } from '@/components/UI';
 import { useNavigate } from 'react-router';
+import { logoutThunk } from '../../../app/user/UserThunks';
 
 const Logout = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const logout = async () => {
-    await dispatch(logoutPatient());
+    await dispatch(logoutThunk());
 
     navigate('/login', { replace: true });
   };

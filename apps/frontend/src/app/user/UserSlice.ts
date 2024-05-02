@@ -1,9 +1,11 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '../createAppSlice';
-import type { TUser } from '@/dataTypes/User';
+import { type components } from '../../api';
 
 interface UserData {
-  data: TUser;
+  data: {
+    role?: components['schemas']['MeResponseDto']['role'];
+  };
   state: {
     isLoading: boolean;
     isFetched: boolean;
@@ -16,13 +18,7 @@ const initialState: UserData = {
     isFetched: false,
   },
   data: {
-    id: '1',
-    firstName: '',
-    lastName: '',
-    phone: '',
-    email: '',
-    avatarKey: '',
-    emailVerified: false,
+    role: undefined,
   },
 };
 
@@ -30,12 +26,18 @@ export const userSlice = createAppSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUserData: (state, action: PayloadAction<TUser>) => {
+    setUserData: (state, action: PayloadAction<UserData['data']>) => {
       state.data = action.payload;
+    },
+    setUserState: (state, action: PayloadAction<Partial<UserData['state']>>) => {
+      state.state = {
+        ...state.state,
+        ...action.payload,
+      };
     },
   },
 });
 
-export const { setUserData } = userSlice.actions;
+export const { setUserData, setUserState } = userSlice.actions;
 
 export default userSlice.reducer;

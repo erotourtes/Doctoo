@@ -13,6 +13,7 @@ import { CreateUserDto } from '../user/dto/create.dto';
 import { ResponseUserDto } from '../user/dto/response.dto';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
+import { mockUndefined, pipe } from 'src/utils/test-injection-mock';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -37,7 +38,9 @@ describe('AuthService', () => {
         { provide: MailService, useValue: mailServiceMock },
         { provide: MinioService, useValue: minioServiceMock },
       ],
-    }).compile();
+    })
+      .useMocker(pipe(mockUndefined))
+      .compile();
 
     authService = moduleRef.get<AuthService>(AuthService);
     userServiceMock.getUserByEmail = jest.fn().mockResolvedValue(null);

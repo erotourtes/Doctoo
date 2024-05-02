@@ -16,6 +16,9 @@ import { LocalLoginTwoFactorDto } from './dto/localLoginTwoFactor.dto';
 import { SignUpPatientDto } from './dto/signUpPatient.dto';
 import { SignUpUserDto } from './dto/signUpUser.dto';
 import { JwtPayload } from './strategies/jwt';
+import { MeResponseDto } from './dto/getMe.dto';
+import { ResponseDoctorDto } from '../doctor/dto/response.dto';
+import { DoctorService } from '../doctor/doctor.service';
 
 // TODO: refactor this service;
 // there are 3 concerns to consider:
@@ -31,6 +34,7 @@ export class AuthService {
     private readonly minioService: MinioService,
     private readonly userService: UserService,
     private readonly patientService: PatientService,
+    private readonly doctorService: DoctorService,
     @Inject(auth.KEY) private readonly authObject: ConfigType<typeof auth>,
   ) {}
 
@@ -133,12 +137,20 @@ export class AuthService {
     return accessToken;
   }
 
+  // TODO: inline this functions
   async getMePatient(user?: ResponseUserDto): Promise<ResponsePatientDto> {
     if (!user) throw new UnauthorizedException();
 
     const patient = await this.patientService.getPatientByUserId(user.id);
 
     return patient;
+  }
+
+  // TODO: inline this functions
+  private async getMeDoctor(user?: ResponseUserDto): Promise<ResponseDoctorDto> {
+    if (!user) throw new UnauthorizedException();
+    const doctor = await this.doctorService.getDoctorByUserId(user.id);
+    return doctor;
   }
 
   jwtCloseToExpire(token: string): boolean {
@@ -200,6 +212,15 @@ export class AuthService {
     const hashedPassword = await this.hashPassword(body.newPassword);
 
     await this.userService.patchUser(user.id, { password: hashedPassword });
+  }
+
+  async getMe(user?: ResponseUserDto): Promise<MeResponseDto> {
+    if (!user) throw new UnauthorizedException();
+    const response = new MeResponseDto();
+    response.role = user.role;
+    if (user.role === 'PATIENT') response.patient = await this.getMePatient(user);
+    else if (user.role === 'DOCTOR') response.doctor = await this.getMeDoctor(user);
+    return response;
   }
 
   private async signUpUserWithPassword(body: SignUpUserDto): Promise<ResponseUserDto> {

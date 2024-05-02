@@ -3,11 +3,13 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '../createAppSlice';
 import type { IDoctor } from '@/dataTypes/Doctor';
 import type { GetDoctorDataPayload } from './DoctorThunks';
+import { type components } from '../../api';
 
 interface DoctorData {
   doctors: IDoctor[];
   totalCount: number;
   familyDoctor: IDoctor | null;
+  doctorUser?: components['schemas']['ResponseDoctorDto'];
 }
 
 const initialState: DoctorData = {
@@ -20,6 +22,10 @@ export const doctorSlice = createAppSlice({
   name: 'doctor',
   initialState,
   reducers: {
+    setDoctorDataUser: (state, action: PayloadAction<components['schemas']['ResponseDoctorDto']>) => {
+      state.doctorUser = action.payload;
+    },
+
     setDoctorData: (state, action: PayloadAction<GetDoctorDataPayload>) => {
       state.doctors = action.payload.doctors;
       state.totalCount = action.payload.count;
@@ -53,6 +59,7 @@ export const doctorSlice = createAppSlice({
 
 export const {
   setDoctorData,
+  setDoctorDataUser,
   setNewDoctor,
   setDeleteDoctor,
   setPatchDoctorData,
