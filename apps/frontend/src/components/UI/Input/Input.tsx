@@ -27,11 +27,16 @@ const Input = ({
 }: InputProps) => {
   const {
     register,
+    setValue,
     formState: { errors, dirtyFields, isValid },
   } = useFormContext();
 
   const hasError = errors[id];
   const isDirty = id in dirtyFields;
+
+  const handleResetInput = (id: string) => {
+    setValue(id, null);
+  };
 
   return (
     <div className={cn(className || '', 'grid')}>
@@ -53,7 +58,11 @@ const Input = ({
         />
 
         {isDirty && !hasError && !isValid && (
-          <button type='reset' className='col-start-1 row-start-1 mr-2 self-center justify-self-end'>
+          <button
+            type='button'
+            className='col-start-1 row-start-1 mr-2 self-center justify-self-end'
+            onClick={() => handleResetInput(id)}
+          >
             <Icon variant='close' />
           </button>
         )}
