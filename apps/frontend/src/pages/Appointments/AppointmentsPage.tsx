@@ -11,12 +11,15 @@ import { getMyAppointments } from '@/app/appointment/AppointmentThunks';
 import NoAppointments from './NoAppointments';
 import { filterReducer, initialFilterState } from './filterReducer';
 import useWindowWide from '@/hooks/useWindowWide';
+import { useNavigate } from 'react-router';
 
 export default function AppointmentsPage() {
+  const navigate = useNavigate();
   const mobileWidth = useWindowWide(768);
   const dispatch = useAppDispatch();
   const appointments = useAppSelector(state => state.appointment.appointments);
   const [filterState, dispatchFilterAction] = useReducer(filterReducer, initialFilterState);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     dispatch(getMyAppointments());
@@ -27,11 +30,13 @@ export default function AppointmentsPage() {
     status: appointment.status.toUpperCase(),
   }));
 
-  const [search, setSearch] = useState('');
-
   function handleSubmit(value: string) {
     setSearch(value);
   }
+
+  const findDoctor = () => {
+    navigate(`/doctors?search=${encodeURIComponent(search)}`);
+  };
 
   return (
     <section className=''>
@@ -45,7 +50,12 @@ export default function AppointmentsPage() {
             className='w-full'
           />
 
-          <Button type='primary' btnType='button' className='flex items-center justify-center whitespace-nowrap'>
+          <Button
+            onClick={findDoctor}
+            type='primary'
+            btnType='button'
+            className='flex items-center justify-center whitespace-nowrap'
+          >
             Find a doctor
           </Button>
         </div>

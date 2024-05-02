@@ -69,7 +69,8 @@ export class UserService {
 
     if (user.email !== body.email && !user.password) {
       throw new BadRequestException('To change your email, please set up your password first.');
-    } else if (body.email) await this.patchUserEmail(id, user.firstName, user.email, body.email);
+    } else if (body.email && body.email !== user.email)
+      await this.patchUserEmail(id, user.firstName, user.email, body.email);
 
     return plainToInstance(ResponseUserDto, user);
   }

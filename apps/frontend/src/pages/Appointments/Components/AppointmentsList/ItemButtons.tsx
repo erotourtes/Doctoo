@@ -122,6 +122,14 @@ export default function AppointmentButtons({ componentName, appointment, openBoo
     case AppointmentStatus.CANCELED:
       return <BookAgainButton />;
 
+    case AppointmentStatus.PENDING_PAYMENT:
+      return (
+        <>
+          <PayButton />
+          <CancelButton text='Cancel' />
+        </>
+      );
+
     case AppointmentStatus.COMPLETED:
       return (
         <>

@@ -23,7 +23,6 @@ const DoctorsListItem = ({ key, doctor }: DoctorsListItemProps) => {
     setSchedulePopupIsOpen(true);
   }
 
-
   const fullName = `Dr. ${doctor.firstName} ${doctor.lastName}`;
 
   return (

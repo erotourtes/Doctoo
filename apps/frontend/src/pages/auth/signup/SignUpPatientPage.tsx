@@ -45,6 +45,16 @@ const patientScheme = Joi.object<Patient>({
   street: Joi.string().min(3).max(100).required(),
 });
 
+const styles = {
+  backgroundImage:
+    'linear-gradient(45deg, transparent 50%, blue 50%), linear-gradient(135deg, blue 50%, transparent 50%)',
+  backgroundPosition: 'calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px), 100% 0',
+  backgroundSize: '5px 5px, 5px 5px, 2.5em 2.5em',
+  backgroundRepeat: 'no-repeat',
+  '-webkit-appearance': 'none',
+  '-moz-appearance': 'none',
+};
+
 const SignUpPageOrig = ({ token }: { token: string }) => {
   const navigate = useNavigate();
   const form = useForm<Patient>({
@@ -85,9 +95,10 @@ const SignUpPageOrig = ({ token }: { token: string }) => {
               {...form.register('bloodType')}
               defaultValue=''
               className={cn(
-                `w-full rounded-lg border border-transparent bg-background py-2 pl-2 pr-10 text-base text-text hover:border-text focus:border-text focus:outline-none`,
+                `w-full rounded-lg border border-transparent bg-background py-2 pl-3 pr-10 text-base text-text hover:border-text focus:border-text focus:outline-none`,
                 errors.bloodType?.message && 'border border-solid border-error',
               )}
+              style={styles}
             >
               <option disabled value=''>
                 Select blood type
@@ -105,9 +116,10 @@ const SignUpPageOrig = ({ token }: { token: string }) => {
             <p className={cn('text-md my-2 block text-grey-1')}>Gender</p>
             <select
               {...form.register('gender')}
+              style={styles}
               defaultValue=''
               className={cn(
-                `w-full rounded-lg border border-transparent bg-background py-2 pl-2 pr-10 text-base text-text hover:border-text focus:border-text focus:outline-none`,
+                `w-full rounded-lg border border-transparent bg-background py-2 pl-3 pr-10 text-base text-text hover:border-text focus:border-text focus:outline-none`,
                 errors.bloodType?.message && 'border border-solid border-error',
               )}
             >
