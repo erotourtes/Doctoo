@@ -6,11 +6,14 @@ import AppointmentLinks from '../AppointmentsList/ItemLinks';
 import Schedule from '@/components/UI/Schedule/Schedule';
 import { useState } from 'react';
 import type { IReview } from '@/dataTypes/Review';
+import useWindowWide from '@/hooks/useWindowWide';
 
 type AppointmentPopupProps = { appointment: IAppointment; reviews: IReview[] };
 
 export default function AppointmentsPopup({ appointment, reviews }: AppointmentPopupProps) {
   const [rescheduleIsOpen, setRescheduleIsOpen] = useState(false);
+  const tabletWidth = useWindowWide(824);
+  const mobileWidth = useWindowWide(500);
 
   function closeReschedule() {
     setRescheduleIsOpen(false);
@@ -29,15 +32,15 @@ export default function AppointmentsPopup({ appointment, reviews }: AppointmentP
           {doctor && <PopupBody openReschedule={openReschedule} doctorId={doctorId} status={status} doctor={doctor} />}
         </div>
 
-        <div className='flex items-center justify-between'>
-          <span className='text-base font-normal text-grey-2'>Attached files:</span>
+        <div className={`flex items-center ${tabletWidth ? 'justify-between' : 'mt-2 gap-x-2'}`}>
+          <span className={`font-normal text-grey-2 `}>Attached files:</span>
 
           <div className='self-end'>
             <AppointmentLinks videoRecordKey={videoRecordKey} notes={notes} />
           </div>
         </div>
 
-        <div className='flex gap-x-4 self-end'>
+        <div className={`flex gap-x-4 ${mobileWidth ? 'self-end' : 'self-center'}`}>
           <AppointmentButtons componentName='popup' appointment={appointment} openBookModal={openReschedule} />
         </div>
       </div>
