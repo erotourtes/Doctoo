@@ -7,20 +7,26 @@ import AppointmentButtons from './ItemButtons';
 import AppointmentLinks from './ItemLinks';
 import { useState } from 'react';
 import Schedule from '@/components/UI/Schedule/Schedule';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { fetchReviewsByDoctor } from '@/app/review/ReviewThunks';
 
 dayjs.extend(utc);
 
 type AppointmentsListItemProps = { appointment: IAppointment; openModal: (appointment: IAppointment) => void };
 
 export default function AppointmentsListItem({ appointment, openModal }: AppointmentsListItemProps) {
-  const [rescheduleIsOpen, setRescheduleIsOpen] = useState(false);
+  const dispatch = useAppDispatch();
+  const reviews = useAppSelector(state => state.review.reviews);
 
-  function closeReschedule() {
-    setRescheduleIsOpen(false);
+  const [bookModalIsOpen, setBookModal] = useState(false);
+
+  function closeBookModal() {
+    setBookModal(false);
   }
 
-  function openReschedule() {
-    setRescheduleIsOpen(true);
+  function openBookModal() {
+    dispatch(fetchReviewsByDoctor({ doctorId: appointment.doctorId, includeNames: 'true', skip: '0', take: '2' }));
+    setBookModal(true);
   }
 
   const { patientId, doctorId, doctor, videoRecordKey, notes, status, paymentReceiptKey, id, startedAt } = appointment;
@@ -58,6 +64,14 @@ export default function AppointmentsListItem({ appointment, openModal }: Appoint
           </div>
         </div>
 
+        <div className='flex flex-col justify-between'>
+          <div className='flex w-[140px] flex-col gap-x-2 gap-y-4 self-end'>
+            <AppointmentButtons componentName='listItem' appointment={appointment} openBookModal={openBookModal} />
+          </div>
+
+          <div className='self-end'>
+            <AppointmentLinks videoRecordKey={videoRecordKey} notes={notes} />
+          </div>
         <div className='flex flex-wrap items-center justify-between gap-4'>
           <p className='text-base font-normal text-grey-2'>Attached files:</p>
           <AppointmentLinks videoRecordKey={videoRecordKey} notes={notes} />
@@ -65,13 +79,14 @@ export default function AppointmentsListItem({ appointment, openModal }: Appoint
       </div>
 
       <Schedule
-        closePopup={closeReschedule}
-        scheduleIsOpen={rescheduleIsOpen}
+        closePopup={closeBookModal}
+        scheduleIsOpen={bookModalIsOpen}
         scheduleInfo={{
           patientId: patientId,
           doctorId: doctorId,
           appointmentId: id,
           doctor: doctor!,
+          reviews: reviews,
         }}
       />
     </>

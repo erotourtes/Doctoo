@@ -5,10 +5,11 @@ import AppointmentButtons from '../AppointmentsList/ItemButtons';
 import AppointmentLinks from '../AppointmentsList/ItemLinks';
 import Schedule from '@/components/UI/Schedule/Schedule';
 import { useState } from 'react';
+import type { IReview } from '@/dataTypes/Review';
 
-type AppointmentPopupProps = { appointment: IAppointment };
+type AppointmentPopupProps = { appointment: IAppointment; reviews: IReview[] };
 
-export default function AppointmentsPopup({ appointment }: AppointmentPopupProps) {
+export default function AppointmentsPopup({ appointment, reviews }: AppointmentPopupProps) {
   const [rescheduleIsOpen, setRescheduleIsOpen] = useState(false);
 
   function closeReschedule() {
@@ -49,6 +50,7 @@ export default function AppointmentsPopup({ appointment }: AppointmentPopupProps
           doctorId: doctorId,
           appointmentId: id,
           doctor: doctor!,
+          reviews: reviews,
         }}
         rescheduling={true}
       />

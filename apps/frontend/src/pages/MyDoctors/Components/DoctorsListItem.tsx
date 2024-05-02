@@ -45,6 +45,7 @@ const DoctorsListItem = ({ key, doctor }: DoctorsListItemProps) => {
             patientId: patient.id,
             doctorId: doctor.id,
             doctor: doctor,
+            reviews: [],
           }}
         />
       }

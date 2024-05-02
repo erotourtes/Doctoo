@@ -8,10 +8,7 @@ import dayjs from 'dayjs';
 import ScheduleSuccessModal from './ScheduleSuccessModal';
 import { useState } from 'react';
 import type { IDoctor } from '@/dataTypes/Doctor';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import type { IReview } from '@/dataTypes/Review';
-import { useEffect } from 'react';
-import { fetchReviewsByDoctor } from '@/app/review/ReviewThunks';
 
 type ScheduleProps = {
   closePopup: () => void;
@@ -21,6 +18,7 @@ type ScheduleProps = {
     appointmentId?: string;
     doctorId: string;
     doctor: IDoctor;
+    reviews: IReview[];
   };
   currentDay?: Dayjs;
   rescheduling?: boolean;
@@ -33,21 +31,10 @@ export default function Schedule({
   currentDay = dayjs(),
   rescheduling,
 }: ScheduleProps) {
-  const { doctorId, patientId, appointmentId, doctor } = scheduleInfo;
+  const { doctorId, patientId, appointmentId, doctor, reviews } = scheduleInfo;
   const { avatarKey, firstName, lastName, payrate, rating, reviewsCount, about, specializations } = doctor;
 
   const doctorFullName = `Dr. ${firstName} ${lastName}`;
-
-  const dispatch = useAppDispatch();
-  const reviews = useAppSelector(state => state.review.reviews).filter(
-    (review: IReview) => review.doctorId === doctorId,
-  );
-
-  useEffect(() => {
-    if (!doctorId) return;
-
-    dispatch(fetchReviewsByDoctor({ doctorId, includeNames: 'true', skip: '0', take: '2' }));
-  }, [doctorId, dispatch]);
 
   const [appointmentSelectedDate, setAppointmentSelectedDate] = useState<Dayjs | undefined>(undefined);
   const [successfullModal, setSuccessfullModal] = useState(false);

@@ -6,8 +6,9 @@ import type { IAppointment } from '@/dataTypes/Appointment';
 import type { FilterState } from '../../filterReducer';
 import dayjs from 'dayjs';
 import { filterConfig } from '../AppointmentsFilters/AppointmentsFilters';
-import { useAppDispatch } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { getMyAppointments } from '@/app/appointment/AppointmentThunks';
+import { fetchReviewsByDoctor } from '@/app/review/ReviewThunks';
 
 type AppointmentsListProps = {
   filters: FilterState;
@@ -47,6 +48,8 @@ function sortAppointments(a: IAppointment, b: IAppointment, filters: FilterState
 
 export default function AppointmentsList({ filters, appointments }: AppointmentsListProps) {
   const dispatch = useAppDispatch();
+  const reviews = useAppSelector(state => state.review.reviews);
+
   const [modal, setModal] = useState(false);
   const [appointment, setAppointment] = useState<IAppointment>();
   const [filteredAppointments, setFilteredAppointments] = useState<IAppointment[]>([]);
@@ -70,13 +73,19 @@ export default function AppointmentsList({ filters, appointments }: Appointments
     }
   }, [appointments, filters, hasFetchedAppointments]);
 
+  useEffect(() => {
+    if (reviews && appointment) {
+      setModal(true);
+    }
+  }, [reviews, appointment]);
+
   function closeModal(): void {
     setModal(false);
   }
 
   function openModal(appointment: IAppointment): void {
     setAppointment(appointment);
-    setModal(true);
+    dispatch(fetchReviewsByDoctor({ doctorId: appointment.doctorId, includeNames: 'true', skip: '0', take: '2' }));
   }
 
   return (
@@ -95,7 +104,7 @@ export default function AppointmentsList({ filters, appointments }: Appointments
         modalBodyClassName={''}
         modalFullClassName='max-w-[700px]'
       >
-        {appointment && <AppointmentsPopup appointment={appointment} />}
+        {appointment && <AppointmentsPopup appointment={appointment} reviews={reviews} />}
       </PopupDoctoo>
     </>
   );

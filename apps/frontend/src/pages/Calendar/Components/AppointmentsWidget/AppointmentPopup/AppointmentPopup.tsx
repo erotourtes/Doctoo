@@ -6,14 +6,21 @@ import CalendarPopupHeader from './CalendarPopupHeader';
 import CalendarPopupBody from './CalendarPopupBody';
 import Schedule from '@/components/UI/Schedule/Schedule';
 import { useState } from 'react';
+import type { IReview } from '@/dataTypes/Review';
 
 type AppointmentPopupProps = {
   appointmentModal: boolean;
   closeModal: () => void;
   selectedAppointment: IAppointment;
+  reviews: IReview[];
 };
 
-export default function AppointmentPopup({ appointmentModal, closeModal, selectedAppointment }: AppointmentPopupProps) {
+export default function AppointmentPopup({
+  appointmentModal,
+  closeModal,
+  selectedAppointment,
+  reviews,
+}: AppointmentPopupProps) {
   const [rescheduleIsOpen, setRescheduleIsOpen] = useState(false);
   const [bookAgainIsOpen, setBookAgainIsOpen] = useState(false);
   const [bookMode, setBookMode] = useState({
@@ -79,6 +86,7 @@ export default function AppointmentPopup({ appointmentModal, closeModal, selecte
             doctorId: doctorId,
             appointmentId: id,
             doctor: doctor as IDoctor,
+            reviews: reviews,
           }}
           rescheduling={bookMode.reschedule}
         />
