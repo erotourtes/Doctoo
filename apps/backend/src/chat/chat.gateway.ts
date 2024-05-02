@@ -8,14 +8,14 @@ import {
   ConnectedSocket,
 } from '@nestjs/websockets';
 import { Injectable, Logger } from '@nestjs/common';
-import { OnEvent } from '@nestjs/event-emitter';
+// import { OnEvent } from '@nestjs/event-emitter';
 import { Role } from '@prisma/client';
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
 import { PatientService } from '../patient/patient.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserService } from '../user/user.service';
-import { ResponseChatDto } from './dto/response.dto';
+// import { ResponseChatDto } from './dto/response.dto';
 
 @Injectable()
 @WebSocketGateway({ cors: { origin: '*' }, namespace: 'chat' })
@@ -60,17 +60,17 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     socket.emit('connected', 'Successfully connected. userId: ' + userId);
   }
 
-  @OnEvent('chat.created')
-  handleChatCreated(chat: ResponseChatDto) {
-    const patientSocket = this.users[`PATIENT_${chat.patientId}`]?.socket;
-    const doctorSocket = this.users[`DOCTOR_${chat.doctorId}`]?.socket;
-    if (patientSocket) {
-      patientSocket.emit('chats', chat);
-    }
-    if (doctorSocket) {
-      doctorSocket.emit('chats', chat);
-    }
-  }
+  // @OnEvent('chat.created')
+  // handleChatCreated(chat: ResponseChatDto) {
+  //   const patientSocket = this.users[`PATIENT_${chat.patientId}`]?.socket;
+  //   const doctorSocket = this.users[`DOCTOR_${chat.doctorId}`]?.socket;
+  //   if (patientSocket) {
+  //     patientSocket.emit('chats', chat);
+  //   }
+  //   if (doctorSocket) {
+  //     doctorSocket.emit('chats', chat);
+  //   }
+  // }
 
   @SubscribeMessage('sendMessage')
   async handleMessageDoctor(@MessageBody() payload: { userId: string; chatId: string; message: string }) {

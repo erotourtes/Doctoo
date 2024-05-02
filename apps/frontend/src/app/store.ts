@@ -9,6 +9,7 @@ import reviewSlice from './review/ReviewSlice';
 import { declarationSlice } from './declaration/DeclarationSlice';
 import { hospitalSlice } from './hospital/HospitalSlice';
 import { userSlice } from './user/UserSlice';
+import { chatSlice } from './chat/ChatSlice';
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ export const store = configureStore({
     declaration: declarationSlice.reducer,
     hospital: hospitalSlice.reducer,
     user: userSlice.reducer,
+    chat: chatSlice.reducer,
   },
 });
 

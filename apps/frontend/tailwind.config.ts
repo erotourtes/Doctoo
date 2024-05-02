@@ -18,6 +18,7 @@ export default <Config>{
       transparent: '#00000000',
       'semi-transparent': 'rgba(0, 0, 0, 0.5)',
       black: '#202323',
+      'black-2': '#454F50',
       white: '#ffffff',
       text: '#454F50',
       'grey-1': '#707D7E',

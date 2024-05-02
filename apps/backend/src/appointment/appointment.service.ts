@@ -6,6 +6,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateAppointmentDto } from './dto/create.dto';
 import { PatchAppointmentDto } from './dto/patch.dto';
 import { ResponseAppointmentDto } from './dto/response.dto';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { ChatCreatedEvent } from '../chat/events/chat-created.event';
 
 @Injectable()
 export class AppointmentService {
@@ -13,6 +15,7 @@ export class AppointmentService {
     private readonly prismaService: PrismaService,
     private readonly doctorService: DoctorService,
     private readonly patientService: PatientService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async isAppointmentExists(id: string): Promise<boolean> {
@@ -30,6 +33,7 @@ export class AppointmentService {
     const appointment = await this.prismaService.appointment.create({ data: body });
 
     // TODO: Use event isntead of directly call payment service.
+    this.eventEmitter.emit('chat.created', new ChatCreatedEvent(body.patientId, body.doctorId));
 
     return plainToInstance(ResponseAppointmentDto, appointment);
   }

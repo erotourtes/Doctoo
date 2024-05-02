@@ -3,8 +3,9 @@ import { PrismaService } from '../prisma/prisma.service';
 import { Chat, ChatMessage, Role } from '@prisma/client';
 import { CreateMessageDto } from './dto/create.dto';
 import { ResponseChatDto } from './dto/response.dto';
-import { EventEmitter2 } from '@nestjs/event-emitter';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { MinioService } from '../minio/minio.service';
+import { ChatCreatedEvent } from './events/chat-created.event';
 
 @Injectable()
 export class ChatService {
@@ -13,6 +14,23 @@ export class ChatService {
     private eventEmitter: EventEmitter2,
     private readonly minioService: MinioService,
   ) {}
+
+  @OnEvent('chat.created')
+  async createChatEvent(chatCreatedEvent: ChatCreatedEvent) {
+    const isExistsChat = await this.isExistsChatByDoctorAndPatient(
+      chatCreatedEvent.patientId,
+      chatCreatedEvent.doctorId,
+    );
+
+    if (!isExistsChat) {
+      this.prismaService.chat.create({
+        data: {
+          patientId: chatCreatedEvent.patientId,
+          doctorId: chatCreatedEvent.doctorId,
+        },
+      });
+    }
+  }
 
   async createChat(patientId: string, doctorId: string): Promise<ResponseChatDto> {
     const isExistsChat = this.isExistsChatByDoctorAndPatient(patientId, doctorId);
@@ -74,7 +92,7 @@ export class ChatService {
       },
     });
     const transformedChat = await this.transformedChat(chat);
-    this.eventEmitter.emit('chat.created', transformedChat);
+    // this.eventEmitter.emit('chat.created', transformedChat);
     return transformedChat;
   }
 
@@ -259,7 +277,7 @@ export class ChatService {
       doctor: {
         firstName: doctor.user.firstName,
         lastName: doctor.user.lastName,
-        specializationName: doctor.specializations[0].specialization.name,
+        specializationName: doctor.specializations[0]?.specialization.name || null,
         avatar: doctorAvatar,
       },
       patientId: chat.patientId,

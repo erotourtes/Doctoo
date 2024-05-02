@@ -20,6 +20,7 @@ import { useAppSelector } from '../app/hooks';
 import PatientDashboard from './dashboard/components/PatientDashboard/PatientDashboard';
 import DoctorDashboard from './dashboard/components/DoctorDashboard/DoctorDashboard';
 import { useMemo } from 'react';
+import ChatPage from './Chat/ChatPage';
 
 const PatientPages = () => {
   return (
@@ -34,6 +35,10 @@ const PatientPages = () => {
         <Route path='/reviews' Component={ReviewsPage} />
         <Route path='/appointments' Component={AppointmentsPage} />
         <Route path='/logout' Component={LogoutPage} />
+
+        <Route path='/chats/my' Component={ChatPage} />
+        <Route path='/chats/:chatId' Component={ChatPage} />
+        <Route path='/chats/assistant' Component={ChatPage} />
       </Route>
     </Routes>
   );
@@ -52,6 +57,10 @@ const DoctorPages = () => {
         <Route path='/reviews' Component={ReviewsPage} />
         <Route path='/appointments' Component={AppointmentsPage} />
         <Route path='/logout' Component={LogoutPage} />
+
+        <Route path='/chats/my' Component={ChatPage} />
+        <Route path='/chats/:chatId' Component={ChatPage} />
+        <Route path='/chats/assistant' Component={ChatPage} />
       </Route>
     </Routes>
   );
@@ -62,7 +71,7 @@ const PageContainer = () => {
 
   const Page = useMemo(() => {
     if (!role) return null;
-    const pages = {
+    const pages: any = {
       PATIENT: PatientPages,
       DOCTOR: DoctorPages,
     };

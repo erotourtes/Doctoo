@@ -52,7 +52,7 @@ const Sidemenu: React.FunctionComponent<SidemenuProps> = ({ variant = 'large' })
           selected={getSelected('/my-doctors')}
         />
         <NavButton
-          to={'/chats'}
+          to={'/chats/my'}
           iconVariant='chats'
           text='Chats'
           variant={variantSize}
