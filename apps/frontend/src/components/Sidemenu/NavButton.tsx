@@ -24,16 +24,19 @@ const NavButton: React.FunctionComponent<NavButtonProps> = ({
       to={to}
       className={cn(
         variant !== 'small' ? 'flex w-full rounded-xl p-4' : 'inline-flex rounded-lg p-3',
-        !selected ? 'text-white' : 'bg-white',
-        'group items-center justify-start gap-2 no-underline transition-all hover:bg-main-dark active:bg-white active:text-white',
+        'group items-center justify-start gap-2 no-underline transition-all',
+        selected && 'text-dark bg-white',
+        !selected && 'text-white hover:bg-main-dark',
       )}
     >
       <Icon
         variant={iconVariant}
-        className={`size-6 group-hover:text-white group-active:text-main ${selected ? 'text-main' : ''} transition-all`}
+        className={cn('size-6 transition-all', selected ? 'text-main' : 'group-hover:text-white')}
       />
       {variant !== 'small' && (
-        <span className='font-medium group-hover:text-white group-active:text-black'>{text}</span>
+        <span className={cn('font-medium', !selected && 'group-hover:text-white', selected && 'text-black')}>
+          {text}
+        </span>
       )}
       <div className='absolute'>
         <div className='relative -top-5 left-10'>
