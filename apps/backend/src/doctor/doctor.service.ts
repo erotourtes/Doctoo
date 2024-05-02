@@ -4,7 +4,6 @@ import { HospitalService } from '../hospital/hospital.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { SpecializationService } from '../specialization/specialization.service';
 import { UserService } from '../user/user.service';
-import { removeDuplicates } from '../utils/arrayUtils';
 import { CreateDoctorDto } from './dto/create.dto';
 import { GetDoctorsQuery } from './dto/get.query';
 import { PatchDoctorDto } from './dto/patch.dto';
@@ -230,21 +229,26 @@ export class DoctorService {
   async getPatientDoctors(id: string): Promise<ResponseDoctorDto[]> {
     const request = {
       where: { patientId: id },
-      include: { doctor: { include: { user: true, _count: { select: { reviews: true } } } } },
+      include: {
+        doctor: {
+          include: {
+            user: true,
+            _count: { select: { reviews: true } },
+
+            hospitals: { select: { hospital: true } },
+            specializations: { select: { specialization: true } },
+          },
+        },
+      },
     };
 
-    const [appointments, declaration] = await Promise.all([
-      this.prismaService.appointment.findMany(request),
-      this.prismaService.declaration.findUnique(request),
-    ]);
+    const appointments = await this.prismaService.appointment.findMany(request);
 
     const doctorsFromAppointments = appointments.map(appointment => appointment.doctor);
 
-    const allDoctors = declaration ? [declaration.doctor, ...doctorsFromAppointments] : doctorsFromAppointments;
+    const uniqueDoctors = Array.from(new Map(doctorsFromAppointments.map(doctor => [doctor.id, doctor])).values());
 
-    return removeDuplicates(allDoctors, doctor => doctor.id).map(el => {
-      return plainToInstance(ResponseDoctorDto, el, { exposeUnsetFields: false });
-    });
+    return uniqueDoctors.map(doctor => plainToInstance(ResponseDoctorDto, doctor, { exposeUnsetFields: false }));
   }
 
   async deleteDoctor(id: string): Promise<void> {
