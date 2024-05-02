@@ -1,12 +1,12 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import { plainToInstance } from 'class-transformer';
+import { MailService } from '../mail/mail.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create.dto';
 import { PatchUserDto } from './dto/patch.dto';
 import { ResponseUserDto } from './dto/response.dto';
-import { MailService } from '../mail/mail.service';
-import { JwtService } from '@nestjs/jwt';
 
 // TODO: refactor
 export type JwtEmailPayload = { sub?: string; newEmail?: string };
@@ -64,19 +64,12 @@ export class UserService {
 
   async patchUser(id: string, body: PatchUserDto): Promise<ResponseUserDto> {
     await this.isUserExists(id);
-    const user = await this.prismaService.user.update({
-      where: { id },
-      data: {
-        ...body,
-        email: undefined,
-      },
-    });
 
-    if (body.email && !user.password)
-      throw new BadRequestException(
-        'You have signed up with a social account. In order to change your email, please set up your password first.',
-      );
-    else if (body.email) await this.patchUserEmail(id, user.firstName, user.email, body.email);
+    const user = await this.prismaService.user.update({ where: { id }, data: { ...body, email: undefined } });
+
+    if (user.email !== body.email && !user.password) {
+      throw new BadRequestException('To change your email, please set up your password first.');
+    } else if (body.email) await this.patchUserEmail(id, user.firstName, user.email, body.email);
 
     return plainToInstance(ResponseUserDto, user);
   }

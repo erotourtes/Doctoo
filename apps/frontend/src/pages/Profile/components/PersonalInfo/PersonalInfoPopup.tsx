@@ -72,6 +72,8 @@ const PersonalInfoPopup = ({ isOpen, onClose }: PersonalInfoPopupProps) => {
 
     dispatch(patchUserData({ id: patient.userId, data: userData }));
 
+    setFile(null);
+
     onClose();
   }
 
@@ -120,6 +122,7 @@ const PersonalInfoPopup = ({ isOpen, onClose }: PersonalInfoPopupProps) => {
             <Button btnType='reset' type='secondary' onClick={() => onClose()} className='w-full sm:w-1/2'>
               Cancel
             </Button>
+
             <Button btnType='submit' type='primary' className='w-full sm:w-1/2'>
               Save
             </Button>
