@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose, Transform, plainToInstance } from 'class-transformer';
-import { DoctorSpecialization, HospitalDoctor, User } from '@prisma/client';
+import { Appointment, DoctorSpecialization, HospitalDoctor, User } from '@prisma/client';
 import { ResponseHospitalDto } from '../../hospital/dto/response.dto';
 import { ResponseSpecializationDto } from '../../specialization/dto/response.dto';
+import { ResponseDoctorScheduleDto } from './response-schedule.dto';
 
 export class ResponseDoctorDto {
   @ApiProperty({ description: 'The ID of the doctor', example: 'acde070d-8c4c-4f0d-9d8a-162843c10333' })
@@ -105,4 +106,25 @@ export class ResponseDoctorDto {
     isArray: true,
   })
   readonly specializations?: ResponseSpecializationDto[];
+
+  @Exclude()
+  readonly doctorSchedule: any;
+
+  @ApiProperty({
+    description: "Doctor's schedule",
+  })
+  @Expose()
+  @Transform(({ obj }) => {
+    if (!obj.hasOwnProperty('doctorSchedule')) return null;
+    const schedule: { startsWorkHourUTC: number; endsWorkHourUTC: number; unavailableTimeSlots?: string[] } = {
+      startsWorkHourUTC: obj.doctorSchedule?.startsWorkHourUTC || null,
+      endsWorkHourUTC: obj.doctorSchedule?.endsWorkHourUTC || null,
+    };
+    if (obj.appointments) schedule.unavailableTimeSlots = obj.appointments.map(a => a.startedAt);
+    return schedule;
+  })
+  readonly schedule?: ResponseDoctorScheduleDto;
+
+  @Exclude()
+  readonly appointments: Appointment[];
 }

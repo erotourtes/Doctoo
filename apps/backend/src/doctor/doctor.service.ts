@@ -12,6 +12,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 import { ReviewUpdatedEvent } from '../review/events/review-updated.event';
 import { ReviewService } from '../review/review.service';
 import { ResponseDoctorListDto } from './dto/response-list.dto';
+import { getDateWithDaysOffset, getMidnightOfDate } from '../utils/dateUtils';
 
 @Injectable()
 export class DoctorService {
@@ -121,6 +122,20 @@ export class DoctorService {
         hospitals: { select: { hospital: { select: { id: true, name: true } } } },
         specializations: { select: { specialization: true } },
         _count: { select: { reviews: true } },
+        doctorSchedule: { select: { startsWorkHourUTC: true, endsWorkHourUTC: true } },
+        appointments: {
+          select: { startedAt: true },
+          where: {
+            AND: [
+              {
+                startedAt: { gte: new Date() },
+              },
+              {
+                startedAt: { lte: getDateWithDaysOffset(getMidnightOfDate(new Date()), 1) },
+              },
+            ],
+          },
+        },
       },
       where: conditions,
       skip: offset,
@@ -155,6 +170,20 @@ export class DoctorService {
         hospitals: { select: { hospital: true } },
         specializations: { select: { specialization: true } },
         _count: { select: { reviews: true } },
+        doctorSchedule: { select: { startsWorkHourUTC: true, endsWorkHourUTC: true } },
+        appointments: {
+          select: { startedAt: true },
+          where: {
+            AND: [
+              {
+                startedAt: { gte: new Date() },
+              },
+              {
+                startedAt: { lte: getDateWithDaysOffset(getMidnightOfDate(new Date()), 1) },
+              },
+            ],
+          },
+        },
       },
     });
 
