@@ -27,6 +27,8 @@ export default function AppointmentsListItem({ appointment, openModal }: Appoint
   const { firstName, lastName, specializations } = doctor!;
   const fullName = `Dr. ${firstName} ${lastName}`;
 
+  const firstSpecializationName = specializations.length > 0 ? specializations[0].name : 'Doctor';
+
   return (
     <>
       <div
@@ -43,7 +45,7 @@ export default function AppointmentsListItem({ appointment, openModal }: Appoint
             </div>
 
             <span className='text-base font-medium text-black'>
-              {fullName} ({specializations[0].name})
+              {fullName} ({firstSpecializationName})
             </span>
           </div>
 

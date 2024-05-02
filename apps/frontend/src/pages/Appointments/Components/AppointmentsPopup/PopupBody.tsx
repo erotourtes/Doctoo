@@ -12,6 +12,7 @@ type PopupBodyProps = {
 export default function PopupBody({ openReschedule, doctorId, status, doctor }: PopupBodyProps) {
   const { firstName, lastName, avatarKey, rating, reviewsCount, specializations } = doctor;
   const fullName = `Dr. ${firstName} ${lastName}`;
+  const firstSpecializationName = specializations.length > 0 ? specializations[0].name : 'Doctor';
 
   return (
     <>
@@ -33,7 +34,7 @@ export default function PopupBody({ openReschedule, doctorId, status, doctor }: 
               )}
             </div>
 
-            <span className='text-base font-medium text-grey-1'>{specializations[0].name}</span>
+            <span className='text-base font-medium text-grey-1'>{firstSpecializationName}</span>
           </div>
 
           <Badge badgeColor='bg-main-light' labelColor='text-main'>

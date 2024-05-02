@@ -9,7 +9,8 @@ export type AppointmentsListItemProps = {
 export default function AppointmentsListItem({ doctor, date }: AppointmentsListItemProps) {
   const { avatarKey, firstName, lastName, specializations } = doctor as IDoctor;
   const name = `Dr. ${firstName} ${lastName}`;
-  const specialization = specializations.length > 0 ? specializations[0].name : 'Doctor';
+
+  const firstSpecializationName = specializations.length > 0 ? specializations[0].name : 'Doctor';
 
   return (
     <>
@@ -20,7 +21,7 @@ export default function AppointmentsListItem({ doctor, date }: AppointmentsListI
 
         <div className='flex text-sm font-medium text-grey-1'>
           <span>
-            {specialization} • <time>{dayjs(date).format('h:mm a')}</time>
+            {firstSpecializationName} • <time>{dayjs(date).format('h:mm a')}</time>
           </span>
         </div>
       </div>
