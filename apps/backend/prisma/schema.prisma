@@ -287,12 +287,14 @@ model Appointment {
 }
 
 model Chat {
-  id        String        @id @default(uuid())
-  patientId String        @map("patient_id")
-  doctorId  String        @map("doctor_id")
-  patient   Patient       @relation(fields: [patientId], references: [id])
-  doctor    Doctor        @relation(fields: [doctorId], references: [id])
-  messages  ChatMessage[]
+  id                    String        @id @default(uuid())
+  patientId             String        @map("patient_id")
+  doctorId              String        @map("doctor_id")
+  patient               Patient       @relation(fields: [patientId], references: [id])
+  doctor                Doctor        @relation(fields: [doctorId], references: [id])
+  messages              ChatMessage[]
+  missedMessagesDoctor  Int           @default(0)
+  missedMessagesPatient Int           @default(0)
 
   @@unique([patientId, doctorId])
   @@map("chats")
@@ -301,10 +303,10 @@ model Chat {
 model ChatMessage {
   id          String              @id @default(uuid())
   chatId      String              @map("chat_id")
-  senderId    String              @map("sender_id")
+  sender      Role                @map("sender")
   sentAt      DateTime            @default(now()) @map("sent_at")
   text        String
-  editedAt    DateTime            @map("edited_at")
+  editedAt    DateTime            @updatedAt @map("edited_at")
   chat        Chat                @relation(fields: [chatId], references: [id])
   attachments MessageAttachment[]
 
