@@ -114,8 +114,19 @@ model Doctor {
   declarations    Declaration[]
   favorites       Favorite[]
   reviews         Review[]
+  doctorSchedule  DoctorSchedule?
 
   @@map("doctors")
+}
+
+model DoctorSchedule {
+  id                String @id @default(uuid())
+  doctorId          String @unique @map("doctor_id")
+  startsWorkHourUTC Int
+  endsWorkHourUTC   Int
+  doctor            Doctor @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
+  @@map("doctor_schedules")
 }
 
 model HospitalDoctor {
