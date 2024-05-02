@@ -55,7 +55,7 @@ export class ResponseChatDto {
 
   @ApiProperty({
     example: {
-      sentAt: new Date(),
+      sentAt: '2024-05-02T07:41:18.065Z',
       sender: Role.DOCTOR,
       text: 'last message text',
     },

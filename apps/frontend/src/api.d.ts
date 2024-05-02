@@ -1596,7 +1596,7 @@ export interface components {
       /**
        * @description Got last message.
        * @example {
-       *   "sentAt": "2024-05-02T07:41:31.633Z",
+       *   "sentAt": "2024-05-02T07:41:18.065Z",
        *   "sender": "DOCTOR",
        *   "text": "last message text"
        * }
