@@ -21,6 +21,7 @@ type SignUpType = {
 
 const userSignUpSchema = Joi.object<SignUpType>({
   email: Joi.string()
+    .trim()
     .email({ tlds: false })
     .messages({
       'string.email': 'Please enter a valid email',
@@ -32,10 +33,12 @@ const userSignUpSchema = Joi.object<SignUpType>({
     'string.empty': 'Please enter your password',
   }),
   phone: Joi.string()
+    .trim()
     .regex(/^\+?\d{10,}$/)
     .messages({ 'string.pattern.base': 'Phone number must have 10 digits.' })
     .required(),
   fullName: Joi.string()
+    .trim()
     .min(3)
     .max(30)
     .regex(/^\w+\s+\w+$/)

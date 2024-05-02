@@ -22,6 +22,7 @@ type SignInType = {
 };
 const userLogInSchema = Joi.object<SignInType>({
   email: Joi.string()
+    .trim()
     .email({ tlds: false })
     .messages({
       'string.email': 'Please enter a valid email address',

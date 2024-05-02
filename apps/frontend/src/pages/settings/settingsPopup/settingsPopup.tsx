@@ -21,7 +21,7 @@ type FormValues = {
 
 const schema = Joi.object<FormValues>({
   newPassword: Joi.string().min(8).required(),
-  oldPassword: Joi.string().required(),
+  oldPassword: Joi.string().allow(null, ''),
 });
 
 const SettingsPopup: React.FC<PopupProps> = ({ showPopup, handleClosePopup }) => {
@@ -60,7 +60,7 @@ const SettingsPopup: React.FC<PopupProps> = ({ showPopup, handleClosePopup }) =>
             <InputPassword
               id='oldPassword'
               label='Old password'
-              placeholder='Enter your password'
+              placeholder='Enter your old password'
               errorMessage='Password is required'
               className='mb-5'
               classNameInput=''
@@ -69,7 +69,7 @@ const SettingsPopup: React.FC<PopupProps> = ({ showPopup, handleClosePopup }) =>
             <InputPassword
               id='newPassword'
               label='Create new password'
-              placeholder='Enter your password'
+              placeholder='Enter your new password'
               errorMessage='Password is required'
               className='my-custom-class'
               classNameInput=''
