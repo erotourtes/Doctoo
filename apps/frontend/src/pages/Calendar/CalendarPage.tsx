@@ -68,7 +68,7 @@ export default function CalendarPage() {
         </div>
       </PageHeader>
 
-      <section className='flex w-full flex-col-reverse gap-6 sm:flex-col md:justify-between md:gap-8 lg:flex-row 2xl:gap-24'>
+      <section className='flex w-full flex-col-reverse gap-6 sm:flex-col md:justify-between md:gap-8 xl:grid xl:grid-cols-[1fr_auto] 2xl:gap-24'>
         <AppointmentsWidget appointmentsForDay={appointmentsForDay} selectedDate={selectedDate} />
         <BigCalendar meetingsForDay={allPlannedAppointments} chooseDate={handleDateChange} />
       </section>

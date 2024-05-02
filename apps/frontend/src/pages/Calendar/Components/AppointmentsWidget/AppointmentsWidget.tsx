@@ -33,7 +33,7 @@ export default function AppointmentsWidget({ appointmentsForDay, selectedDate }:
 
   return (
     <>
-      <article className='flex h-fit w-full flex-col gap-y-3 rounded-xl bg-white p-3 sm:gap-y-5 sm:p-6 lg:min-h-[308px] lg:max-w-[300px]'>
+      <article className='flex h-fit w-full flex-col gap-y-3 rounded-xl bg-white p-3 sm:gap-y-5 sm:p-6 lg:min-h-[308px] lg:max-w-[900px] 2xl:max-w-full'>
         <h3 className='text-lg font-normal text-black'>
           {dayjs(selectedDate).isSame(dayjs(), 'date') ? (
             'Today`s appointments'

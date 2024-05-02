@@ -1,5 +1,7 @@
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { patchUserData } from '@/app/patient/PatientThunks';
+import { deleteProfilePatientPhoto, patchUserData, uploadProfilePatientPhoto } from '@/app/patient/PatientThunks';
+import { OptionToChangeProfilePhoto } from '@/components/ProfilePhoto/OptionToChangeProfilePhoto';
+import { PatientProfilePhoto } from '@/components/ProfilePhoto/PatientProfilePhoto';
 import { Button } from '@/components/UI/Button/Button';
 import Input from '@/components/UI/Input/Input';
 import PopupDoctoo from '@/components/UI/Popup/Popup';
@@ -29,15 +31,26 @@ const schema = Joi.object({
 });
 
 const PersonalInfoPopup = ({ isOpen, onClose }: PersonalInfoPopupProps) => {
-  const [file, setFile] = useState<File | null>();
+  const dispatch = useAppDispatch();
+  const patient = useAppSelector(state => state.patient.data);
+  const [file, setFile] = useState<File | null>(null);
+  const [photoURL, setPhotoURL] = useState<string | null>(
+    patient.avatarKey !== '' ? `${import.meta.env.VITE_S3_BASE_URL}/${patient.avatarKey}` : null,
+  );
+
+  console.log(patient);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) return setFile(e.target.files[0]);
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setPhotoURL(URL.createObjectURL(file));
+    setFile(file);
   };
 
-  const patient = useAppSelector(state => state.patient.data);
-
-  const dispatch = useAppDispatch();
+  const handleDeletePhoto = () => {
+    setPhotoURL(null);
+    setFile(null);
+  };
 
   const methods = useForm({
     mode: 'onChange',
@@ -54,18 +67,17 @@ const PersonalInfoPopup = ({ isOpen, onClose }: PersonalInfoPopupProps) => {
 
     if (file) {
       const formData = new FormData();
-
       formData.append('file', file!);
 
-      const request = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/file/upload`, {
-        method: 'POST',
-        body: formData,
-        credentials: 'include',
-      });
-
-      const response = await request.json();
+      const result = await dispatch(uploadProfilePatientPhoto(formData));
+      const response = result.payload;
 
       avatarKey = response.name;
+    }
+
+    if (!file && !photoURL) {
+      await dispatch(deleteProfilePatientPhoto(avatarKey));
+      avatarKey = '';
     }
 
     const userData: Partial<TUser> = { email, phone: data.phone, firstName, lastName, avatarKey };
@@ -85,22 +97,32 @@ const PersonalInfoPopup = ({ isOpen, onClose }: PersonalInfoPopupProps) => {
       modalBodyClassName='relative z-20 flex h-full max-w-[412px] flex-col gap-6 sm:gap-7 rounded-xl bg-white'
     >
       <p className='text-xl font-medium text-black sm:text-2xl'>Personal info</p>
-      <div className='flex flex-col items-center gap-2 sm:flex-row sm:gap-7'>
-        <img
-          src={`${import.meta.env.VITE_S3_BASE_URL}/${patient.avatarKey}`}
-          alt='avatar'
-          className='h-[92px] w-[92px] rounded-lg'
+      <div className='flex flex-col items-center gap-2 sm:flex-row sm:gap-6'>
+        <PatientProfilePhoto photoURL={photoURL} />
+        <OptionToChangeProfilePhoto
+          photoURL={photoURL}
+          handleFileChange={handleFileChange}
+          handleDeletePhoto={handleDeletePhoto}
         />
 
-        <div className='flex flex-col'>
-          <div>
-            <label htmlFor='file' className='sr-only'>
-              Choose a file
+        {/* {photoURL ? (
+          <div className='flex flex-col gap-2 min-[690px]:flex-row'>
+            <label htmlFor='file' className='flex items-center gap-2 text-base font-medium leading-6 text-main'>
+              <Icon variant='change' />
+              Change photo
+              <input id='file' type='file' accept='image/*' onChange={handleFileChange} className='hidden' />
             </label>
-
-            <input id='file' type='file' accept='image/*' onChange={handleFileChange} />
+            <button className='flex items-center gap-2 text-base font-medium text-grey-1' onClick={handleDeletePhoto}>
+              <Icon variant='delete' />
+              Delete photo
+            </button>
           </div>
-        </div>
+        ) : (
+          <label htmlFor='file' className='text-base font-medium leading-6 text-main'>
+            Upload photo
+            <input id='file' type='file' accept='image/*' onChange={handleFileChange} className='hidden' />
+          </label>
+        )} */}
       </div>
 
       <FormProvider {...methods}>

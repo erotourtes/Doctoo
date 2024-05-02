@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
-import { IsEmail, IsEnum, IsOptional, IsPhoneNumber } from 'class-validator';
+import { IsEmail, IsEnum, IsOptional, IsPhoneNumber, IsString } from 'class-validator';
 import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
 
 export class CreateUserDto {
@@ -34,7 +34,8 @@ export class CreateUserDto {
     example: '123e4567-e89b-12d3-a456-426614174000.jpeg',
     description: 'The unique file id of the file in S3 storage.',
   })
-  @IsNotEmptyString()
+  @IsOptional()
+  @IsString()
   avatarKey: string;
 
   @ApiProperty({ example: Role.PATIENT, description: 'The role of the user.' })

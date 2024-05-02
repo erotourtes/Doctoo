@@ -1,4 +1,4 @@
-import { Button, Icon, PaymentMethodCard } from '@/components/UI';
+import { Button, Icon } from '@/components/UI';
 
 const PaymentMethods = () => {
   return (
@@ -7,6 +7,7 @@ const PaymentMethods = () => {
         <h3 className='text-lg font-medium text-black'>Payment methods</h3>
         <Button
           type='secondary'
+          disabled
           onClick={() => {}}
           className='flex w-3/4 items-center justify-center gap-2 sm:max-w-[140px]'
         >
@@ -14,11 +15,7 @@ const PaymentMethods = () => {
           Add
         </Button>
       </div>
-
-      <PaymentMethodCard
-        editable
-        card={{ number: '1111 2222 3333 4444', expiresAt: new Date('2024-01-01T00:00:00.000Z') }}
-      />
+      <p>You do not have any payment methods saved</p>
     </div>
   );
 };

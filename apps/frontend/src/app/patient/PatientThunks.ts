@@ -126,5 +126,37 @@ export const createPatientConditions = createAsyncThunk(
   },
 );
 
+export const uploadProfilePatientPhoto = createAsyncThunk(
+  'user/uploadPatientProfilePhoto',
+  async (formData: FormData) => {
+    try {
+      const response = await instance.post('/file/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (e) {
+      const error = e as Error;
+      throw error;
+    }
+  },
+);
+
+export const deleteProfilePatientPhoto = createAsyncThunk(
+  'user/deletePatientProfilePhoto',
+  async (avatarKey: string) => {
+    try {
+      const response = await instance.delete(`/file/${avatarKey}`);
+      if (response.status === 200) {
+        return response.data;
+      }
+    } catch (e) {
+      const error = e as Error;
+      throw error;
+    }
+  },
+);
+
 type ChangePasswordType = paths['/auth/password/change']['post']['requestBody']['content']['application/json'];
 type ErrorResponseType = components['schemas']['ClassicNestResponse'];
