@@ -18,9 +18,15 @@ const Logout = () => {
       <div className='text-center'>
         <h1 className='mb-6'>Are you sure?</h1>
 
-        <Button onClick={logout} type='primary'>
-          Yes
-        </Button>
+        <div className='flex space-x-2'>
+          <Button onClick={logout} type='primary'>
+            Yes
+          </Button>
+
+          <Button onClick={() => navigate(-1)} type='primary'>
+            No
+          </Button>
+        </div>
       </div>
     </div>
   );
