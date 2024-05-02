@@ -57,6 +57,7 @@ export class AppointmentService {
             },
             hospitals: { select: { hospital: { select: { id: true, name: true } } } },
             specializations: { select: { specialization: true } },
+            _count: { select: { reviews: true } },
           },
         },
       },
