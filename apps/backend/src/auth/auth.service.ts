@@ -110,12 +110,10 @@ export class AuthService {
   }
 
   async validateGoogleUser(email: string, googleId: string): Promise<ResponseUserDto | null> {
-    const user = await this.userService.getUserByEmail(email);
-
+    const user = await this.userService.getUserByEmail(email).catch(() => null);
     if (!user) return null;
 
-    const patient = await this.patientService.getPatientByUserId(user.id);
-
+    const patient = await this.patientService.getPatientByUserId(user.id).catch(() => null);
     if (!patient) return null;
 
     if (user.googleId && user.googleId === googleId) return user;
