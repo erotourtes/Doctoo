@@ -110,7 +110,7 @@ export default function AppointmentsFilters({ state, dispatch, appointments }: A
   }
 
   return (
-    <div className='flex gap-x-4'>
+    <div className='flex flex-wrap gap-4'>
       {Object.keys(filterTypeToActionType).map(filterType => {
         if (filterType === 'order') {
           return (

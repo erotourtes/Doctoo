@@ -169,6 +169,7 @@ export class AuthController {
     return this.authService.changePassword(user, body);
   }
 
+  // Todo: remove unused code
   @UseGuards(JWTGuard)
   @Get('patient/me')
   @ApiOperation({ summary: 'Get patient' })

@@ -15,7 +15,7 @@ interface FormData {
   country: string;
   city: string;
   street: string;
-  apartment: string;
+  apartment?: string;
   zipCode?: string;
 }
 
@@ -23,8 +23,8 @@ const schema = Joi.object({
   country: Joi.string().min(3).required(),
   city: Joi.string().min(3).required(),
   street: Joi.string().min(3).required(),
-  zipCode: Joi.string().alphanum().min(3).required(),
-  apartment: Joi.string().optional(),
+  zipCode: Joi.string().alphanum().min(3).optional(),
+  apartment: Joi.string().min(3).optional(),
 });
 
 const AddressInfoPopup = ({ isOpen, onClose }: AddressInfoPopupProps) => {
@@ -48,6 +48,8 @@ const AddressInfoPopup = ({ isOpen, onClose }: AddressInfoPopupProps) => {
     };
 
     dispatch(patchPatientData({ id: patient.id, body: patientData }));
+
+    onClose();
   }
 
   return (
@@ -58,6 +60,7 @@ const AddressInfoPopup = ({ isOpen, onClose }: AddressInfoPopupProps) => {
       modalBodyClassName=' relative z-20 flex h-full max-w-[412px] flex-col gap-7 rounded-xl bg-white'
     >
       <p className='text-xl font-medium text-black sm:text-2xl'>Add a new address</p>
+
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit as SubmitHandler<FieldValues>)} className='flex w-full flex-col gap-7'>
           <div className='grid w-full gap-2 sm:gap-6'>
@@ -68,16 +71,17 @@ const AddressInfoPopup = ({ isOpen, onClose }: AddressInfoPopupProps) => {
             <div className='flex w-full flex-col gap-4 sm:flex-row'>
               <Input
                 id='apartment'
-                label='Apartment (optional)'
+                label='Apartment'
                 type='text'
                 defaultValue={patient.apartment ?? ''}
                 className='w-full'
               />
+
               <Input
                 id='zipCode'
                 label='Zip code'
                 type='text'
-                defaultValue={String(patient.zipCode)}
+                defaultValue={String(patient.zipCode ?? '')}
                 className='w-full'
               />
             </div>
@@ -87,7 +91,8 @@ const AddressInfoPopup = ({ isOpen, onClose }: AddressInfoPopupProps) => {
             <Button btnType='reset' type='secondary' onClick={() => onClose()} className='w-full sm:w-1/2'>
               Cancel
             </Button>
-            <Button btnType='submit' type='primary' onClick={() => onClose()} className='w-full sm:w-1/2'>
+
+            <Button btnType='submit' type='primary' className='w-full sm:w-1/2'>
               Save
             </Button>
           </div>

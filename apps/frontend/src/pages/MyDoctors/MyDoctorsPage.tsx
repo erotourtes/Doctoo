@@ -5,24 +5,28 @@ import PageHeader from '../PageHeader';
 import { useAppSelector } from '@/app/hooks';
 import { useAppDispatch } from '@/app/hooks';
 import { useEffect } from 'react';
-import { getMyDoctorData } from '@/app/doctor/DoctorThunks';
+import { getDoctorData } from '@/app/doctor/DoctorThunks';
 import MyDoctorsFilters from './Components/Filters/MyDoctorsFilters';
 import { useState } from 'react';
 import { InputSearch } from '@/components/UI';
 import DoctorsList from './Components/DoctorsList';
 import { getMyAppointments } from '@/app/appointment/AppointmentThunks';
 import dayjs from 'dayjs';
+import { filterReducer, initialFilterState } from './Components/Filters/filterReducer';
+import { useReducer } from 'react';
 
 const MyDoctorsPage = () => {
   const dispatch = useAppDispatch();
   const appointments = useAppSelector(state => state.appointment.appointments);
   const doctors = useAppSelector(state => state.doctor.doctors);
+
+  const [filterState, dispatchFilterAction] = useReducer(filterReducer, initialFilterState);
   useEffect(() => {
-    dispatch(getMyDoctorData());
+    // dispatch(getMyDoctorData());
     dispatch(getMyAppointments());
+    dispatch(getDoctorData());
   }, []);
 
-  const [chosenOptions, setChosenOptions] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
 
   const meetingsForDay = appointments.map(appointment => ({
@@ -49,10 +53,10 @@ const MyDoctorsPage = () => {
         <div className='flex gap-6'>
           <div className='shrink grow basis-4/5'>
             <ul className='mb-6 flex gap-4'>
-              <MyDoctorsFilters doctors={doctors} chosenOptions={chosenOptions} setChosenOptions={setChosenOptions} />
+              <MyDoctorsFilters state={filterState} dispatch={dispatchFilterAction} doctors={doctors} />
             </ul>
             {doctors?.length ? (
-              <DoctorsList doctors={doctors} appointments={appointments} chosenOptions={chosenOptions} />
+              <DoctorsList filters={filterState} doctors={doctors} appointments={appointments} />
             ) : (
               <div className='flex h-[594px] w-full items-center justify-center rounded-xl bg-white text-center text-text'>
                 <span className='flex flex-col items-center gap-4'>

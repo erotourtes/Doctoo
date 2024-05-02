@@ -1,5 +1,5 @@
 import { Button, Input } from '@/components/UI';
-import { AuthCreateAccount, AuthMainContainer, ErrorMessage, LogoWithTitle } from '@/pages/auth/auth-components';
+import { AuthMainContainer, ErrorMessage, LogoWithTitle } from '@/pages/auth/auth-components';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Joi from 'joi';
 import { useState } from 'react';
@@ -57,7 +57,6 @@ const DoctorLoginPage = () => {
           <LogoWithTitle />
           <div>
             <h1 className='mb-2 leading-none tracking-tight'>Log In</h1>
-            <p className='text-grey-1'>Select a method to log in:</p>
           </div>
 
           <div className='space-y-6'>
@@ -84,7 +83,6 @@ const DoctorLoginPage = () => {
             <Button btnType='submit' type='primary' className='w-full'>
               Log in
             </Button>
-            <AuthCreateAccount />
           </div>
         </form>
       </FormProvider>
