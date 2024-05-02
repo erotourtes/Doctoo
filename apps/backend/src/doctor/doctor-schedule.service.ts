@@ -10,14 +10,14 @@ import { ResponseDoctorScheduleDto } from './dto/response-schedule.dto';
 @Injectable()
 export class DoctorScheduleService {
   constructor(private readonly prismaService: PrismaService) {}
-  async createSchedule(doctorId: string, dto: CreateDoctorScheduleDto) {
+  async createSchedule(doctorId: string, dto: CreateDoctorScheduleDto): Promise<ResponseDoctorScheduleDto> {
     const schedule = await this.prismaService.doctorSchedule.create({
       data: { ...dto, doctor: { connect: { id: doctorId } } },
     });
-    return schedule;
+    return plainToInstance(ResponseDoctorScheduleDto, schedule);
   }
 
-  async getDoctorSchedule(doctorId: string, query?: GetDoctorScheduleQuery) {
+  async getDoctorSchedule(doctorId: string, query?: GetDoctorScheduleQuery): Promise<ResponseDoctorScheduleDto> {
     const appointmentFilters: any = {};
     if (query?.date)
       appointmentFilters.AND = [
@@ -54,12 +54,12 @@ export class DoctorScheduleService {
     return plainToInstance(ResponseDoctorScheduleDto, schedule);
   }
 
-  async updateSchedule(doctorId: string, dto: UpdateDoctorScheduleDto) {
+  async updateSchedule(doctorId: string, dto: UpdateDoctorScheduleDto): Promise<ResponseDoctorScheduleDto> {
     const schedule = await this.prismaService.doctorSchedule.update({ where: { doctorId }, data: dto });
-    return schedule;
+    return plainToInstance(ResponseDoctorScheduleDto, schedule);
   }
 
-  async deleteSchedule(doctorId: string) {
+  async deleteSchedule(doctorId: string): Promise<void> {
     await this.prismaService.doctorSchedule.delete({ where: { doctorId } });
   }
 }

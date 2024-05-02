@@ -122,8 +122,8 @@ model Doctor {
 model DoctorSchedule {
   id                String @id @default(uuid())
   doctorId          String @unique @map("doctor_id")
-  startsWorkHourUTC Int
-  endsWorkHourUTC   Int
+  startsWorkHourUTC Int    @map("starts_work_hour_utc")
+  endsWorkHourUTC   Int    @map("ends_work_hour_utc")
   doctor            Doctor @relation(fields: [doctorId], references: [id], onDelete: Cascade)
 
   @@map("doctor_schedules")

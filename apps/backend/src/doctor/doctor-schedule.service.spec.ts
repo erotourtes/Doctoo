@@ -42,7 +42,6 @@ describe('DoctorScheduleService', () => {
     const createdSchedule = await scheduleService.createSchedule(doctor.id, scheduleDto);
 
     expect(createdSchedule).toMatchObject(scheduleDto);
-    expect(createdSchedule.id).toBeDefined();
   });
 
   it("should return doctor's schedule", async () => {
