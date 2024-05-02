@@ -93,7 +93,7 @@ export class DoctorController {
   }
 
   @Get(':id/schedule')
-  @ApiOperation({ summary: "Get doctor's schedule " })
+  @ApiOperation({ summary: "Get doctor's schedule" })
   @ApiOkResponse({ type: ResponseDoctorScheduleDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
