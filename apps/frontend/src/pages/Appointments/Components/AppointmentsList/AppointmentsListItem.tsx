@@ -65,13 +65,6 @@ export default function AppointmentsListItem({ appointment, openModal }: Appoint
         </div>
 
         <div className='flex flex-col justify-between'>
-          <div className='flex w-[140px] flex-col gap-x-2 gap-y-4 self-end'>
-            <AppointmentButtons componentName='listItem' appointment={appointment} openBookModal={openBookModal} />
-          </div>
-
-          <div className='self-end'>
-            <AppointmentLinks videoRecordKey={videoRecordKey} notes={notes} />
-          </div>
           <div className='flex flex-wrap items-center justify-between gap-4'>
             <p className='text-base font-normal text-grey-2'>Attached files:</p>
             <AppointmentLinks videoRecordKey={videoRecordKey} notes={notes} />
