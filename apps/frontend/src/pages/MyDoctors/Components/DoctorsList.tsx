@@ -4,6 +4,8 @@ import type { IAppointment } from '@/dataTypes/Appointment';
 import { useEffect, useState } from 'react';
 import type { FilterState } from './Filters/filterReducer';
 import { filterConfig } from './Filters/MyDoctorsFilters';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { getFamilyDoctor } from '@/app/doctor/DoctorThunks';
 
 interface DoctorsListProps {
   doctors: IDoctor[];
@@ -42,8 +44,26 @@ const DoctorsList = ({ filters, doctors, appointments }: DoctorsListProps) => {
     setFilteredDoctors(filtered);
   }, [doctors, filters]);
 
+  const patient = useAppSelector(state => state.patient.data);
+  const familyDoctor = useAppSelector(state => state.doctor.familyDoctor);
+
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(getFamilyDoctor(patient.id));
+  }, []);
+
   return (
     <>
+      <div className='flex flex-col gap-6'>
+        {familyDoctor && (
+          <div className=''>
+            <h3 className='mb-4 flex justify-start text-lg font-medium text-black'>Family Doctor</h3>
+            <div className='flex flex-col gap-4'>
+              <DoctorsListItem key={familyDoctor.id} doctor={familyDoctor} appointments={appointments} />
+            </div>
+          </div>
+        )}
+      </div>
       <div className='flex flex-col gap-6'>
         {doctors && (
           <div className=''>
