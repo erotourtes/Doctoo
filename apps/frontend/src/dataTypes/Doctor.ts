@@ -13,6 +13,12 @@ export interface Hospital {
   zipCode: number;
 }
 
+export interface DoctorSchedule {
+  startsWorkHourUTC: number;
+  endsWorkHour: number;
+  unavailableTimeSlots?: string[];
+}
+
 export interface IDoctor {
   id: string;
   userId: string;
@@ -27,4 +33,5 @@ export interface IDoctor {
   hospitals: Hospital[];
   rating: number;
   reviewsCount: number;
+  schedule?: DoctorSchedule;
 }

@@ -113,6 +113,10 @@ export interface paths {
     /** Update doctor */
     patch: operations['DoctorController_patchDoctor'];
   };
+  '/doctor/{id}/schedule': {
+    /** Get doctor's schedule */
+    get: operations['DoctorController_getDoctorSchedule'];
+  };
   '/hospital': {
     /** Get all hospitals */
     get: operations['HospitalController_getHospitals'];
@@ -750,6 +754,25 @@ export interface components {
        */
       name: string;
     };
+    ResponseDoctorScheduleDto: {
+      /**
+       * @description Hour in UTC the doctor starts working from
+       * @example 9
+       */
+      startsWorkHourUTC: number;
+      /**
+       * @description Hour in UTC the doctor works until
+       * @example 20
+       */
+      endsWorkHour: number;
+      /**
+       * @description Time slots in from of UTC time strings of slots that are not available to book
+       * @example [
+       *   "2024-05-02T12:00:00.000Z"
+       * ]
+       */
+      unavailableTimeSlotsUTC?: string[];
+    };
     ResponseDoctorDto: {
       /**
        * @description The ID of the doctor
@@ -810,6 +833,8 @@ export interface components {
       hospitals: components['schemas']['ResponseHospitalDto'][];
       /** @description An array of specializations of the doctor */
       specializations: components['schemas']['ResponseSpecializationDto'][];
+      /** @description Doctor's schedule */
+      schedule: components['schemas']['ResponseDoctorScheduleDto'];
     };
     MeResponseDto: {
       patient: components['schemas']['ResponsePatientDto'];
@@ -2655,6 +2680,46 @@ export interface operations {
       200: {
         content: {
           'application/json': components['schemas']['ResponseDoctorDto'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /** Get doctor's schedule */
+  DoctorController_getDoctorSchedule: {
+    parameters: {
+      query?: {
+        /** @description Date to get unavailable time slots for */
+        date?: string;
+        /** @description Date to get unavailable time slots starting from */
+        fromDate?: string;
+        /** @description Date to get unavailable time slots starting until */
+        toDate?: string;
+      };
+      path: {
+        /**
+         * @description Unique doctor id.
+         * @example 123e4567-e89b-12d3-a456-426614174000
+         */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseDoctorScheduleDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
