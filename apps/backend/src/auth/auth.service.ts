@@ -336,4 +336,9 @@ export class AuthService {
 
     return plainToInstance(ResponseUserDto, user);
   }
+
+  async getIsPasswordExist(email: string): Promise<boolean> {
+    const user = await this.userService.getUserByEmail(email);
+    return !!user.password;
+  }
 }

@@ -205,4 +205,15 @@ export class AuthController {
   async getMe(@UserDec() user: ResponseUserDto): Promise<MeResponseDto> {
     return await this.authService.getMe(user);
   }
+
+  @UseGuards(JWTGuard)
+  @Get('get/me/pass')
+  @ApiHeader({ name: 'Cookie', example: 'jwt=eyJhbGci...', description: 'JWT token' })
+  @ApiOkResponse({ type: Boolean, description: RESPONSE_STATUS.SUCCESS })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  async getIsPasswordExist(@UserDec() user: ResponseUserDto): Promise<boolean> {
+    return await this.authService.getIsPasswordExist(user.email);
+  }
 }

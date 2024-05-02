@@ -1,15 +1,22 @@
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { Icon, Toggle } from '@/components/UI';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { patchPatientData } from '../../../app/patient/PatientThunks';
 import { ErrorMessage } from '../../auth/auth-components';
 import SettingsPopup from '../settingsPopup/settingsPopup';
+import { isPasswordExistThunk } from '../../../app/user/UserThunks';
 
 const Settings = () => {
   const [showPopup, setShowPopup] = useState(false);
   const patient = useAppSelector(state => state.patient.data);
-  const dispatch = useAppDispatch();
   const [error, setError] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
+
+  const isPasswordExist = useAppSelector(state => state.user.data.isPasswordExist);
+
+  useEffect(() => {
+    dispatch(isPasswordExistThunk());
+  }, [dispatch]);
 
   const handleEmailNotificationToggleChange = async () => {
     await dispatch(
@@ -100,7 +107,13 @@ const Settings = () => {
         </section>
       </div>
 
-      {showPopup && <SettingsPopup showPopup={showPopup} handleClosePopup={() => setShowPopup(false)} />}
+      {showPopup && (
+        <SettingsPopup
+          showPopup={showPopup}
+          handleClosePopup={() => setShowPopup(false)}
+          isPasswordExist={isPasswordExist}
+        />
+      )}
     </>
   );
 };

@@ -12,6 +12,7 @@ import { ErrorMessage } from '../../auth/auth-components';
 export interface PopupProps {
   showPopup: boolean;
   handleClosePopup: () => void;
+  isPasswordExist?: boolean;
 }
 
 type FormValues = {
@@ -24,7 +25,7 @@ const schema = Joi.object<FormValues>({
   oldPassword: Joi.string().allow(null, ''),
 });
 
-const SettingsPopup: React.FC<PopupProps> = ({ showPopup, handleClosePopup }) => {
+const SettingsPopup: React.FC<PopupProps> = ({ showPopup, handleClosePopup, isPasswordExist }) => {
   const form = useForm<FormValues>({
     resolver: joiResolver(schema),
     mode: 'onSubmit',
@@ -33,6 +34,16 @@ const SettingsPopup: React.FC<PopupProps> = ({ showPopup, handleClosePopup }) =>
   const dispatch = useAppDispatch();
 
   const handleSubmit = async (data: FormValues) => {
+    if (!isPasswordExist) {
+      if (data.oldPassword === data.newPassword) {
+        const res = await dispatch(changePassword(data)).unwrap();
+
+        if (res && res.message) return void setServerError(res.message as string);
+
+        handleClosePopup();
+      }
+    }
+
     if (data.oldPassword === data.newPassword) {
       return void setServerError('New password cannot be the same as old password.');
     }
@@ -61,7 +72,7 @@ const SettingsPopup: React.FC<PopupProps> = ({ showPopup, handleClosePopup }) =>
               id='oldPassword'
               label='Old password'
               placeholder='Enter your old password'
-              errorMessage='Password is required'
+              errorMessage='Invalid Password'
               className='mb-5'
               classNameInput=''
               classNameLabel='text-sm sm:text-base '
@@ -70,7 +81,7 @@ const SettingsPopup: React.FC<PopupProps> = ({ showPopup, handleClosePopup }) =>
               id='newPassword'
               label='Create new password'
               placeholder='Enter your new password'
-              errorMessage='Password is required'
+              errorMessage='Invalid Password'
               className='my-custom-class'
               classNameInput=''
               classNameLabel='text-sm sm:text-base'

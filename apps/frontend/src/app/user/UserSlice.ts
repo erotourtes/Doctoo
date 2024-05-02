@@ -5,6 +5,7 @@ import { type components } from '../../api';
 interface UserData {
   data: {
     role?: components['schemas']['MeResponseDto']['role'];
+    isPasswordExist?: boolean;
   };
   state: {
     isLoading: boolean;
@@ -19,6 +20,7 @@ const initialState: UserData = {
   },
   data: {
     role: undefined,
+    isPasswordExist: false,
   },
 };
 
@@ -35,9 +37,13 @@ export const userSlice = createAppSlice({
         ...action.payload,
       };
     },
+
+    setUserPasswordExist: (state, action: PayloadAction<boolean>) => {
+      state.data.isPasswordExist = action.payload;
+    },
   },
 });
 
-export const { setUserData, setUserState } = userSlice.actions;
+export const { setUserData, setUserState, setUserPasswordExist } = userSlice.actions;
 
 export default userSlice.reducer;
