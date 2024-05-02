@@ -95,7 +95,7 @@ const SignUpPage = () => {
         <form onSubmit={form.handleSubmit(onSubmit)} className='flex w-[340px] flex-col justify-between gap-y-6'>
           <LogoWithTitle />
           <div>
-            <h1 className='mb-2 text-2xl font-bold leading-none tracking-tight'>Create account</h1>
+            <h1 className='mb-2 leading-none tracking-tight'>Create account</h1>
             <p className='text-grey-1'>Select a method to create account:</p>
           </div>
 
@@ -158,7 +158,12 @@ const SignUpPage = () => {
         </form>
       </FormProvider>
 
-      <PopupDoctoo modalBodyClassName='' closePopup={() => setOpen(false)} popupIsOpen={open}>
+      <PopupDoctoo
+        modalBodyClassName=''
+        modalFullClassName='max-w-[700px]'
+        closePopup={() => setOpen(false)}
+        popupIsOpen={open}
+      >
         <h2 className='mb-3'>Confirm your account</h2>
         <p>The confirmation link has been sent to your email. Please, check your email and confirm your account</p>
       </PopupDoctoo>

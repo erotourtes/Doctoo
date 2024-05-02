@@ -20,7 +20,7 @@ const LoginPageAuthenticate = () => {
   const onSubmit = async () => {
     const { error } = await api.POST('/auth/login/patient/mfa', { body: { ...credentials, code } });
     if (error) return void setServerError(joinError(error.message));
-    navigate('/', { replace: true });
+    navigate('/dashboard', { replace: true });
   };
 
   const onResend = async () => {

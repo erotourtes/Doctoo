@@ -6,7 +6,7 @@ import { cn } from '../../utils/cn';
 export const LogoWithTitle = () => {
   return (
     <div className='flex items-center gap-1'>
-      <Icon className='size-7' variant='logo' />
+      <Icon className='size-7 text-main' variant='logo' />
       <h1 className='font-syncopate text-2xl font-extrabold text-main'>Doctoo</h1>
     </div>
   );

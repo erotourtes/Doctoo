@@ -10,9 +10,9 @@ const EmailChangePageWrapper = () => {
   const navigate = useNavigate();
   const token = new URLSearchParams(location.search).get('token');
 
-  if (!token) return <Navigate to='/' />;
+  if (!token) return <Navigate to='/dashboard' />;
 
-  return <EmailChangePage token={token} onSuccess={() => navigate('/')} />;
+  return <EmailChangePage token={token} onSuccess={() => navigate('/dashboard')} />;
 };
 
 const REDIRECT_TIMEOUT_MS = 3000;

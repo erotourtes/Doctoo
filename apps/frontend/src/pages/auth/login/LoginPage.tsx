@@ -58,7 +58,7 @@ const LoginPage = () => {
 
     const is2faEnabled: boolean = data.isMFAEnabled;
     if (is2faEnabled) navigate(`/login/authenticate`, { state: { credentials: body } });
-    else navigate('/', { replace: true });
+    else navigate('/dashboard', { replace: true });
   };
 
   const onGoogleLogin = () => {

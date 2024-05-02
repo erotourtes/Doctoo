@@ -47,7 +47,7 @@ const DoctorLoginPage = () => {
   const onLogin: SubmitHandler<SignInType> = async body => {
     const { error } = await api.POST('/auth/login/doctor', { body });
     if (error) return void setServerError(joinError(error.message));
-    else navigate('/', { replace: true });
+    else navigate('/dashboard', { replace: true });
   };
 
   return (

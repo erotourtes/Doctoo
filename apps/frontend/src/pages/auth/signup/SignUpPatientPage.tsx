@@ -63,7 +63,7 @@ const SignUpPageOrig = ({ token }: { token: string }) => {
       const message = Array.isArray(error.message) ? error.message.join('\n') : error.message;
       setServerError(message);
     } else {
-      navigate('/', { replace: true });
+      navigate('/dashboard', { replace: true });
     }
   };
 
@@ -75,8 +75,8 @@ const SignUpPageOrig = ({ token }: { token: string }) => {
           className='lg:min-w[700px] my-6 min-w-[300px] max-w-[700px] space-y-3 md:min-w-[400px]'
         >
           <h2>Continue your registration</h2>
-          <Input id='weight' type='text' errorMessage={errors.weight?.message} label='Weight' />
-          <Input id='height' type='text' errorMessage={errors.height?.message} label='Height' />
+          <Input id='weight' type='text' errorMessage={errors.weight?.message} label='Weight (kg)' />
+          <Input id='height' type='text' errorMessage={errors.height?.message} label='Height (cm)' />
           <Input id='age' type='text' errorMessage={errors.age?.message} label='Age' />
 
           <div>
@@ -85,7 +85,7 @@ const SignUpPageOrig = ({ token }: { token: string }) => {
               {...form.register('bloodType')}
               defaultValue=''
               className={cn(
-                `w-full rounded-lg border border-transparent bg-background py-2 pl-4 pr-10 text-base text-text hover:border-text focus:border-text focus:outline-none`,
+                `w-full rounded-lg border border-transparent bg-background py-2 pl-2 pr-10 text-base text-text hover:border-text focus:border-text focus:outline-none`,
                 errors.bloodType?.message && 'border border-solid border-error',
               )}
             >
@@ -107,7 +107,7 @@ const SignUpPageOrig = ({ token }: { token: string }) => {
               {...form.register('gender')}
               defaultValue=''
               className={cn(
-                `w-full rounded-lg border border-transparent bg-background py-2 pl-4 pr-10 text-base text-text hover:border-text focus:border-text focus:outline-none`,
+                `w-full rounded-lg border border-transparent bg-background py-2 pl-2 pr-10 text-base text-text hover:border-text focus:border-text focus:outline-none`,
                 errors.bloodType?.message && 'border border-solid border-error',
               )}
             >
@@ -115,7 +115,7 @@ const SignUpPageOrig = ({ token }: { token: string }) => {
                 Select gender
               </option>
               {Object.keys(Gender).map(key => (
-                <option key={key} value={key}>
+                <option key={key} value={key} className='capitalize'>
                   {Gender[key as keyof typeof Gender]}
                 </option>
               ))}
