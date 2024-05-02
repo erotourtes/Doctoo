@@ -43,6 +43,7 @@ const DoctorsListItem = ({ key, doctor, appointments }: DoctorsListItemProps) =>
             patientId: patientId,
             doctorId: doctor.id,
             doctor: doctor,
+            reviews: [],
           }}
         />
       }
