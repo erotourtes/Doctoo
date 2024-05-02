@@ -158,7 +158,7 @@ export const Default: Story = {
           modalBodyClassName={''}
           modalFullClassName='max-w-[700px]'
         >
-          <AppointmentsPopup appointment={appointment} />
+          <AppointmentsPopup appointment={appointment} reviews={[]} />
         </PopupDoctoo>
       </BrowserRouter>
     );

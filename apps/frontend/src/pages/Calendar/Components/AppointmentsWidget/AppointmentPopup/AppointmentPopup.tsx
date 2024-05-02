@@ -6,7 +6,7 @@ import CalendarPopupHeader from './CalendarPopupHeader';
 import CalendarPopupBody from './CalendarPopupBody';
 import Schedule from '@/components/UI/Schedule/Schedule';
 import { useState } from 'react';
-import { IReview } from '@/dataTypes/Review';
+import type { IReview } from '@/dataTypes/Review';
 
 type AppointmentPopupProps = {
   appointmentModal: boolean;

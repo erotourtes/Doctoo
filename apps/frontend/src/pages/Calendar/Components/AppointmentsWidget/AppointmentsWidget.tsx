@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import type { IAppointment } from '@/dataTypes/Appointment';
 import AppointmentPopup from './AppointmentPopup/AppointmentPopup';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { IReview } from '@/dataTypes/Review';
 import { fetchReviewsByDoctor } from '@/app/review/ReviewThunks';
 
 type AppointmentsWidgetProps = { appointmentsForDay: IAppointment[]; selectedDate: Date };
