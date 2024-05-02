@@ -19,6 +19,7 @@ export default function ReviewsPage() {
   const doctorId = useQuery().get('doctorId');
 
   const doctor = useAppSelector(state => state.doctor.doctors).find((doctor: IDoctor) => doctor.id === doctorId);
+  const patient = useAppSelector(state => state.patient.data);
   const reviews = useAppSelector(state => state.review.reviews).filter(
     (review: IReview) => review.doctorId === doctorId,
   );
@@ -80,7 +81,7 @@ export default function ReviewsPage() {
             closePopup={closeSchedule}
             scheduleIsOpen={scheduleOpened}
             scheduleInfo={{
-              patientId: '',
+              patientId: patient.id,
               doctorId: doctor.id,
               doctor: doctor,
               reviews: reviews,
