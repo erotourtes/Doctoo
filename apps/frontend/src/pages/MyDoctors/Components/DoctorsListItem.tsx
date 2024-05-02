@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Schedule from '@/components/UI/Schedule/Schedule';
 import { DoctorCard } from '@/components/UI';
 import type { IAppointment } from '@/dataTypes/Appointment';
+import { useAppSelector } from '../../../app/hooks';
 
 interface DoctorsListItemProps {
   key: string;
@@ -10,7 +11,7 @@ interface DoctorsListItemProps {
   appointments: IAppointment[];
 }
 
-const DoctorsListItem = ({ key, doctor, appointments }: DoctorsListItemProps) => {
+const DoctorsListItem = ({ key, doctor }: DoctorsListItemProps) => {
   const [schedulePopupIsOpen, setSchedulePopupIsOpen] = useState(false);
   function closeSchedulePopup() {
     setSchedulePopupIsOpen(false);
@@ -19,8 +20,9 @@ const DoctorsListItem = ({ key, doctor, appointments }: DoctorsListItemProps) =>
     setSchedulePopupIsOpen(true);
   }
 
+  const patient = useAppSelector(state => state.patient.data);
+
   const fullName = `Dr. ${doctor.firstName} ${doctor.lastName}`;
-  const patientId = appointments[0].patientId;
 
   return (
     <>
@@ -40,7 +42,7 @@ const DoctorsListItem = ({ key, doctor, appointments }: DoctorsListItemProps) =>
           closePopup={closeSchedulePopup}
           scheduleIsOpen={schedulePopupIsOpen}
           scheduleInfo={{
-            patientId: patientId,
+            patientId: patient.id,
             doctorId: doctor.id,
             doctor: doctor,
           }}

@@ -11,7 +11,14 @@ const Settings = () => {
   const dispatch = useAppDispatch();
   const [error, setError] = useState<string | null>(null);
 
-  const handleEmailNotificationToggleChange = () => {};
+  const handleEmailNotificationToggleChange = async () => {
+    await dispatch(
+      patchPatientData({
+        id: patient.id,
+        body: { emailNotificationToggle: !patient.emailNotificationToggle },
+      }),
+    );
+  };
 
   const handleTwoFactorAuthToggleChange = async () => {
     await dispatch(
@@ -26,7 +33,14 @@ const Settings = () => {
       });
   };
 
-  const handleBillPaymentToggleChange = () => {};
+  const handleBillPaymentToggleChange = async () => {
+    await dispatch(
+      patchPatientData({
+        id: patient.id,
+        body: { requestBillPaymentApproval: !patient.requestBillPaymentApproval },
+      }),
+    );
+  };
 
   const settingsData = [
     {
