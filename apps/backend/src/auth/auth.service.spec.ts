@@ -71,7 +71,11 @@ describe('AuthService', () => {
 
     expect(password).toEqual(expect.any(String));
     expect(signedUp).toEqual(expect.objectContaining({ id: '1', ...userWithoutPassword }));
-    expect(userServiceMock.createUser).toHaveBeenCalledWith({ ...user, avatarKey: expect.any(String) });
+    expect(userServiceMock.createUser).toHaveBeenCalledWith({
+      ...user,
+      password: expect.not.stringMatching(user.password),
+      avatarKey: expect.any(String),
+    });
   });
 
   it('Should validate credentials', async () => {

@@ -100,7 +100,6 @@ export class AuthService {
 
   async loginDoctor(email: string, password: string): Promise<ResponseUserDto | null> {
     const user = await this.userService.getUserByEmail(email);
-    // TODO: add role when it is implemented
     if (!user) throw new NotFoundException("User with this email doesn't exist");
 
     const isValidPassword = await this.verifyPassword(password, user.password);
@@ -223,45 +222,48 @@ export class AuthService {
 
   private async signUpUserWithPassword(body: SignUpUserDto): Promise<ResponseUserDto> {
     const existingUser: User = await this.userService.getUserByEmail(body.email);
+    if (existingUser && existingUser.emailVerified) throw new BadRequestException('Requested user already exists.');
 
     if (existingUser) {
-      if (existingUser.emailVerified) throw new BadRequestException('Requested user already exists.');
+      await this.userService.patchUser(existingUser.id, {
+        ...body,
+        password: await this.hashPassword(body.password),
+      });
 
       const token = await this.jwtService.signAsync({ sub: existingUser.id }, { expiresIn: '1d' });
-
       await this.mailService.sendPatientSignUpMail(existingUser.email, existingUser.firstName, token);
 
       return plainToInstance(ResponseUserDto, existingUser);
     }
 
     const password = await this.hashPassword(body.password);
+    const user = await this.createUser({ ...body, password });
 
-    const data = Object.assign(body, { password });
-
-    const user = await this.createUser(data);
-
-    try {
-      const imageUrl = body?.avatarImgUrl ?? 'https://storage.googleapis.com/doctoo/user.png';
-
-      const { name } = await this.minioService.uploadByUrl(imageUrl);
-
-      await this.userService.patchUser(user.id, { avatarKey: name });
-    } catch (err) {}
+    await this.uploadAvatar(user.id, body.avatarImgUrl).catch(() => {});
 
     const token = await this.jwtService.signAsync({ sub: user.id }, { expiresIn: '1d' });
-
     this.mailService.sendPatientSignUpMail(user.email, user.firstName, token);
 
     return plainToInstance(ResponseUserDto, user);
   }
 
+  private async uploadAvatar(userId: string, avatarImgUrl?: string): Promise<void> {
+    const imageUrl = avatarImgUrl ?? 'https://storage.googleapis.com/doctoo/user.png';
+    const { name } = await this.minioService.uploadByUrl(imageUrl);
+    await this.userService.patchUser(userId, { avatarKey: name });
+  }
+
   private async signUpUserWithGoogleId(body: SignUpUserDto): Promise<ResponseUserDto> {
-    const isUserExists: User = await this.userService.getUserByEmail(body.email);
+    const existingUser: User = await this.userService.getUserByEmail(body.email);
+    if (existingUser && existingUser.emailVerified) throw new BadRequestException('Requested user already exists.');
 
-    if (isUserExists) {
-      if (isUserExists.emailVerified) throw new BadRequestException('Requested user already exists.');
+    if (existingUser) {
+      this.userService.patchUser(existingUser.id, {
+        ...body,
+        password: body.password ? await this.hashPassword(body.password) : undefined,
+      });
 
-      return plainToInstance(ResponseUserDto, isUserExists);
+      return plainToInstance(ResponseUserDto, existingUser);
     }
 
     const user = await this.userService.createUser({
@@ -274,13 +276,7 @@ export class AuthService {
       role: body.role,
     });
 
-    try {
-      const imageUrl = body?.avatarImgUrl ?? 'https://storage.googleapis.com/doctoo/user.png';
-
-      const { name } = await this.minioService.uploadByUrl(imageUrl);
-
-      await this.userService.patchUser(user.id, { avatarKey: name });
-    } catch (err) {}
+    await this.uploadAvatar(user.id, body.avatarImgUrl).catch(() => {});
 
     return plainToInstance(ResponseUserDto, user);
   }
