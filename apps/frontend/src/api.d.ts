@@ -1556,17 +1556,17 @@ export interface components {
     ResponseChatDto: {
       /**
        * @description Unique chat id.
-       * @example 67cf5e0c-3337-4912-aed0-b972e56ef3e8
+       * @example d70c9b43-fecb-441d-9fec-5dd80ac92fd0
        */
       id: string;
       /**
        * @description Unique doctor id.
-       * @example 1f16f7c8-920d-448c-a944-e06d64c63353
+       * @example 007b0a05-17a4-4b12-9257-e21ba555ab7f
        */
       doctorId: string;
       /**
        * @description Unique patient id.
-       * @example 7adf51fb-c037-4aba-99c5-f208103ece39
+       * @example 63f7bf23-a708-4049-bb9e-abb3a1d95234
        */
       patientId: string;
       /**
@@ -1597,7 +1597,7 @@ export interface components {
       /**
        * @description Got last message.
        * @example {
-       *   "sentAt": "2024-05-02T07:03:38.588Z",
+       *   "sentAt": "2024-05-02T07:45:30.835Z",
        *   "sender": "DOCTOR",
        *   "text": "last message text"
        * }
@@ -1607,12 +1607,12 @@ export interface components {
     ResponseMessageDto: {
       /**
        * @description Unique chat message id.
-       * @example 819c1d6e-c395-44c8-87a7-d7cb7d6a157b
+       * @example 99cfc972-d645-4cc2-9d32-f8b902430d57
        */
       id: string;
       /**
        * @description Unique chat id.
-       * @example f3cca669-592e-4459-9940-d2c671f31c00
+       * @example b0a69b80-0640-4f55-92c7-e80d40a08a4d
        */
       chatId: string;
       /**
@@ -1623,7 +1623,7 @@ export interface components {
       /**
        * Format: date-time
        * @description Time when sent message.
-       * @example 2024-05-02T07:03:38.598Z
+       * @example 2024-05-02T07:45:30.881Z
        */
       sentAt: string;
       /**
@@ -1634,7 +1634,7 @@ export interface components {
       /**
        * Format: date-time
        * @description Time when updated message.
-       * @example 2024-05-02T07:03:38.598Z
+       * @example 2024-05-02T07:45:30.882Z
        */
       editedAt: string;
     };
