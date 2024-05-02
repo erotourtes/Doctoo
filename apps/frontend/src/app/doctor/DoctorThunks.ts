@@ -101,7 +101,6 @@ export const getFamilyDoctor = createAsyncThunk('doctor', async (doctor_id: stri
     const response = await instance.get(`/doctor/${doctor_id}`);
     if (response.status === 200) {
       dispatch(setFamilyDoctor(response.data));
-      console.log('Family doctor: ', response.data);
     }
   } catch (e) {
     const error = e as Error;

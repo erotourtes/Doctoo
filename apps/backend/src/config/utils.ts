@@ -10,7 +10,5 @@ export const validate = <T extends object>(schema: ClassConstructor<T>) => {
   const errors = validateSync(validatedConfig);
   if (errors.length > 0) throw new Error(errors.toString());
 
-  console.log(validatedConfig);
-
   return validatedConfig;
 };
