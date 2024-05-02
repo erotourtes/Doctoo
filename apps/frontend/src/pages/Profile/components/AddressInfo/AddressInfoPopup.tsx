@@ -24,7 +24,7 @@ const schema = Joi.object({
   city: Joi.string().min(3).required(),
   street: Joi.string().min(3).required(),
   zipCode: Joi.string().alphanum().min(3).optional(),
-  apartment: Joi.string().min(3).optional(),
+  apartment: Joi.string().min(1).optional(),
 });
 
 const AddressInfoPopup = ({ isOpen, onClose }: AddressInfoPopupProps) => {
