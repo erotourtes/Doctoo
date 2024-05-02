@@ -1,27 +1,46 @@
 import type { IDoctor } from '@/dataTypes/Doctor';
 import DoctorsListItem from './DoctorsListItem';
 import type { IAppointment } from '@/dataTypes/Appointment';
+import { useEffect, useState } from 'react';
+import type { FilterState } from './Filters/filterReducer';
+import { filterConfig } from './Filters/MyDoctorsFilters';
 
 interface DoctorsListProps {
   doctors: IDoctor[];
-  chosenOptions: string[];
   appointments: IAppointment[];
+  filters: FilterState;
 }
 
-const DoctorsList = ({ doctors, appointments, chosenOptions }: DoctorsListProps) => {
-  const filterdDoctors = () => {
-    const result: IDoctor[] = [];
-    chosenOptions.forEach(option => {
-      doctors.forEach(doctor => {
-        if (doctor.id === option) {
-          result.push(doctor);
-        }
-      });
-    });
-    return result;
-  };
+function filterDoctors(doctor: IDoctor, filters: FilterState): boolean {
+  if (!doctor) return false;
 
-  const doctorsList = chosenOptions.length ? filterdDoctors() : doctors;
+  const fullName = `Dr. ${doctor!.firstName} ${doctor!.lastName}`;
+  const passesDoctorFilter =
+    filters.doctors.includes(filterConfig.doctors.defaultValue) || filters.doctors.includes(fullName);
+
+  if (!doctor.specializations?.length) return passesDoctorFilter;
+
+  const doctorSpecialization = doctor.specializations[0].name;
+  const doctorHospital = doctor.hospitals[0].name;
+
+  const passesSpecializationFilter =
+    filters.specializations.includes(filterConfig.specializations.defaultValue) ||
+    filters.specializations.includes(doctorSpecialization);
+
+  const passesHospitalsFilter =
+    filters.hospitals.includes(filterConfig.hospitals.defaultValue) || filters.hospitals.includes(doctorHospital);
+
+  return passesSpecializationFilter && passesHospitalsFilter && passesDoctorFilter;
+}
+
+const DoctorsList = ({ filters, doctors, appointments }: DoctorsListProps) => {
+  const [filteredDoctors, setFilteredDoctors] = useState<IDoctor[]>([]);
+
+  useEffect(() => {
+    const filtered = doctors.filter(app => filterDoctors(app, filters));
+
+    setFilteredDoctors(filtered);
+  }, [doctors, filters]);
 
   return (
     <>
@@ -29,10 +48,10 @@ const DoctorsList = ({ doctors, appointments, chosenOptions }: DoctorsListProps)
         {doctors && (
           <div className=''>
             <h3 className='mb-4 flex justify-start text-lg font-medium text-black'>
-              My doctors ({doctorsList.length})
+              My doctors ({filteredDoctors.length})
             </h3>
             <div className='flex flex-col gap-4'>
-              {doctorsList.map(doctor => (
+              {filteredDoctors.map(doctor => (
                 <DoctorsListItem key={doctor.id} doctor={doctor} appointments={appointments} />
               ))}
             </div>
