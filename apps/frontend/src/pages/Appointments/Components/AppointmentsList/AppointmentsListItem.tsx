@@ -29,11 +29,6 @@ export default function AppointmentsListItem({ appointment, openModal }: Appoint
     setBookModal(true);
   }
 
-  useEffect(() => {
-    if (reviews && appointment) {
-    }
-  }, [reviews, appointment]);
-
   const { patientId, doctorId, doctor, videoRecordKey, notes, status, paymentReceiptKey, id, startedAt } = appointment;
   const { firstName, lastName, specializations } = doctor!;
   const fullName = `Dr. ${firstName} ${lastName}`;
