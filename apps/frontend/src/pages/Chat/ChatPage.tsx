@@ -7,10 +7,11 @@ import { getChatMessages, getChatsForPatient, getMe } from '@/app/chat/ChatThunk
 import { deleteChatMessages, openChat } from '@/app/chat/ChatSlice';
 
 import PageHeader from '@/pages/PageHeader';
-import ChatTabs from './Components/ChatTabs';
-import ChatList from './Components/ChatList';
-import ChatBody from './Components/ChatBody';
-import AttachedFiles from './Components/AttachedFiles';
+import ChatTabs from './Components/DoctorChatsComponents/ChatTabs';
+import ChatList from './Components/DoctorChatsComponents/ChatList';
+import ChatBody from './Components/DoctorChatsComponents/ChatBody';
+import AttachedFiles from './Components/DoctorChatsComponents/AttachedFiles';
+import { VirtualAssistantChat } from './Components/VirtualAssistantChatComponents/VirtualAssistantChat';
 
 const ChatPage = () => {
   const me = useAppSelector(state => state.chat.me);
@@ -88,6 +89,7 @@ const ChatPage = () => {
             ) : null}
           </div>
         ) : null}
+        {getSelected('/assistant') && <VirtualAssistantChat />}
       </div>
     </div>
   );
