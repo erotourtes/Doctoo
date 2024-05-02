@@ -17,7 +17,9 @@ import type { FieldValues, SubmitHandler } from 'react-hook-form';
 import { FormProvider, useForm } from 'react-hook-form';
 
 const schema = Joi.object({
-  cardholderName: Joi.string().min(3).max(30).required(),
+  cardholderName: Joi.string()
+    .regex(/^[a-zA-Zа-яА-ЯіїєґІЇЄҐ\s]{3,30}$/u)
+    .required(),
   agreedToTerms: Joi.boolean().valid(true).required(),
 });
 
