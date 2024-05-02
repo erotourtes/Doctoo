@@ -175,16 +175,6 @@ export interface paths {
     /** Delete favorite */
     delete: operations['FavoriteController_deleteFavorite'];
   };
-  '/favorite': {
-    /** Get favorites */
-    get: operations['FavoriteController_getFavorites'];
-    /** Create favorite */
-    post: operations['FavoriteController_createFavorite'];
-  };
-  '/favorite/{id}': {
-    /** Delete favorite */
-    delete: operations['FavoriteController_deleteFavorite'];
-  };
   '/file/upload': {
     /** Upload file */
     post: operations['FileController_uploadFile'];
@@ -1970,74 +1960,6 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: never;
-      };
-      /** @description Response if an error occurs while processing a request. */
-      400: {
-        content: {
-          'application/json': components['schemas']['BadRequestResponse'];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      401: {
-        content: {
-          'application/json': components['schemas']['UnauthorizedResponse'];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      500: {
-        content: {
-          'application/json': components['schemas']['ClassicNestResponse'];
-        };
-      };
-    };
-  };
-  AuthController_getMe: {
-    parameters: {
-      header?: {
-        /** @description JWT token */
-        Cookie?: string;
-      };
-    };
-    responses: {
-      /** @description Response when the request is successfully processed. */
-      200: {
-        content: {
-          'application/json': components['schemas']['MeResponseDto'];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      400: {
-        content: {
-          'application/json': components['schemas']['BadRequestResponse'];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      401: {
-        content: {
-          'application/json': components['schemas']['UnauthorizedResponse'];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      500: {
-        content: {
-          'application/json': components['schemas']['ClassicNestResponse'];
-        };
-      };
-    };
-  };
-  AuthController_getMe: {
-    parameters: {
-      header?: {
-        /** @description JWT token */
-        Cookie?: string;
-      };
-    };
-    responses: {
-      /** @description Response when the request is successfully processed. */
-      200: {
-        content: {
-          'application/json': components['schemas']['MeResponseDto'];
-        };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
@@ -4333,51 +4255,6 @@ export interface operations {
       400: {
         content: {
           'application/json': components['schemas']['BadRequestResponse'];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      401: {
-        content: {
-          'application/json': components['schemas']['UnauthorizedResponse'];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      500: {
-        content: {
-          'application/json': components['schemas']['ClassicNestResponse'];
-        };
-      };
-    };
-  };
-  /**
-   * Get chat messages
-   * @description This endpoint retrieves a chat messages.
-   */
-  ChatController_getChatMessages: {
-    parameters: {
-      header?: {
-        /** @description JWT token */
-        Cookie?: string;
-      };
-      path: {
-        /**
-         * @description Unique chat id.
-         * @example 123e4567-e89b-12d3-a456-426614174000
-         */
-        chatId: string;
-      };
-    };
-    responses: {
-      /** @description Response when the request is successfully processed. */
-      200: {
-        content: {
-          'application/json': components['schemas']['ResponseMessageDto'];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      401: {
-        content: {
-          'application/json': components['schemas']['UnauthorizedResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
