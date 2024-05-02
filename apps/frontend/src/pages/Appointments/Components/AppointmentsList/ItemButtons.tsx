@@ -58,6 +58,7 @@ export default function AppointmentButtons({ componentName, appointment, openBoo
 
   function PayButton() {
     return (
+      !approve &&
       status === 'PENDING_PAYMENT' && (
         <Button type='secondary' btnType='button'>
           Pay
@@ -124,10 +125,11 @@ export default function AppointmentButtons({ componentName, appointment, openBoo
 
     case AppointmentStatus.PENDING_PAYMENT:
       return (
-        <>
+        <div className={`flex ${componentName === 'popup' ? 'flex gap-x-4' : 'flex-col'} gap-y-2`}>
+          {!approve && <CancelButton text='Cancel' />}
+          {approve && (componentName === 'popup' ? <CancelInPopup /> : <CancelInList />)}
           <PayButton />
-          <CancelButton text='Cancel' />
-        </>
+        </div>
       );
 
     case AppointmentStatus.COMPLETED:
