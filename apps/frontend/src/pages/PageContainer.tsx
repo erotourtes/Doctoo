@@ -1,37 +1,79 @@
-import ProtectPatientRoute from '@/pages/auth/ProtectPatientPage';
 import Sidemenu from '@components/Sidemenu/Sidemenu';
 import Header from '@components/UI/Header/Header';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import AppointmentsPage from './Appointments/AppointmentsPage';
+import DoctorLoginPage from './auth/login/DoctorLoginPage';
+import LoginPage from './auth/login/LoginPage';
+import LoginPageAuthenticate from './auth/login/LoginPageAuthenticate';
+import LogoutPage from './auth/logout/Logout';
+import { ProtectDoctorRoute, ProtectPatientRoute, ProtectRoute } from './auth/ProtectPatientPage';
+import SignUpPage from './auth/signup/SignUpPage';
+import SignUpPatientPage from './auth/signup/SignUpPatientPage';
 import CalendarPage from './Calendar/CalendarPage';
 import EmailChangePage from './EmailChange/EmailChangePage';
 import MyDoctorsPage from './MyDoctors/MyDoctorsPage';
 import { PaymentPage } from './PaymentPage/PaymentPage';
 import ProfilePage from './Profile/ProfilePage';
 import ReviewsPage from './Reviews/ReviewsPage';
-import LoginPage from './auth/login/LoginPage';
-import LoginPageAuthenticate from './auth/login/LoginPageAuthenticate';
-import LogoutPage from './auth/logout/Logout';
-import SignUpPage from './auth/signup/SignUpPage';
-import SignUpPatientPage from './auth/signup/SignUpPatientPage';
-import DashboardPage from './dashboard/DashboardPage';
 import Settings from './settings/settingsPage/settingsPage';
-import DoctorLoginPage from './auth/login/DoctorLoginPage';
+import { useAppSelector } from '../app/hooks';
+import PatientDashboard from './dashboard/components/PatientDashboard/PatientDashboard';
+import DoctorDashboard from './dashboard/components/DoctorDashboard/DoctorDashboard';
+import { useMemo } from 'react';
+
+const PatientPages = () => {
+  return (
+    <Routes>
+      <Route path='/' Component={ProtectPatientRoute}>
+        <Route path='/profile' Component={ProfilePage} />
+        <Route path='/dashboard' Component={PatientDashboard} />
+        <Route path='/settings' Component={Settings} />
+        <Route path='/payment' Component={PaymentPage} />
+        <Route path='/my-doctors' Component={MyDoctorsPage} />
+        <Route path='/calendar' Component={CalendarPage} />
+        <Route path='/reviews' Component={ReviewsPage} />
+        <Route path='/appointments' Component={AppointmentsPage} />
+        <Route path='/logout' Component={LogoutPage} />
+      </Route>
+    </Routes>
+  );
+};
+
+const DoctorPages = () => {
+  return (
+    <Routes>
+      <Route path='/' Component={ProtectDoctorRoute}>
+        <Route path='/profile' Component={ProfilePage} />
+        <Route path='/dashboard' Component={DoctorDashboard} />
+        <Route path='/settings' Component={Settings} />
+        <Route path='/payment' Component={PaymentPage} />
+        <Route path='/my-doctors' Component={MyDoctorsPage} />
+        <Route path='/calendar' Component={CalendarPage} />
+        <Route path='/reviews' Component={ReviewsPage} />
+        <Route path='/appointments' Component={AppointmentsPage} />
+        <Route path='/logout' Component={LogoutPage} />
+      </Route>
+    </Routes>
+  );
+};
 
 const PageContainer = () => {
+  const role = useAppSelector(state => state.user.data.role);
+
+  const Page = useMemo(() => {
+    if (!role) return null;
+    const pages = {
+      PATIENT: PatientPages,
+      DOCTOR: DoctorPages,
+    };
+    return pages[role];
+  }, [role]);
+
   return (
     <main className='main-wrapper flex h-full w-full flex-col gap-6 overflow-auto bg-background p-8 px-4 sm:px-8'>
       <Routes>
-        <Route path='/' Component={ProtectPatientRoute}>
-          <Route path='/profile' Component={ProfilePage} />
-          <Route path='/dashboard' Component={DashboardPage} />
-          <Route path='/settings' Component={Settings} />
-          <Route path='/payment' Component={PaymentPage} />
-          <Route path='/my-doctors' Component={MyDoctorsPage} />
-          <Route path='/calendar' Component={CalendarPage} />
-          <Route path='/reviews' Component={ReviewsPage} />
-          <Route path='/appointments' Component={AppointmentsPage} />
-          <Route path='/logout' Component={LogoutPage} />
+        <Route path='/' Component={ProtectRoute}>
+          <Route path='*' Component={Page} />
         </Route>
       </Routes>
     </main>

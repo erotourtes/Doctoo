@@ -29,6 +29,7 @@ import { GoogleAuthGuard } from './strategies/google';
 import { AuthRequestHelper } from './utils/cookie-helper.service';
 import { ResponsePatientDto } from '../patient/dto/response.dto';
 import { ChangeEmailDto } from './dto/changeEmail.dto';
+import { MeResponseDto } from './dto/getMe.dto';
 
 @ApiTags('Auth Endpoints')
 @Controller('auth')
@@ -191,5 +192,16 @@ export class AuthController {
   @ApiBody({ type: ChangeEmailDto })
   async changeEmail(@UserDec() user: ResponseUserDto, @Body() body: ChangeEmailDto): Promise<void> {
     return this.authService.changeEmail(user, body.token);
+  }
+
+  @UseGuards(JWTGuard)
+  @Get('get/me')
+  @ApiHeader({ name: 'Cookie', example: 'jwt=eyJhbGci...', description: 'JWT token' })
+  @ApiOkResponse({ type: MeResponseDto, description: RESPONSE_STATUS.SUCCESS })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  async getMe(@UserDec() user: ResponseUserDto): Promise<MeResponseDto> {
+    return await this.authService.getMe(user);
   }
 }

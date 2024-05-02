@@ -1,19 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../api';
-import { setUserData } from './UserSlice';
-import handleError from '@/api/handleError.api';
+import { setUserState } from './UserSlice';
 
-export const getUserData = createAsyncThunk('user', async (_, { dispatch }) => {
-  try {
-    const { data, error } = await api.GET('/user/me');
-
-    if (error) {
-      throw new Error('Failed to fetch patient data GET /user/me');
-    }
-
-    dispatch(setUserData({ ...data }));
-  } catch (e) {
-    const error = e as Error;
-    handleError(error);
-  }
+export const logoutThunk = createAsyncThunk('logout', async (_void, { dispatch }) => {
+  const { error } = await api.GET('/auth/logout');
+  if (error) throw new Error('Failed to logout');
+  dispatch(setUserState({ isFetched: false }));
 });

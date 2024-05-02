@@ -10,9 +10,10 @@ import { GoogleStrategy } from './strategies/google';
 import { JwtStrategy } from './strategies/jwt';
 import { AuthRequestHelper } from './utils/cookie-helper.service';
 import { GlobalJwtModule } from '../jwt/jwt.module';
+import { DoctorModule } from '../doctor/doctor.module';
 
 @Module({
-  imports: [PassportModule, MailModule, MinioModule, GlobalJwtModule, UserModule, PatientModule],
+  imports: [PassportModule, MailModule, MinioModule, GlobalJwtModule, UserModule, PatientModule, DoctorModule],
   controllers: [AuthController],
   providers: [AuthService, AuthRequestHelper, GoogleStrategy, JwtStrategy],
 })
