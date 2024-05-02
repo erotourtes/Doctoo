@@ -1,14 +1,14 @@
-import type { IAppointment } from '@/dataTypes/Appointment';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { fetchReviewsByDoctor } from '@/app/review/ReviewThunks';
 import Icon from '@/components/UI/Icon/Icon';
+import Schedule from '@/components/UI/Schedule/Schedule';
+import type { IAppointment } from '@/dataTypes/Appointment';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { useState } from 'react';
 import AppointmentBadges from './ItemBadges';
 import AppointmentButtons from './ItemButtons';
 import AppointmentLinks from './ItemLinks';
-import { useState } from 'react';
-import Schedule from '@/components/UI/Schedule/Schedule';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { fetchReviewsByDoctor } from '@/app/review/ReviewThunks';
 
 dayjs.extend(utc);
 
@@ -59,7 +59,7 @@ export default function AppointmentsListItem({ appointment, openModal }: Appoint
 
           <div className='flex flex-col justify-between'>
             <div className='flex w-[140px] flex-col gap-x-2 gap-y-4 self-end'>
-              <AppointmentButtons componentName='listItem' appointment={appointment} openBookModal={openReschedule} />
+              <AppointmentButtons componentName='listItem' appointment={appointment} openBookModal={openBookModal} />
             </div>
           </div>
         </div>
@@ -72,23 +72,24 @@ export default function AppointmentsListItem({ appointment, openModal }: Appoint
           <div className='self-end'>
             <AppointmentLinks videoRecordKey={videoRecordKey} notes={notes} />
           </div>
-        <div className='flex flex-wrap items-center justify-between gap-4'>
-          <p className='text-base font-normal text-grey-2'>Attached files:</p>
-          <AppointmentLinks videoRecordKey={videoRecordKey} notes={notes} />
+          <div className='flex flex-wrap items-center justify-between gap-4'>
+            <p className='text-base font-normal text-grey-2'>Attached files:</p>
+            <AppointmentLinks videoRecordKey={videoRecordKey} notes={notes} />
+          </div>
         </div>
-      </div>
 
-      <Schedule
-        closePopup={closeBookModal}
-        scheduleIsOpen={bookModalIsOpen}
-        scheduleInfo={{
-          patientId: patientId,
-          doctorId: doctorId,
-          appointmentId: id,
-          doctor: doctor!,
-          reviews: reviews,
-        }}
-      />
+        <Schedule
+          closePopup={closeBookModal}
+          scheduleIsOpen={bookModalIsOpen}
+          scheduleInfo={{
+            patientId: patientId,
+            doctorId: doctorId,
+            appointmentId: id,
+            doctor: doctor!,
+            reviews: reviews,
+          }}
+        />
+      </div>
     </>
   );
 }
