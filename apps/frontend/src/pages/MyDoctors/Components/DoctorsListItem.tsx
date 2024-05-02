@@ -14,7 +14,7 @@ interface DoctorsListItemProps {
 const DoctorsListItem = ({ key, doctor }: DoctorsListItemProps) => {
   const [schedulePopupIsOpen, setSchedulePopupIsOpen] = useState(false);
 
-  const patient = useAppSelector(state => state.patient);
+  const patient = useAppSelector(state => state.patient.data);
 
   function closeSchedulePopup() {
     setSchedulePopupIsOpen(false);
@@ -23,7 +23,6 @@ const DoctorsListItem = ({ key, doctor }: DoctorsListItemProps) => {
     setSchedulePopupIsOpen(true);
   }
 
-  const patient = useAppSelector(state => state.patient.data);
 
   const fullName = `Dr. ${doctor.firstName} ${doctor.lastName}`;
 
