@@ -32,7 +32,7 @@ const userLogInSchema = Joi.object<SignInType>({
   password: Joi.string()
     .min(8)
     .messages({
-      'string.min': 'Password must be at least 6 characters',
+      'string.min': 'Password must be at least 8 characters',
       'string.empty': 'Password is required',
     })
     .required(),

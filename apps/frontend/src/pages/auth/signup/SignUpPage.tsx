@@ -10,7 +10,9 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import Joi from 'joi';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { API_URL, instance } from '../../../api/axios.api';
+import { API_URL } from '../../../api/axios.api';
+import api from '../../../app/api';
+import { joinError } from '../../../utils/errors';
 
 type SignUpType = {
   email: string;
@@ -28,14 +30,22 @@ const userSignUpSchema = Joi.object<SignUpType>({
       'string.empty': 'Please enter your email',
     })
     .required(),
-  password: Joi.string().min(8).required().messages({
-    'string.min': 'Password must be at least 6 characters',
-    'string.empty': 'Please enter your password',
-  }),
+  password: Joi.string()
+    .min(8)
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)
+    .required()
+    .messages({
+      'string.min': 'Password must be at least 8 characters',
+      'string.pattern.base': 'Password must contain at least one uppercase letter, one lowercase letter and one number',
+      'string.empty': 'Please enter your password',
+    }),
   phone: Joi.string()
     .trim()
     .regex(/^\+?\d{10,}$/)
-    .messages({ 'string.pattern.base': 'Phone number must have 10 digits.' })
+    .messages({
+      'string.pattern.base': 'Phone number must have 10 digits.',
+      'string.empty': 'Please enter your phone number',
+    })
     .required(),
   fullName: Joi.string()
     .trim()
@@ -46,6 +56,8 @@ const userSignUpSchema = Joi.object<SignUpType>({
     .messages({
       'string.pattern.base': 'Please enter your first and last name space separated',
       'string.empty': 'Please enter your first and last name',
+      'string.min': 'Name must be at least 3 characters',
+      'string.max': 'Name must be less than 30 characters',
     }),
 });
 
@@ -60,28 +72,20 @@ const SignUpPage = () => {
 
   const onSubmit = async (data: SignUpType) => {
     const [firstName, lastName] = data.fullName.split(' ');
-    await instance
-      .post(
-        '/auth/signup',
-        {
-          firstName: firstName,
-          lastName: lastName,
-          email: data.email,
-          password: data.password,
-          phone: data.phone,
-          role: 'PATIENT',
-        },
-        {
-          withCredentials: true,
-        },
-      )
-      .then(() => {
-        setOpen(true);
-      })
-      .catch(e => {
-        if (e.response) setServerError(e.response.data.message);
-        else setServerError('Something went wrong');
-      });
+    const { error } = await api.POST('/auth/signup', {
+      body: {
+        firstName: firstName,
+        lastName: lastName,
+        email: data.email,
+        password: data.password,
+        phone: data.phone,
+        role: 'PATIENT',
+      },
+    });
+
+    if (error) return void setServerError(joinError(error.message));
+    setServerError(null);
+    setOpen(true);
   };
 
   const onGoogleSignUp = async () => {
@@ -161,7 +165,10 @@ const SignUpPage = () => {
       <PopupDoctoo
         modalBodyClassName=''
         modalFullClassName='max-w-[700px]'
-        closePopup={() => setOpen(false)}
+        closePopup={() => {
+          form.reset();
+          setOpen(false);
+        }}
         popupIsOpen={open}
       >
         <h2 className='mb-3'>Confirm your account</h2>

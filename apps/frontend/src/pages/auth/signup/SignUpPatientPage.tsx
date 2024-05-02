@@ -29,9 +29,21 @@ type Patient = {
 };
 
 const patientScheme = Joi.object<Patient>({
-  weight: Joi.number().min(30).max(1000).required(),
-  height: Joi.number().min(50).max(300).required(),
-  age: Joi.number().min(18).max(130).required(),
+  weight: Joi.number().min(30).max(1000).required().messages({
+    'number.base': 'Weight must be a number',
+    'number.min': 'Weight must be more than 30kg',
+    'number.max': 'Weight must be less than 1000kg',
+  }),
+  height: Joi.number().min(50).max(300).required().messages({
+    'number.base': 'Height must be a number',
+    'number.min': 'Height must be more than 50cm',
+    'number.max': 'Height must be less than 300cm',
+  }),
+  age: Joi.number().min(18).max(130).required().messages({
+    'number.base': 'Age must be a number',
+    'number.min': 'Age must be more than 18',
+    'number.max': 'Age must be less than 130',
+  }),
   bloodType: Joi.string()
     .valid(...Object.keys(BloodType))
     .required()
@@ -40,9 +52,21 @@ const patientScheme = Joi.object<Patient>({
     .valid(...Object.keys(Gender))
     .required()
     .messages({ 'any.only': 'Please select you gender' }),
-  country: Joi.string().min(3).max(100).required(),
-  city: Joi.string().min(3).max(100).required(),
-  street: Joi.string().min(3).max(100).required(),
+  country: Joi.string().min(3).max(100).required().messages({
+    'string.empty': 'Country is required',
+    'string.min': 'Country must be at least 3 characters long',
+    'string.max': 'Country must be less than 100 characters long',
+  }),
+  city: Joi.string().min(3).max(100).required().messages({
+    'string.empty': 'City is required',
+    'string.min': 'City must be at least 3 characters long',
+    'string.max': 'City must be less than 100 characters long',
+  }),
+  street: Joi.string().min(3).max(100).required().messages({
+    'string.empty': 'Street is required',
+    'string.min': 'Street must be at least 3 characters long',
+    'string.max': 'Street must be less than 100 characters long',
+  }),
 });
 
 const styles = {
@@ -119,7 +143,7 @@ const SignUpPageOrig = ({ token }: { token: string }) => {
               style={styles}
               defaultValue=''
               className={cn(
-                `w-full rounded-lg border border-transparent bg-background py-2 pl-3 pr-10 text-base text-text hover:border-text focus:border-text focus:outline-none`,
+                `w-full rounded-lg border border-transparent bg-background py-2 pl-3 pr-10 text-base capitalize text-text hover:border-text focus:border-text focus:outline-none`,
                 errors.bloodType?.message && 'border border-solid border-error',
               )}
             >
@@ -140,6 +164,8 @@ const SignUpPageOrig = ({ token }: { token: string }) => {
           <Input id='street' type='text' errorMessage={errors.street?.message} label='Street' />
 
           <ErrorMessage message={serverError} />
+
+          <div className='h-3' />
 
           <Button btnType='submit' type='primary' className='w-full'>
             Sign Up
