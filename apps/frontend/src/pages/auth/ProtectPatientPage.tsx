@@ -1,10 +1,11 @@
 import React from 'react';
 import { Outlet, useNavigate } from 'react-router';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import api from '../../app/api';
 import { setDoctorDataUser } from '../../app/doctor/DoctorSlice';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { setPatientData } from '../../app/patient/PatientSlice';
 import { setUserData, setUserState } from '../../app/user/UserSlice';
+import PatientDashboardSkeleton from '../dashboard/components/PatientDashboard/PatientDashboardSkeleton';
 
 export const ProtectRoute: React.FC<{ Page?: React.ElementType }> = ({ Page }) => {
   const navigate = useNavigate();
@@ -36,7 +37,8 @@ export const ProtectRoute: React.FC<{ Page?: React.ElementType }> = ({ Page }) =
   }, [isFetched, isLoading]);
 
   if (isFetched) return Page ? <Page /> : <Outlet />;
-  return 'Loading...';
+
+  return <PatientDashboardSkeleton />;
 };
 
 export const ProtectPatientRoute: React.FC<{ Page?: React.ElementType }> = ({ Page }) => {
