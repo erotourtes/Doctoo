@@ -1,4 +1,4 @@
-import { Button, Icon, Input } from '@/components/UI';
+import { Button, Icon, Input, InputPassword } from '@/components/UI';
 import {
   AuthCreateAccount,
   AuthMainContainer,
@@ -106,13 +106,7 @@ const LoginPage = () => {
                 placeholder='John@gmail.com'
                 errorMessage={errors.email?.message}
               />
-              <Input
-                id='password'
-                type='password'
-                label='Password'
-                placeholder=''
-                errorMessage={errors.password?.message}
-              />
+              <InputPassword id='password' label='Password' placeholder='' errorMessage={errors.password?.message} />
             </div>
           </div>
           <ErrorMessage message={serverError} />
