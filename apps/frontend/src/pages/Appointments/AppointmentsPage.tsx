@@ -52,7 +52,7 @@ export default function AppointmentsPage() {
       </PageHeader>
 
       <section className='flex flex-col justify-between gap-6 lg:flex-row'>
-        <div className='flex h-4/5 flex-1 flex-col gap-y-6'>
+        <div className='flex h-4/5 flex-1 flex-col gap-y-6 rounded-xl p-2 sm:p-6'>
           <AppointmentsFilters state={filterState} dispatch={dispatchFilterAction} appointments={appointments} />
           {appointments.length === 0 ? (
             <NoAppointments findDoctor={() => {}} />
