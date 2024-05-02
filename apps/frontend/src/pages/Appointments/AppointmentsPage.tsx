@@ -10,8 +10,10 @@ import AppointmentsFilters from './Components/AppointmentsFilters/AppointmentsFi
 import { getMyAppointments } from '@/app/appointment/AppointmentThunks';
 import NoAppointments from './NoAppointments';
 import { filterReducer, initialFilterState } from './filterReducer';
+import useWindowWide from '@/hooks/useWindowWide';
 
 export default function AppointmentsPage() {
+  const mobileWidth = useWindowWide(768);
   const dispatch = useAppDispatch();
   const appointments = useAppSelector(state => state.appointment.appointments);
   const [filterState, dispatchFilterAction] = useReducer(filterReducer, initialFilterState);
@@ -32,16 +34,24 @@ export default function AppointmentsPage() {
   }
 
   return (
-    <section className='overflow-hidden'>
-      <PageHeader iconVariant='appointments' title='Appointments'>
-        <InputSearch value={search} setValue={handleSubmit} variant='white' placeholder='Search by doctor, symptom' />
+    <section className=''>
+      <PageHeader iconVariant='appointments' title='Appointments' className='flex-col gap-4 lg:flex-row'>
+        <div className='flex w-full flex-col gap-4 sm:flex-row'>
+          <InputSearch
+            value={search}
+            setValue={handleSubmit}
+            variant='white'
+            placeholder={`${mobileWidth ? 'Search by doctor, symptom' : 'Search by doctor'}`}
+            className='w-full'
+          />
 
-        <Button type='primary' btnType='button'>
-          Find a doctor
-        </Button>
+          <Button type='primary' btnType='button' className='flex items-center justify-center whitespace-nowrap'>
+            Find a doctor
+          </Button>
+        </div>
       </PageHeader>
 
-      <section className='flex h-screen justify-between gap-x-5'>
+      <section className='flex flex-col justify-between gap-6 lg:flex-row'>
         <div className='flex h-4/5 flex-1 flex-col gap-y-6'>
           <AppointmentsFilters state={filterState} dispatch={dispatchFilterAction} appointments={appointments} />
           {appointments.length === 0 ? (

@@ -47,7 +47,7 @@ const OptionalSelect: React.FC<SelectProps> = ({ options, defaultOption, setChos
   return (
     <div className='relative'>
       <button
-        className='flex cursor-pointer items-center gap-3 rounded-full bg-white p-0.5 pl-3 text-base text-black hover:bg-grey-5 hover:text-main'
+        className='flex cursor-pointer items-center gap-3 whitespace-nowrap rounded-full bg-white p-0.5 pl-3 text-base text-black hover:bg-grey-5 hover:text-main'
         onClick={() => setIsOpen(prev => !prev)}
         ref={dropdownRef}
       >

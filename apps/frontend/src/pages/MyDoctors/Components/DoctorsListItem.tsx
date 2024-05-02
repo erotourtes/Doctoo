@@ -23,6 +23,8 @@ const DoctorsListItem = ({ key, doctor }: DoctorsListItemProps) => {
     setSchedulePopupIsOpen(true);
   }
 
+  const patient = useAppSelector(state => state.patient.data);
+
   const fullName = `Dr. ${doctor.firstName} ${doctor.lastName}`;
 
   return (
@@ -43,7 +45,7 @@ const DoctorsListItem = ({ key, doctor }: DoctorsListItemProps) => {
           closePopup={closeSchedulePopup}
           scheduleIsOpen={schedulePopupIsOpen}
           scheduleInfo={{
-            patientId: patient.data.id,
+            patientId: patient.id,
             doctorId: doctor.id,
             doctor: doctor,
           }}
