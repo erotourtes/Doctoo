@@ -49,10 +49,10 @@ export interface paths {
     /** Change user's email */
     post: operations["AuthController_changeEmail"];
   };
-  "/auth/get/me": {
-    get: operations["AuthController_getMe"];
+  '/auth/get/me': {
+    get: operations['AuthController_getMe'];
   };
-  "/user/me": {
+  '/user/me': {
     /** Get curent login user */
     get: operations["UserController_getMeInfo"];
   };
@@ -92,7 +92,7 @@ export interface paths {
     /** Create patient conditions */
     post: operations["PatientController_createPatientConditions"];
   };
-  "/doctor": {
+  '/doctor': {
     /** Get all doctors */
     get: operations["DoctorController_getDoctors"];
     /** Create doctor */
@@ -176,7 +176,17 @@ export interface paths {
     /** Delete favorite */
     delete: operations["FavoriteController_deleteFavorite"];
   };
-  "/file/upload": {
+  '/favorite': {
+    /** Get favorites */
+    get: operations['FavoriteController_getFavorites'];
+    /** Create favorite */
+    post: operations['FavoriteController_createFavorite'];
+  };
+  '/favorite/{id}': {
+    /** Delete favorite */
+    delete: operations['FavoriteController_deleteFavorite'];
+  };
+  '/file/upload': {
     /** Upload file */
     post: operations["FileController_uploadFile"];
   };
@@ -279,26 +289,26 @@ export interface paths {
     /** Delete allergy */
     delete: operations["AllergyController_deleteAllergy"];
     /** Update allergy */
-    patch: operations["AllergyController_patchAllergy"];
+    patch: operations['AllergyController_patchAllergy'];
   };
-  "/chat": {
+  '/chat': {
     /**
      * Get a chat list
      * @description This endpoint retrieves a chat list.
      */
-    get: operations["ChatController_getChatsForPatient"];
+    get: operations['ChatController_getChatsForPatient'];
     /**
      * Create chat
      * @description This endpoint created a chat
      */
-    post: operations["ChatController_createChat"];
+    post: operations['ChatController_createChat'];
   };
-  "/chat/{chatId}": {
+  '/chat/{chatId}': {
     /**
      * Get chat messages
      * @description This endpoint retrieves a chat messages.
      */
-    get: operations["ChatController_getChatMessages"];
+    get: operations['ChatController_getChatMessages'];
   };
 }
 
@@ -808,15 +818,15 @@ export interface components {
        */
       email: string;
       /** @description An array of hospitals associated with the doctor */
-      hospitals: components["schemas"]["ResponseHospitalDto"][];
+      hospitals: components['schemas']['ResponseHospitalDto'][];
       /** @description An array of specializations of the doctor */
-      specializations: components["schemas"]["ResponseSpecializationDto"][];
+      specializations: components['schemas']['ResponseSpecializationDto'][];
     };
     MeResponseDto: {
-      patient: components["schemas"]["ResponsePatientDto"];
-      doctor: components["schemas"]["ResponseDoctorDto"];
+      patient: components['schemas']['ResponsePatientDto'];
+      doctor: components['schemas']['ResponseDoctorDto'];
       /** @enum {string} */
-      role: "PATIENT" | "DOCTOR";
+      role: 'PATIENT' | 'DOCTOR';
     };
     CreateUserDto: {
       /**
@@ -1556,17 +1566,17 @@ export interface components {
     ResponseChatDto: {
       /**
        * @description Unique chat id.
-       * @example d70c9b43-fecb-441d-9fec-5dd80ac92fd0
+       * @example 349c9ffc-1427-459d-a260-1e3f186b9db2
        */
       id: string;
       /**
        * @description Unique doctor id.
-       * @example 007b0a05-17a4-4b12-9257-e21ba555ab7f
+       * @example 349c9ffc-1427-459d-a260-1e3f186b9db2
        */
       doctorId: string;
       /**
        * @description Unique patient id.
-       * @example 63f7bf23-a708-4049-bb9e-abb3a1d95234
+       * @example 349c9ffc-1427-459d-a260-1e3f186b9db2
        */
       patientId: string;
       /**
@@ -1597,7 +1607,7 @@ export interface components {
       /**
        * @description Got last message.
        * @example {
-       *   "sentAt": "2024-05-02T07:45:30.835Z",
+       *   "sentAt": "2024-05-02T07:41:18.065Z",
        *   "sender": "DOCTOR",
        *   "text": "last message text"
        * }
@@ -1607,12 +1617,12 @@ export interface components {
     ResponseMessageDto: {
       /**
        * @description Unique chat message id.
-       * @example 99cfc972-d645-4cc2-9d32-f8b902430d57
+       * @example 349c9ffc-1427-459d-a260-1e3f186b9db2
        */
       id: string;
       /**
        * @description Unique chat id.
-       * @example b0a69b80-0640-4f55-92c7-e80d40a08a4d
+       * @example 349c9ffc-1427-459d-a260-1e3f186b9db2
        */
       chatId: string;
       /**
@@ -1623,7 +1633,7 @@ export interface components {
       /**
        * Format: date-time
        * @description Time when sent message.
-       * @example 2024-05-02T07:45:30.881Z
+       * @example 2024-05-02T07:41:18.065Z
        */
       sentAt: string;
       /**
@@ -1634,7 +1644,7 @@ export interface components {
       /**
        * Format: date-time
        * @description Time when updated message.
-       * @example 2024-05-02T07:45:30.882Z
+       * @example 2024-05-02T07:41:18.065Z
        */
       editedAt: string;
     };
@@ -2013,6 +2023,74 @@ export interface operations {
       500: {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
+        };
+      };
+    };
+  };
+  AuthController_getMe: {
+    parameters: {
+      header?: {
+        /** @description JWT token */
+        Cookie?: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          'application/json': components['schemas']['MeResponseDto'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      401: {
+        content: {
+          'application/json': components['schemas']['UnauthorizedResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  AuthController_getMe: {
+    parameters: {
+      header?: {
+        /** @description JWT token */
+        Cookie?: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          'application/json': components['schemas']['MeResponseDto'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      401: {
+        content: {
+          'application/json': components['schemas']['UnauthorizedResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -2439,7 +2517,7 @@ export interface operations {
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3233,13 +3311,13 @@ export interface operations {
       /** @description Response if an error occurs while processing a request. */
       401: {
         content: {
-          "application/json": components["schemas"]["UnauthorizedResponse"];
+          'application/json': components['schemas']['UnauthorizedResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3250,19 +3328,19 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseFavoriteDto"][];
+          'application/json': components['schemas']['ResponseFavoriteDto'][];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3271,26 +3349,26 @@ export interface operations {
   FavoriteController_createFavorite: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateFavoriteDto"];
+        'application/json': components['schemas']['CreateFavoriteDto'];
       };
     };
     responses: {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseFavoriteDto"];
+          'application/json': components['schemas']['ResponseFavoriteDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -3314,13 +3392,13 @@ export interface operations {
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -4250,94 +4328,25 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseAllergyDto"];
+          'application/json': components['schemas']['ResponseAllergyDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      500: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-    };
-  };
-  /**
-   * Get a chat list
-   * @description This endpoint retrieves a chat list.
-   */
-  ChatController_getChatsForPatient: {
-    parameters: {
-      header?: {
-        /** @description JWT token */
-        Cookie?: string;
-      };
-    };
-    responses: {
-      /** @description Response when the request is successfully processed. */
-      200: {
-        content: {
-          "application/json": components["schemas"]["ResponseChatDto"];
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       401: {
         content: {
-          "application/json": components["schemas"]["UnauthorizedResponse"];
+          'application/json': components['schemas']['UnauthorizedResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
-        };
-      };
-    };
-  };
-  /**
-   * Create chat
-   * @description This endpoint created a chat
-   */
-  ChatController_createChat: {
-    parameters: {
-      header?: {
-        /** @description JWT token */
-        Cookie?: string;
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CreateChatDto"];
-      };
-    };
-    responses: {
-      /** @description Response when the request is successfully processed. */
-      200: {
-        content: {
-          "application/json": components["schemas"]["ResponseChatDto"];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      400: {
-        content: {
-          "application/json": components["schemas"]["BadRequestResponse"];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      401: {
-        content: {
-          "application/json": components["schemas"]["UnauthorizedResponse"];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      500: {
-        content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
@@ -4364,19 +4373,133 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          "application/json": components["schemas"]["ResponseMessageDto"];
+          'application/json': components['schemas']['ResponseMessageDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       401: {
         content: {
-          "application/json": components["schemas"]["UnauthorizedResponse"];
+          'application/json': components['schemas']['UnauthorizedResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
-          "application/json": components["schemas"]["ClassicNestResponse"];
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /**
+   * Get a chat list
+   * @description This endpoint retrieves a chat list.
+   */
+  ChatController_getChatsForPatient: {
+    parameters: {
+      header?: {
+        /** @description JWT token */
+        Cookie?: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseChatDto'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      401: {
+        content: {
+          'application/json': components['schemas']['UnauthorizedResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /**
+   * Create chat
+   * @description This endpoint created a chat
+   */
+  ChatController_createChat: {
+    parameters: {
+      header?: {
+        /** @description JWT token */
+        Cookie?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateChatDto'];
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseChatDto'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      401: {
+        content: {
+          'application/json': components['schemas']['UnauthorizedResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /**
+   * Get chat messages
+   * @description This endpoint retrieves a chat messages.
+   */
+  ChatController_getChatMessages: {
+    parameters: {
+      header?: {
+        /** @description JWT token */
+        Cookie?: string;
+      };
+      path: {
+        /**
+         * @description Unique chat id.
+         * @example 123e4567-e89b-12d3-a456-426614174000
+         */
+        chatId: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseMessageDto'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      401: {
+        content: {
+          'application/json': components['schemas']['UnauthorizedResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
         };
       };
     };
