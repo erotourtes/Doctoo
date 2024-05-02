@@ -1,7 +1,7 @@
 import { registerAs } from '@nestjs/config';
-import { IsBoolean, IsNumber, IsString, Max, Min } from 'class-validator';
+import { Expose, Transform, Type } from 'class-transformer';
+import { IsNumber, IsString, Max, Min } from 'class-validator';
 import { validate } from './utils';
-import { Expose, Transform } from 'class-transformer';
 
 class MailConfig {
   @Expose()
@@ -27,8 +27,10 @@ class MailConfig {
   MAIL_FROM: string;
 
   @Expose()
-  @Transform(({ value }) => value === 'true')
-  @IsBoolean()
+  @Type(() => String)
+  @Transform(({ value }) => {
+    return value === 'true';
+  })
   MAIL_SECURE: boolean;
 }
 

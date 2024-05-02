@@ -27,10 +27,12 @@ export default function AppointmentsListItem({ appointment, openModal }: Appoint
   const { firstName, lastName, specializations } = doctor!;
   const fullName = `Dr. ${firstName} ${lastName}`;
 
+  const firstSpecializationName = specializations.length > 0 ? specializations[0].name : 'Doctor';
+
   return (
     <>
       <div
-        className='flex max-w-[700px] flex-1 cursor-pointer justify-between rounded-xl bg-white p-6 hover:ring-1 hover:ring-main'
+        className='flex flex-1 cursor-pointer justify-between rounded-xl bg-white p-6 hover:ring-1 hover:ring-main'
         onClick={() => openModal(appointment)}
       >
         <div>
@@ -43,7 +45,7 @@ export default function AppointmentsListItem({ appointment, openModal }: Appoint
             </div>
 
             <span className='text-base font-medium text-black'>
-              {fullName} ({specializations[0].name})
+              {fullName} ({firstSpecializationName})
             </span>
           </div>
 

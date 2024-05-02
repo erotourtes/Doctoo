@@ -56,6 +56,8 @@ export default function Schedule({
     setSuccessfullModal(true);
   }
 
+  const firstSpecializationName = specializations.length > 0 ? specializations[0].name : 'Doctor';
+
   return (
     <>
       <PopupDoctoo
@@ -71,7 +73,7 @@ export default function Schedule({
           rating={rating}
           reviewsCount={reviewsCount}
           doctorId={doctorId}
-          specialization={specializations && specializations[0].name}
+          specialization={specializations && firstSpecializationName}
         />
 
         <ScheduleBook
