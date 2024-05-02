@@ -14,8 +14,10 @@ import { getMyAppointments } from '@/app/appointment/AppointmentThunks';
 import dayjs from 'dayjs';
 import { filterReducer, initialFilterState } from './Components/Filters/filterReducer';
 import { useReducer } from 'react';
+import useWindowWide from '@/hooks/useWindowWide';
 
 const MyDoctorsPage = () => {
+  const mobileWidth = useWindowWide(768);
   const dispatch = useAppDispatch();
   const appointments = useAppSelector(state => state.appointment.appointments);
   const doctors = useAppSelector(state => state.doctor.doctors);
@@ -42,17 +44,17 @@ const MyDoctorsPage = () => {
               variant={'white'}
               value={searchValue}
               setValue={setSearchValue}
-              placeholder='Search by doctor, symptom'
+              placeholder={`${mobileWidth ? 'Search by doctor, symptom' : 'Search by doctor'}`}
               className='w-full'
             />
-            <Button type={'primary'} onClick={() => {}}>
+            <Button type={'primary'} onClick={() => {}} className='flex items-center justify-center whitespace-nowrap'>
               Find a doctor
             </Button>
           </div>
         </PageHeader>
       </header>
-      <section className='bg-background '>
-        <div className='flex flex-col gap-6 lg:flex-row'>
+
+      <section className='bg-background flex flex-col gap-6 lg:flex-row'>
           <div className='shrink grow basis-4/5'>
             <ul className='mb-6 flex gap-4'>
               <MyDoctorsFilters state={filterState} dispatch={dispatchFilterAction} doctors={doctors} />
@@ -77,7 +79,6 @@ const MyDoctorsPage = () => {
           <div>
             <Calendar meetingsForDay={meetingsForDay} />
           </div>
-        </div>
       </section>
     </div>
   );
