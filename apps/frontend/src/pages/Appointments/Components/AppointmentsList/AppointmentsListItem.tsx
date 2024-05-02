@@ -30,7 +30,7 @@ export default function AppointmentsListItem({ appointment, openModal }: Appoint
   return (
     <>
       <div
-        className='flex max-w-[700px] flex-1 cursor-pointer justify-between rounded-xl bg-white p-6 hover:ring-1 hover:ring-main'
+        className='flex flex-1 cursor-pointer justify-between rounded-xl bg-white p-6 hover:ring-1 hover:ring-main'
         onClick={() => openModal(appointment)}
       >
         <div>

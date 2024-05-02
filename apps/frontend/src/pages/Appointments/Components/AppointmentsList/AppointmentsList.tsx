@@ -83,7 +83,7 @@ export default function AppointmentsList({ filters, appointments }: Appointments
     <>
       <div className='no-scrollbar flex flex-1 flex-col gap-y-4 overflow-y-scroll p-1'>
         {filteredAppointments.map(appointment => (
-          <li key={appointment.id}>
+          <li key={appointment.id} className='list-none'>
             <AppointmentsListItem appointment={appointment} openModal={openModal} />
           </li>
         ))}
