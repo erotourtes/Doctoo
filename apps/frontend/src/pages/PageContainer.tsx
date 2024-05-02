@@ -1,6 +1,6 @@
 import Sidemenu from '@components/Sidemenu/Sidemenu';
 import Header from '@components/UI/Header/Header';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import AppointmentsPage from './Appointments/AppointmentsPage';
 import DoctorLoginPage from './auth/login/DoctorLoginPage';
 import LoginPage from './auth/login/LoginPage';
@@ -82,6 +82,7 @@ const PageContainer = () => {
     <main className='main-wrapper flex h-full w-full flex-col gap-6 overflow-auto bg-background p-8 px-4 sm:px-8'>
       <Routes>
         <Route path='/' Component={ProtectRoute}>
+          <Route path='/' element={<Navigate to={'/dashboard'} />} />
           <Route path='*' Component={Page} />
         </Route>
       </Routes>
