@@ -48,6 +48,9 @@ export interface paths {
     /** Change user's email */
     post: operations['AuthController_changeEmail'];
   };
+  '/auth/get/me': {
+    get: operations['AuthController_getMe'];
+  };
   '/user/me': {
     /** Get curent login user */
     get: operations['UserController_getMeInfo'];
@@ -87,16 +90,6 @@ export interface paths {
     get: operations['PatientController_getPatientConditions'];
     /** Create patient conditions */
     post: operations['PatientController_createPatientConditions'];
-  };
-  '/favorite': {
-    /** Get favorites */
-    get: operations['FavoriteController_getFavorites'];
-    /** Create favorite */
-    post: operations['FavoriteController_createFavorite'];
-  };
-  '/favorite/{id}': {
-    /** Delete favorite */
-    delete: operations['FavoriteController_deleteFavorite'];
   };
   '/doctor': {
     /** Get all doctors */
@@ -171,6 +164,16 @@ export interface paths {
     delete: operations['ReviewController_deleteReview'];
     /** Update a review */
     patch: operations['ReviewController_patchReview'];
+  };
+  '/favorite': {
+    /** Get favorites */
+    get: operations['FavoriteController_getFavorites'];
+    /** Create favorite */
+    post: operations['FavoriteController_createFavorite'];
+  };
+  '/favorite/{id}': {
+    /** Delete favorite */
+    delete: operations['FavoriteController_deleteFavorite'];
   };
   '/file/upload': {
     /** Upload file */
@@ -276,6 +279,25 @@ export interface paths {
     delete: operations['AllergyController_deleteAllergy'];
     /** Update allergy */
     patch: operations['AllergyController_patchAllergy'];
+  };
+  '/chat': {
+    /**
+     * Get a chat list
+     * @description This endpoint retrieves a chat list.
+     */
+    get: operations['ChatController_getChatsForPatient'];
+    /**
+     * Create chat
+     * @description This endpoint created a chat
+     */
+    post: operations['ChatController_createChat'];
+  };
+  '/chat/{chatId}': {
+    /**
+     * Get chat messages
+     * @description This endpoint retrieves a chat messages.
+     */
+    get: operations['ChatController_getChatMessages'];
   };
 }
 
@@ -679,6 +701,122 @@ export interface components {
       /** @description Token to change email, taken from email which is send when you patch user */
       token: string;
     };
+    ResponseHospitalDto: {
+      /**
+       * @description The hospital's unique id.
+       * @example 123e4567-e89b-12d3-a456-426614174000
+       */
+      id: string;
+      /**
+       * @description The full name of the hospital is.
+       * @example Ichilov and Assuta
+       */
+      name: string;
+      /**
+       * @description The country where the hospital is located.
+       * @example USA
+       */
+      country: string;
+      /**
+       * @description The address of the state where the hospital is located.
+       * @example Oregon
+       */
+      state?: string;
+      /**
+       * @description The name of the city where this hospital is located.
+       * @example Salem
+       */
+      city: string;
+      /**
+       * @description The name of the street where this hospital is located.
+       * @example St. Big Bells
+       */
+      street: string;
+      /**
+       * @description The hospital's zip code.
+       * @example 128
+       */
+      zipCode: number;
+    };
+    ResponseSpecializationDto: {
+      /**
+       * @description Unique specialisation id.
+       * @example 123e4567-e89b-12d3-a456-426614174000
+       */
+      id: string;
+      /**
+       * @description Specialization name.
+       * @example Surgeon
+       */
+      name: string;
+    };
+    ResponseDoctorDto: {
+      /**
+       * @description The ID of the doctor
+       * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+       */
+      id: string;
+      /**
+       * @description The ID of the user associated with the doctor
+       * @example acde070d-8c4c-4f0d-9d8a-162843c10333
+       */
+      userId: string;
+      /**
+       * @description The pay rate of the doctor
+       * @example 100
+       */
+      payrate: number;
+      /**
+       * @description About section of the doctor
+       * @example Experienced doctor with a focus on patient care
+       */
+      about: string;
+      /**
+       * @description The rating of the doctor
+       * @example 4.7
+       */
+      rating: number;
+      /**
+       * @description The count of reviews of the doctor
+       * @example 100
+       */
+      reviewsCount: number;
+      /**
+       * @description First name of the doctor
+       * @example John
+       */
+      firstName: string;
+      /**
+       * @description Last name of the doctor
+       * @example Doe
+       */
+      lastName: string;
+      /**
+       * @description Key of the avatar of the doctor
+       * @example acde070d-8c4c-4f0d-9d8a-162843c10333.jpg
+       */
+      avatarKey: string;
+      /**
+       * @description The phone of the doctor
+       * @example +38099561735634
+       */
+      phone: string;
+      /**
+       * @description Email of the doctor
+       * @example johndoe@mail.com
+       */
+      email: string;
+      /** @description An array of hospitals associated with the doctor */
+      hospitals: components['schemas']['ResponseHospitalDto'][];
+      /** @description An array of specializations of the doctor */
+      specializations: components['schemas']['ResponseSpecializationDto'][];
+    };
+    MeResponseDto: {
+      patient: components['schemas']['ResponsePatientDto'];
+      doctor: components['schemas']['ResponseDoctorDto'];
+      /** @enum {string} */
+      role: 'PATIENT' | 'DOCTOR';
+    };
     CreateUserDto: {
       /**
        * @description The user's real first name.
@@ -933,25 +1071,6 @@ export interface components {
        */
       count: number;
     };
-    CreateFavoriteDto: {
-      /**
-       * @description Unique doctor id.
-       * @example 123e4567-e89b-12d3-a456-426614174000
-       */
-      doctorId: string;
-    };
-    ResponseFavoriteDto: {
-      /**
-       * @description Unique doctor id.
-       * @example 123e4567-e89b-12d3-a456-426614174000
-       */
-      doctorId: string;
-      /**
-       * @description Unique favorite id.
-       * @example 123e4567-e89b-12d3-a456-426614174000
-       */
-      id: string;
-    };
     CreateDoctorDto: {
       /**
        * @description Unique user id.
@@ -982,116 +1101,6 @@ export interface components {
        * ]
        */
       hospitalIds: string[];
-    };
-    ResponseHospitalDto: {
-      /**
-       * @description The hospital's unique id.
-       * @example 123e4567-e89b-12d3-a456-426614174000
-       */
-      id: string;
-      /**
-       * @description The full name of the hospital is.
-       * @example Ichilov and Assuta
-       */
-      name: string;
-      /**
-       * @description The country where the hospital is located.
-       * @example USA
-       */
-      country: string;
-      /**
-       * @description The address of the state where the hospital is located.
-       * @example Oregon
-       */
-      state?: string;
-      /**
-       * @description The name of the city where this hospital is located.
-       * @example Salem
-       */
-      city: string;
-      /**
-       * @description The name of the street where this hospital is located.
-       * @example St. Big Bells
-       */
-      street: string;
-      /**
-       * @description The hospital's zip code.
-       * @example 128
-       */
-      zipCode: number;
-    };
-    ResponseSpecializationDto: {
-      /**
-       * @description Unique specialisation id.
-       * @example 123e4567-e89b-12d3-a456-426614174000
-       */
-      id: string;
-      /**
-       * @description Specialization name.
-       * @example Surgeon
-       */
-      name: string;
-    };
-    ResponseDoctorDto: {
-      /**
-       * @description The ID of the doctor
-       * @example acde070d-8c4c-4f0d-9d8a-162843c10333
-       */
-      id: string;
-      /**
-       * @description The ID of the user associated with the doctor
-       * @example acde070d-8c4c-4f0d-9d8a-162843c10333
-       */
-      userId: string;
-      /**
-       * @description The pay rate of the doctor
-       * @example 100
-       */
-      payrate: number;
-      /**
-       * @description About section of the doctor
-       * @example Experienced doctor with a focus on patient care
-       */
-      about: string;
-      /**
-       * @description The rating of the doctor
-       * @example 4.7
-       */
-      rating: number;
-      /**
-       * @description The count of reviews of the doctor
-       * @example 100
-       */
-      reviewsCount: number;
-      /**
-       * @description First name of the doctor
-       * @example John
-       */
-      firstName: string;
-      /**
-       * @description Last name of the doctor
-       * @example Doe
-       */
-      lastName: string;
-      /**
-       * @description Key of the avatar of the doctor
-       * @example acde070d-8c4c-4f0d-9d8a-162843c10333.jpg
-       */
-      avatarKey: string;
-      /**
-       * @description The phone of the doctor
-       * @example +38099561735634
-       */
-      phone: string;
-      /**
-       * @description Email of the doctor
-       * @example johndoe@mail.com
-       */
-      email: string;
-      /** @description An array of hospitals associated with the doctor */
-      hospitals: components['schemas']['ResponseHospitalDto'][];
-      /** @description An array of specializations of the doctor */
-      specializations: components['schemas']['ResponseSpecializationDto'][];
     };
     ResponseDoctorListDto: {
       /**
@@ -1303,6 +1312,25 @@ export interface components {
        * @example 5
        */
       rate?: number;
+    };
+    CreateFavoriteDto: {
+      /**
+       * @description Unique doctor id.
+       * @example 123e4567-e89b-12d3-a456-426614174000
+       */
+      doctorId: string;
+    };
+    ResponseFavoriteDto: {
+      /**
+       * @description Unique doctor id.
+       * @example 123e4567-e89b-12d3-a456-426614174000
+       */
+      doctorId: string;
+      /**
+       * @description Unique favorite id.
+       * @example 123e4567-e89b-12d3-a456-426614174000
+       */
+      id: string;
     };
     ResponseFileDto: {
       /**
@@ -1523,6 +1551,98 @@ export interface components {
        * @example Dust
        */
       name?: string;
+    };
+    ResponseChatDto: {
+      /**
+       * @description Unique chat id.
+       * @example b1763c2d-6e4b-4369-9df0-700171e8d2e5
+       */
+      id: string;
+      /**
+       * @description Unique doctor id.
+       * @example 3b0c1976-fad1-45aa-b3ad-4629096c32d6
+       */
+      doctorId: string;
+      /**
+       * @description Unique patient id.
+       * @example 5fa196f3-939f-4ade-93b8-3df2eccc1962
+       */
+      patientId: string;
+      /**
+       * @description Doctor data
+       * @example {
+       *   "firstName": "Josh",
+       *   "lastName": "Doe",
+       *   "specializationName": "Therapist",
+       *   "avatarKey": {
+       *     "name": "44440105-e6d4-45e8-83f7-b1ff18aaa283.png",
+       *     "url": "https://storage.googleapis.com/bucket/44440105-e6d4-45e8-83f7-b1ff18aaa283.png"
+       *   }
+       * }
+       */
+      doctor: Record<string, never>;
+      /**
+       * @description Patient name
+       * @example {
+       *   "firstName": "Josh",
+       *   "lastName": "Doe",
+       *   "avatarKey": {
+       *     "name": "44440105-e6d4-45e8-83f7-b1ff18aaa283.png",
+       *     "url": "https://storage.googleapis.com/bucket/44440105-e6d4-45e8-83f7-b1ff18aaa283.png"
+       *   }
+       * }
+       */
+      patient: Record<string, never>;
+      /**
+       * @description Got last message.
+       * @example {
+       *   "sentAt": "2024-05-02T07:29:37.722Z",
+       *   "sender": "DOCTOR",
+       *   "text": "last message text"
+       * }
+       */
+      lastMessage: Record<string, never>;
+    };
+    ResponseMessageDto: {
+      /**
+       * @description Unique chat message id.
+       * @example c5b2ad3a-df4e-4604-9e3d-1681a3458dde
+       */
+      id: string;
+      /**
+       * @description Unique chat id.
+       * @example 0d4b1da1-79b6-41be-ac17-77a3fdda2af1
+       */
+      chatId: string;
+      /**
+       * @description Type sender.
+       * @example DOCTOR
+       */
+      sender: string;
+      /**
+       * Format: date-time
+       * @description Time when sent message.
+       * @example 2024-05-02T07:29:37.724Z
+       */
+      sentAt: string;
+      /**
+       * @description Message text
+       * @example Hello patient!
+       */
+      text: string;
+      /**
+       * Format: date-time
+       * @description Time when updated message.
+       * @example 2024-05-02T07:29:37.724Z
+       */
+      editedAt: string;
+    };
+    CreateChatDto: {
+      /**
+       * @description Unique user id (doctor or patient).
+       * @example 123e4567-e89b-12d3-a456-426614174000
+       */
+      participantId: string;
     };
   };
   responses: never;
@@ -1840,6 +1960,40 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: never;
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      401: {
+        content: {
+          'application/json': components['schemas']['UnauthorizedResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  AuthController_getMe: {
+    parameters: {
+      header?: {
+        /** @description JWT token */
+        Cookie?: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          'application/json': components['schemas']['MeResponseDto'];
+        };
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
@@ -2273,87 +2427,6 @@ export interface operations {
         content: {
           'application/json': components['schemas']['ResponsePatientConditionsDto'];
         };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      400: {
-        content: {
-          'application/json': components['schemas']['BadRequestResponse'];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      500: {
-        content: {
-          'application/json': components['schemas']['ClassicNestResponse'];
-        };
-      };
-    };
-  };
-  /** Get favorites */
-  FavoriteController_getFavorites: {
-    responses: {
-      /** @description Response when the request is successfully processed. */
-      200: {
-        content: {
-          'application/json': components['schemas']['ResponseFavoriteDto'][];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      400: {
-        content: {
-          'application/json': components['schemas']['BadRequestResponse'];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      500: {
-        content: {
-          'application/json': components['schemas']['ClassicNestResponse'];
-        };
-      };
-    };
-  };
-  /** Create favorite */
-  FavoriteController_createFavorite: {
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateFavoriteDto'];
-      };
-    };
-    responses: {
-      /** @description Response when the request is successfully processed. */
-      200: {
-        content: {
-          'application/json': components['schemas']['ResponseFavoriteDto'];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      400: {
-        content: {
-          'application/json': components['schemas']['BadRequestResponse'];
-        };
-      };
-      /** @description Response if an error occurs while processing a request. */
-      500: {
-        content: {
-          'application/json': components['schemas']['ClassicNestResponse'];
-        };
-      };
-    };
-  };
-  /** Delete favorite */
-  FavoriteController_deleteFavorite: {
-    parameters: {
-      path: {
-        /**
-         * @description Unique doctor id.
-         * @example 123e4567-e89b-12d3-a456-426614174000
-         */
-        id: string;
-      };
-    };
-    responses: {
-      /** @description Response when the request is successfully processed. */
-      200: {
-        content: never;
       };
       /** @description Response if an error occurs while processing a request. */
       400: {
@@ -3159,6 +3232,87 @@ export interface operations {
       401: {
         content: {
           'application/json': components['schemas']['UnauthorizedResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /** Get favorites */
+  FavoriteController_getFavorites: {
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseFavoriteDto'][];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /** Create favorite */
+  FavoriteController_createFavorite: {
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateFavoriteDto'];
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseFavoriteDto'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /** Delete favorite */
+  FavoriteController_deleteFavorite: {
+    parameters: {
+      path: {
+        /**
+         * @description Unique doctor id.
+         * @example 123e4567-e89b-12d3-a456-426614174000
+         */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: never;
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
@@ -4101,6 +4255,120 @@ export interface operations {
       400: {
         content: {
           'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /**
+   * Get a chat list
+   * @description This endpoint retrieves a chat list.
+   */
+  ChatController_getChatsForPatient: {
+    parameters: {
+      header?: {
+        /** @description JWT token */
+        Cookie?: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseChatDto'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      401: {
+        content: {
+          'application/json': components['schemas']['UnauthorizedResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /**
+   * Create chat
+   * @description This endpoint created a chat
+   */
+  ChatController_createChat: {
+    parameters: {
+      header?: {
+        /** @description JWT token */
+        Cookie?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateChatDto'];
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseChatDto'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      401: {
+        content: {
+          'application/json': components['schemas']['UnauthorizedResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /**
+   * Get chat messages
+   * @description This endpoint retrieves a chat messages.
+   */
+  ChatController_getChatMessages: {
+    parameters: {
+      header?: {
+        /** @description JWT token */
+        Cookie?: string;
+      };
+      path: {
+        /**
+         * @description Unique chat id.
+         * @example 123e4567-e89b-12d3-a456-426614174000
+         */
+        chatId: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseMessageDto'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      401: {
+        content: {
+          'application/json': components['schemas']['UnauthorizedResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
