@@ -32,10 +32,10 @@ export default function AppointmentsListItem({ appointment, openModal }: Appoint
   return (
     <>
       <div
-        className='flex flex-1 cursor-pointer justify-between rounded-xl bg-white p-6 hover:ring-1 hover:ring-main'
+        className='flex flex-1 cursor-pointer flex-col justify-between gap-4 rounded-xl bg-white p-2 hover:ring-1 hover:ring-main sm:p-6'
         onClick={() => openModal(appointment)}
       >
-        <div>
+        <div className='flex flex-wrap items-start justify-between gap-2'>
           <div className='flex flex-col gap-y-2'>
             <div className='flex gap-x-2'>
               <Icon variant='date' className='h-6 w-6 text-main' />
@@ -43,27 +43,24 @@ export default function AppointmentsListItem({ appointment, openModal }: Appoint
                 {dayjs.utc(startedAt, 'H:mm').format('MMMM D, h:mm a')}
               </span>
             </div>
-
-            <span className='text-base font-medium text-black'>
+            <p className='text-base font-medium text-black'>
               {fullName} ({firstSpecializationName})
-            </span>
+            </p>
+            <div className='flex gap-x-3 gap-y-4'>
+              <AppointmentBadges paymentReceiptKey={paymentReceiptKey} status={status} />
+            </div>
           </div>
 
-          <div className='flex gap-x-3 gap-y-4'>
-            <AppointmentBadges paymentReceiptKey={paymentReceiptKey} status={status} />
+          <div className='flex flex-col justify-between'>
+            <div className='flex w-[140px] flex-col gap-x-2 gap-y-4 self-end'>
+              <AppointmentButtons componentName='listItem' appointment={appointment} openBookModal={openReschedule} />
+            </div>
           </div>
-
-          <span className='text-base font-normal text-grey-2'>Attached files:</span>
         </div>
 
-        <div className='flex flex-col justify-between'>
-          <div className='flex w-[140px] flex-col gap-x-2 gap-y-4 self-end'>
-            <AppointmentButtons componentName='listItem' appointment={appointment} openBookModal={openReschedule} />
-          </div>
-
-          <div className='self-end'>
-            <AppointmentLinks videoRecordKey={videoRecordKey} notes={notes} />
-          </div>
+        <div className='flex flex-wrap items-center justify-between gap-4'>
+          <p className='text-base font-normal text-grey-2'>Attached files:</p>
+          <AppointmentLinks videoRecordKey={videoRecordKey} notes={notes} />
         </div>
       </div>
 
