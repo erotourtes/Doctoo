@@ -21,7 +21,7 @@ export default function AppointmentsListItem({ doctor, date }: AppointmentsListI
 
         <div className='flex text-sm font-medium text-grey-1'>
           <span>
-            {firstSpecializationName} • <time>{dayjs(date).format('h:mm a')}</time>
+            {firstSpecializationName} • <time>{dayjs(date).utc().format('h:mm a')}</time>
           </span>
         </div>
       </div>
