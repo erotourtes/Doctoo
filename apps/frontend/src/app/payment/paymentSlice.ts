@@ -1,12 +1,15 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '../createAppSlice';
 import type { RootState } from '../store';
+import type { Specialization } from '@/dataTypes/Doctor';
 
 interface PaymentData {
   data: {
-    date: string;
+    appointmentId: string;
+    status: string;
+    date: string | Date;
     doctorName: string;
-    doctorSpecialization: string;
+    doctorSpecialization: Specialization[];
     appointmentDuration: number;
     pricePerHour: number;
   };
@@ -14,11 +17,13 @@ interface PaymentData {
 
 const initialState: PaymentData = {
   data: {
-    date: '1739835600000',
-    doctorName: 'Dr. Sarah Chang',
-    doctorSpecialization: 'cardiologist',
-    appointmentDuration: 1.5,
-    pricePerHour: 100,
+    appointmentId: '',
+    status: '',
+    date: '',
+    doctorName: '',
+    doctorSpecialization: [{ id: '', name: '' }],
+    appointmentDuration: 0,
+    pricePerHour: 0,
   },
 };
 

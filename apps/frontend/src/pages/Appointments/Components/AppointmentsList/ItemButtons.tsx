@@ -1,10 +1,12 @@
 import { changeAppointmentStatus } from '@/app/appointment/AppointmentThunks';
 import { useAppDispatch } from '@/app/hooks';
+import { setPaymentData } from '@/app/payment/paymentSlice';
 import { PopupDoctoo } from '@/components/UI';
 import { Button } from '@/components/UI/Button/Button';
 import type { IAppointment } from '@/dataTypes/Appointment';
 import { AppointmentStatus } from '@/dataTypes/Appointment';
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 
 type AppointmentButtonsProps = {
   appointment: IAppointment;
@@ -13,10 +15,26 @@ type AppointmentButtonsProps = {
 };
 
 export default function AppointmentButtons({ componentName, appointment, openBookModal }: AppointmentButtonsProps) {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { status, id } = appointment;
+  const { status, id, doctor, startedAt } = appointment;
+
+  const data = {
+    appointmentId: id,
+    status: 'planned',
+    date: startedAt,
+    doctorName: `Dr. ${doctor?.firstName} ${doctor?.lastName}`,
+    doctorSpecialization: doctor?.specializations || [],
+    appointmentDuration: 1,
+    pricePerHour: doctor?.payrate || 0,
+  };
 
   const [approve, setApprove] = useState(false);
+
+  function navigateToPayment() {
+    navigate('/payment');
+    dispatch(setPaymentData({ data }));
+  }
 
   function enableApproveButton(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     event.stopPropagation();
@@ -60,7 +78,7 @@ export default function AppointmentButtons({ componentName, appointment, openBoo
     return (
       !approve &&
       status === 'PENDING_PAYMENT' && (
-        <Button type='secondary' btnType='button'>
+        <Button type='secondary' btnType='button' onClick={navigateToPayment}>
           Pay
         </Button>
       )

@@ -4,11 +4,12 @@ import Icon from '@/components/UI/Icon/Icon';
 import Tag from '@/components/UI/Tag/Tag';
 
 export const Checkout = () => {
-  const { date, doctorSpecialization, doctorName, appointmentDuration, pricePerHour } = useAppSelector(
+  const { date, status, doctorSpecialization, doctorName, appointmentDuration, pricePerHour } = useAppSelector(
     state => state.payment.data,
   );
 
   const formattedDate = dayjs(date).format('MMM D, h:mm a');
+  const selectedSpecialization = doctorSpecialization[0].name || 'doctor';
 
   return (
     <>
@@ -17,8 +18,8 @@ export const Checkout = () => {
           <Icon variant='date' className='text-main' />
           <p className='text-lg font-semibold leading-6'>{formattedDate}</p>
         </div>
-        <p className='mb-2 font-medium'>{`${doctorName} (${doctorSpecialization})`}</p>
-        <Tag icon={false} text='Completed' />
+        <p className='mb-2 font-medium'>{`${doctorName} (${selectedSpecialization})`}</p>
+        <Tag icon={false} text={status} />
       </div>
 
       <div className='grid w-full gap-2'>

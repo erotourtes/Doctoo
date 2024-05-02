@@ -1,9 +1,11 @@
+import { changeAppointmentStatus } from '@/app/appointment/AppointmentThunks';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { getPaymentIntent } from '@/app/payment/paymentThunks';
 import { Button } from '@/components/UI/Button/Button';
 import { Checkbox } from '@/components/UI/Checkbox/Checkbox';
 import Icon from '@/components/UI/Icon/Icon';
 import { RadioButton } from '@/components/UI/RadioButton/RadioButton';
+import { AppointmentStatus } from '@/dataTypes/Appointment';
 import { Checkout } from '@/pages/PaymentPage/component/Checkout';
 import { NewPaymentCardForm } from '@/pages/PaymentPage/component/NewPaymentCardForm';
 import { PaymentPopup } from '@/pages/PaymentPage/component/PaymentPopup';
@@ -13,7 +15,6 @@ import Joi from 'joi';
 import { useState } from 'react';
 import type { FieldValues, SubmitHandler } from 'react-hook-form';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router';
 
 const schema = Joi.object({
   cardholderName: Joi.string().min(3).max(30).required(),
@@ -25,7 +26,7 @@ export const PaymentForm = () => {
   const elements = useElements();
 
   const dispatch = useAppDispatch();
-  const { appointmentDuration, pricePerHour } = useAppSelector(state => state.payment.data);
+  const { appointmentId, appointmentDuration, pricePerHour } = useAppSelector(state => state.payment.data);
 
   const [isSuccessfulPayment, setIsSuccessfulPayment] = useState<boolean>(false);
   const [paymentDetails, setPaymentDetails] = useState({ id: '', created: 0 });
@@ -43,10 +44,9 @@ export const PaymentForm = () => {
   } = methods;
 
   const [status, setStatus] = useState<string>('new-card');
-  const navigate = useNavigate();
 
   const navigateBack = () => {
-    navigate('/dashboard');
+    window.history.back();
     setIsOpenModal(false);
   };
 
@@ -70,7 +70,7 @@ export const PaymentForm = () => {
 
     try {
       const response = await dispatch(getPaymentIntent(postData));
-      const { client_secret: clientSecret } = response.payload as { client_secret: string };
+      const clientSecret = response.payload;
 
       const paymentMethod = await stripe.createPaymentMethod({
         type: 'card',
@@ -98,6 +98,7 @@ export const PaymentForm = () => {
         cardExpiry?.clear();
         cardCVC?.clear();
         setIsOpenModal(true);
+        dispatch(changeAppointmentStatus({ id: appointmentId, status: AppointmentStatus.PLANNED }));
       }
     } catch (error) {
       setIsSuccessfulPayment(false);
@@ -170,7 +171,6 @@ export const PaymentForm = () => {
           isOpenModal={isOpenModal}
           setIsOpenModal={setIsOpenModal}
           isSuccessfulPayment={isSuccessfulPayment}
-          navigateBack={navigateBack}
           paymentDetails={paymentDetails}
         />
       )}

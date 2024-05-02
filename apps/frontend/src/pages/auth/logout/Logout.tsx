@@ -19,7 +19,7 @@ const Logout = () => {
         <h1 className='mb-6'>Are you sure?</h1>
 
         <div className='flex space-x-2'>
-          <Button onClick={logout} type='primary'>
+          <Button onClick={logout} type='secondary'>
             Yes
           </Button>
 

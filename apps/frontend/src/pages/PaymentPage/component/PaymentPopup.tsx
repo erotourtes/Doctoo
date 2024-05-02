@@ -1,15 +1,13 @@
+import { useNavigate } from 'react-router';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { useAppSelector } from '@/app/hooks';
 import { ReceiptPDF } from './ReceiptPDF';
-import { Button } from '@/components/UI/Button/Button';
-import Icon from '@/components/UI/Icon/Icon';
-import PopupDoctoo from '@/components/UI/Popup/Popup';
+import { Button, Icon, PopupDoctoo } from '@/components/UI';
 
 interface PaymentPopupProps {
   isOpenModal: boolean;
   setIsOpenModal: (arg0: boolean) => void;
   isSuccessfulPayment: boolean;
-  navigateBack: () => void;
   paymentDetails: {
     id: string;
     created: number;
@@ -20,15 +18,25 @@ export const PaymentPopup = ({
   isOpenModal,
   setIsOpenModal,
   isSuccessfulPayment,
-  navigateBack,
   paymentDetails,
 }: PaymentPopupProps) => {
   const { doctorName, appointmentDuration, pricePerHour } = useAppSelector(state => state.payment.data);
+  const navigate = useNavigate();
+
+  const navigateBack = () => {
+    navigate('/dashboard');
+    setIsOpenModal(false);
+  };
+
+  const closeModal = () => {
+    window.history.back();
+    setIsOpenModal(false);
+  };
 
   return (
     <PopupDoctoo
       popupIsOpen={isOpenModal}
-      closePopup={() => setIsOpenModal(false)}
+      closePopup={closeModal}
       modalFullClassName='!max-w-[522px] p-10'
       modalBodyClassName=''
     >
