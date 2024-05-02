@@ -25,12 +25,16 @@ import { ResponseDoctorListDto } from './dto/response-list.dto';
 import { ResponseDoctorDto } from './dto/response.dto';
 import { Role } from '../auth/decorators/roles.decorator';
 import { RolesGuard } from 'src/auth/gaurds/role.guard';
+import { DoctorScheduleService } from './doctor-schedule.service';
+import { GetDoctorScheduleQuery } from './dto/get-schedule.query';
+import { ResponseDoctorScheduleDto } from './dto/response-schedule.dto';
 
 @ApiTags('Doctor Endpoints')
 @Controller('doctor')
 export class DoctorController {
   constructor(
     private readonly doctorService: DoctorService,
+    private readonly doctorScheduleService: DoctorScheduleService,
     private readonly patientService: PatientService,
   ) {}
 
@@ -86,6 +90,16 @@ export class DoctorController {
   @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique doctor id.' })
   getDoctor(@Param('id') id: string) {
     return this.doctorService.getDoctor(id);
+  }
+
+  @Get(':id/schedule')
+  @ApiOperation({ summary: "Get doctor's schedule " })
+  @ApiOkResponse({ type: ResponseDoctorScheduleDto, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique doctor id.' })
+  getDoctorSchedule(@Param('id') id: string, @Query() query: GetDoctorScheduleQuery) {
+    return this.doctorScheduleService.getDoctorSchedule(id, query);
   }
 
   @Patch(':id')
