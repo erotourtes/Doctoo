@@ -1,19 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { randomInt, randomUUID } from 'crypto';
 
 export class ResponseCreatedChatDto {
-  @ApiProperty({ example: randomUUID(), description: 'Unique chat id.' })
+  @ApiProperty({ example: '349c9ffc-1427-459d-a260-1e3f186b9db2', description: 'Unique chat id.' })
   id: string;
 
-  @ApiProperty({ example: randomUUID(), description: 'Unique patient id.' })
+  @ApiProperty({ example: '349c9ffc-1427-459d-a260-1e3f186b9db2', description: 'Unique patient id.' })
   patientId: string;
 
-  @ApiProperty({ example: randomUUID(), description: 'Unique doctor id.' })
+  @ApiProperty({ example: '349c9ffc-1427-459d-a260-1e3f186b9db2', description: 'Unique doctor id.' })
   doctorId: string;
 
-  @ApiProperty({ example: randomInt(500), description: 'Numbers missed messages in doctor.' })
+  @ApiProperty({ example: '200', description: 'Numbers missed messages in doctor.' })
   missedMessagesDoctor: number;
 
-  @ApiProperty({ example: randomInt(500), description: 'Numbers missed messages in patient.' })
+  @ApiProperty({ example: '200', description: 'Numbers missed messages in patient.' })
   missedMessagesPatient: number;
 }

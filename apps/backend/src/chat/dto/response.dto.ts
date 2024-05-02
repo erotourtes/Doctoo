@@ -1,15 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
-import { randomUUID } from 'crypto';
 
 export class ResponseChatDto {
-  @ApiProperty({ example: randomUUID(), description: 'Unique chat id.' })
+  @ApiProperty({ example: '349c9ffc-1427-459d-a260-1e3f186b9db2', description: 'Unique chat id.' })
   id: string;
 
-  @ApiProperty({ example: randomUUID(), description: 'Unique doctor id.' })
+  @ApiProperty({ example: '349c9ffc-1427-459d-a260-1e3f186b9db2', description: 'Unique doctor id.' })
   doctorId: string;
 
-  @ApiProperty({ example: randomUUID(), description: 'Unique patient id.' })
+  @ApiProperty({ example: '349c9ffc-1427-459d-a260-1e3f186b9db2', description: 'Unique patient id.' })
   patientId: string;
 
   @ApiProperty({
