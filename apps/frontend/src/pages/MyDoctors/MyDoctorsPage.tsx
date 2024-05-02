@@ -33,20 +33,23 @@ const MyDoctorsPage = () => {
   return (
     <div>
       <header className='bg-background'>
-        <PageHeader iconVariant={'my-doctors'} title='My doctors'>
+        <PageHeader iconVariant={'my-doctors'} title='My doctors' className='flex-col gap-4 lg:flex-row'>
+        <div className='flex w-full flex-col gap-4 sm:flex-row'>
           <InputSearch
             variant={'white'}
             value={searchValue}
             setValue={setSearchValue}
             placeholder='Search by doctor, symptom'
+            className='w-full'
           />
           <Button type={'primary'} onClick={() => {}}>
             Find a doctor
           </Button>
+          </div>
         </PageHeader>
       </header>
       <section className='bg-background '>
-        <div className='flex gap-6'>
+        <div className='lg:flex-row gap-6 flex-col flex'>
           <div className='shrink grow basis-4/5'>
             <ul className='mb-6 flex gap-4'>
               <MyDoctorsFilters doctors={doctors} chosenOptions={chosenOptions} setChosenOptions={setChosenOptions} />
@@ -54,7 +57,7 @@ const MyDoctorsPage = () => {
             {doctors?.length ? (
               <DoctorsList doctors={doctors} appointments={appointments} chosenOptions={chosenOptions} />
             ) : (
-              <div className='flex h-[594px] w-full items-center justify-center rounded-xl bg-white text-center text-text'>
+              <div className='p-2 flex lg:h-[350px] xl:h-[600px] h-[250px] w-full items-center justify-center rounded-xl bg-white text-center text-text'>
                 <span className='flex flex-col items-center gap-4'>
                   <span>
                     Your doctors will be displayed here. Let’s find one and book <br /> appointment
