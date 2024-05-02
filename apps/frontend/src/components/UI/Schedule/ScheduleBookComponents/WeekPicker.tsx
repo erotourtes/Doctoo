@@ -26,7 +26,7 @@ export default function WeekPicker({ dates, weeks, currentDate, decrementDate, i
                 : 'bg-white text-black',
             )}
           >
-            <div>{weeks[date.day()]}</div>
+            <div>{weeks[(date.day() + 6) % 7]}</div>
             <div>{date.format('MMM D')}</div>
           </div>
         ))}

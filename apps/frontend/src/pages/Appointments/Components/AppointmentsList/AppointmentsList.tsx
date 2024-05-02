@@ -73,17 +73,12 @@ export default function AppointmentsList({ filters, appointments }: Appointments
     }
   }, [appointments, filters, hasFetchedAppointments]);
 
-  useEffect(() => {
-    if (reviews && appointment) {
-      setModal(true);
-    }
-  }, [reviews, appointment]);
-
   function closeModal(): void {
     setModal(false);
   }
 
   function openModal(appointment: IAppointment): void {
+    setModal(true);
     setAppointment(appointment);
     dispatch(fetchReviewsByDoctor({ doctorId: appointment.doctorId, includeNames: 'true', skip: '0', take: '2' }));
   }
