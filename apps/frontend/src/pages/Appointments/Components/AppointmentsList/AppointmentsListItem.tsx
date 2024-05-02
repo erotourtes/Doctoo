@@ -5,7 +5,7 @@ import utc from 'dayjs/plugin/utc';
 import AppointmentBadges from './ItemBadges';
 import AppointmentButtons from './ItemButtons';
 import AppointmentLinks from './ItemLinks';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Schedule from '@/components/UI/Schedule/Schedule';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchReviewsByDoctor } from '@/app/review/ReviewThunks';
