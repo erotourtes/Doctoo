@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router';
 import api from '../../../app/api';
 import InputCode from '../../../components/UI/Input/InputCode';
 import { joinError } from '../../../utils/errors';
+import { cn } from '../../../utils/cn';
 
 const EMAIL_VERIFICATION_CODE_LEN = 6;
 
@@ -14,11 +15,27 @@ const LoginPageAuthenticate = () => {
   const location = useLocation();
   const credentials = location.state?.credentials;
   const [serverError, setServerError] = useState<string | null>(null);
+  const [resendStatus, setResendStatus] = useState<'sent' | 'error' | 'none'>('none');
 
   const onSubmit = async () => {
     const { error } = await api.POST('/auth/login/patient/mfa', { body: { ...credentials, code } });
     if (error) return void setServerError(joinError(error.message));
     navigate('/', { replace: true });
+  };
+
+  const onResend = async () => {
+    if (resendStatus === 'sent') return;
+    setResendStatus('none');
+    const { error } = await api.POST('/auth/login/patient', { body: { ...credentials } });
+    if (error) {
+      setResendStatus('error');
+      return void setServerError(joinError(error.message));
+    }
+    setResendStatus('sent');
+
+    setTimeout(() => {
+      setResendStatus('none');
+    }, 1000 * 3);
   };
 
   const onBack = () => {
@@ -50,7 +67,17 @@ const LoginPageAuthenticate = () => {
         <div>
           <p>
             It may take a minute to receive your code. Haven’t received it?{' '}
-            <a className='text-main'>Resend a new code</a>
+            <a
+              onClick={onResend}
+              className={cn(
+                'text-main hover:cursor-pointer',
+                resendStatus === 'sent' && 'text-grey-1 hover:cursor-default',
+                resendStatus === 'error' && 'text-red-1',
+                resendStatus === 'none' && 'text-main',
+              )}
+            >
+              Resend a new code
+            </a>
           </p>
         </div>
 
