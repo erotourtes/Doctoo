@@ -7,11 +7,12 @@ import { DoctorController } from './doctor.controller';
 import { DoctorService } from './doctor.service';
 import { ReviewModule } from '../review/review.module';
 import { PatientModule } from '../patient/patient.module';
+import { DoctorScheduleService } from './doctor-schedule.service';
 
 @Module({
   imports: [UserModule, HospitalModule, SpecializationModule, ReviewModule, PatientModule],
-  providers: [DoctorService, PrismaService],
+  providers: [DoctorService, DoctorScheduleService, PrismaService],
   controllers: [DoctorController],
-  exports: [DoctorService],
+  exports: [DoctorService, DoctorScheduleService],
 })
 export class DoctorModule {}
