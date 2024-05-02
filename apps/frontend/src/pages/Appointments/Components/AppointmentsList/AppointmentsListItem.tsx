@@ -5,23 +5,34 @@ import utc from 'dayjs/plugin/utc';
 import AppointmentBadges from './ItemBadges';
 import AppointmentButtons from './ItemButtons';
 import AppointmentLinks from './ItemLinks';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Schedule from '@/components/UI/Schedule/Schedule';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { fetchReviewsByDoctor } from '@/app/review/ReviewThunks';
 
 dayjs.extend(utc);
 
 type AppointmentsListItemProps = { appointment: IAppointment; openModal: (appointment: IAppointment) => void };
 
 export default function AppointmentsListItem({ appointment, openModal }: AppointmentsListItemProps) {
-  const [rescheduleIsOpen, setRescheduleIsOpen] = useState(false);
+  const dispatch = useAppDispatch();
+  const reviews = useAppSelector(state => state.review.reviews);
 
-  function closeReschedule() {
-    setRescheduleIsOpen(false);
+  const [bookModalIsOpen, setBookModal] = useState(false);
+
+  function closeBookModal() {
+    setBookModal(false);
   }
 
-  function openReschedule() {
-    setRescheduleIsOpen(true);
+  function openBookModal() {
+    dispatch(fetchReviewsByDoctor({ doctorId: appointment.doctorId, includeNames: 'true', skip: '0', take: '2' }));
+    setBookModal(true);
   }
+
+  useEffect(() => {
+    if (reviews && appointment) {
+    }
+  }, [reviews, appointment]);
 
   const { patientId, doctorId, doctor, videoRecordKey, notes, status, paymentReceiptKey, id, startedAt } = appointment;
   const { firstName, lastName, specializations } = doctor!;
@@ -58,7 +69,7 @@ export default function AppointmentsListItem({ appointment, openModal }: Appoint
 
         <div className='flex flex-col justify-between'>
           <div className='flex w-[140px] flex-col gap-x-2 gap-y-4 self-end'>
-            <AppointmentButtons componentName='listItem' appointment={appointment} openBookModal={openReschedule} />
+            <AppointmentButtons componentName='listItem' appointment={appointment} openBookModal={openBookModal} />
           </div>
 
           <div className='self-end'>
@@ -68,13 +79,14 @@ export default function AppointmentsListItem({ appointment, openModal }: Appoint
       </div>
 
       <Schedule
-        closePopup={closeReschedule}
-        scheduleIsOpen={rescheduleIsOpen}
+        closePopup={closeBookModal}
+        scheduleIsOpen={bookModalIsOpen}
         scheduleInfo={{
           patientId: patientId,
           doctorId: doctorId,
           appointmentId: id,
           doctor: doctor!,
+          reviews: reviews,
         }}
       />
     </>

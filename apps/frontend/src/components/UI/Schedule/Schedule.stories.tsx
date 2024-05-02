@@ -36,6 +36,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     scheduleInfo: {
+      reviews: [],
       doctorId: '3',
       patientId: '7',
       doctor: {

@@ -83,6 +83,7 @@ export default function ReviewsPage() {
               patientId: '',
               doctorId: doctor.id,
               doctor: doctor,
+              reviews: reviews,
             }}
           />
         </>
