@@ -7,7 +7,7 @@ import ShortInfoCard from '../ShortInfoCard/ShortInfoCard';
 type AppointmentCardProps = {
   appointment: IAppointment;
   fullName: string;
-  about: string;
+  about?: string;
   avatarKey: string;
   withQuickNotes: boolean;
 };

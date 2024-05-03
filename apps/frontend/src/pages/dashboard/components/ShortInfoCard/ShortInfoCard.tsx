@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 type AppointmentCardProps = {
   fullName: string;
   avatarKey: string;
-  about: string;
+  about?: string;
   eventTime?: string;
   classNames: string | undefined;
   id?: string;
@@ -26,7 +26,7 @@ export default function ShortInfoCard({
   const checkOverflow = () => {
     const element = textRef.current;
     if (element) {
-      const fullText = about;
+      const fullText = about ? about : '';
       const textNode = document.createTextNode(fullText);
       element.appendChild(textNode);
 
@@ -58,7 +58,7 @@ export default function ShortInfoCard({
               onMouseEnter={checkOverflow}
               onMouseLeave={() => setShowTooltip(false)}
             >
-              {about?.substring(0, 20) + '...'}
+              {about ? about.substring(0, 20) + '...' : ''}
               {eventTime ? (
                 <p className='ml-auto mr-0 text-sm font-medium leading-5 text-grey-1'>{eventTime}</p>
               ) : (
