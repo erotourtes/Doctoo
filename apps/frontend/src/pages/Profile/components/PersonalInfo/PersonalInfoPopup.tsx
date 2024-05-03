@@ -119,7 +119,11 @@ const PersonalInfoPopup = ({ isOpen, onClose }: PersonalInfoPopupProps) => {
               className='w-full'
             />
 
-            <Input id='email' label='Email' defaultValue={patient.email} type='text' className='w-full' />
+            <div className='flex flex-col gap-1'>
+              <Input id='email' label='Email' defaultValue={patient.email} type='text' className='w-full' />
+              <p className='text-xs italic text-grey-1'>A confirmation list will be sent to your old email address</p>
+            </div>
+
             <Input id='phone' label='Phone' defaultValue={patient.phone} type='text' className='w-full' />
           </div>
 
