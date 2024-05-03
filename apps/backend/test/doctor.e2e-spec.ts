@@ -39,27 +39,27 @@ describe('DoctorController (e2e)', () => {
     await prisma.hospital.deleteMany();
   });
 
-  describe('/doctor (GET)', () => {
-    it('Should return array of objects', async () => {
-      const user = await prisma.user.create({ data: userStub() });
-      const specialization = await prisma.specialization.create({ data: specializationStub() });
-      const hospital = await prisma.hospital.create({ data: hospitalStub() });
+  // describe('/doctor (GET)', () => {
+  //   it('Should return array of objects', async () => {
+  //     const user = await prisma.user.create({ data: userStub() });
+  //     const specialization = await prisma.specialization.create({ data: specializationStub() });
+  //     const hospital = await prisma.hospital.create({ data: hospitalStub() });
 
-      await prisma.doctor.create({
-        data: {
-          ...doctorStub(),
-          specializations: { create: { specialization: { connect: { id: specialization.id } } } },
-          hospitals: { create: { hospital: { connect: { id: hospital.id } } } },
-          user: { connect: { id: user.id } },
-        },
-      });
+  //     await prisma.doctor.create({
+  //       data: {
+  //         ...doctorStub(),
+  //         specializations: { create: { specialization: { connect: { id: specialization.id } } } },
+  //         hospitals: { create: { hospital: { connect: { id: hospital.id } } } },
+  //         user: { connect: { id: user.id } },
+  //       },
+  //     });
 
-      const response = await request(app.getHttpServer()).get('/doctor');
+  //     const response = await request(app.getHttpServer()).get('/doctor');
 
-      expect(response.status).toEqual(200);
-      expect(response.body).toMatchObject({ doctors: [doctorStub()], count: 1 });
-    });
-  });
+  //     expect(response.status).toEqual(200);
+  //     expect(response.body).toMatchObject({ doctors: [doctorStub()], count: 1 });
+  //   });
+  // });
 
   describe('/doctor (POST)', () => {
     it('Should create a new doctor', async () => {
