@@ -54,31 +54,31 @@ const MyDoctorsPage = () => {
         </PageHeader>
       </header>
 
-      <section className='bg-background flex flex-col gap-6 lg:flex-row'>
-          <div className='shrink grow basis-4/5'>
-            <ul className='mb-6 flex gap-4'>
-              <MyDoctorsFilters state={filterState} dispatch={dispatchFilterAction} doctors={doctors} />
-            </ul>
-            {doctors?.length ? (
-              <DoctorsList filters={filterState} doctors={doctors} appointments={appointments} />
-            ) : (
-              <div className='flex h-[250px] w-full items-center justify-center rounded-xl bg-white p-2 text-center text-text lg:h-[350px] xl:h-[600px]'>
-                <span className='flex flex-col items-center gap-4'>
-                  <span>
-                    Your doctors will be displayed here. Let’s find one and book <br /> appointment
-                  </span>
-                  <span>
-                    <Button type={'secondary'} onClick={fn()}>
-                      Find
-                    </Button>
-                  </span>
+      <section className='flex flex-col gap-6 bg-background lg:flex-row'>
+        <div className='shrink grow basis-4/5'>
+          <ul className='mb-6 flex gap-4'>
+            <MyDoctorsFilters state={filterState} dispatch={dispatchFilterAction} doctors={doctors} />
+          </ul>
+          {doctors?.length ? (
+            <DoctorsList filters={filterState} doctors={doctors} appointments={appointments} />
+          ) : (
+            <div className='flex h-[250px] w-full items-center justify-center rounded-xl bg-white p-2 text-center text-text lg:h-[350px] xl:h-[600px]'>
+              <span className='flex flex-col items-center gap-4'>
+                <span>
+                  Your doctors will be displayed here. Let’s find one and book <br /> appointment
                 </span>
-              </div>
-            )}
-          </div>
-          <div>
-            <Calendar meetingsForDay={meetingsForDay} />
-          </div>
+                <span>
+                  <Button type={'secondary'} onClick={fn()}>
+                    Find
+                  </Button>
+                </span>
+              </span>
+            </div>
+          )}
+        </div>
+        <div>
+          <Calendar meetingsForDay={meetingsForDay} />
+        </div>
       </section>
     </div>
   );

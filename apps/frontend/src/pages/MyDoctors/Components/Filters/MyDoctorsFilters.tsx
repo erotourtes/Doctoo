@@ -90,7 +90,7 @@ const MyDoctorsFilters = ({ state, dispatch, doctors }: MyDoctorsFilterProps) =>
   }
 
   return (
-    <div className='flex gap-4 flex-wrap'>
+    <div className='flex flex-wrap gap-4'>
       {Object.keys(filterTypeToActionType).map(filterType => {
         return (
           <OptionalSelect

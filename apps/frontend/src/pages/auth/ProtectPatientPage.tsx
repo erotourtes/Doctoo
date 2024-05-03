@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { setPatientData } from '../../app/patient/PatientSlice';
 import { setUserData, setUserState } from '../../app/user/UserSlice';
 import PatientDashboardSkeleton from '../dashboard/components/PatientDashboard/PatientDashboardSkeleton';
+import { getMyDeclarations } from '../../app/declaration/DeclarationThunks';
 
 export const ProtectRoute: React.FC<{ Page?: React.ElementType }> = ({ Page }) => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ export const ProtectRoute: React.FC<{ Page?: React.ElementType }> = ({ Page }) =
       const { data, error } = await api.GET('/auth/get/me');
       if (error) return navigate('/signup', { replace: true });
 
-      if (data.role === 'PATIENT') dispatch(setPatientData(data.patient!));
+      if (data.role === 'PATIENT') dispatch(setPatientData(data.patient!), dispatch(getMyDeclarations()));
       else if (data.role === 'DOCTOR') dispatch(setDoctorDataUser(data.doctor!));
       dispatch(setUserState({ isLoading: false, isFetched: true }));
       dispatch(setUserData({ role: data.role }));

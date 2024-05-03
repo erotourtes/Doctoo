@@ -1,19 +1,13 @@
-import { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { useState } from 'react';
+import { useAppSelector } from '@/app/hooks';
 import MedicalConditionPopup from './MedicalConditionPopup';
 import { Icon } from '@/components/UI';
-import { getMyDeclarations } from '../../../../app/declaration/DeclarationThunks';
 
 const MedicalCondition = () => {
   const patient = useAppSelector(state => state.patient.data);
   const { conditions, allergies } = patient;
-  const dispatch = useAppDispatch();
 
   const declaration = useAppSelector(state => state.declaration.data[0]);
-
-  useEffect(() => {
-    dispatch(getMyDeclarations());
-  }, []);
 
   const [isOpen, setIsOpen] = useState(false);
 

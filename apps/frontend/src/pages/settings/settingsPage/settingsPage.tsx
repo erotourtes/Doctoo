@@ -16,7 +16,7 @@ const Settings = () => {
 
   useEffect(() => {
     dispatch(isPasswordExistThunk());
-  }, [dispatch]);
+  }, [showPopup]);
 
   const handleEmailNotificationToggleChange = async () => {
     await dispatch(
@@ -82,7 +82,7 @@ const Settings = () => {
             <div className='flex flex-col items-center justify-between gap-2 p-2 sm:flex-row sm:p-8'>
               <span className='text-lg font-medium text-dark-grey'>Password</span>
               <a href='#' className='text-lg font-medium text-main ' onClick={() => setShowPopup(true)}>
-                Change password
+                {!isPasswordExist ? 'Set password' : 'Change password'}
               </a>
             </div>
           </div>
