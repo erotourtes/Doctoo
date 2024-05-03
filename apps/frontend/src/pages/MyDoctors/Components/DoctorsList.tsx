@@ -22,15 +22,30 @@ function filterDoctors(doctor: IDoctor, filters: FilterState): boolean {
 
   if (!doctor.specializations?.length) return passesDoctorFilter;
 
-  const doctorSpecialization = doctor.specializations[0].name;
-  const doctorHospital = doctor.hospitals[0].name;
+  const doctorSpecializations = doctor.specializations.map(spec => spec.name);
 
-  const passesSpecializationFilter =
-    filters.specializations.includes(filterConfig.specializations.defaultValue) ||
-    filters.specializations.includes(doctorSpecialization);
+  let passesSpecializationFilter = false;
 
-  const passesHospitalsFilter =
-    filters.hospitals.includes(filterConfig.hospitals.defaultValue) || filters.hospitals.includes(doctorHospital);
+  doctorSpecializations.forEach(spec => {
+    const isPasses =
+      filters.specializations.includes(filterConfig.specializations.defaultValue) ||
+      filters.specializations.includes(spec);
+
+    if (isPasses) passesSpecializationFilter = true;
+  });
+
+  if (!doctor.hospitals?.length) return passesDoctorFilter && passesSpecializationFilter;
+
+  const doctorHospitals = doctor.hospitals.map(hosp => hosp.name);
+
+  let passesHospitalsFilter = false;
+
+  doctorHospitals.forEach(hosp => {
+    const isPasses =
+      filters.hospitals.includes(filterConfig.hospitals.defaultValue) || filters.hospitals.includes(hosp);
+
+    if (isPasses) passesHospitalsFilter = true;
+  });
 
   return passesSpecializationFilter && passesHospitalsFilter && passesDoctorFilter;
 }
@@ -53,7 +68,7 @@ const DoctorsList = ({ filters, doctors, appointments }: DoctorsListProps) => {
   }, []);
 
   return (
-    <>
+    <div className='flex flex-col gap-4'>
       <div className='flex flex-col gap-6'>
         {familyDoctor && (
           <div className=''>
@@ -78,7 +93,7 @@ const DoctorsList = ({ filters, doctors, appointments }: DoctorsListProps) => {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

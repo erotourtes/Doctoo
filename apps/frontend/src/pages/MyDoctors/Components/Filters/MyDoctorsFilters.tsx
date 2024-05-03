@@ -1,6 +1,6 @@
 import OptionalSelect from '@/components/UI/Select/OptionalSelect';
-import { useMemo } from 'react';
 import type { IDoctor } from '@/dataTypes/Doctor';
+import { useMemo } from 'react';
 import type { FilterAction, FilterState } from './filterReducer';
 
 interface MyDoctorsFilterProps {
@@ -16,6 +16,26 @@ type FilterConfig = {
   };
 };
 
+function getSpecializationsArray(doctors: IDoctor[]) {
+  const allSpecs: string[] = [];
+  doctors.forEach((doctor: IDoctor) => {
+    doctor.specializations.forEach(spec => {
+      allSpecs.push(spec.name);
+    });
+  });
+  return allSpecs;
+}
+
+function getHospitalsArray(doctors: IDoctor[]) {
+  const allHospitals: string[] = [];
+  doctors.forEach((doctor: IDoctor) => {
+    doctor.hospitals.forEach(hospital => {
+      allHospitals.push(hospital.name);
+    });
+  });
+  return allHospitals;
+}
+
 export const filterConfig: FilterConfig = {
   doctors: {
     defaultValue: 'All doctors',
@@ -25,15 +45,11 @@ export const filterConfig: FilterConfig = {
   },
   specializations: {
     defaultValue: 'All specializations',
-    getOptions: (doctors: IDoctor[]) => [
-      ...new Set(doctors.map(doctor => `${doctor?.specializations?.length && doctor?.specializations[0].name}`)),
-    ],
+    getOptions: (doctors: IDoctor[]) => [...new Set(getSpecializationsArray(doctors))],
   },
   hospitals: {
     defaultValue: 'All hospitals',
-    getOptions: (doctors: IDoctor[]) => [
-      ...new Set(doctors.map(doctor => `${doctor?.hospitals?.length && doctor?.hospitals[0].name}`)),
-    ],
+    getOptions: (doctors: IDoctor[]) => [...new Set(getHospitalsArray(doctors))],
   },
 };
 
@@ -49,6 +65,7 @@ const MyDoctorsFilters = ({ state, dispatch, doctors }: MyDoctorsFilterProps) =>
 
     for (const filterType of Object.keys(filterTypeToActionType)) {
       const filterOptions = filterConfig[filterType].getOptions(doctors);
+      console.log(filterOptions);
       options[filterType] = filterOptions.map((option, index) => ({
         id: `${filterType}-${index}`,
         name: option,
@@ -90,7 +107,7 @@ const MyDoctorsFilters = ({ state, dispatch, doctors }: MyDoctorsFilterProps) =>
   }
 
   return (
-    <div className='flex flex-wrap gap-4'>
+    <div className='flex gap-4'>
       {Object.keys(filterTypeToActionType).map(filterType => {
         return (
           <OptionalSelect

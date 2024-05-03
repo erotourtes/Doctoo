@@ -1,21 +1,18 @@
+import { getMyAppointments } from '@/app/appointment/AppointmentThunks';
+import { getMyDoctorData } from '@/app/doctor/DoctorThunks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { InputSearch } from '@/components/UI';
 import { Button } from '@/components/UI/Button/Button';
 import { Calendar } from '@/components/UI/Calendar/Calendar';
-import { fn } from '@storybook/test';
-import PageHeader from '../PageHeader';
-import { useAppSelector } from '@/app/hooks';
-import { useAppDispatch } from '@/app/hooks';
-import { useEffect } from 'react';
-import { getMyDoctorData } from '@/app/doctor/DoctorThunks';
-import MyDoctorsFilters from './Components/Filters/MyDoctorsFilters';
-import { useState } from 'react';
-import { InputSearch } from '@/components/UI';
-import DoctorsList from './Components/DoctorsList';
-import { getMyAppointments } from '@/app/appointment/AppointmentThunks';
-import dayjs from 'dayjs';
-import { filterReducer, initialFilterState } from './Components/Filters/filterReducer';
-import { useReducer } from 'react';
 import useWindowWide from '@/hooks/useWindowWide';
+import { fn } from '@storybook/test';
+import dayjs from 'dayjs';
+import { useEffect, useReducer, useState } from 'react';
 import { useNavigate } from 'react-router';
+import PageHeader from '../PageHeader';
+import DoctorsList from './Components/DoctorsList';
+import MyDoctorsFilters from './Components/Filters/MyDoctorsFilters';
+import { filterReducer, initialFilterState } from './Components/Filters/filterReducer';
 
 const MyDoctorsPage = () => {
   const mobileWidth = useWindowWide(768);
