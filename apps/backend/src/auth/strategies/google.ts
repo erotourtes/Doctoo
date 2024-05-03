@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { AuthGuard, PassportStrategy } from '@nestjs/passport';
 import { Profile, Strategy } from 'passport-google-oauth20';
@@ -41,7 +41,10 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
 
         return { isLoggedIn: false, user: newUser };
       } catch (err) {
-        throw new BadRequestException('Error while creating user. Maybe user with this email already exists.');
+        return {
+          isLoggedIn: false,
+          user: null,
+        };
       }
     }
 

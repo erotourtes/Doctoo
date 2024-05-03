@@ -260,7 +260,14 @@ export class AuthService {
     if (existingUser) {
       const password = body.password ? await this.hashPassword(body.password) : undefined;
 
-      await this.userService.patchUser(existingUser.id, { ...body, password });
+      await this.userService.patchUser(existingUser.id, {
+        email: body.email,
+        firstName: body.firstName,
+        lastName: body.lastName,
+        phone: body.phone,
+        googleId: body.googleId,
+        password,
+      });
 
       return plainToInstance(ResponseUserDto, existingUser);
     }
