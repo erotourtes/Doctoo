@@ -1,4 +1,5 @@
 import type { IDoctor } from './Doctor';
+import type { TPatient } from './Patient';
 
 export enum AppointmentStatus {
   PENDING_PAYMENT = 'PENDING_PAYMENT',
@@ -20,6 +21,7 @@ export interface IAppointment {
   startedAt: string;
   endedAt: string;
   doctor?: IDoctor;
+  patient?: TPatient;
 }
 
 export interface IPlannedAppointment {

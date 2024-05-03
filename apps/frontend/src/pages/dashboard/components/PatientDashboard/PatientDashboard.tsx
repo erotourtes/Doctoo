@@ -11,17 +11,17 @@ import NearestAppointmentsComponent from '../NerestAppointmentsCard/NearestAppoi
 import NotificationsComponent from '../NotificationsComponent/NotificationsComponent';
 import { getMyDoctorData } from '@/app/doctor/DoctorThunks';
 import useWindowWide from '@/hooks/useWindowWide';
+import { useNavigate } from 'react-router';
 
 const PatientDashboard = () => {
   const mobileWidth = useWindowWide(768);
   const dispatch = useAppDispatch();
-
+  const [search, setSearch] = useState('');
+  const navigate = useNavigate();
   useEffect(() => {
     dispatch(getMyDoctorData());
     dispatch(getMyAppointments());
   }, [dispatch]);
-
-  const [search, setSearch] = useState('');
 
   function handleSubmit(value: string) {
     setSearch(value);
@@ -42,6 +42,10 @@ const PatientDashboard = () => {
     })
     .slice(0, 5);
 
+  const findDoctor = () => {
+    navigate(`/doctors?search=${encodeURIComponent(search)}`);
+  };
+
   return (
     <div>
       <PageHeader iconVariant='dashboard' title='Dashboard' className='flex-col gap-4 lg:flex-row'>
@@ -54,7 +58,12 @@ const PatientDashboard = () => {
             className='w-full'
           />
 
-          <Button type='primary' btnType='button' className='flex items-center justify-center whitespace-nowrap'>
+          <Button
+            onClick={findDoctor}
+            type='primary'
+            btnType='button'
+            className='flex items-center justify-center whitespace-nowrap'
+          >
             Find a doctor
           </Button>
         </div>

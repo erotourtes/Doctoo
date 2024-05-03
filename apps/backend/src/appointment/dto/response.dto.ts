@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { AppointmentStatus } from '@prisma/client';
 import { Expose, Transform, plainToInstance } from 'class-transformer';
 import { ResponseDoctorDto } from 'src/doctor/dto/response.dto';
+import { ResponsePatientDto } from 'src/patient/dto/response.dto';
 
 export class ResponseAppointmentDto {
   @ApiProperty({ example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique appointment id.' })
@@ -46,4 +47,8 @@ export class ResponseAppointmentDto {
   @Expose()
   @Transform(({ value }) => plainToInstance(ResponseDoctorDto, value))
   doctor?: ResponseDoctorDto;
+
+  @Expose()
+  @Transform(({ value }) => plainToInstance(ResponsePatientDto, value))
+  patient?: ResponsePatientDto;
 }

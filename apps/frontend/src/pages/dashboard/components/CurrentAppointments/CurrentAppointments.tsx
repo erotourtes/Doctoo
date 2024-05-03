@@ -1,10 +1,40 @@
-export default function CurrentAppointments() {
+import type { TPatient } from '@/dataTypes/Patient';
+import AppointmentCard from '../AppointmentCard/AppointmentCard';
+import { AppointmentStatus, type IAppointment } from '@/dataTypes/Appointment';
+
+type AppointmentCardProps = {
+  appointments: IAppointment[];
+  patients: TPatient[];
+};
+
+export default function CurrentAppointments({ appointments, patients }: AppointmentCardProps) {
   return (
-    <>
-      <aside className='mt-[24px] min-h-[156px] min-w-[694px] max-w-[694px] flex-col rounded-xl bg-[#ffffff] p-[24px]'>
-        <h3>Current appointments</h3>
-        <></>
-      </aside>
-    </>
+    <div className='h-min-[306px] flex w-full flex-col gap-7 rounded-xl bg-white px-2 sm:p-6'>
+      <h3 className='text-lg'>Current appointments</h3>
+      {appointments?.length > 0 ? (
+        appointments
+          .filter(a => a.status === AppointmentStatus.PLANNED)
+          .slice(0, 1)
+          .map(currentAppointment => {
+            const appointmentPatient = patients.find(
+              (patient: TPatient) => patient.id === currentAppointment.patientId,
+            );
+            return (
+              <AppointmentCard
+                appointment={currentAppointment}
+                key={currentAppointment.id}
+                withQuickNotes={true}
+                fullName={`${appointmentPatient!.firstName}  ${appointmentPatient!.lastName}`}
+                about={currentAppointment.notes}
+                avatarKey={appointmentPatient!.avatarKey}
+              />
+            );
+          })
+      ) : (
+        <div className='flex flex-col items-center gap-6'>
+          <p className='text-center font-normal leading-6'>Seems like you don’t have any appointments.</p>
+        </div>
+      )}
+    </div>
   );
 }

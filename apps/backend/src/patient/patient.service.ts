@@ -31,6 +31,32 @@ export class PatientService {
     return true;
   }
 
+  async getPatientIds(ids: string[]): Promise<ResponsePatientDto[]> {
+    const patients = await this.prismaService.patient.findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+      include: {
+        user: { select: { firstName: true, lastName: true, avatarKey: true } },
+        allergies: { select: { allergy: { select: { id: true, name: true } } } },
+        conditions: {
+          select: {
+            condition: {
+              select: {
+                name: true,
+                id: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return plainToInstance(ResponsePatientDto, patients);
+  }
+
   async getPatient(id: string): Promise<ResponsePatientDto> {
     await this.isPatientByIdExists(id);
 

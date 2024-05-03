@@ -1,21 +1,72 @@
+import { useRef, useState } from 'react';
+
 type AppointmentCardProps = {
   fullName: string;
   avatarKey: string;
   about: string;
   eventTime?: string;
   classNames: string | undefined;
+  id?: string;
+  onClick?: (item: any) => void;
 };
 
-export default function ShortInfoCard({ fullName, avatarKey, about, eventTime, classNames }: AppointmentCardProps) {
+export default function ShortInfoCard({
+  fullName,
+  avatarKey,
+  eventTime,
+  classNames,
+  about,
+  id,
+  onClick,
+}: AppointmentCardProps) {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const textRef = useRef<HTMLDivElement>(null);
+
+  const checkOverflow = () => {
+    const element = textRef.current;
+    if (element) {
+      const fullText = about;
+      const textNode = document.createTextNode(fullText);
+      element.appendChild(textNode);
+
+      if (element.scrollWidth > element.clientWidth) {
+        setShowTooltip(true);
+      } else {
+        setShowTooltip(false);
+      }
+
+      element.removeChild(textNode);
+    }
+  };
+
   return (
     <>
-      <div className={`${classNames} flex w-full max-w-[261px] flex-row items-center gap-4`}>
+      <div
+        className={`${classNames} relative flex w-full max-w-[261px] flex-row items-center gap-x-4 px-2 py-4`}
+        onClick={onClick ? () => onClick(id) : undefined}
+      >
         <img src={avatarKey} alt={avatarKey} className='h-8 w-8 rounded-lg md:h-12 md:w-12' />
-        <div className='flex w-full max-w-[150px] flex-col'>
+        <div className='flex w-full max-w-[166px] flex-col py-[8px]'>
           <p className='font-semibold leading-6'>{fullName}</p>
           <div className='flex w-full'>
-            <p className='text-sm font-medium leading-5 text-grey-1'>{about}</p>
-            {eventTime ? <p className='ml-auto mr-0 text-sm font-medium leading-5 text-grey-1'>{eventTime}</p> : <></>}
+            <div
+              ref={textRef}
+              className='flex w-full flex-row overflow-hidden whitespace-nowrap text-sm font-medium leading-5 text-grey-1'
+              onMouseEnter={checkOverflow}
+              onMouseLeave={() => setShowTooltip(false)}
+            >
+              {about?.substring(0, 20) + '...'}
+              {eventTime ? (
+                <p className='ml-auto mr-0 text-sm font-medium leading-5 text-grey-1'>{eventTime}</p>
+              ) : (
+                <></>
+              )}
+            </div>
+          </div>
+          <div
+            className={`absolute left-[198px] top-11 z-10 flex w-28 cursor-default rounded bg-black bg-opacity-75 p-2 text-sm text-white transition-all duration-200 ${showTooltip ? 'visible opacity-100' : 'invisible opacity-0'}`}
+          >
+            {about}
           </div>
         </div>
       </div>

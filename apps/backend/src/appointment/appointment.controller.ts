@@ -21,6 +21,9 @@ import { AppointmentService } from './appointment.service';
 import { CreateAppointmentDto } from './dto/create.dto';
 import { PatchAppointmentDto } from './dto/patch.dto';
 import { ResponseAppointmentDto } from './dto/response.dto';
+import { DoctorService } from '../doctor/doctor.service';
+import { RolesGuard } from '../auth/gaurds/role.guard';
+import { Role } from '../auth/decorators/roles.decorator';
 
 @ApiTags('Appointment Endpoints')
 @Controller('appointment')
@@ -28,6 +31,7 @@ export class AppointmentController {
   constructor(
     private readonly appointmentService: AppointmentService,
     private readonly patientService: PatientService,
+    private readonly doctorService: DoctorService,
   ) {}
 
   @Post()
@@ -60,6 +64,20 @@ export class AppointmentController {
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
   getAppointments() {
     return this.appointmentService.getAppointments();
+  }
+
+  @UseGuards(JWTGuard, RolesGuard)
+  @Role('DOCTOR')
+  @Get('doctor/all')
+  @ApiOperation({ summary: 'Get all doctors appointments' })
+  @ApiOkResponse({ type: ResponseAppointmentDto, isArray: true, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiHeader({ name: 'Cookie', example: 'jwt=eyJhbGci...', description: 'JWT token' })
+  async getAllDoctorsAppointments(@UserDec() userInfo) {
+    const loginedDoctor = await this.doctorService.getDoctorByUserId(userInfo.id);
+    return await this.appointmentService.getAppointmentsByDoctorId(loginedDoctor.id);
   }
 
   @Get('patient/:id')

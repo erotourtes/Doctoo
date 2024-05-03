@@ -145,6 +145,21 @@ describe('AppointmentService', () => {
         startedAt: '2024-04-29T07:50:50.171Z',
         endedAt: '2024-04-29T08:50:50.171Z',
         videoRecordKey: null,
+        doctor: {
+          payrate: 50,
+          about: 'Initial lorem ipsum text...',
+          id: '123e4567-e89b-12d3-a456-000000000018',
+          userId: '123e4567-e89b-12d3-a456-000000000016',
+          rating: 0,
+          hospitals: [],
+          specializations: [],
+          reviewsCount: undefined,
+          firstName: 'First Name',
+          lastName: 'Last Name',
+          avatarKey: 'test',
+          phone: '+380995698142',
+          email: 'user@gmail.com',
+        },
       },
     ];
 

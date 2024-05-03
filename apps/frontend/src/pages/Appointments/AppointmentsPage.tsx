@@ -65,7 +65,7 @@ export default function AppointmentsPage() {
         <div className='flex h-4/5 flex-1 flex-col gap-y-6'>
           <AppointmentsFilters state={filterState} dispatch={dispatchFilterAction} appointments={appointments} />
           {appointments.length === 0 ? (
-            <NoAppointments findDoctor={() => {}} />
+            <NoAppointments findDoctor={() => navigate(`/doctors`)} />
           ) : (
             <AppointmentsList appointments={appointments} filters={filterState} />
           )}

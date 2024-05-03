@@ -40,6 +40,19 @@ export const getMyAppointments = createAsyncThunk('appointment', async (_, { dis
   }
 });
 
+export const getLoginedDoctorAppointments = createAsyncThunk('appointment', async (_, { dispatch }) => {
+  try {
+    const { error, data } = await api.GET(`/appointment/doctor/all`, {});
+    if (!error) {
+      const res: IAppointment[] = data;
+
+      dispatch(setAppointments(res));
+    }
+  } catch (e) {
+    handleError(e as Error | AxiosError);
+  }
+});
+
 export const createAppointment = createAsyncThunk(
   'appointment',
   async (appointment: ICreateAppointment, { dispatch }) => {

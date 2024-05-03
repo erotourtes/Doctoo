@@ -71,7 +71,24 @@ export class AppointmentService {
 
     const appointments = await this.prismaService.appointment.findMany({
       where: { doctorId: id },
-      include: { patient: true },
+      include: {
+        patient: {
+          include: {
+            user: {
+              select: { firstName: true, lastName: true, avatarKey: true, phone: true, email: true },
+            },
+          },
+        },
+        doctor: {
+          include: {
+            user: {
+              select: { firstName: true, lastName: true, avatarKey: true, phone: true, email: true },
+            },
+            hospitals: { select: { hospital: { select: { id: true, name: true } } } },
+            specializations: { select: { specialization: true } },
+          },
+        },
+      },
     });
 
     return plainToInstance(ResponseAppointmentDto, appointments);

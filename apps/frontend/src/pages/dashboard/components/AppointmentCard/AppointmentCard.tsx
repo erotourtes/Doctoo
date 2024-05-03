@@ -6,28 +6,39 @@ import ShortInfoCard from '../ShortInfoCard/ShortInfoCard';
 
 type AppointmentCardProps = {
   appointment: IAppointment;
+  fullName: string;
+  about: string;
+  avatarKey: string;
   withQuickNotes: boolean;
 };
 
-export default function AppointmentCard({ appointment, withQuickNotes = false }: AppointmentCardProps) {
-  const appointmentDate = dayjs(appointment.startedAt);
-  const isLate = appointmentDate.diff(new Date(), 'minutes') <= 0;
+export default function AppointmentCard({
+  appointment,
+  fullName,
+  about,
+  avatarKey,
+  withQuickNotes = false,
+}: AppointmentCardProps) {
+  const appointmentDate = dayjs.utc(appointment.startedAt).format('YYYY-MM-DDTHH:mm:ss');
+  const isLate = dayjs(appointmentDate).diff(dayjs(), 'minutes') <= 0;
 
   return (
     <>
-      <article className='flex w-full max-w-[646px] flex-col items-center justify-between gap-y-8 rounded-xl bg-background px-4 py-2 xl:flex-row xl:items-center'>
+      <article className='flex w-full max-w-[646px] flex-col items-center justify-between gap-y-8 rounded-xl bg-background px-4 xl:flex-row xl:items-center'>
         <ShortInfoCard
-          fullName={`Dr. ${appointment.doctor!.firstName + ' ' + appointment.doctor!.lastName}`}
-          about={appointment.doctor!.about}
-          avatarKey={appointment.doctor!.avatarKey}
+          fullName={`${fullName}`}
+          about={about}
+          avatarKey={avatarKey}
           classNames='justify-center xl:justify-start xl:after:w-px xl:after:h-12 xl:after:bg-main-medium'
         />
         <div className='flex w-full flex-row items-center justify-center xl:justify-start'>
-          {appointmentDate.diff(new Date(), 'minutes', true) > 5 ? (
+          {dayjs(appointmentDate).diff(dayjs.utc(), 'minutes', true) > 5 ? (
             <div className='flex items-center'>
-              <p className='border-r border-main-medium pr-4 font-semibold'>{appointmentDate.format('MMM D')}</p>
+              <p className='border-r border-main-medium pr-4 font-semibold'>
+                {dayjs(appointmentDate).utc().format('MMM D')}
+              </p>
               <Icon variant='timer' className='ml-[8px] mr-[8px] size-6 shrink-0 text-grey-3' />
-              <p>{appointmentDate.format('h:mm A')}</p>
+              <p>{dayjs(appointmentDate).utc().format('h:mm A')}</p>
             </div>
           ) : (
             <div className='flex w-full flex-col items-center justify-center gap-4 sm:flex-row xl:justify-between'>
@@ -35,12 +46,12 @@ export default function AppointmentCard({ appointment, withQuickNotes = false }:
                 <Icon variant='timer' className={`h-6 w-6 shrink-0 ${isLate ? 'text-error' : 'text-[#FFC249]'}`} />
                 <p
                   className={`font-semibold ${isLate ? 'text-error' : 'text-[#067C88]'}`}
-                >{`Starts in ${isLate ? 0 : appointmentDate.diff(new Date(), 'minutes')} min`}</p>
+                >{`Starts in ${isLate ? 0 : dayjs(appointmentDate).diff(dayjs(), 'minutes')} min`}</p>
               </div>
               {withQuickNotes ? <Icon variant='quick-notes' className='ml-[16px] text-[#067C88]' /> : <></>}
               <Button
                 type={'primary'}
-                className={`flex w-full items-center justify-center gap-2 sm:max-w-[148px] ${withQuickNotes ? 'px-2 ' : ''}`}
+                className={`flex w-full items-center justify-center gap-2 sm:max-w-[148px] ${withQuickNotes ? 'w-fit px-2 ' : ''}`}
               >
                 <div className={`${withQuickNotes ? '' : 'flex'} 'font-normal'`}>
                   {withQuickNotes ? <></> : <Icon variant='plus' />}
