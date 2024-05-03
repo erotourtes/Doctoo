@@ -27,7 +27,6 @@ import { SignUpUserDto } from './dto/signUpUser.dto';
 import JWTGuard from './gaurds/jwt.guard';
 import { GoogleAuthGuard } from './strategies/google';
 import { AuthRequestHelper } from './utils/cookie-helper.service';
-import { ResponsePatientDto } from '../patient/dto/response.dto';
 import { ChangeEmailDto } from './dto/changeEmail.dto';
 import { MeResponseDto } from './dto/getMe.dto';
 
@@ -167,19 +166,6 @@ export class AuthController {
   @ApiBody({ type: ChangePasswordDto })
   changePassword(@Body() body: ChangePasswordDto, @UserDec() user: ResponseUserDto) {
     return this.authService.changePassword(user, body);
-  }
-
-  // Todo: remove unused code
-  @UseGuards(JWTGuard)
-  @Get('patient/me')
-  @ApiOperation({ summary: 'Get patient' })
-  @ApiHeader({ name: 'Cookie', example: 'jwt=eyJhbGci...', description: 'JWT token' })
-  @ApiOkResponse({ type: ResponsePatientDto, description: RESPONSE_STATUS.SUCCESS })
-  @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  async getPatient(@UserDec() user: ResponseUserDto): Promise<ResponsePatientDto> {
-    return await this.authService.getMePatient(user);
   }
 
   @UseGuards(JWTGuard)
