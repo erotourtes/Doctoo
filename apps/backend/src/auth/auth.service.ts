@@ -100,7 +100,7 @@ export class AuthService {
 
   async loginDoctor(email: string, password: string): Promise<ResponseUserDto | null> {
     const user = await this.userService.getUserByEmail(email);
-    if (!user) throw new NotFoundException("User with this email doesn't exist");
+    if (!user || user.role !== 'DOCTOR') throw new NotFoundException("User with this email doesn't exist");
 
     const isValidPassword = await this.verifyPassword(password, user.password);
     if (!isValidPassword) throw new BadRequestException('Invalid auth credentials.');

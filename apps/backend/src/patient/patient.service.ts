@@ -26,7 +26,7 @@ export class PatientService {
   async isPatientByUserIdExists(userId: string): Promise<boolean> {
     const patient = await this.prismaService.patient.findFirst({ where: { user: { id: userId } } });
 
-    if (!patient) throw new NotFoundException('A patient with this Id not found.');
+    if (!patient) throw new NotFoundException('A patient is not found.');
 
     return true;
   }

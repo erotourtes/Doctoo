@@ -71,7 +71,7 @@ const patientScheme = Joi.object<Patient>({
 
 const styles = {
   backgroundImage:
-    'linear-gradient(45deg, transparent 50%, blue 50%), linear-gradient(135deg, blue 50%, transparent 50%)',
+    'linear-gradient(45deg, transparent 50%, #707D7E 50%), linear-gradient(135deg, #707D7E 50%, transparent 50%)',
   backgroundPosition: 'calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px), 100% 0',
   backgroundSize: '5px 5px, 5px 5px, 2.5em 2.5em',
   backgroundRepeat: 'no-repeat',
