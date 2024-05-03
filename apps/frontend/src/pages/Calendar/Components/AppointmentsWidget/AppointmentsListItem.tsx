@@ -14,7 +14,13 @@ export default function AppointmentsListItem({ doctor, date }: AppointmentsListI
 
   return (
     <>
-      <img src={avatarKey} alt={name} width='48px' height='48px' className='rounded-lg' />
+      <img
+        src={`${import.meta.env.VITE_S3_BASE_URL}/${avatarKey}`}
+        alt={name}
+        width='48px'
+        height='48px'
+        className='rounded-lg'
+      />
 
       <div className='flex flex-col items-center gap-y-1 sm:items-start'>
         <span className='text-base font-semibold text-black'>{name}</span>

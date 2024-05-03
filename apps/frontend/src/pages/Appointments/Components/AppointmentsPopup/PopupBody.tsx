@@ -39,7 +39,11 @@ export default function PopupBody({ openReschedule, doctorId, status, doctor }: 
       {!mobileWidth && <AppointmentWith />}
 
       <div className='flex h-32 justify-start gap-x-6'>
-        <img src={avatarKey} alt={fullName} className='max-h-28 max-w-28 rounded-lg' />
+        <img
+          src={`${import.meta.env.VITE_S3_BASE_URL}/${avatarKey}`}
+          alt={fullName}
+          className='max-h-28 max-w-28 rounded-lg'
+        />
 
         <div className='flex w-full flex-col'>
           {mobileWidth && <AppointmentWith />}
