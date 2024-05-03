@@ -39,7 +39,7 @@ type ImageProps = {
 function Image({ url, className }: ImageProps) {
   return (
     <img
-      src={url}
+      src={avatarKey !== '' ? `${import.meta.env.VITE_S3_BASE_URL}/${avatarKey}` : null}
       className={cn('col-span-1 row-span-3 aspect-square h-[80px] rounded-lg sm:row-span-4 sm:h-[112px]', className)}
       alt='DOCTOR_AVATAR'
     />
@@ -56,7 +56,7 @@ function ImageWithFavorite({ doctorId, url, isFavorite }: ImageWithFavoriteProps
   const dispatch = useAppDispatch();
   return (
     <div className='group relative col-span-1 row-span-3 aspect-square h-[80px] sm:row-span-4 sm:h-[112px]'>
-      <img src={url} className='rounded-lg' alt='DOCTOR_AVATAR' />
+      <img src={avatarKey !== '' ? `${import.meta.env.VITE_S3_BASE_URL}/${avatarKey}` : null} className='rounded-lg aspect-square' alt='DOCTOR_AVATAR' />
       <div className='absolute left-0 top-0 flex h-full w-full items-end justify-end rounded-lg bg-semi-transparent opacity-0 transition duration-300 group-hover:opacity-100'>
         <button
           className='mb-1 mr-1 rounded-lg bg-white hover:bg-grey-5'
