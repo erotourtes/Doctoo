@@ -21,7 +21,13 @@ export default function ScheduleHeader({
 }: ScheduleHeader) {
   return (
     <div className='flex items-center gap-x-6'>
-      <img width={112} height={112} src={avatar} alt={fullName} className='rounded-lg' />
+      <img
+        width={112}
+        height={112}
+        src={`${import.meta.env.VITE_S3_BASE_URL}/${avatar}`}
+        alt={fullName}
+        className='rounded-lg'
+      />
 
       <div className='flex flex-1 flex-col gap-y-2'>
         <div className='flex justify-between'>
