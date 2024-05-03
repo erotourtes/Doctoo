@@ -24,7 +24,7 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
     <div className='flex w-full justify-between gap-4 rounded-lg bg-white p-3 pb-4 text-start md:p-7'>
       <div className='flex flex-col gap-4'>
         <p className='w-full text-grey-1'>{title}</p>
-        <div className='group flex w-fit items-center text-black'>
+        <div className='group flex w-full items-center justify-between text-black'>
           <form onSubmit={e => e.preventDefault()}>
             {variant === 'input' && (
               <input

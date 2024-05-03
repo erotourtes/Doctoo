@@ -83,7 +83,14 @@ import ShareScreenIcon from '@assets/icons/share-screen.svg?react';
 // Logo
 import Logo from '@assets/logo.svg?react';
 
+//Additional icons(not from figma)
+import { Clock } from 'lucide-react';
+
 export type IconType = React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+
+function ClockIcon() {
+  return <Clock className='stroke-[1.5]' />;
+}
 
 const IconVariants = {
   logo: Logo,
@@ -142,6 +149,7 @@ const IconVariants = {
   help: HelpIcon,
   'location-target': LocationTargetIcon,
   'share-screen': ShareScreenIcon,
+  age: ClockIcon,
 };
 
 const Icon: React.FunctionComponent<IconProps> = ({ variant, ...props }) => {

@@ -35,6 +35,12 @@ export class ResponsePatientDto {
   })
   readonly identityCardKey: string;
 
+  @ApiProperty({
+    example: 'Passport',
+    description: 'A name of patient identification file.',
+  })
+  readonly identityCardType: string;
+
   @ApiProperty({ example: 'USA', description: 'The country where the hospital is located.' })
   readonly country: string;
 

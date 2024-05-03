@@ -3,10 +3,12 @@ import { Button, Icon } from '@/components/UI';
 import { capitalizeString } from '@/utils/capitalizeString';
 import { useState } from 'react';
 import PersonalInfoPopup from './PersonalInfoPopup';
+import AddDocumentPopup from './AddDocumentPopup';
 import { PatientProfilePhoto } from '@/components/ProfilePhoto/PatientProfilePhoto';
 
 const PersonalInfo = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isPersonalInfoPopupOpen, setIsPersonalInfoPopupOpen] = useState(false);
+  const [isDocumentPopupOpen, setIsDocumentPopupOpen] = useState(false);
   const patient = useAppSelector(state => state.patient.data);
   const photoURL = patient.avatarKey !== '' ? `${import.meta.env.VITE_S3_BASE_URL}/${patient.avatarKey}` : null;
 
@@ -24,17 +26,36 @@ const PersonalInfo = () => {
         </div>
       </div>
       <div className='flex flex-col items-end justify-between gap-2 sm:self-end xl:gap-8'>
-        <button className='flex items-center gap-1 text-sm text-grey-1' onClick={() => setIsOpen(!isOpen)}>
+        <button
+          className='flex items-center gap-1 text-sm text-grey-1'
+          onClick={() => setIsPersonalInfoPopupOpen(!isPersonalInfoPopupOpen)}
+        >
           <Icon variant='edit' />
           Edit
         </button>
         <div>
-          <Button btnType='button' type='secondary' onClick={() => {}} className='flex items-center gap-2 px-3 py-0'>
-            <Icon variant='plus' />
-            Add a document
-          </Button>
+          {patient.identityCardType && (
+            <div
+              onClick={() => setIsDocumentPopupOpen(!isDocumentPopupOpen)}
+              className='rounded-lg bg-main-light px-4 py-2 font-medium text-black'
+            >
+              {patient.identityCardType}
+            </div>
+          )}
+          {!patient.identityCardType && (
+            <Button
+              btnType='button'
+              type='secondary'
+              onClick={() => setIsDocumentPopupOpen(!isDocumentPopupOpen)}
+              className='flex items-center gap-2 px-3 py-0'
+            >
+              <Icon variant='plus' />
+              Add a document
+            </Button>
+          )}
         </div>
-        <PersonalInfoPopup isOpen={isOpen} onClose={() => setIsOpen(false)} />
+        <PersonalInfoPopup isOpen={isPersonalInfoPopupOpen} onClose={() => setIsPersonalInfoPopupOpen(false)} />
+        <AddDocumentPopup isOpen={isDocumentPopupOpen} onClose={() => setIsDocumentPopupOpen(false)} />
       </div>
     </div>
   );

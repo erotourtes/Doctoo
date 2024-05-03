@@ -1,24 +1,17 @@
 import type React from 'react';
-import { useState } from 'react';
-import Icon from '../Icon/Icon';
+import { useFormContext } from 'react-hook-form';
+import { Icon } from '..';
 
 interface SelectProps {
   id: string;
   options: string[];
   defaultOption?: string | '';
-  onChange: (value: string) => void;
   label?: string;
   classNameLabel?: string;
 }
 
 const Select: React.FC<SelectProps> = ({ options, defaultOption, label, id, classNameLabel }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(defaultOption || '');
-
-  const handleOptionClick = (option: string) => {
-    setSelectedOption(option);
-    setIsOpen(false);
-  };
+  const { register } = useFormContext();
 
   return (
     <div className='relative'>
@@ -27,30 +20,39 @@ const Select: React.FC<SelectProps> = ({ options, defaultOption, label, id, clas
           {label}
         </label>
       )}
-      <button
-        className='flex h-9 w-[412px]  cursor-pointer items-center justify-between 
-        rounded-md bg-grey-5 p-3 text-sm text-black hover:bg-grey-4'
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        {selectedOption || 'Select'}
-        <Icon variant={`shevron-mini-${isOpen ? 'open' : 'closed'}`} className='h-6 w-6 text-grey-3' />
-      </button>
-
-      {isOpen && (
-        <div className='absolute mt-0.5 w-[412px] rounded-md bg-grey-5'>
-          {options.map(option => (
-            <div
-              key={option}
-              onClick={() => handleOptionClick(option)}
-              className={`mb-1 w-full cursor-pointer rounded-md bg-grey-5 p-1 pl-3
-                text-left first:mt-2 text-${selectedOption === option ? 'main' : 'grey-1'} text-sm hover:bg-grey-4 hover:text-main
-              `}
-            >
-              {option}
-            </div>
+      <div className='relative h-fit w-full'>
+        <Icon
+          variant='shevron-mini-closed'
+          className='pointer-events-none absolute right-4 top-1/2 z-50 -translate-y-1/2 text-grey-1'
+        />
+        <select
+          {...register(id)}
+          id={id}
+          defaultValue={defaultOption || 'default'}
+          onChange={e => console.log(e.target.value)}
+          className='relative flex w-full max-w-[412px] cursor-pointer appearance-none items-center justify-between rounded-md 
+          bg-grey-5 p-4 text-sm text-black transition-colors duration-300 hover:bg-grey-4 focus:border-none focus:outline-none'
+        >
+          {options.map((option, index) => (
+            <>
+              {index === 0 && (
+                <option key='default' disabled>
+                  Select
+                </option>
+              )}
+              <option
+                key={option}
+                value={option}
+                className={`mb-1 w-full cursor-pointer rounded-md border-none bg-grey-5 p-1 pl-3 text-left
+                    text-sm first:mt-2 hover:bg-grey-4 hover:text-main focus:outline-none
+                  `}
+              >
+                {option}
+              </option>
+            </>
           ))}
-        </div>
-      )}
+        </select>
+      </div>
     </div>
   );
 };

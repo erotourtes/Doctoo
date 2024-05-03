@@ -133,6 +133,7 @@ describe('PatientService', () => {
       weight: 50,
       age: 35,
       identityCardKey: 'new_identity_card_key',
+      identityCardType: 'new_identity_card_type',
       emailNotificationToggle: true,
       twoFactorAuthToggle: true,
       requestBillPaymentApproval: false,

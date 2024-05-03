@@ -1,5 +1,5 @@
 import { ApiPropertyOptional, OmitType, PartialType } from '@nestjs/swagger';
-import { IsBoolean, IsNumber, IsOptional, IsUUID } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 import { CreatePatientDto } from './create.dto';
 
 export class PatchPatientDto extends PartialType(OmitType(CreatePatientDto, ['userId'])) {
@@ -9,12 +9,20 @@ export class PatchPatientDto extends PartialType(OmitType(CreatePatientDto, ['us
   readonly declarationId?: string;
 
   @ApiPropertyOptional({
-    example: '123e4567-e89b-12d3-a456-426614174000',
+    example: '123e4567-e89b-12d3-a456-426614174000.jpeg',
     description: 'A unique key to the patient identification file.',
   })
   @IsOptional()
-  @IsUUID(4)
+  @IsString()
   readonly identityCardKey: string;
+
+  @ApiPropertyOptional({
+    example: 'Passport',
+    description: 'A name of patient identification file.',
+  })
+  @IsOptional()
+  @IsString()
+  readonly identityCardType: string;
 
   @ApiPropertyOptional({ default: false, description: "Status of alerts to the patient's email." })
   @IsOptional()

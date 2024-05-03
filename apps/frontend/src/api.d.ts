@@ -630,6 +630,11 @@ export interface components {
        */
       identityCardKey: string;
       /**
+       * @description A name of patient identification file.
+       * @example Passport
+       */
+      identityCardType: string;
+      /**
        * @description The country where the hospital is located.
        * @example USA
        */
@@ -1056,6 +1061,11 @@ export interface components {
        * @example 123e4567-e89b-12d3-a456-426614174000
        */
       identityCardKey?: string;
+      /**
+       * @description A name of patient identification file.
+       * @example Passport
+       */
+      identityCardType?: string;
       /**
        * @description Status of alerts to the patient's email.
        * @default false
@@ -4408,6 +4418,18 @@ export interface operations {
         content: {
           "application/json": components["schemas"]["ClassicNestResponse"];
         };
+      };
+    };
+  };
+  PaymentController_createPayment: {
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreatePaymentDto'];
+      };
+    };
+    responses: {
+      201: {
+        content: never;
       };
     };
   };

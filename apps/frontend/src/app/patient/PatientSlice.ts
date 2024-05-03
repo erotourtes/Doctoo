@@ -25,6 +25,7 @@ const initialState: PatientData = {
     lastName: 'Doe',
     phone: '+38098555555',
     email: 'john.doe@gmail.com',
+    identityCardType: '',
     avatarKey: '',
     weight: 75,
     height: 175,

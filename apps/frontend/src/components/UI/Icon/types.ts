@@ -56,7 +56,8 @@ export type IconVariant =
   | 'help'
   | 'location-target'
   | 'sent-invoice'
-  | 'share-screen';
+  | 'share-screen'
+  | 'age';
 
 export type IconProps = {
   variant: IconVariant;
