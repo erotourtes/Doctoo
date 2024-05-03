@@ -29,12 +29,12 @@ const DoctorsListItem = ({ key, doctor }: DoctorsListItemProps) => {
     <>
       <div key={key}>
         <DoctorCard>
-          <DoctorCard.Image url={doctor.avatarKey} />
+          <DoctorCard.Image url={doctor.avatarKey} className='min-h-[70]' />
           <DoctorCard.Name>{fullName}</DoctorCard.Name>
-          <DoctorCard.Specializations specializations={doctor.specializations ? doctor.specializations : []} />
+          <DoctorCard.Specializations specializations={doctor.specializations ? doctor.specializations : []} className='overflow-hidden text-ellipsis' />
           <DoctorCard.Tags tags={[]} />
           <DoctorCard.Rating rating={doctor.rating} reviewsCount={doctor.reviewsCount} />
-          <DoctorCard.BookButton onClick={() => openSchedulePopup()} />
+          <DoctorCard.BookButton onClick={() => openSchedulePopup()} className='min-width-auto!' />
         </DoctorCard>
       </div>
 

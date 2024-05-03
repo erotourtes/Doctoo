@@ -15,9 +15,11 @@ import dayjs from 'dayjs';
 import { filterReducer, initialFilterState } from './Components/Filters/filterReducer';
 import { useReducer } from 'react';
 import useWindowWide from '@/hooks/useWindowWide';
+import { useNavigate } from 'react-router';
 
 const MyDoctorsPage = () => {
   const mobileWidth = useWindowWide(768);
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const appointments = useAppSelector(state => state.appointment.appointments);
   const doctors = useAppSelector(state => state.doctor.doctors);
@@ -35,6 +37,15 @@ const MyDoctorsPage = () => {
     status: appointment.status.toUpperCase(),
   }));
 
+  function handleSubmit(value: string) {
+    setSearchValue(value);
+  }
+
+  const findDoctor = () => {
+    navigate(`/doctors?search=${encodeURIComponent(searchValue)}`);
+  };
+
+
   return (
     <div>
       <header className='bg-background'>
@@ -43,18 +54,18 @@ const MyDoctorsPage = () => {
             <InputSearch
               variant={'white'}
               value={searchValue}
-              setValue={setSearchValue}
+              setValue={handleSubmit}
               placeholder={`${mobileWidth ? 'Search by doctor, symptom' : 'Search by doctor'}`}
               className='w-full'
             />
-            <Button type={'primary'} onClick={() => {}} className='flex items-center justify-center whitespace-nowrap'>
+            <Button type={'primary'} onClick={findDoctor} className='flex items-center justify-center whitespace-nowrap'>
               Find a doctor
             </Button>
           </div>
         </PageHeader>
       </header>
 
-      <section className='flex flex-col gap-6 bg-background lg:flex-row'>
+      <section className='flex flex-col gap-6 bg-background xl:flex-row'>
         <div className='shrink grow basis-4/5'>
           <ul className='mb-6 flex gap-4'>
             <MyDoctorsFilters state={filterState} dispatch={dispatchFilterAction} doctors={doctors} />
