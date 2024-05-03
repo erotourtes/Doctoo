@@ -31,7 +31,11 @@ const NavButton: React.FunctionComponent<NavButtonProps> = ({
     >
       <Icon
         variant={iconVariant}
-        className={cn('size-6 transition-all', selected ? 'text-main' : 'group-hover:text-white')}
+        className={cn(
+          'size-6 transition-all',
+          selected && 'text-main',
+          !selected && 'text-white group-hover:text-white',
+        )}
       />
       {variant !== 'small' && (
         <span className={cn('font-medium', !selected && 'group-hover:text-white', selected && 'text-black')}>
