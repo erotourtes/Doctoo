@@ -27,7 +27,11 @@ export const Button = ({
       onClick={onClick}
       disabled={disabled}
       type={btnType}
-      className={cn(ButtonTypeStyles[type], 'h-10 min-w-[100px] rounded-md px-6', className)}
+      className={cn(
+        ButtonTypeStyles[type],
+        'h-10 min-w-[100px] rounded-md px-6 transition-colors duration-300',
+        className,
+      )}
     >
       {children}
     </button>
