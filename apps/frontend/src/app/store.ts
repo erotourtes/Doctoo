@@ -10,6 +10,7 @@ import { declarationSlice } from './declaration/DeclarationSlice';
 import { hospitalSlice } from './hospital/HospitalSlice';
 import { userSlice } from './user/UserSlice';
 import { chatSlice } from './chat/ChatSlice';
+import { specializationSlice } from './specialization/SpecializationSlice';
 
 export const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ export const store = configureStore({
     hospital: hospitalSlice.reducer,
     user: userSlice.reducer,
     chat: chatSlice.reducer,
+    specialization: specializationSlice.reducer,
   },
 });
 

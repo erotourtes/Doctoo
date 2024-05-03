@@ -2,7 +2,7 @@ import type { RootState } from '@/app/store';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '../createAppSlice';
 import type { IDoctor } from '@/dataTypes/Doctor';
-import type { GetDoctorDataPayload } from './DoctorThunks';
+import { addDoctorToFavorites, removeDoctorFromFavorites, type GetDoctorDataPayload } from './DoctorThunks';
 import { type components } from '../../api';
 
 interface DoctorData {
@@ -55,6 +55,16 @@ export const doctorSlice = createAppSlice({
       state.familyDoctor = action.payload;
     },
   },
+  extraReducers: builder =>
+    builder
+      .addCase(addDoctorToFavorites.fulfilled, (state, action) => {
+        const doctor = state.doctors.find(doc => doc.id === action.payload.doctorId);
+        doctor!.isFavorite = true;
+      })
+      .addCase(removeDoctorFromFavorites.fulfilled, (state, action) => {
+        const doctor = state.doctors.find(doc => doc.id === action.meta.arg);
+        doctor!.isFavorite = false;
+      }),
 });
 
 export const {

@@ -1,6 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Expose, Transform, plainToInstance } from 'class-transformer';
-import { Appointment, DoctorSpecialization, HospitalDoctor, User } from '@prisma/client';
+import { Appointment, DoctorSpecialization, Favorite, HospitalDoctor, User } from '@prisma/client';
 import { ResponseHospitalDto } from '../../hospital/dto/response.dto';
 import { ResponseSpecializationDto } from '../../specialization/dto/response.dto';
 import { ResponseDoctorScheduleDto } from './response-schedule.dto';
@@ -110,7 +110,8 @@ export class ResponseDoctorDto {
   @Exclude()
   readonly doctorSchedule: any;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
+    required: false,
     description: "Doctor's schedule",
   })
   @Expose()
@@ -127,4 +128,15 @@ export class ResponseDoctorDto {
 
   @Exclude()
   readonly appointments: Appointment[];
+
+  @Exclude()
+  readonly favorites: Favorite[];
+
+  @ApiPropertyOptional({
+    required: false,
+    description: 'Property that indicates whether the doctor is in th favorites list of the patient',
+  })
+  @Expose()
+  @Transform(({ obj }) => obj.favorites && obj.favorites.length === 1)
+  readonly isFavorite?: boolean;
 }

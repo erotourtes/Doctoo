@@ -98,7 +98,7 @@ export class DoctorService {
   }
 
   // TODO: refactor, extracting filter mapping logic into separate function/s
-  async getDoctors(query?: GetDoctorsQuery): Promise<ResponseDoctorListDto> {
+  async getDoctors(patientId: string, query?: GetDoctorsQuery): Promise<ResponseDoctorListDto> {
     const { hospitalId, specializationId, search, status } = query;
     const page = query.page || 1;
     const itemsPerPage = query.itemsPerPage || 10;
@@ -121,6 +121,15 @@ export class DoctorService {
       searchFilters.push({
         specializations: { some: { specialization: { name: { contains: search, mode: 'insensitive' } } } },
       });
+      searchFilters.push({
+        specializations: {
+          some: {
+            specialization: {
+              conditions: { some: { condition: { name: { contains: { search, mode: 'insensitive' } } } } },
+            },
+          },
+        },
+      });
     }
 
     const conditions = {
@@ -135,6 +144,7 @@ export class DoctorService {
     const doctors = await this.prismaService.doctor.findMany({
       include: {
         user: { select: { firstName: true, lastName: true, avatarKey: true } },
+        favorites: { where: { patient: { id: patientId } } },
         hospitals: { select: { hospital: { select: { id: true, name: true } } } },
         specializations: { select: { specialization: true } },
         _count: { select: { reviews: true } },

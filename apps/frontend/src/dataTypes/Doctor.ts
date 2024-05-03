@@ -15,7 +15,7 @@ export interface Hospital {
 
 export interface DoctorSchedule {
   startsWorkHourUTC: number;
-  endsWorkHour: number;
+  endsWorkHourUTC: number;
   unavailableTimeSlots?: string[];
 }
 
@@ -34,4 +34,5 @@ export interface IDoctor {
   rating: number;
   reviewsCount: number;
   schedule?: DoctorSchedule;
+  isFavorite?: boolean;
 }

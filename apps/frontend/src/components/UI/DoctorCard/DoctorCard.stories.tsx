@@ -35,11 +35,7 @@ export const WithImageFavoriteOverlay: Story = {
   render: () => (
     <div className='w-[800px]'>
       <DoctorCard>
-        <DoctorCard.ImageWithFavorite
-          isFavorite={false}
-          onClickFavorite={() => null}
-          url='https://thispersondoesnotexist.com/'
-        />
+        <DoctorCard.ImageWithFavorite isFavorite={false} url='https://thispersondoesnotexist.com/' doctorId='1' />
         <DoctorCard.Name>John Doe</DoctorCard.Name>
         <DoctorCard.Specializations specializations={[{ id: '1', name: 'Therapist' }]} />
         <DoctorCard.PayrateLabel payrate={75} />

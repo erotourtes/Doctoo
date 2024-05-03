@@ -776,14 +776,14 @@ export interface components {
        * @description Hour in UTC the doctor works until.
        * @example 20
        */
-      endsWorkHour: number;
+      endsWorkHourUTC: number;
       /**
        * @description Time slots in from of UTC time strings of slots that are not available to book.
        * @example [
        *   "2024-05-02T12:00:00.000Z"
        * ]
        */
-      unavailableTimeSlotsUTC?: string[];
+      unavailableTimeSlots?: string[];
     };
     ResponseDoctorDto: {
       /**
@@ -846,7 +846,9 @@ export interface components {
       /** @description An array of specializations of the doctor */
       specializations: components['schemas']['ResponseSpecializationDto'][];
       /** @description Doctor's schedule */
-      schedule: components['schemas']['ResponseDoctorScheduleDto'];
+      schedule?: components["schemas"]["ResponseDoctorScheduleDto"];
+      /** @description Property that indicates whether the doctor is in th favorites list of the patient */
+      isFavorite?: boolean;
     };
     MeResponseDto: {
       patient: components['schemas']['ResponsePatientDto'];
@@ -4416,6 +4418,18 @@ export interface operations {
         content: {
           'application/json': components['schemas']['ClassicNestResponse'];
         };
+      };
+    };
+  };
+  PaymentController_createPayment: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreatePaymentDto"];
+      };
+    };
+    responses: {
+      201: {
+        content: never;
       };
     };
   };

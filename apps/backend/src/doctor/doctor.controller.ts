@@ -48,13 +48,15 @@ export class DoctorController {
     return this.doctorService.createDoctor(body);
   }
 
+  @UseGuards(JWTGuard)
   @Get()
   @ApiOperation({ summary: 'Get all doctors' })
   @ApiOkResponse({ type: ResponseDoctorListDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  getDoctors(@Query() query: GetDoctorsQuery) {
-    return this.doctorService.getDoctors(query);
+  async getDoctors(@UserDec() userInfo, @Query() query: GetDoctorsQuery) {
+    const patient = await this.patientService.getPatientByUserId(userInfo.id);
+    return this.doctorService.getDoctors(patient.id, query);
   }
 
   @UseGuards(JWTGuard, RolesGuard)

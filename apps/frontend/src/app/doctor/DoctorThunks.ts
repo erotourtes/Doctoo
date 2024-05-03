@@ -17,17 +17,34 @@ export type GetDoctorDataPayload = {
   count: number;
 };
 
-export const getDoctorData = createAsyncThunk('doctor', async (_, { dispatch }) => {
-  try {
-    const response = await instance.get(`/doctor`);
-    if (response.status === 200) {
-      dispatch(setDoctorData(response.data));
+export type GetDoctorDataOptions = {
+  search?: string;
+  page?: number;
+  hospitalId?: string[];
+  specializationId?: string[];
+};
+
+export const getDoctorData = createAsyncThunk<void, GetDoctorDataOptions | undefined>(
+  'doctor',
+  async (options, { dispatch }) => {
+    try {
+      const response = await instance.get(`/doctor`, {
+        params: {
+          search: options?.search,
+          page: options?.page,
+          hospitalId: options?.hospitalId,
+          specializationId: options?.specializationId,
+        },
+      });
+      if (response.status === 200) {
+        dispatch(setDoctorData(response.data));
+      }
+    } catch (e) {
+      const error = e as Error;
+      throw error;
     }
-  } catch (e) {
-    const error = e as Error;
-    throw error;
-  }
-});
+  },
+);
 
 export const getPatientDoctorData = createAsyncThunk('doctor', async (patient_id: string, { dispatch }) => {
   try {
@@ -106,4 +123,14 @@ export const getFamilyDoctor = createAsyncThunk('doctor', async (doctor_id: stri
     const error = e as Error;
     throw error;
   }
+});
+
+export const addDoctorToFavorites = createAsyncThunk('favorite/added', async (doctorId: string) => {
+  const response = await instance.post(`/favorite`, { doctorId });
+  return response.data;
+});
+
+export const removeDoctorFromFavorites = createAsyncThunk('favorite/removed', async (doctorId: string) => {
+  const response = await instance.delete(`/favorite/${doctorId}`);
+  return response.data;
 });

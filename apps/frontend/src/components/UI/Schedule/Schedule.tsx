@@ -10,14 +10,14 @@ import { useState } from 'react';
 import type { IDoctor } from '@/dataTypes/Doctor';
 import type { IReview } from '@/dataTypes/Review';
 
-type ScheduleProps = {
+export type ScheduleProps = {
   closePopup: () => void;
   scheduleIsOpen: boolean;
   scheduleInfo: {
     patientId: string;
     appointmentId?: string;
-    doctorId: string;
-    doctor: IDoctor;
+    doctorId: string | null;
+    doctor: IDoctor | null;
     reviews: IReview[];
   };
   currentDay?: Dayjs;
@@ -32,6 +32,8 @@ export default function Schedule({
   rescheduling,
 }: ScheduleProps) {
   const { doctorId, patientId, appointmentId, doctor, reviews } = scheduleInfo;
+  if (!doctor || !doctorId) return null;
+
   const { avatarKey, firstName, lastName, payrate, rating, reviewsCount, about, specializations } = doctor;
 
   const doctorFullName = `Dr. ${firstName} ${lastName}`;

@@ -21,6 +21,7 @@ import PatientDashboard from './dashboard/components/PatientDashboard/PatientDas
 import DoctorDashboard from './dashboard/components/DoctorDashboard/DoctorDashboard';
 import { useMemo } from 'react';
 import ChatPage from './Chat/ChatPage';
+import { FindDoctorsPage } from './FindDoctors/FindDoctorsPage';
 
 const PatientPages = () => {
   return (
@@ -39,6 +40,7 @@ const PatientPages = () => {
         <Route path='/chats/my' Component={ChatPage} />
         <Route path='/chats/:chatId' Component={ChatPage} />
         <Route path='/chats/assistant' Component={ChatPage} />
+        <Route path='/doctors' Component={FindDoctorsPage} />
       </Route>
     </Routes>
   );
