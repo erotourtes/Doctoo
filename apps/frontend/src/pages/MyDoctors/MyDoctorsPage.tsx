@@ -45,7 +45,6 @@ const MyDoctorsPage = () => {
     navigate(`/doctors?search=${encodeURIComponent(searchValue)}`);
   };
 
-
   return (
     <div>
       <header className='bg-background'>
@@ -58,7 +57,11 @@ const MyDoctorsPage = () => {
               placeholder={`${mobileWidth ? 'Search by doctor, symptom' : 'Search by doctor'}`}
               className='w-full'
             />
-            <Button type={'primary'} onClick={findDoctor} className='flex items-center justify-center whitespace-nowrap'>
+            <Button
+              type={'primary'}
+              onClick={findDoctor}
+              className='flex items-center justify-center whitespace-nowrap'
+            >
               Find a doctor
             </Button>
           </div>
