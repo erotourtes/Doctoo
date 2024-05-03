@@ -29,7 +29,7 @@ export default function AppointmentCard({
           fullName={`${fullName}`}
           about={about}
           avatarKey={avatarKey}
-          classNames='justify-center xl:justify-start xl:after:w-px xl:after:h-12 xl:after:bg-main-medium'
+          classNames='justify-center xl:justify-start xl:after:w-px xl:after:h-12 xl:after:bg-main-medium pl-0'
         />
         <div className='flex w-full flex-row items-center justify-center xl:justify-start'>
           {dayjs(appointmentDate).diff(dayjs.utc(), 'minutes', true) > 5 ? (

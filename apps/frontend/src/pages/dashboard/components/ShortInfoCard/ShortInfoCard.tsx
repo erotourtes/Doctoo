@@ -1,3 +1,4 @@
+import { PatientProfilePhoto } from '@/components/ProfilePhoto/PatientProfilePhoto';
 import { useRef, useState } from 'react';
 
 type AppointmentCardProps = {
@@ -39,13 +40,15 @@ export default function ShortInfoCard({
     }
   };
 
+  const photoURL = avatarKey !== '' ? `${import.meta.env.VITE_S3_BASE_URL}/${avatarKey}` : null;
+
   return (
     <>
       <div
-        className={`${classNames} relative flex w-full max-w-[261px] flex-row items-center gap-x-4 px-2 py-4`}
+        className={`${classNames} relative flex w-full max-w-[261px] flex-row items-center gap-x-4 px-4 py-2`}
         onClick={onClick ? () => onClick(id) : undefined}
       >
-        <img src={avatarKey} alt={avatarKey} className='h-8 w-8 rounded-lg md:h-12 md:w-12' />
+        <PatientProfilePhoto className='h-8 w-8 rounded-lg md:h-12 md:w-12 ' photoURL={photoURL} />
         <div className='flex w-full max-w-[166px] flex-col py-[8px]'>
           <p className='font-semibold leading-6'>{fullName}</p>
           <div className='flex w-full'>
