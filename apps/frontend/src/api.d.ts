@@ -284,6 +284,7 @@ export interface paths {
     patch: operations['AllergyController_patchAllergy'];
   };
   '/payment': {
+    /** Create payment invoice */
     post: operations['PaymentController_createPayment'];
   };
   '/chat': {
@@ -1579,7 +1580,18 @@ export interface components {
        */
       name?: string;
     };
-    CreatePaymentDto: Record<string, never>;
+    CreatePaymentDto: {
+      /**
+       * @description How long appointment has been.
+       * @example 1
+       */
+      appointmentDuration: number;
+      /**
+       * @description Doctor hourly payrate.
+       * @example 200
+       */
+      pricePerHour: number;
+    };
     ResponseChatDto: {
       /**
        * @description Unique chat id.
@@ -4332,6 +4344,7 @@ export interface operations {
       };
     };
   };
+  /** Create payment invoice */
   PaymentController_createPayment: {
     requestBody: {
       content: {
@@ -4339,8 +4352,21 @@ export interface operations {
       };
     };
     responses: {
-      201: {
+      /** @description Response when the request is successfully processed. */
+      200: {
         content: never;
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
       };
     };
   };

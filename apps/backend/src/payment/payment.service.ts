@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
-import { CreatePaymentDto } from './dto/create-payment.dto';
+import { CreatePaymentDto } from './dto/create.dto';
 
 @Injectable()
 export class PaymentService {
@@ -11,14 +11,17 @@ export class PaymentService {
     this.stripe = new Stripe(this.configService.get('STRIPE_API_KEY'), { apiVersion: '2024-04-10' });
   }
 
-  async createPayment(createPaymentDto: CreatePaymentDto) {
-    const total = createPaymentDto.appointmentDuration * createPaymentDto.pricePerHour * 100;
+  async createPayment(body: CreatePaymentDto): Promise<Stripe.Response<Stripe.PaymentIntent>> {
+    const total = body.appointmentDuration * body.pricePerHour * 100;
 
-    const paymentIntent = await this.stripe.paymentIntents.create({
-      amount: total,
-      currency: 'USD',
-    });
+    try {
+      const payment = await this.stripe.paymentIntents.create({ amount: total, currency: 'USD' });
 
-    return paymentIntent;
+      return payment;
+    } catch (err) {
+      console.error(err);
+
+      throw new BadRequestException('Something bad happened during creating payment.');
+    }
   }
 }
