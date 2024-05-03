@@ -41,7 +41,7 @@ const ChatItem = ({ chat, active = false }: ChatItemProps) => {
       )}
     >
       <div className='avatar size-8 shrink-0 overflow-hidden rounded-lg'>
-        <img src={participant.avatar.url} alt={participant.avatar.name} />
+        {participant.avatar && <img src={participant.avatar.url} alt={participant.avatar.name} />}
       </div>
       <div className='flex flex-1 items-start gap-2'>
         <div className='grid flex-1 gap-1'>

@@ -8,7 +8,7 @@ export interface IChatDoctor {
   avatar: {
     name: string;
     url: string;
-  };
+  } | null;
 }
 
 export interface IChatPatient {
@@ -17,7 +17,7 @@ export interface IChatPatient {
   avatar: {
     name: string;
     url: string;
-  };
+  } | null;
 }
 
 export interface IChat {

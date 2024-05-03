@@ -18,7 +18,9 @@ const ChatHeader = ({ participant, beforeChildren, afterChildren }: ChatHeaderPr
             `avatar size-12 overflow-hidden rounded-lg max-md:size-10 max-sm:size-8 ${!participant ? 'bg-grey-1' : ''}`,
           )}
         >
-          {participant ? <img src={participant?.avatar.url} alt={participant?.avatar.name} /> : null}
+          {participant && participant?.avatar ? (
+            <img src={participant?.avatar.url} alt={participant?.avatar.name} />
+          ) : null}
         </div>
         <div className='grid flex-1 gap-1'>
           <div className='truncate text-lg font-bold text-black max-md:text-base'>

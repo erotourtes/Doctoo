@@ -30,7 +30,7 @@ export class ResponseChatDto {
     avatar: {
       name: string;
       url: string;
-    };
+    } | null;
   };
 
   @ApiProperty({
@@ -50,7 +50,7 @@ export class ResponseChatDto {
     avatar: {
       name: string;
       url: string;
-    };
+    } | null;
   };
 
   @ApiProperty({

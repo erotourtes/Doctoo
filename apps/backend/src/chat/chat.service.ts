@@ -268,8 +268,13 @@ export class ChatService {
         }
       : null;
 
-    const doctorAvatar = await this.getAvatar(doctor.user.avatarKey);
-    const patientAvatar = await this.getAvatar(patient.user.avatarKey);
+    let doctorAvatar = null;
+    let patientAvatar = null;
+
+    try {
+      doctorAvatar = await this.getAvatar(doctor.user.avatarKey);
+      patientAvatar = await this.getAvatar(patient.user.avatarKey);
+    } catch (error) {}
 
     return {
       id: chat.id,
