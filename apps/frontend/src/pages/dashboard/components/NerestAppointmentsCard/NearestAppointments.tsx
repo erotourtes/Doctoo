@@ -16,7 +16,7 @@ export default function NearestAppointmentsComponent({ appointments }: Appointme
             <AppointmentCard appointment={currentAppointment} key={currentAppointment.id} withQuickNotes={false} />
           ))
         ) : (
-          <div className='flex flex-col items-center gap-6'>
+          <div className='flex min-h-[250px] flex-col items-center justify-center gap-6'>
             <p className='text-center font-normal leading-6'>
               Seems like you don’t have any appointments. <br /> Let’s find a doctor and book one
             </p>
