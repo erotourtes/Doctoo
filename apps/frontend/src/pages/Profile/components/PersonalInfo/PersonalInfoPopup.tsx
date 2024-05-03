@@ -67,7 +67,10 @@ const PersonalInfoPopup = ({ isOpen, onClose }: PersonalInfoPopupProps) => {
       const formData = new FormData();
       formData.append('file', file!);
 
-      await dispatch(deleteProfilePatientPhoto(avatarKey));
+      if (avatarKey) {
+        await dispatch(deleteProfilePatientPhoto(avatarKey));
+      }
+
       const result = await dispatch(uploadProfilePatientPhoto(formData));
       const response = result.payload;
 
