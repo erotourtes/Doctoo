@@ -5,6 +5,8 @@ import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { plainToInstance } from 'class-transformer';
 import auth from '../config/auth';
+import { DoctorService } from '../doctor/doctor.service';
+import { ResponseDoctorDto } from '../doctor/dto/response.dto';
 import { MailService } from '../mail/mail.service';
 import { MinioService } from '../minio/minio.service';
 import { ResponsePatientDto } from '../patient/dto/response.dto';
@@ -12,13 +14,11 @@ import { PatientService } from '../patient/patient.service';
 import { ResponseUserDto } from '../user/dto/response.dto';
 import { JwtEmailPayload, UserService } from '../user/user.service';
 import { ChangePasswordDto } from './dto/changePassword.dto';
+import { MeResponseDto } from './dto/getMe.dto';
 import { LocalLoginTwoFactorDto } from './dto/localLoginTwoFactor.dto';
 import { SignUpPatientDto } from './dto/signUpPatient.dto';
 import { SignUpUserDto } from './dto/signUpUser.dto';
 import { JwtPayload } from './strategies/jwt';
-import { MeResponseDto } from './dto/getMe.dto';
-import { ResponseDoctorDto } from '../doctor/dto/response.dto';
-import { DoctorService } from '../doctor/doctor.service';
 
 // TODO: refactor this service;
 // there are 3 concerns to consider:
@@ -258,10 +258,9 @@ export class AuthService {
     if (existingUser && existingUser.emailVerified) throw new BadRequestException('Requested user already exists.');
 
     if (existingUser) {
-      this.userService.patchUser(existingUser.id, {
-        ...body,
-        password: body.password ? await this.hashPassword(body.password) : undefined,
-      });
+      const password = body.password ? await this.hashPassword(body.password) : undefined;
+
+      await this.userService.patchUser(existingUser.id, { ...body, password });
 
       return plainToInstance(ResponseUserDto, existingUser);
     }
