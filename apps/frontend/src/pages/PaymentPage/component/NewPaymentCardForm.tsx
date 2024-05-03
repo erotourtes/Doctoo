@@ -3,7 +3,7 @@ import { CardCvcElement, CardExpiryElement, CardNumberElement } from '@stripe/re
 
 export const NewPaymentCardForm = () => {
   const inputFieldClass =
-    'w-full rounded-lg bg-background py-3 pl-4 pr-10 text-base text-text hover:border focus:border focus:outline-none';
+    'w-full rounded-lg bg-background py-3 border border-transparent pl-4 pr-10 text-base text-text hover:border hover:border-text focus:border focus:outline-none focus:border-text';
   const labelClass = 'text-md flex flex-col justify-items-start gap-2 text-grey-1';
 
   return (
