@@ -47,7 +47,7 @@ const InputChat: React.FC<InputChatProps> = ({
         onChange={onChange}
         onKeyPress={handleKeyPress}
         placeholder='Write a message...'
-        className='text-gray-2 flex-1 text-sm font-medium focus:outline-none'
+        className='text-gray-2 w-full flex-1 text-sm font-medium focus:outline-none'
       />
 
       <Button

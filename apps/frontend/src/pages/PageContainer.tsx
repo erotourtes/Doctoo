@@ -59,7 +59,6 @@ const DoctorPages = () => {
         <Route path='/logout' Component={LogoutPage} />
 
         <Route path='/chats/my' Component={ChatPage} />
-        <Route path='/chats/:chatId' Component={ChatPage} />
         <Route path='/chats/assistant' Component={ChatPage} />
       </Route>
     </Routes>
@@ -79,7 +78,7 @@ const PageContainer = () => {
   }, [role]);
 
   return (
-    <main className='main-wrapper flex h-full w-full flex-col gap-6 overflow-auto bg-background p-8 px-4 sm:px-8'>
+    <main className='main-wrapper flex h-full w-full flex-col gap-6 overflow-auto bg-background p-4 sm:p-8'>
       <Routes>
         <Route path='/' Component={ProtectRoute}>
           <Route path='/' element={<Navigate to={'/dashboard'} />} />

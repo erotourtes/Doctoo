@@ -14,7 +14,7 @@ export const getMe = createAsyncThunk('chat/fetch', async (_, { dispatch }) => {
   }
 });
 
-export const getChatsForPatient = createAsyncThunk('chat/fetch', async (_, { dispatch }) => {
+export const getChats = createAsyncThunk('chat/fetch', async (_, { dispatch }) => {
   try {
     const response = await instance.get(`/chat`);
     if (response.status === 200) {

@@ -43,7 +43,7 @@ const NavButton: React.FunctionComponent<NavButtonProps> = ({
         </span>
       )}
       <div className='absolute'>
-        <div className='relative -top-5 left-10'>
+        <div className='relative -top-5 left-10 z-10'>
           {variant === 'small' && (
             <span className='z-100 invisible absolute left-full  ml-1 whitespace-nowrap rounded-xl bg-main-dark p-2 text-white transition-all group-hover:visible'>
               {text}

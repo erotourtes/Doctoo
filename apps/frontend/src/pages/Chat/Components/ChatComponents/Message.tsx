@@ -12,7 +12,7 @@ const MessageItem = ({ text, sender = 'participant', sentAt, attaches }: Message
   return (
     <div className={`${sender !== 'participant' ? 'text-white max-[1440px]:self-end' : 'max-[1440px]:self-start'}`}>
       <div
-        className={`mb-2 flex max-w-80 flex-col gap-4 rounded-lg p-5 ${sender !== 'participant' ? 'bg-main' : 'bg-white'}`}
+        className={`mb-2 flex max-w-80 flex-col gap-4 rounded-lg p-5 max-sm:p-3 ${sender !== 'participant' ? 'bg-main' : 'bg-white'}`}
       >
         <div className='text'>{text}</div>
         {attaches

@@ -8,6 +8,7 @@ interface chatData {
   me: TUser | null;
   chats: IChat[];
   openedChat: IChat | null;
+  isOpenedChat: boolean;
   chatMessages: IMessage[];
   chatAttachedFiles: IAttachment[];
 }
@@ -16,6 +17,7 @@ const initialState: chatData = {
   me: null,
   chats: [],
   openedChat: null,
+  isOpenedChat: false,
   chatMessages: [],
   chatAttachedFiles: [],
 };
@@ -49,8 +51,13 @@ export const chatSlice = createAppSlice({
       state.chats.forEach(chat => {
         if (chat.id === action.payload.chatId) {
           state.openedChat = chat || null;
+          state.isOpenedChat = true;
         }
       });
+    },
+
+    closeChat: state => {
+      state.isOpenedChat = false;
     },
 
     setChatMessages: (state, action: PayloadAction<IMessage[]>) => {
@@ -100,6 +107,7 @@ export const {
   deleteChat,
   setNewChat,
   openChat,
+  closeChat,
   setChatMessages,
   addMessage,
   deleteChatMessages,
