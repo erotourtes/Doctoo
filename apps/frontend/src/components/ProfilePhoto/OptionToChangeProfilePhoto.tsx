@@ -13,7 +13,10 @@ export const OptionToChangeProfilePhoto = ({
 }: OptionToChangeProfilePhotoProps) => {
   return photoURL ? (
     <div className='flex flex-col gap-2 min-[690px]:flex-row'>
-      <label htmlFor='file' className='flex items-center gap-2 text-base font-medium leading-6 text-main'>
+      <label
+        htmlFor='file'
+        className='flex cursor-pointer items-center gap-2 text-base font-medium leading-6 text-main'
+      >
         <Icon variant='change' />
         Change photo
         <input id='file' type='file' accept='image/*' onChange={handleFileChange} className='hidden' />
@@ -24,7 +27,7 @@ export const OptionToChangeProfilePhoto = ({
       </button>
     </div>
   ) : (
-    <label htmlFor='file' className='text-base font-medium leading-6 text-main'>
+    <label htmlFor='file' className='cursor-pointer text-base font-medium leading-6 text-main'>
       Upload photo
       <input id='file' type='file' accept='image/*' onChange={handleFileChange} className='hidden' />
     </label>

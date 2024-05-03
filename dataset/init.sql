@@ -1,8 +1,8 @@
 -- Insert data into Users
 INSERT INTO users (id, first_name, last_name, phone, email, email_verified, secret_code, password, google_id, avatar_key, role)
 VALUES 
-('054c83d7-5a75-4867-8947-85d5ed482f63', 'John', 'Doe', '1234567890', 'john.doe@example.com', true, '12345', '$2b$10$gs9ffR.1rS2qVF.2fGXVG.38kGGz1/C.tlrljAcGeMVAJzWiH7tci', null, 'avatar123', 'DOCTOR'),
-('f4e77c9c-0f7f-4a56-b2d7-c76a37c01e40', 'Jane', 'Smith', '0987654321', 'jane.smith@example.com', true, null, '$2b$10$gs9ffR.1rS2qVF.2fGXVG.38kGGz1/C.tlrljAcGeMVAJzWiH7tci', 'google-id-123', 'avatar456', 'PATIENT');
+('054c83d7-5a75-4867-8947-85d5ed482f63', 'John', 'Doe', '1234567890', 'john.doe@example.com', true, '12345', '$2b$10$gs9ffR.1rS2qVF.2fGXVG.38kGGz1/C.tlrljAcGeMVAJzWiH7tci', null, ' ', 'DOCTOR'),
+('f4e77c9c-0f7f-4a56-b2d7-c76a37c01e40', 'Jane', 'Smith', '0987654321', 'jane.smith@example.com', true, null, '$2b$10$gs9ffR.1rS2qVF.2fGXVG.38kGGz1/C.tlrljAcGeMVAJzWiH7tci', 'google-id-123', null, 'PATIENT');
 
 -- Insert data into Doctors
 INSERT INTO doctors (id, user_id, payrate, about, rating)

@@ -248,7 +248,7 @@ export class AuthService {
   }
 
   private async uploadAvatar(userId: string, avatarImgUrl?: string): Promise<void> {
-    const imageUrl = avatarImgUrl ?? 'https://storage.googleapis.com/doctoo/user.png';
+    const imageUrl = avatarImgUrl ?? '';
     const { name } = await this.minioService.uploadByUrl(imageUrl);
     await this.userService.patchUser(userId, { avatarKey: name });
   }
