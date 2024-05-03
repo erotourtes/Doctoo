@@ -144,6 +144,7 @@ jobs:
           MAIL_SECURE=${{ secrets.MAIL_SECURE }}
           FRONTEND_SIGNUP_PATH=${{ secrets.FRONTEND_SIGNUP_PATH }}
           FRONTEND_CHANGE_EMAIL_PATH=${{ secrets.FRONTEND_CHANGE_EMAIL_PATH }}
+          STRIPE_API_KEY=${{ serects.STRIPE_API_KEY }}
           EOF
 
       - name: Run new Docker containers
