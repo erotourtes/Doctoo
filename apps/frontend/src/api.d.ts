@@ -846,7 +846,7 @@ export interface components {
       /** @description An array of specializations of the doctor */
       specializations: components['schemas']['ResponseSpecializationDto'][];
       /** @description Doctor's schedule */
-      schedule?: components["schemas"]["ResponseDoctorScheduleDto"];
+      schedule?: components['schemas']['ResponseDoctorScheduleDto'];
       /** @description Property that indicates whether the doctor is in th favorites list of the patient */
       isFavorite?: boolean;
     };
@@ -4424,7 +4424,7 @@ export interface operations {
   PaymentController_createPayment: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreatePaymentDto"];
+        'application/json': components['schemas']['CreatePaymentDto'];
       };
     };
     responses: {
