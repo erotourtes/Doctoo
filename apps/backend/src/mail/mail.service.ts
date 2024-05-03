@@ -25,8 +25,8 @@ export class MailService {
   async sendMFACode(to: string, name: string, code: string): Promise<void> {
     await this.mailerService.sendMail({
       to,
-      subject: 'Enable MFA for your account',
-      template: './enable-mfa',
+      subject: 'Verification code for two-factor authentication',
+      template: './mfa-code',
       context: { name, code },
     });
   }
