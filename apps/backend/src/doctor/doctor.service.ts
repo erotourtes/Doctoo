@@ -125,7 +125,7 @@ export class DoctorService {
         specializations: {
           some: {
             specialization: {
-              conditions: { some: { condition: { name: { contains: { search, mode: 'insensitive' } } } } },
+              conditions: { some: { condition: { name: { contains: search, mode: 'insensitive' } } } },
             },
           },
         },
