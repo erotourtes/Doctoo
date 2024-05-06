@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateFavoriteDto } from './dto/create.dto';
 import { ResponseFavoriteDto } from './dto/response.dto';
+import { CreateFavoriteDto } from './dto/create.dto';
 
 @Injectable()
 export class FavoriteService {
@@ -16,7 +16,22 @@ export class FavoriteService {
     return true;
   }
 
+  async isFavoriteAlreadyExists(patientId: string, doctorId: string): Promise<boolean> {
+    const favorite = await this.prismaService.favorite.findFirst({
+      where: {
+        patientId: patientId,
+        doctorId: doctorId,
+      },
+    });
+
+    if (favorite) throw new NotFoundException('A favorite with this doctor already exists.');
+
+    return true;
+  }
+
   async createFavorite(patientId: string, body: CreateFavoriteDto): Promise<ResponseFavoriteDto> {
+    await this.isFavoriteAlreadyExists(patientId, body.doctorId);
+
     const favorite = await this.prismaService.favorite.create({
       data: { doctor: { connect: { id: body.doctorId } }, patient: { connect: { id: patientId } } },
     });
@@ -38,7 +53,7 @@ export class FavoriteService {
     return plainToInstance(ResponseFavoriteDto, favorite);
   }
 
-  async deleteFavorite(patientId: string, doctorId: string): Promise<void> {
-    await this.prismaService.favorite.deleteMany({ where: { patient: { id: patientId }, doctor: { id: doctorId } } });
+  async deleteFavorite(id: string): Promise<void> {
+    await this.prismaService.favorite.delete({ where: { id: id } });
   }
 }

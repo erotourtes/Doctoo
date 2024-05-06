@@ -13,6 +13,7 @@ import PageHeader from '../PageHeader';
 import DoctorsList from './Components/DoctorsList';
 import MyDoctorsFilters from './Components/Filters/MyDoctorsFilters';
 import { filterReducer, initialFilterState } from './Components/Filters/filterReducer';
+import { getMyFavorites } from '../../app/favorite/FavoriteThunks';
 
 const MyDoctorsPage = () => {
   const mobileWidth = useWindowWide(768);
@@ -25,6 +26,7 @@ const MyDoctorsPage = () => {
   useEffect(() => {
     dispatch(getMyDoctorData());
     dispatch(getMyAppointments());
+    dispatch(getMyFavorites());
   }, []);
 
   const [searchValue, setSearchValue] = useState<string>('');

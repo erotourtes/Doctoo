@@ -11,6 +11,7 @@ import { hospitalSlice } from './hospital/HospitalSlice';
 import { userSlice } from './user/UserSlice';
 import { chatSlice } from './chat/ChatSlice';
 import { specializationSlice } from './specialization/SpecializationSlice';
+import { favoriteSlice } from './favorite/FavoriteSlice';
 
 export const store = configureStore({
   reducer: {
@@ -26,6 +27,7 @@ export const store = configureStore({
     user: userSlice.reducer,
     chat: chatSlice.reducer,
     specialization: specializationSlice.reducer,
+    favorite: favoriteSlice.reducer,
   },
 });
 

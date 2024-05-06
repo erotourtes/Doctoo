@@ -61,8 +61,7 @@ export class FavoriteController {
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique doctor id.' })
-  async deleteFavorite(@UserDec() userInfo, @Param('id') id: string) {
-    const patient = await this.patientService.getPatientByUserId(userInfo.id);
-    return this.favoriteService.deleteFavorite(patient.id, id);
+  async deleteFavorite(@Param('id') id: string) {
+    return this.favoriteService.deleteFavorite(id);
   }
 }
