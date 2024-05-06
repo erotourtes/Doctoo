@@ -36,7 +36,7 @@ const DoctorsListItem = ({ key, doctor }: DoctorsListItemProps) => {
             className='overflow-hidden text-ellipsis'
           />
           <DoctorCard.Tags tags={[]} />
-          <DoctorCard.Rating rating={doctor.rating} reviewsCount={doctor.reviewsCount} />
+          <DoctorCard.Rating rating={doctor.rating} reviewsCount={doctor.reviewsCount} doctorId={doctor.id} />
           <DoctorCard.BookButton onClick={() => openSchedulePopup()} className='min-width-auto!' />
         </DoctorCard>
       </div>

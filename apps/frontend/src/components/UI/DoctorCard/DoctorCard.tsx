@@ -7,12 +7,13 @@ import type { Specialization } from '../../../dataTypes/Doctor';
 import { cn } from '../../../utils/cn';
 import { Button } from '../Button/Button';
 import Tag from '../Tag/Tag';
+import { Link } from 'react-router-dom';
 
 const DoctorCard = ({ children, className }: { children: React.ReactNode; className?: string }) => {
   return (
     <div
       className={cn(
-        'grid w-full auto-rows-auto grid-cols-[max-content_1fr] rounded-xl bg-white p-6 sm:grid-cols-[max-content_1fr_max-content] md:grid-rows-4 lg:h-[176px]',
+        'grid w-full auto-rows-auto grid-cols-[max-content_1fr] gap-1 rounded-xl bg-white p-6 sm:grid-cols-[max-content_1fr_max-content]',
         className,
       )}
     >
@@ -40,7 +41,7 @@ function Image({ url, className }: ImageProps) {
   return (
     <img
       src={url !== '' ? `${import.meta.env.VITE_S3_BASE_URL}/${url}` : ''}
-      className={cn('col-span-1 row-span-3 aspect-square h-[80px] rounded-lg sm:row-span-4 sm:h-[112px]', className)}
+      className={cn('col-span-1 row-span-4 aspect-square h-[112px] rounded-lg object-cover', className)}
       alt='DOCTOR_AVATAR'
     />
   );
@@ -55,10 +56,10 @@ type ImageWithFavoriteProps = {
 function ImageWithFavorite({ doctorId, url, isFavorite }: ImageWithFavoriteProps) {
   const dispatch = useAppDispatch();
   return (
-    <div className='group relative col-span-1 row-span-3 aspect-square h-[80px] sm:row-span-4 sm:h-[112px]'>
+    <div className='group relative col-span-1 row-span-4 aspect-square h-[112px]'>
       <img
         src={url !== '' ? `${import.meta.env.VITE_S3_BASE_URL}/${url}` : ''}
-        className='aspect-square rounded-lg'
+        className='aspect-square rounded-lg object-cover'
         alt='DOCTOR_AVATAR'
       />
       <div className='absolute left-0 top-0 flex h-full w-full items-end justify-end rounded-lg bg-semi-transparent opacity-0 transition duration-300 group-hover:opacity-100'>
@@ -89,7 +90,7 @@ function Specializations({ specializations, className }: SpecializationsProps) {
   return (
     <h2
       className={cn(
-        'col-span-1 col-start-2 row-span-1 row-start-2 whitespace-break-spaces px-2 text-base font-medium text-grey-1',
+        'col-span-1 col-start-2 row-span-1 row-start-2 truncate whitespace-break-spaces pl-2 text-base font-medium text-grey-1 sm:col-span-2 sm:col-start-2 md:col-span-1 md:col-start-2',
         className,
       )}
     >
@@ -102,17 +103,21 @@ type TagsProps = { tags: string[]; tagClassName?: string };
 
 function Tags({ tags, tagClassName }: TagsProps) {
   return (
-    <div className='col-span-full col-start-1 row-span-1 my-1 whitespace-pre-wrap sm:col-start-2 sm:px-2 md:col-span-1 md:col-start-2 md:row-start-3 md:flex md:space-x-2'>
-      {tags.map((tag, i) => (
-        <Tag key={i} text={tag} icon={false} className={cn('max-sm:mr-2 max-sm:mt-1', tagClassName)} />
-      ))}
-    </div>
+    <>
+      {tags.length ? (
+        <div className='col-span-full col-start-2 row-span-1 my-1 flex flex-wrap gap-1 sm:col-span-2 sm:col-start-2 sm:px-2 md:col-span-1 md:col-start-2'>
+          {tags.map((tag, i) => (
+            <Tag key={i} text={tag} icon={false} className={cn('h-fit min-w-fit', tagClassName)} />
+          ))}
+        </div>
+      ) : null}
+    </>
   );
 }
 
-type RatingProps = { rating: number; reviewsCount: number; starClassName?: string };
+type RatingProps = { rating: number; reviewsCount: number; starClassName?: string; doctorId: string };
 
-function Rating({ rating, reviewsCount, starClassName }: RatingProps) {
+function Rating({ rating, reviewsCount, starClassName, doctorId }: RatingProps) {
   const getRatingStars = () => {
     const stars = [];
     for (let i = 0; i <= 4; i++) {
@@ -123,10 +128,16 @@ function Rating({ rating, reviewsCount, starClassName }: RatingProps) {
     return stars;
   };
   return (
-    <div className='col-span-full row-span-1 flex items-center space-x-2 whitespace-pre-line px-2 text-main-medium sm:col-span-1 sm:col-start-2'>
+    <div className='col-span-full col-start-2 row-span-1 flex items-center space-x-2 whitespace-pre-line px-2 text-main-medium sm:col-span-1 sm:col-start-2 sm:row-start-4'>
       <span className='flex'>{getRatingStars()}</span>
 
-      <span className='ml-2 text-black underline sm:whitespace-nowrap'>{reviewsCount} reviews</span>
+      <Link
+        className='ml-2 text-black underline sm:whitespace-nowrap'
+        to={`/reviews/?doctorId=${doctorId}`}
+        target='_blank'
+      >
+        {reviewsCount} reviews
+      </Link>
     </div>
   );
 }
@@ -138,7 +149,7 @@ function BookButton({ className, disabled, onClick }: BookButtonProps) {
     <Button
       type='primary'
       className={cn(
-        'col-span-full row-span-1 lg:col-span-1 lg:col-start-3 lg:row-start-1 lg:w-28 lg:justify-self-end',
+        'col-span-full row-span-1 mt-1 lg:col-span-1 lg:col-start-3 lg:row-start-1 lg:mt-0 lg:w-28 lg:justify-self-end',
         className,
       )}
       onClick={onClick}
@@ -160,13 +171,15 @@ function TimeSlots({ timestamps, onClickSlot, onClickMore }: TimeSlotsProps) {
     return dayjs(timestamp).format('hh:mm a');
   };
   return (
-    <div className='col-span-full col-start-1 mt-1 md:row-auto lg:col-start-3 lg:row-start-2 lg:row-end-4 lg:mt-0'>
-      <div className={`grid ${timestamps.length > 1 ? 'grid-cols-2 grid-rows-2' : ''} gap-2 whitespace-nowrap`}>
+    <div className='col-span-full col-start-1 mt-1 md:row-auto lg:col-start-3 lg:row-span-3 lg:row-start-2 lg:mt-0'>
+      <div
+        className={`grid ${timestamps.length > 2 ? 'grid-rows-2' : 'grid-rows-1 md:grid-cols-1'} ${timestamps.length === 1 ? 'grid-cols-1' : 'grid-cols-2'} gap-2 whitespace-nowrap`}
+      >
         {timestamps.slice(0, countToShow).map((timestamp, i) => (
           <Button
             key={i}
             type='secondary'
-            className='min-w-fit px-0 sm:min-w-16 lg:w-28'
+            className={`min-w-fit px-0 sm:min-w-16 lg:w-28 ${i === 2 && timestamps.length === 3 ? 'lg:col-start-2' : ''}`}
             onClick={() => onClickSlot(i)}
             disabled={false}
           >

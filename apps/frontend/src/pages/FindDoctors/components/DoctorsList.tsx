@@ -47,7 +47,7 @@ export const DoctorsList = ({ doctors }: DoctorsListProps) => {
               </DoctorCard.Name>
               <DoctorCard.Specializations specializations={doctor.specializations} />
               <DoctorCard.Tags tags={generateDoctorTags({ schedule: doctor.schedule, rating: doctor.rating })} />
-              <DoctorCard.Rating rating={doctor.rating} reviewsCount={doctor.reviewsCount} />
+              <DoctorCard.Rating rating={doctor.rating} reviewsCount={doctor.reviewsCount} doctorId={doctor.id} />
               <DoctorCard.PayrateLabel payrate={doctor.payrate} />
               <DoctorCard.TimeSlots
                 timestamps={generateTimeSlots(doctor.schedule!)}
