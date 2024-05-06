@@ -4421,18 +4421,6 @@ export interface operations {
       };
     };
   };
-  PaymentController_createPayment: {
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreatePaymentDto'];
-      };
-    };
-    responses: {
-      201: {
-        content: never;
-      };
-    };
-  };
   /**
    * Get a chat list
    * @description This endpoint retrieves a chat list.
