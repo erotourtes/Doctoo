@@ -6,15 +6,25 @@ import type { FieldValues, SubmitHandler } from 'react-hook-form';
 import { FormProvider, useForm } from 'react-hook-form';
 import './OptionalSelect.css';
 import { useClickOutside } from '../../../hooks/useClickOutside';
+import { cn } from '../../../utils/cn';
 
 interface SelectProps {
   options: { id: string; name: string }[];
   defaultOption: string | '';
   setChosenOptions: (value: string[]) => void;
   selectedOptions?: string[];
+  classNameWrapper?: string;
+  classNameButton?: string;
 }
 
-const OptionalSelect: React.FC<SelectProps> = ({ options, defaultOption, setChosenOptions, selectedOptions }) => {
+const OptionalSelect: React.FC<SelectProps> = ({
+  options,
+  defaultOption,
+  setChosenOptions,
+  selectedOptions,
+  classNameWrapper,
+  classNameButton,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   useClickOutside(dropdownRef, () => setIsOpen(false));
@@ -45,9 +55,12 @@ const OptionalSelect: React.FC<SelectProps> = ({ options, defaultOption, setChos
   }, [selectedOptions]);
 
   return (
-    <div className='relative'>
+    <div className={cn('relative min-w-fit', classNameWrapper)}>
       <button
-        className='flex cursor-pointer items-center gap-3 whitespace-nowrap rounded-full bg-white p-0.5 pl-3 text-base text-black hover:bg-grey-5 hover:text-main'
+        className={cn(
+          'flex min-w-fit cursor-pointer items-center justify-between gap-3 whitespace-nowrap rounded-full bg-white px-4 py-1 text-base text-black hover:bg-grey-5 hover:text-main',
+          classNameButton,
+        )}
         onClick={() => setIsOpen(prev => !prev)}
         ref={dropdownRef}
       >
