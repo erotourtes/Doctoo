@@ -26,9 +26,14 @@ export class AuthRequestHelper {
     res.redirect(this.configObject.FRONTEND_URL);
   }
 
-  redirectToFrontendSignUpPage(res: Response, token: string) {
+  redirectToFrontendSignUpPatientPage(res: Response, token: string) {
     const { FRONTEND_URL, FRONTEND_SIGNUP_PATH } = this.configObject;
 
     res.redirect(`${FRONTEND_URL}/${FRONTEND_SIGNUP_PATH}?token=${token}`);
+  }
+
+  redirectToFrontendSignUpPage(res: Response) {
+    const { FRONTEND_URL } = this.configObject;
+    res.redirect(`${FRONTEND_URL}/signup`);
   }
 }

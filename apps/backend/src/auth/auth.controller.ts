@@ -139,7 +139,7 @@ export class AuthController {
     } else {
       const token = await this.authService.signJwtToken(data.user.id);
 
-      return this.requestHelper.redirectToFrontendSignUpPage(res, token);
+      return this.requestHelper.redirectToFrontendSignUpPatientPage(res, token);
     }
   }
 

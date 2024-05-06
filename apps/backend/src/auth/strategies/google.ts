@@ -1,16 +1,18 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { ExecutionContext, Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { AuthGuard, PassportStrategy } from '@nestjs/passport';
 import { Profile, Strategy } from 'passport-google-oauth20';
 import auth from '../../config/auth';
+import { ResponseUserDto } from '../../user/dto/response.dto';
 import { AuthService } from '../auth.service';
 import { GoogleSignInResponseDto } from '../dto/googleSignInResponse.dto';
+import { AuthRequestHelper } from '../utils/cookie-helper.service';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy) {
   constructor(
     private readonly authService: AuthService,
-    @Inject(auth.KEY) private readonly authConfig: ConfigType<typeof auth>,
+    @Inject(auth.KEY) authConfig: ConfigType<typeof auth>,
   ) {
     super({
       clientID: authConfig.GOOGLE_CLIENT_ID,
@@ -52,4 +54,18 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
   }
 }
 
-export class GoogleAuthGuard extends AuthGuard('google') {}
+@Injectable()
+export class GoogleAuthGuard extends AuthGuard('google') {
+  constructor(private readonly cookieHelper: AuthRequestHelper) {
+    super();
+  }
+
+  handleRequest<TUser = ResponseUserDto>(err: any, user: TUser, _info: any, context: ExecutionContext): TUser {
+    if (err || !user) {
+      const res = context.switchToHttp().getResponse();
+      return void this.cookieHelper.redirectToFrontendSignUpPage(res);
+    }
+
+    return user;
+  }
+}
