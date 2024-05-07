@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router';
-import ChatTab from './ChatTab';
+import ChatTab from './Components/ChatComponents/ChatTab/ChatTab';
 import { Role } from '@/dataTypes/User';
 
 type ChatTabsProps = {

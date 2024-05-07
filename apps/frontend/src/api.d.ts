@@ -303,12 +303,24 @@ export interface paths {
      */
     post: operations['ChatController_createChat'];
   };
-  '/chat/{chatId}': {
+  '/chat/{chatId}/messages': {
     /**
      * Get chat messages
-     * @description This endpoint retrieves a chat messages.
+     * @description This endpoint retrieves chat messages.
      */
     get: operations['ChatController_getChatMessages'];
+    /**
+     * create a message with uploading files
+     * @description This endpoint creates a message in a chat.
+     */
+    post: operations['ChatController_uploadFile'];
+  };
+  '/chat/{chatId}/attachments': {
+    /**
+     * Get attachments by chatId
+     * @description This endpoint retrieves attachments for a specific chat.
+     */
+    get: operations['ChatController_getAttachmentsByChatId'];
   };
 }
 
@@ -1608,6 +1620,13 @@ export interface components {
        */
       pricePerHour: number;
     };
+    CreateChatDto: {
+      /**
+       * @description Unique user id (doctor or patient).
+       * @example 123e4567-e89b-12d3-a456-426614174000
+       */
+      participantId: string;
+    };
     ResponseChatDto: {
       /**
        * @description Unique chat id.
@@ -1629,11 +1648,10 @@ export interface components {
        * @example {
        *   "firstName": "Josh",
        *   "lastName": "Doe",
-       *   "specializationName": "Therapist",
-       *   "avatarKey": {
-       *     "name": "44440105-e6d4-45e8-83f7-b1ff18aaa283.png",
-       *     "url": "https://storage.googleapis.com/bucket/44440105-e6d4-45e8-83f7-b1ff18aaa283.png"
-       *   }
+       *   "specializations": [
+       *     "Therapist"
+       *   ],
+       *   "avatarKey": "44440105-e6d4-45e8-83f7-b1ff18aaa283.png"
        * }
        */
       doctor: Record<string, never>;
@@ -1642,10 +1660,7 @@ export interface components {
        * @example {
        *   "firstName": "Josh",
        *   "lastName": "Doe",
-       *   "avatarKey": {
-       *     "name": "44440105-e6d4-45e8-83f7-b1ff18aaa283.png",
-       *     "url": "https://storage.googleapis.com/bucket/44440105-e6d4-45e8-83f7-b1ff18aaa283.png"
-       *   }
+       *   "avatarKey": "44440105-e6d4-45e8-83f7-b1ff18aaa283.png"
        * }
        */
       patient: Record<string, never>;
@@ -1658,6 +1673,29 @@ export interface components {
        * }
        */
       lastMessage: Record<string, never>;
+    };
+    GetChatsResponse: {
+      /** @description Array of response chats. */
+      chats: components['schemas']['ResponseChatDto'][];
+      /** @description Total number of chats. */
+      totalChats: number;
+    };
+    ResponseAttachmentDto: {
+      /**
+       * @description Unique attachment id.
+       * @example 349c9ffc-1427-459d-a260-1e3f186b9db2
+       */
+      id: string;
+      /**
+       * @description Unique message id.
+       * @example 349c9ffc-1427-459d-a260-1e3f186b9db2
+       */
+      messageId: string;
+      /**
+       * @description The unique file id of the file in S3 storage.
+       * @example 123e4567-e89b-12d3-a456-426614174000.jpeg
+       */
+      attachmentKey: string;
     };
     ResponseMessageDto: {
       /**
@@ -1692,13 +1730,32 @@ export interface components {
        * @example 2024-05-02T07:41:18.065Z
        */
       editedAt: string;
+      /** @description Array of attachments. */
+      attachments: components['schemas']['ResponseAttachmentDto'][];
     };
-    CreateChatDto: {
+    GetMessageResponse: {
+      /** @description Array of response messages. */
+      messages: components['schemas']['ResponseMessageDto'][];
+      /** @description Total number of messages. */
+      totalMessages: number;
+    };
+    CreateMessageDto: {
       /**
-       * @description Unique user id (doctor or patient).
-       * @example 123e4567-e89b-12d3-a456-426614174000
+       * @description Text message
+       * @example Lorem ipsum text
        */
-      participantId: string;
+      text: string;
+      /**
+       * Format: date-time
+       * @description Time when sent message
+       * @example 2024-05-04T16:34:19.971Z
+       */
+      sentAt: string;
+      /**
+       * @description Array of files
+       * @example []
+       */
+      files?: string[];
     };
   };
   responses: never;
@@ -4436,7 +4493,7 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          'application/json': components['schemas']['ResponseChatDto'];
+          'application/json': components['schemas']['GetChatsResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
@@ -4498,10 +4555,14 @@ export interface operations {
   };
   /**
    * Get chat messages
-   * @description This endpoint retrieves a chat messages.
+   * @description This endpoint retrieves chat messages.
    */
   ChatController_getChatMessages: {
     parameters: {
+      query: {
+        skip: string;
+        take: string;
+      };
       header?: {
         /** @description JWT token */
         Cookie?: string;
@@ -4518,13 +4579,92 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          'application/json': components['schemas']['ResponseMessageDto'];
+          'application/json': components['schemas']['GetMessageResponse'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
       401: {
         content: {
           'application/json': components['schemas']['UnauthorizedResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /**
+   * create a message with uploading files
+   * @description This endpoint creates a message in a chat.
+   */
+  ChatController_uploadFile: {
+    parameters: {
+      path: {
+        /**
+         * @description Unique chat id.
+         * @example 123e4567-e89b-12d3-a456-426614174000
+         */
+        chatId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        'multipart/form-data': components['schemas']['CreateMessageDto'];
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseMessageDto'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      401: {
+        content: {
+          'application/json': components['schemas']['UnauthorizedResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /**
+   * Get attachments by chatId
+   * @description This endpoint retrieves attachments for a specific chat.
+   */
+  ChatController_getAttachmentsByChatId: {
+    parameters: {
+      header?: {
+        /** @description JWT token */
+        Cookie?: string;
+      };
+      path: {
+        /**
+         * @description Unique chat id.
+         * @example 123e4567-e89b-12d3-a456-426614174000
+         */
+        chatId: string;
+      };
+    };
+    responses: {
+      /** @description Attachments retrieved successfully */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseAttachmentDto'][];
         };
       };
       /** @description Response if an error occurs while processing a request. */

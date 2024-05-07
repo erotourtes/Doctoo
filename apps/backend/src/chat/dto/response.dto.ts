@@ -15,42 +15,30 @@ export class ResponseChatDto {
     example: {
       firstName: 'Josh',
       lastName: 'Doe',
-      specializationName: 'Therapist',
-      avatarKey: {
-        name: '44440105-e6d4-45e8-83f7-b1ff18aaa283.png',
-        url: 'https://storage.googleapis.com/bucket/44440105-e6d4-45e8-83f7-b1ff18aaa283.png',
-      },
+      specializations: ['Therapist'],
+      avatarKey: '44440105-e6d4-45e8-83f7-b1ff18aaa283.png',
     },
     description: 'Doctor data',
   })
   doctor: {
     firstName: string;
     lastName: string;
-    specializationName: string;
-    avatar: {
-      name: string;
-      url: string;
-    } | null;
+    specializations: string[];
+    avatarKey: string;
   };
 
   @ApiProperty({
     example: {
       firstName: 'Josh',
       lastName: 'Doe',
-      avatarKey: {
-        name: '44440105-e6d4-45e8-83f7-b1ff18aaa283.png',
-        url: 'https://storage.googleapis.com/bucket/44440105-e6d4-45e8-83f7-b1ff18aaa283.png',
-      },
+      avatarKey: '44440105-e6d4-45e8-83f7-b1ff18aaa283.png',
     },
     description: 'Patient name',
   })
   patient: {
     firstName: string;
     lastName: string;
-    avatar: {
-      name: string;
-      url: string;
-    } | null;
+    avatarKey: string;
   };
 
   @ApiProperty({
@@ -66,4 +54,12 @@ export class ResponseChatDto {
     sender: Role;
     text: string;
   } | null;
+}
+
+export class GetChatsResponse {
+  @ApiProperty({ type: ResponseChatDto, description: 'Array of response chats.', isArray: true })
+  chats: ResponseChatDto[];
+
+  @ApiProperty({ type: 'number', description: 'Total number of chats.' })
+  totalChats: number;
 }

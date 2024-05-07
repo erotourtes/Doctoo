@@ -2,9 +2,10 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import AttachedFile from './AttachedFile';
 import '@/index.css';
+import { BrowserRouter } from 'react-router-dom';
 
 const meta = {
-  title: 'Pages/Chat/ChatComponents/AttachedFile',
+  title: 'Pages/ChatPage/ChatComponents/AttachedFiles/AttachedFile',
   component: AttachedFile,
   parameters: {
     layout: 'centered',
@@ -12,9 +13,11 @@ const meta = {
   tags: ['autodocs'],
   decorators: [
     Story => (
-      <div className='max-w-80 bg-background p-10'>
-        <Story />
-      </div>
+      <BrowserRouter>
+        <div className='max-w-80 bg-grey-4 p-10'>
+          <Story />
+        </div>
+      </BrowserRouter>
     ),
   ],
 } satisfies Meta<typeof AttachedFile>;

@@ -4,20 +4,20 @@ import type { Role } from './User';
 export interface IChatDoctor {
   firstName: string;
   lastName: string;
-  specializationName: string;
-  avatar: {
-    name: string;
-    url: string;
-  } | null;
+  specializations: string[];
+  avatarKey: string;
 }
 
 export interface IChatPatient {
   firstName: string;
   lastName: string;
-  avatar: {
-    name: string;
-    url: string;
-  } | null;
+  avatarKey: string;
+}
+
+export interface LastMessage {
+  sentAt: Date;
+  sender: Role;
+  text: string;
 }
 
 export interface IChat {
@@ -26,11 +26,12 @@ export interface IChat {
   patientId: string;
   doctor: IChatDoctor;
   patient: IChatPatient;
-  lastMessage: {
-    sentAt: Date;
-    sender: Role;
-    text: string;
-  } | null;
+  lastMessage: LastMessage | null;
+}
+
+export interface GetChatsResponse {
+  chats: IChat[];
+  totalChats: number;
 }
 
 export interface IMessage {
@@ -41,6 +42,17 @@ export interface IMessage {
   text: string;
   editedAt: Date;
   attachments: IAttachment[];
+}
+
+export interface GetMessagesResponse {
+  messages: IMessage[];
+  totalMessages: number;
+}
+
+export interface IAttachment {
+  id: string;
+  messageId: string;
+  attachmentKey: string;
 }
 
 export interface IAttachment {}

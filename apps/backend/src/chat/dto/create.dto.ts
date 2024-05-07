@@ -1,19 +1,28 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+
+export type TCreateMessage = {
+  chatId: string;
+  sender: Role;
+  text: string;
+  sentAt?: Date;
+  files?: Express.Multer.File[];
+};
 
 export class CreateMessageDto {
   @IsNotEmpty()
   @IsString()
-  readonly chatId: string;
-
-  @IsNotEmpty()
-  @IsString()
-  readonly sender: Role;
-
-  @IsNotEmpty()
-  @IsString()
+  @ApiProperty({ example: 'Lorem ipsum text', description: 'Text message' })
   readonly text: string;
+
+  @IsOptional()
+  @IsDateString()
+  @ApiProperty({ example: '2024-05-05T22:18:13.234Z', description: 'Time when sent message' })
+  readonly sentAt?: Date;
+
+  @ApiProperty({ example: [], description: 'Array of files', required: false, isArray: true })
+  readonly files: Express.Multer.File[];
 }
 
 export class CreateChatDto {

@@ -2,9 +2,10 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import MessageItem from './Message';
 import '@/index.css';
+import { BrowserRouter } from 'react-router-dom';
 
 const meta = {
-  title: 'Pages/Chat/ChatComponents/MessageItem',
+  title: 'Pages/ChatPage/ChatComponents/MessageItem',
   component: MessageItem,
   parameters: {
     layout: 'centered',
@@ -12,9 +13,11 @@ const meta = {
   tags: ['autodocs'],
   decorators: [
     Story => (
-      <div className='bg-background p-10'>
-        <Story />
-      </div>
+      <BrowserRouter>
+        <div className='bg-background p-10'>
+          <Story />
+        </div>
+      </BrowserRouter>
     ),
   ],
 } satisfies Meta<typeof MessageItem>;
@@ -36,5 +39,20 @@ export const MessageFromMe: Story = {
     sender: 'me',
     text: 'Hi, I need some help with my results.',
     sentAt: new Date(),
+  },
+};
+
+export const MessageWithAttachment: Story = {
+  args: {
+    sender: 'participant',
+    text: 'Hi, I need some help with my results.',
+    sentAt: new Date(),
+    attaches: [
+      {
+        attachmentKey: 'Results_James_Anderson.pdf',
+        id: 'uuid-attachment-1',
+        messageId: 'uuid-message-1',
+      },
+    ],
   },
 };

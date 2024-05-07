@@ -15,20 +15,14 @@ const mockChats: IChat[] = [
     patient: {
       firstName: 'John',
       lastName: 'Doe',
-      avatar: {
-        name: 'john.doe.png',
-        url: 'https://thispersondoesnotexist.com',
-      },
+      avatarKey: 'john.doe.png',
     },
     doctorId: '2',
     doctor: {
       firstName: 'Jane',
       lastName: 'Doe',
-      specializationName: 'Pediatrics',
-      avatar: {
-        name: 'jane.doe.png',
-        url: 'https://i.pravatar.cc/300',
-      },
+      specializations: ['Pediatrics'],
+      avatarKey: 'jane.doe.png',
     },
     lastMessage: {
       sender: Role.PATIENT,
@@ -42,20 +36,14 @@ const mockChats: IChat[] = [
     patient: {
       firstName: 'Bob',
       lastName: 'Smith',
-      avatar: {
-        name: 'bob.smith.png',
-        url: 'https://thispersondoesnotexist.com',
-      },
+      avatarKey: 'bob.smith.png',
     },
     doctorId: '4',
     doctor: {
       firstName: 'Alice',
       lastName: 'Smith',
-      specializationName: 'Pediatrics',
-      avatar: {
-        name: 'alice.smith.png',
-        url: 'https://thispersondoesnotexist.com',
-      },
+      specializations: ['Pediatrics'],
+      avatarKey: 'alice.smith.png',
     },
     lastMessage: {
       sender: Role.PATIENT,
@@ -66,7 +54,7 @@ const mockChats: IChat[] = [
 ];
 
 const meta = {
-  title: 'Pages/Chat/ChatComponents/ChatList',
+  title: 'Pages/ChatPage/ChatComponents/ChatList/ChatList',
   component: ChatList,
   parameters: {
     layout: 'centered',

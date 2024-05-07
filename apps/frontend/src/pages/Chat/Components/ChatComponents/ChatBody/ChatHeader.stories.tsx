@@ -9,23 +9,17 @@ import { store } from '@/app/store';
 const mockDoctorParticipant: IChatDoctor = {
   firstName: 'Jane',
   lastName: 'Doe',
-  specializationName: 'Pediatrics',
-  avatar: {
-    name: 'jane.doe.png',
-    url: 'https://thispersondoesnotexist.com',
-  },
+  specializations: ['Pediatrics'],
+  avatarKey: 'jane.doe.png',
 };
 const mockPatientParticipant: IChatPatient = {
   firstName: 'John',
   lastName: 'Doe',
-  avatar: {
-    name: 'john.doe.png',
-    url: 'https://thispersondoesnotexist.com',
-  },
+  avatarKey: 'john.doe.png',
 };
 
 const meta = {
-  title: 'Pages/Chat/ChatComponents/ChatHeader',
+  title: 'Pages/ChatPage/ChatComponents/ChatHeader',
   component: ChatHeader,
   parameters: {
     layout: 'centered',
@@ -57,11 +51,5 @@ export const Default: Story = {
 export const PatientParticipant: Story = {
   args: {
     participant: mockPatientParticipant,
-  },
-};
-
-export const WhenParticipantEmpty: Story = {
-  args: {
-    participant: undefined,
   },
 };

@@ -7,6 +7,7 @@ import * as cookieParser from 'cookie-parser';
 import * as swaggerStats from 'swagger-stats';
 import { AppModule } from './app/app.module';
 import { LoggerInterceptor } from './app-logger/logger.interceptor';
+import { RedisIoAdapter } from './adapter/redis.adapter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -25,6 +26,11 @@ async function bootstrap() {
       },
     }),
   );
+
+  const redisIoAdapter = new RedisIoAdapter(app);
+  await redisIoAdapter.connectToRedis();
+
+  app.useWebSocketAdapter(redisIoAdapter);
 
   app.enableCors({ origin: true, credentials: true });
   app.use(cookieParser());

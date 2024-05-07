@@ -1,10 +1,11 @@
 import { openChat } from '@/app/chat/ChatSlice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { Icon } from '@/components/UI';
 import type { IChat, IChatDoctor, IChatPatient } from '@/dataTypes/Chat';
 import { Role } from '@/dataTypes/User';
 import { cn } from '@/utils/cn';
 import DayJS from 'dayjs';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 type ChatItemProps = {
   chat: IChat;
@@ -13,6 +14,7 @@ type ChatItemProps = {
 
 const ChatItem = ({ chat, active = false }: ChatItemProps) => {
   const dispatch = useAppDispatch();
+  const [imageLoaded, setImageLoaded] = useState(true);
 
   const user = useAppSelector(state => state.user.data);
   const openedChat = useAppSelector(state => state.chat.openedChat);
@@ -41,7 +43,17 @@ const ChatItem = ({ chat, active = false }: ChatItemProps) => {
       )}
     >
       <div className='avatar size-8 shrink-0 overflow-hidden rounded-lg'>
-        {participant.avatar && <img src={participant.avatar.url} alt={participant.avatar.name} />}
+        {participant.avatarKey && imageLoaded ? (
+          <img
+            src={`${import.meta.env.VITE_S3_BASE_URL}/${participant.avatarKey}`}
+            alt={participant.avatarKey}
+            className='size-full object-cover'
+            onLoad={() => setImageLoaded(true)}
+            onError={() => setImageLoaded(false)}
+          />
+        ) : (
+          <Icon variant='account' className='size-full text-main' />
+        )}
       </div>
       <div className='flex flex-1 items-start gap-2'>
         <div className='grid flex-1 gap-1'>

@@ -23,6 +23,9 @@ importers:
       '@nestjs-modules/mailer':
         specifier: 1.11.2
         version: 1.11.2(@nestjs/common@10.3.7(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.3.7(@nestjs/common@10.3.7(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.3.7)(@nestjs/websockets@10.3.8)(reflect-metadata@0.2.2)(rxjs@7.8.1))(nodemailer@6.9.13)
+      '@nestjs/cache-manager':
+        specifier: 2.2.2
+        version: 2.2.2(@nestjs/common@10.3.7(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.3.7(@nestjs/common@10.3.7(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.3.7)(@nestjs/websockets@10.3.8)(reflect-metadata@0.2.2)(rxjs@7.8.1))(cache-manager@5.5.2)(rxjs@7.8.1)
       '@nestjs/common':
         specifier: 10.3.7
         version: 10.3.7(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
@@ -56,9 +59,18 @@ importers:
       '@prisma/client':
         specifier: 5.12.1
         version: 5.12.1(prisma@5.12.1)
+      '@socket.io/redis-adapter':
+        specifier: 8.3.0
+        version: 8.3.0(socket.io-adapter@2.5.4)
       bcrypt:
         specifier: 5.1.1
         version: 5.1.1
+      cache-manager:
+        specifier: 5.5.2
+        version: 5.5.2
+      cache-manager-redis-store:
+        specifier: '2'
+        version: 2.0.0
       class-transformer:
         specifier: 0.5.1
         version: 0.5.1
@@ -89,6 +101,9 @@ importers:
       passport-local:
         specifier: 1.0.0
         version: 1.0.0
+      redis:
+        specifier: 4.6.13
+        version: 4.6.13
       reflect-metadata:
         specifier: 0.2.2
         version: 0.2.2
@@ -117,6 +132,9 @@ importers:
       '@types/bcrypt':
         specifier: 5.0.2
         version: 5.0.2
+      '@types/cache-manager-redis-store':
+        specifier: '2'
+        version: 2.0.4
       '@types/cookie-parser':
         specifier: 1.4.7
         version: 1.4.7
@@ -1683,6 +1701,14 @@ packages:
       '@nestjs/core': '>=7.0.9'
       nodemailer: '>=6.4.6'
 
+  '@nestjs/cache-manager@2.2.2':
+    resolution: {integrity: sha512-+n7rpU1QABeW2WV17Dl1vZCG3vWjJU1MaamWgZvbGxYE9EeCM0lVLfw3z7acgDTNwOy+K68xuQPoIMxD0bhjlA==}
+    peerDependencies:
+      '@nestjs/common': ^9.0.0 || ^10.0.0
+      '@nestjs/core': ^9.0.0 || ^10.0.0
+      cache-manager: <=5
+      rxjs: ^7.0.0
+
   '@nestjs/cli@10.3.2':
     resolution: {integrity: sha512-aWmD1GLluWrbuC4a1Iz/XBk5p74Uj6nIVZj6Ov03JbTfgtWqGFLtXuMetvzMiHxfrHehx/myt2iKAPRhKdZvTg==}
     engines: {node: '>= 16.14'}
@@ -1937,6 +1963,35 @@ packages:
   '@react-pdf/types@2.5.0':
     resolution: {integrity: sha512-XsVRkt0hQ60I4e3leAVt+aZR3KJCaJd179BfJHAv4F4x6Vq3yqkry8lcbUWKGKDw1j3/8sW4FsgGR41SFvsG9A==}
 
+  '@redis/bloom@1.2.0':
+    resolution: {integrity: sha512-HG2DFjYKbpNmVXsa0keLHp/3leGJz1mjh09f2RLGGLQZzSHpkmZWuwJbAvo3QcRY8p80m5+ZdXZdYOSBLlp7Cg==}
+    peerDependencies:
+      '@redis/client': ^1.0.0
+
+  '@redis/client@1.5.14':
+    resolution: {integrity: sha512-YGn0GqsRBFUQxklhY7v562VMOP0DcmlrHHs3IV1mFE3cbxe31IITUkqhBcIhVSI/2JqtWAJXg5mjV4aU+zD0HA==}
+    engines: {node: '>=14'}
+
+  '@redis/graph@1.1.1':
+    resolution: {integrity: sha512-FEMTcTHZozZciLRl6GiiIB4zGm5z5F3F6a6FZCyrfxdKOhFlGkiAqlexWMBzCi4DcRoyiOsuLfW+cjlGWyExOw==}
+    peerDependencies:
+      '@redis/client': ^1.0.0
+
+  '@redis/json@1.0.6':
+    resolution: {integrity: sha512-rcZO3bfQbm2zPRpqo82XbW8zg4G/w4W3tI7X8Mqleq9goQjAGLL7q/1n1ZX4dXEAmORVZ4s1+uKLaUOg7LrUhw==}
+    peerDependencies:
+      '@redis/client': ^1.0.0
+
+  '@redis/search@1.1.6':
+    resolution: {integrity: sha512-mZXCxbTYKBQ3M2lZnEddwEAks0Kc7nauire8q20oA0oA/LoA+E/b5Y5KZn232ztPb1FkIGqo12vh3Lf+Vw5iTw==}
+    peerDependencies:
+      '@redis/client': ^1.0.0
+
+  '@redis/time-series@1.0.5':
+    resolution: {integrity: sha512-IFjIgTusQym2B5IZJG3XKr5llka7ey84fw/NOYqESP5WUfQs9zz1ww/9+qoz4ka/S6KcGBodzlCeZ5UImKbscg==}
+    peerDependencies:
+      '@redis/client': ^1.0.0
+
   '@reduxjs/toolkit@2.2.3':
     resolution: {integrity: sha512-76dll9EnJXg4EVcI5YNxZA/9hSAmZsFqzMmNRHvIlzw2WS/twfcVX3ysYrWGJMClwEmChQFC4yRq74tn6fdzRA==}
     peerDependencies:
@@ -2067,6 +2122,12 @@ packages:
 
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
+
+  '@socket.io/redis-adapter@8.3.0':
+    resolution: {integrity: sha512-ly0cra+48hDmChxmIpnESKrc94LjRL80TEmZVscuQ/WWkRP81nNj8W8cCGMqbI4L6NCuAaPRSzZF1a9GlAxxnA==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      socket.io-adapter: ^2.5.4
 
   '@storybook/addon-actions@8.0.8':
     resolution: {integrity: sha512-F3qpN0n53d058EroW1A2IlzrsFNR5p2srLY4FmXB80nxAKV8oqoDI4jp15zYlf8ThcJoQl36plT8gx3r1BpANA==}
@@ -2423,6 +2484,12 @@ packages:
   '@types/body-parser@1.19.5':
     resolution: {integrity: sha512-fB3Zu92ucau0iQ0JMCFQE7b/dv8Ot07NI3KaZIkIUNXq82k4eBAqUaneXfleGY9JWskeS9y+u0nXMyspcuQrCg==}
 
+  '@types/cache-manager-redis-store@2.0.4':
+    resolution: {integrity: sha512-EG4ac1KsUr07uv6N/O0X1OaQBNVKShVUxn+GwJQQpUkTEi4+KJl6yvqfwc4uTPT1+pwfKRgQhCoHQQCd/ObkZQ==}
+
+  '@types/cache-manager@4.0.6':
+    resolution: {integrity: sha512-8qL93MF05/xrzFm/LSPtzNEOE1eQF3VwGHAcQEylgp5hDSTe41jtFwbSYAPfyYcVa28y1vYSjIt0c1fLLUiC/Q==}
+
   '@types/connect@3.4.38':
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
 
@@ -2584,6 +2651,9 @@ packages:
 
   '@types/react@18.2.79':
     resolution: {integrity: sha512-RwGAGXPl9kSXwdNTafkOEuFrTBD5SA2B3iEB96xi8+xu5ddUa/cpvyVCSNn+asgLCTHkb5ZxN8gbuibYJi4s1w==}
+
+  '@types/redis@2.8.32':
+    resolution: {integrity: sha512-7jkMKxcGq9p242exlbsVzuJb57KqHRhNl4dHoQu2Y5v9bCAbtIXXH0R3HleSQW4CTOqpHIYUW3t6tpUj4BVQ+w==}
 
   '@types/resolve@1.20.6':
     resolution: {integrity: sha512-A4STmOXPhMUtHH+S6ymgE2GiBSMqf4oTvcQZMcHzokuTLVYzXTB8ttjcgxOVaAp2lGwEdzZ0J+cRbbeevQj1UQ==}
@@ -3295,6 +3365,13 @@ packages:
     resolution: {integrity: sha512-b6Ilus+c3RrdDk+JhLKUAQfzzgLEPy6wcXqS7f/xe1EETvsDP6GORG7SFuOs6cID5YkqchW/LXZbX5bc8j7ZcQ==}
     engines: {node: '>=8'}
 
+  cache-manager-redis-store@2.0.0:
+    resolution: {integrity: sha512-bWLWlUg6nCYHiJLCCYxY2MgvwvKnvlWwrbuynrzpjEIhfArD2GC9LtutIHFEPeyGVQN6C+WEw+P3r+BFBwhswg==}
+    engines: {node: '>= 8.3'}
+
+  cache-manager@5.5.2:
+    resolution: {integrity: sha512-HozSRPCBB26O1ZVIzX8GjauYMoZOpWcArqRIFlPKr+Mm3o+p/6VcHxRt8ia0F/tMwZdKxpHG0M+Am5Qh9FmfKw==}
+
   call-bind@1.0.7:
     resolution: {integrity: sha512-GHTSNSYICQ7scH7sZ+M2rFopRoLh8t2bLSW6BbgrtLsahOIB5iyAVJf9GjWK3cYTDaMj4XdBpM1cA6pIS0Kv2w==}
     engines: {node: '>= 0.4'}
@@ -3455,6 +3532,10 @@ packages:
   clsx@2.1.0:
     resolution: {integrity: sha512-m3iNNWpd9rl3jvvcBnu70ylMdrXt8Vlq4HYadnU5fwcOtvkSQWPmj7amUcDT2qYI7risszBjI5AUIUox9D16pg==}
     engines: {node: '>=6'}
+
+  cluster-key-slot@1.1.2:
+    resolution: {integrity: sha512-RMr0FhtfXemyinomL4hrWcYJxmX6deFdCxpJzhDttxgO1+bcCnkk+9drydLVDmAMG7NE6aN/fl4F7ucU/90gAA==}
+    engines: {node: '>=0.10.0'}
 
   co@4.6.0:
     resolution: {integrity: sha512-QVb0dM5HvG+uaxitm8wONl7jltx8dqhfU33DcqtOZcLSVIKSDDLDi7+0LbAKiyI8hD9u42m2YxXSkMGWThaecQ==}
@@ -3770,6 +3851,10 @@ packages:
 
   delegates@1.0.0:
     resolution: {integrity: sha512-bd2L678uiWATM6m5Z1VzNCErI3jiGzt6HGY8OVICs40JQq/HALfbyNJmp0UDakEY4pMMaN0Ly5om/B1VI/+xfQ==}
+
+  denque@1.5.1:
+    resolution: {integrity: sha512-XwE+iZ4D6ZUB7mfYRMb5wByE8L74HCn30FBN7sWnXksWc1LO1bPDl67pBR9o/kC4z/xSNAwkMYcGgqDV3BE3Hw==}
+    engines: {node: '>=0.10'}
 
   depd@2.0.0:
     resolution: {integrity: sha512-g7nH6P6dyDioJogAAGprGpCtVImJhpPk/roCzdb3fIh61/s/nPsfR6onyMwkCAR/OlC3yBC0lESvUoQEAssIrw==}
@@ -4248,6 +4333,9 @@ packages:
   eventemitter2@6.4.9:
     resolution: {integrity: sha512-JEPTiaOt9f04oa6NOkc4aH+nVp5I3wEjpHbIPqfgCdD5v5bUzy7xQqwcVO2aDQgOWhI28da57HksMrzK9HlRxg==}
 
+  eventemitter3@5.0.1:
+    resolution: {integrity: sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA==}
+
   events@3.3.0:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
     engines: {node: '>=0.8.x'}
@@ -4502,6 +4590,10 @@ packages:
   gauge@3.0.2:
     resolution: {integrity: sha512-+5J6MS/5XksCuXq++uFRsnUd7Ovu1XenbeuIuNRJxYWjgQbPuFhT14lAvsWfqfAmnwluf1OwMjz39HjfLPci0Q==}
     engines: {node: '>=10'}
+
+  generic-pool@3.9.0:
+    resolution: {integrity: sha512-hymDOu5B53XvN4QT9dBmZxPX4CWhBPPLguTZ9MMFeFa/Kg0xWVfylOVNlJji/E7yTZWFd/q9GO5TxDLq156D7g==}
+    engines: {node: '>= 4'}
 
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
@@ -5425,6 +5517,9 @@ packages:
     resolution: {integrity: sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw==}
     engines: {node: '>=10'}
 
+  lodash.clonedeep@4.5.0:
+    resolution: {integrity: sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==}
+
   lodash.debounce@4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
 
@@ -5477,6 +5572,10 @@ packages:
 
   lru-cache@10.2.1:
     resolution: {integrity: sha512-tS24spDe/zXhWbNPErCHs/AGOzbKGHT+ybSBqmdLm8WZ1xXLWvH8Qn71QPAlqVhd0qUTWjy+Kl9JmISgDdEjsA==}
+    engines: {node: 14 || >=16.14}
+
+  lru-cache@10.2.2:
+    resolution: {integrity: sha512-9hp3Vp2/hFQUiIwKo8XCeFVnrg8Pk3TYNPIR7tJADKi5YfcF7vEaK7avFHTlSy3kOKYaJQaalfEo6YuXdceBOQ==}
     engines: {node: 14 || >=16.14}
 
   lru-cache@5.1.1:
@@ -5875,6 +5974,9 @@ packages:
 
   normalize-svg-path@1.1.0:
     resolution: {integrity: sha512-r9KHKG2UUeB5LoTouwDzBy2VxXlHsiM6fyLQvnJa0S5hrhzqElH/CH7TUGhT1fVvIYBIKf3OpY4YJ4CK+iaqHg==}
+
+  notepack.io@3.0.1:
+    resolution: {integrity: sha512-TKC/8zH5pXIAMVQio2TvVDTtPRX+DJPHDqjRbxogtFiByHyzKmy96RA0JtCQJ+WouyyL4A10xomQzgbUT+1jCg==}
 
   npm-run-path@2.0.2:
     resolution: {integrity: sha512-lJxZYlT4DW/bRUtFh1MQIWqmLwQfAxnqWG4HhEdjMlkrJYnJn0Jrr2u3mgxqaWsdiBc76TYkTG/mhrnYTuzfHw==}
@@ -6366,6 +6468,10 @@ packages:
     resolution: {integrity: sha512-on3h1iXb04QFLLThrmVYg1SChBQ9N1c+nKAjebBjokBqipddH3uxmOUcEkTnzmJ8Jh/5TSUnUqS40i2QB2dJHQ==}
     engines: {node: ^16 || ^18 || >=20}
 
+  promise-coalesce@1.1.2:
+    resolution: {integrity: sha512-zLaJ9b8hnC564fnJH6NFSOGZYYdzrAJn2JUUIwzoQb32fG2QAakpDNM+CZo1km6keXkRXRM+hml1BFAPVnPkxg==}
+    engines: {node: '>=16'}
+
   promise@7.3.1:
     resolution: {integrity: sha512-nolQXZ/4L+bP/UGlkfaIujX9BKxGwmQ9OT4mOt5yvy8iK1h3wqTEJCijzGANTCCl9nWjY41juyAn2K3Q1hLLTg==}
 
@@ -6613,6 +6719,24 @@ packages:
   redent@3.0.0:
     resolution: {integrity: sha512-6tDA8g98We0zd0GvVeMT9arEOnTw9qM03L9cJXaCjrip1OO764RDBLBfrB4cwzNGDj5OA5ioymC9GkizgWJDUg==}
     engines: {node: '>=8'}
+
+  redis-commands@1.7.0:
+    resolution: {integrity: sha512-nJWqw3bTFy21hX/CPKHth6sfhZbdiHP6bTawSgQBlKOVRG7EZkfHbbHwQJnrE4vsQf0CMNE+3gJ4Fmm16vdVlQ==}
+
+  redis-errors@1.2.0:
+    resolution: {integrity: sha512-1qny3OExCf0UvUV/5wpYKf2YwPcOqXzkwKKSmKHiE6ZMQs5heeE/c8eXK+PNllPvmjgAbfnsbpkGZWy8cBpn9w==}
+    engines: {node: '>=4'}
+
+  redis-parser@3.0.0:
+    resolution: {integrity: sha512-DJnGAeenTdpMEH6uAJRK/uiyEIH9WVsUmoLwzudwGJUwZPp80PDBWPHXSAGNPwNvIXAbe7MSUB1zQFugFml66A==}
+    engines: {node: '>=4'}
+
+  redis@3.1.2:
+    resolution: {integrity: sha512-grn5KoZLr/qrRQVwoSkmzdbw6pwF+/rwODtrOr6vuBRiR/f3rjSTGupbF90Zpqm2oenix8Do6RV7pYEkGwlKkw==}
+    engines: {node: '>=10'}
+
+  redis@4.6.13:
+    resolution: {integrity: sha512-MHgkS4B+sPjCXpf+HfdetBwbRz6vCtsceTmw1pHNYJAsYxrfpOP6dz+piJWGos8wqG7qb3vj/Rrc5qOlmInUuA==}
 
   redux-thunk@3.1.0:
     resolution: {integrity: sha512-NW2r5T6ksUKXCabzhL9z+h206HQw/NJkcLm1GPImRQ8IzfXwRGqjVhKJGauHirT0DAuyy6hjdnMZaRoAcy0Klw==}
@@ -7474,6 +7598,10 @@ packages:
 
   uid2@0.0.4:
     resolution: {integrity: sha512-IevTus0SbGwQzYh3+fRsAMTVVPOoIVufzacXcHPmdlle1jUpq7BRL+mw3dgeLanvGZdwwbWhRV6XrcFNdBmjWA==}
+
+  uid2@1.0.0:
+    resolution: {integrity: sha512-+I6aJUv63YAcY9n4mQreLUt0d4lvwkkopDNmpomkAUz0fAkEMV9pRWxN0EjhW1YfRhcuyHg2v3mwddCDW1+LFQ==}
+    engines: {node: '>= 4.0.0'}
 
   uid@2.0.2:
     resolution: {integrity: sha512-u3xV3X7uzvi5b1MncmZo3i2Aw222Zk1keqLA1YkHldREkAhAqi65wuPfe7lHx8H/Wzy+8CE7S7uS3jekIM5s8g==}
@@ -9471,6 +9599,13 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
+  '@nestjs/cache-manager@2.2.2(@nestjs/common@10.3.7(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.3.7(@nestjs/common@10.3.7(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.3.7)(@nestjs/websockets@10.3.8)(reflect-metadata@0.2.2)(rxjs@7.8.1))(cache-manager@5.5.2)(rxjs@7.8.1)':
+    dependencies:
+      '@nestjs/common': 10.3.7(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      '@nestjs/core': 10.3.7(@nestjs/common@10.3.7(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.3.7)(@nestjs/websockets@10.3.8)(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      cache-manager: 5.5.2
+      rxjs: 7.8.1
+
   '@nestjs/cli@10.3.2':
     dependencies:
       '@angular-devkit/core': 17.1.2(chokidar@3.6.0)
@@ -9823,6 +9958,32 @@ snapshots:
 
   '@react-pdf/types@2.5.0': {}
 
+  '@redis/bloom@1.2.0(@redis/client@1.5.14)':
+    dependencies:
+      '@redis/client': 1.5.14
+
+  '@redis/client@1.5.14':
+    dependencies:
+      cluster-key-slot: 1.1.2
+      generic-pool: 3.9.0
+      yallist: 4.0.0
+
+  '@redis/graph@1.1.1(@redis/client@1.5.14)':
+    dependencies:
+      '@redis/client': 1.5.14
+
+  '@redis/json@1.0.6(@redis/client@1.5.14)':
+    dependencies:
+      '@redis/client': 1.5.14
+
+  '@redis/search@1.1.6(@redis/client@1.5.14)':
+    dependencies:
+      '@redis/client': 1.5.14
+
+  '@redis/time-series@1.0.5(@redis/client@1.5.14)':
+    dependencies:
+      '@redis/client': 1.5.14
+
   '@reduxjs/toolkit@2.2.3(react-redux@9.1.1(@types/react@18.2.79)(react@18.2.0)(redux@5.0.1))(react@18.2.0)':
     dependencies:
       immer: 10.0.4
@@ -9917,6 +10078,15 @@ snapshots:
       '@sinonjs/commons': 3.0.1
 
   '@socket.io/component-emitter@3.1.2': {}
+
+  '@socket.io/redis-adapter@8.3.0(socket.io-adapter@2.5.4)':
+    dependencies:
+      debug: 4.3.4
+      notepack.io: 3.0.1
+      socket.io-adapter: 2.5.4
+      uid2: 1.0.0
+    transitivePeerDependencies:
+      - supports-color
 
   '@storybook/addon-actions@8.0.8':
     dependencies:
@@ -10707,6 +10877,13 @@ snapshots:
       '@types/connect': 3.4.38
       '@types/node': 20.12.7
 
+  '@types/cache-manager-redis-store@2.0.4':
+    dependencies:
+      '@types/cache-manager': 4.0.6
+      '@types/redis': 2.8.32
+
+  '@types/cache-manager@4.0.6': {}
+
   '@types/connect@3.4.38':
     dependencies:
       '@types/node': 20.12.7
@@ -10887,6 +11064,10 @@ snapshots:
     dependencies:
       '@types/prop-types': 15.7.12
       csstype: 3.1.3
+
+  '@types/redis@2.8.32':
+    dependencies:
+      '@types/node': 20.12.7
 
   '@types/resolve@1.20.6': {}
 
@@ -11823,6 +12004,17 @@ snapshots:
 
   cac@6.7.14: {}
 
+  cache-manager-redis-store@2.0.0:
+    dependencies:
+      redis: 3.1.2
+
+  cache-manager@5.5.2:
+    dependencies:
+      eventemitter3: 5.0.1
+      lodash.clonedeep: 4.5.0
+      lru-cache: 10.2.2
+      promise-coalesce: 1.1.2
+
   call-bind@1.0.7:
     dependencies:
       es-define-property: 1.0.0
@@ -11986,6 +12178,8 @@ snapshots:
   clone@2.1.2: {}
 
   clsx@2.1.0: {}
+
+  cluster-key-slot@1.1.2: {}
 
   co@4.6.0: {}
 
@@ -12322,6 +12516,8 @@ snapshots:
   delayed-stream@1.0.0: {}
 
   delegates@1.0.0: {}
+
+  denque@1.5.1: {}
 
   depd@2.0.0: {}
 
@@ -12956,6 +13152,8 @@ snapshots:
 
   eventemitter2@6.4.9: {}
 
+  eventemitter3@5.0.1: {}
+
   events@3.3.0: {}
 
   execa@0.10.0:
@@ -13332,6 +13530,8 @@ snapshots:
       string-width: 4.2.3
       strip-ansi: 6.0.1
       wide-align: 1.1.5
+
+  generic-pool@3.9.0: {}
 
   gensync@1.0.0-beta.2: {}
 
@@ -14517,6 +14717,8 @@ snapshots:
     dependencies:
       p-locate: 5.0.0
 
+  lodash.clonedeep@4.5.0: {}
+
   lodash.debounce@4.0.8: {}
 
   lodash.includes@4.3.0: {}
@@ -14559,6 +14761,8 @@ snapshots:
       tslib: 2.6.2
 
   lru-cache@10.2.1: {}
+
+  lru-cache@10.2.2: {}
 
   lru-cache@5.1.1:
     dependencies:
@@ -15135,6 +15339,8 @@ snapshots:
     dependencies:
       svg-arc-to-cubic-bezier: 3.2.0
 
+  notepack.io@3.0.1: {}
+
   npm-run-path@2.0.2:
     dependencies:
       path-key: 2.0.1
@@ -15592,6 +15798,8 @@ snapshots:
       '@opentelemetry/api': 1.8.0
       tdigest: 0.1.2
 
+  promise-coalesce@1.1.2: {}
+
   promise@7.3.1:
     dependencies:
       asap: 2.0.6
@@ -15894,6 +16102,30 @@ snapshots:
     dependencies:
       indent-string: 4.0.0
       strip-indent: 3.0.0
+
+  redis-commands@1.7.0: {}
+
+  redis-errors@1.2.0: {}
+
+  redis-parser@3.0.0:
+    dependencies:
+      redis-errors: 1.2.0
+
+  redis@3.1.2:
+    dependencies:
+      denque: 1.5.1
+      redis-commands: 1.7.0
+      redis-errors: 1.2.0
+      redis-parser: 3.0.0
+
+  redis@4.6.13:
+    dependencies:
+      '@redis/bloom': 1.2.0(@redis/client@1.5.14)
+      '@redis/client': 1.5.14
+      '@redis/graph': 1.1.1(@redis/client@1.5.14)
+      '@redis/json': 1.0.6(@redis/client@1.5.14)
+      '@redis/search': 1.1.6(@redis/client@1.5.14)
+      '@redis/time-series': 1.0.5(@redis/client@1.5.14)
 
   redux-thunk@3.1.0(redux@5.0.1):
     dependencies:
@@ -16850,6 +17082,8 @@ snapshots:
   uglify-js@3.17.4: {}
 
   uid2@0.0.4: {}
+
+  uid2@1.0.0: {}
 
   uid@2.0.2:
     dependencies:

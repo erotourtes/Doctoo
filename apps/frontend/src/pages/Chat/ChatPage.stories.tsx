@@ -7,7 +7,7 @@ import '@/index.css';
 import Sidemenu from '@/components/Sidemenu/Sidemenu';
 
 const meta: Meta<typeof ChatPage> = {
-  title: 'Pages/Chat/ChatPage',
+  title: 'Pages/ChatPage/ChatPage',
   component: ChatPage,
   parameters: {
     layout: 'fullscreen',

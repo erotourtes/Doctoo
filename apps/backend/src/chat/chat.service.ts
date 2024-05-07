@@ -1,47 +1,36 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Chat, ChatMessage, Role } from '@prisma/client';
-import { CreateMessageDto } from './dto/create.dto';
 import { ResponseChatDto } from './dto/response.dto';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { MinioService } from '../minio/minio.service';
 import { ChatCreatedEvent } from './events/chat-created.event';
+import { ResponseMessageDto } from './dto/responseMessage.dto';
+import { ResponseAttachmentDto } from './dto/responseMessageAttachment.dto';
+import { TCreateMessage } from './dto/create.dto';
 
 @Injectable()
 export class ChatService {
   constructor(
     private prismaService: PrismaService,
-    private eventEmitter: EventEmitter2,
     private readonly minioService: MinioService,
   ) {}
 
-  @OnEvent('chat.created')
-  async createChatEvent(chatCreatedEvent: ChatCreatedEvent) {
-    const isExistsChat = await this.isExistsChatByDoctorAndPatient(
-      chatCreatedEvent.patientId,
-      chatCreatedEvent.doctorId,
-    );
+  eventEmitter: EventEmitter2 = new EventEmitter2();
 
-    if (!isExistsChat) {
-      this.prismaService.chat.create({
-        data: {
-          patientId: chatCreatedEvent.patientId,
-          doctorId: chatCreatedEvent.doctorId,
-        },
-      });
-    }
+  @OnEvent('chat.create')
+  async createChatEvent(chatCreatedEvent: ChatCreatedEvent) {
+    await this.createChat(chatCreatedEvent.patientId, chatCreatedEvent.doctorId);
   }
 
   async createChat(patientId: string, doctorId: string): Promise<ResponseChatDto> {
-    const isExistsChat = this.isExistsChatByDoctorAndPatient(patientId, doctorId);
-    if (isExistsChat) {
-      throw new ConflictException('Chat exists');
+    const existsChat = await this.isExistsChatByDoctorAndPatient(patientId, doctorId);
+    if (existsChat) {
+      throw new ConflictException('Chat already exists');
     }
+
     const chat = await this.prismaService.chat.create({
-      data: {
-        patientId,
-        doctorId,
-      },
+      data: { patientId, doctorId },
       select: {
         id: true,
         doctorId: true,
@@ -57,11 +46,7 @@ export class ChatService {
             specializations: {
               take: 1,
               select: {
-                specialization: {
-                  select: {
-                    name: true,
-                  },
-                },
+                specialization: { select: { name: true } },
               },
             },
           },
@@ -80,9 +65,7 @@ export class ChatService {
         },
         messages: {
           take: 1,
-          orderBy: {
-            sentAt: 'desc',
-          },
+          orderBy: { sentAt: 'desc' },
           select: {
             sentAt: true,
             sender: true,
@@ -91,27 +74,32 @@ export class ChatService {
         },
       },
     });
-    const transformedChat = await this.transformedChat(chat);
-    // this.eventEmitter.emit('chat.created', transformedChat);
-    return transformedChat;
+
+    const formatedChat = await this.transformedChat(chat);
+
+    this.eventEmitter.emit('chat.created', formatedChat);
+    return formatedChat;
   }
 
-  async getChatsByUserId(userId: string, role: Role): Promise<ResponseChatDto[]> {
-    let where;
-    if (role === Role.PATIENT) {
-      where = {
-        patient: {
-          userId,
-        },
-      };
-    }
-    if (role === Role.DOCTOR) {
-      where = {
-        doctor: {
-          userId,
-        },
-      };
-    }
+  async getChatsByUserId(
+    userId: string,
+    role: Role,
+    skip = 0,
+    take?: number,
+  ): Promise<{ chats: ResponseChatDto[]; totalChats: number }> {
+    const where =
+      role === Role.PATIENT
+        ? {
+            patient: {
+              userId,
+            },
+          }
+        : {
+            doctor: {
+              userId,
+            },
+          };
+    const totalChats = await this.prismaService.chat.count({ where });
 
     const chats = await this.prismaService.chat.findMany({
       where,
@@ -128,13 +116,8 @@ export class ChatService {
               },
             },
             specializations: {
-              take: 1,
               select: {
-                specialization: {
-                  select: {
-                    name: true,
-                  },
-                },
+                specialization: { select: { name: true } },
               },
             },
           },
@@ -153,9 +136,7 @@ export class ChatService {
         },
         messages: {
           take: 1,
-          orderBy: {
-            sentAt: 'desc',
-          },
+          orderBy: { sentAt: 'desc' },
           select: {
             sentAt: true,
             sender: true,
@@ -163,118 +144,104 @@ export class ChatService {
           },
         },
       },
+      skip,
+      take,
     });
 
-    return this.transformedChats(chats);
+    const transformedChats = await Promise.all(chats.map(chat => this.transformedChat(chat)));
+
+    return { chats: transformedChats, totalChats };
   }
 
   async isExistsChatByDoctorAndPatient(patientId: string, doctorId: string): Promise<boolean> {
-    return this.prismaService.chat.findFirst({
-      where: {
-        patientId,
-        doctorId,
-      },
-    })
-      ? true
-      : false;
+    const chat = await this.prismaService.chat.findFirst({ where: { patientId, doctorId } });
+    return !!chat;
   }
 
   async findChatById(id: string): Promise<Chat | null> {
-    return this.prismaService.chat.findFirst({
-      where: {
-        id,
-      },
-    });
+    return this.prismaService.chat.findFirst({ where: { id } });
   }
 
-  async findChatByParticipants(patientId: string, doctorId: string): Promise<Chat | null> {
-    return this.prismaService.chat.findFirst({
-      where: {
-        OR: [
-          { patientId, doctorId },
-          { patientId: doctorId, doctorId: patientId },
-        ],
+  async getUserIdsByChatId(id: string) {
+    const chat = await this.prismaService.chat.findFirst({
+      where: { id },
+      select: {
+        doctor: {
+          select: {
+            user: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
+        patient: {
+          select: {
+            user: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
       },
     });
+    return [chat.doctor.user.id, chat.patient.user.id];
   }
 
-  async createMessage(createMessageDto: CreateMessageDto): Promise<ChatMessage> {
-    const { chatId, sender, text } = createMessageDto;
+  async createMessage(createMessageData: TCreateMessage): Promise<ResponseMessageDto> {
+    const { chatId, sender, text, sentAt, files } = createMessageData;
+    let uploadedFiles: string[] = [];
 
-    // Fetch the chat to get the current unread messages count
-    const chat = await this.prismaService.chat.findUnique({
-      where: {
-        id: chatId,
-      },
-    });
-
+    const chat = await this.prismaService.chat.findUnique({ where: { id: chatId } });
     if (!chat) {
       throw new Error('Chat not found');
     }
 
-    // Determine the recipient (doctor or patient) based on the sender
-    const isDoctor = sender === Role.DOCTOR;
-    const recipient = isDoctor ? 'missedMessagesPatient' : 'missedMessagesDoctor';
-
-    // Create the message and increment the unread messages count for the recipient
-    return this.prismaService.$transaction(async prisma => {
-      const message = await prisma.chatMessage.create({
-        data: {
-          chatId,
-          sender,
-          text,
-        },
+    const recipient = sender === Role.DOCTOR ? 'missedMessagesPatient' : 'missedMessagesDoctor';
+    const message = await this.prismaService.$transaction(async prisma => {
+      const newMessage: ResponseMessageDto = await prisma.chatMessage.create({
+        data: { chatId, sender, text, sentAt },
       });
+      await prisma.chat.update({ where: { id: chatId }, data: { [recipient]: { increment: 1 } } });
 
-      await prisma.chat.update({
-        where: {
-          id: chatId,
-        },
-        data: {
-          [recipient]: {
-            increment: 1,
-          },
-        },
-      });
-
-      return message;
+      return newMessage;
     });
+
+    if (files && files.length > 0) {
+      uploadedFiles = await Promise.all(files.map(async file => (await this.minioService.upload(file)).name));
+      message.attachments = await this.addAttachmentsByMessageId(message.id, uploadedFiles);
+    }
+
+    this.eventEmitter.emit('chat.message.create', message);
+    return message;
   }
 
-  async getChatMessages(chatId: string): Promise<ChatMessage[]> {
-    return this.prismaService.chatMessage.findMany({
-      where: {
-        chatId: chatId,
-      },
-      orderBy: {
-        sentAt: 'desc',
-      },
-      include: {
-        attachments: true,
-      },
+  async getChatMessages(
+    chatId: string,
+    skip = 0,
+    take?: number,
+  ): Promise<{ messages: ChatMessage[]; totalMessages: number }> {
+    const where = { chatId };
+    const totalMessages = await this.prismaService.chatMessage.count({ where });
+    const messages = await this.prismaService.chatMessage.findMany({
+      where,
+      orderBy: { sentAt: 'desc' },
+      include: { attachments: true },
+      skip,
+      take,
     });
+
+    return { messages, totalMessages };
   }
 
   private async transformedChat(chat: any): Promise<ResponseChatDto> {
     if (!chat) return null;
+
     const doctor = chat.doctor;
     const patient = chat.patient;
-
-    const lastMessage = chat.messages[0]
-      ? {
-          sentAt: chat.messages[0].sentAt,
-          sender: chat.messages[0].sender,
-          text: chat.messages[0].text,
-        }
-      : null;
-
-    let doctorAvatar = null;
-    let patientAvatar = null;
-
-    try {
-      doctorAvatar = await this.getAvatar(doctor.user.avatarKey);
-      patientAvatar = await this.getAvatar(patient.user.avatarKey);
-    } catch (error) {}
+    const lastMessage = chat.messages[0] ? { ...chat.messages[0] } : null;
+    const specializations = doctor.specializations.map((s: any) => s.specialization.name);
 
     return {
       id: chat.id,
@@ -282,26 +249,48 @@ export class ChatService {
       doctor: {
         firstName: doctor.user.firstName,
         lastName: doctor.user.lastName,
-        specializationName: doctor.specializations[0]?.specialization.name || null,
-        avatar: doctorAvatar,
+        specializations,
+        avatarKey: doctor.user.avatarKey,
       },
       patientId: chat.patientId,
       patient: {
         firstName: patient.user.firstName,
         lastName: patient.user.lastName,
-        avatar: patientAvatar,
+        avatarKey: patient.user.avatarKey,
       },
-      lastMessage: lastMessage,
+      lastMessage,
     };
   }
 
-  private async getAvatar(avatarKey: string) {
-    return this.minioService.getFileByName(avatarKey);
+  private async addAttachmentsByMessageId(
+    messageId: string,
+    uploadedFiles: string[],
+  ): Promise<ResponseAttachmentDto[]> {
+    const data = uploadedFiles.map(attachmentKey => ({ messageId, attachmentKey }));
+
+    await this.prismaService.messageAttachment.createMany({ data });
+
+    return this.getMessageAttachmentsByMessageId(messageId);
   }
 
-  private async transformedChats(chats: any): Promise<ResponseChatDto[]> {
-    const transformedChats = chats.map(chat => this.transformedChat(chat));
+  async getMessageAttachmentsByMessageId(messageId: string): Promise<ResponseAttachmentDto[]> {
+    return this.prismaService.messageAttachment.findMany({ where: { messageId } });
+  }
 
-    return Promise.all(transformedChats);
+  async getAttachmentsByChatId(chatId: string): Promise<ResponseAttachmentDto[]> {
+    return this.prismaService.messageAttachment.findMany({
+      where: {
+        message: {
+          chat: {
+            id: chatId,
+          },
+        },
+      },
+      orderBy: {
+        message: {
+          sentAt: 'desc',
+        },
+      },
+    });
   }
 }

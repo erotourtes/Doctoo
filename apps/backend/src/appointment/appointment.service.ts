@@ -33,7 +33,7 @@ export class AppointmentService {
     const appointment = await this.prismaService.appointment.create({ data: body });
 
     // TODO: Use event isntead of directly call payment service.
-    this.eventEmitter.emit('chat.created', new ChatCreatedEvent(body.patientId, body.doctorId));
+    this.eventEmitter.emit('chat.create', new ChatCreatedEvent(body.patientId, body.doctorId));
 
     return plainToInstance(ResponseAppointmentDto, appointment);
   }

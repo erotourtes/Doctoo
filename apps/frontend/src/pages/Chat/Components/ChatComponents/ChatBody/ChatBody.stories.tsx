@@ -1,11 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
-
-import ChatBody from './ChatBody';
 import '@/index.css';
 import type { IChat, IChatDoctor, IChatPatient, IMessage } from '@/dataTypes/Chat';
 import { Role } from '@/dataTypes/User';
 import { Provider } from 'react-redux';
 import { store } from '@/app/store';
+import ChatBody from './ChatBody';
 
 const mockChat: IChat = {
   id: '1',
@@ -13,20 +12,14 @@ const mockChat: IChat = {
   patient: {
     firstName: 'John',
     lastName: 'Doe',
-    avatar: {
-      name: 'john.doe.png',
-      url: 'https://thispersondoesnotexist.com',
-    },
+    avatarKey: 'john.doe.png',
   } as IChatPatient,
   doctorId: '2',
   doctor: {
     firstName: 'Jane',
     lastName: 'Doe',
-    specializationName: 'Pediatrics',
-    avatar: {
-      name: 'jane.doe.png',
-      url: 'https://thispersondoesnotexist.com',
-    },
+    specializations: ['Pediatrics'],
+    avatarKey: 'jane.doe.png',
   } as IChatDoctor,
   lastMessage: {
     sender: Role.DOCTOR,
@@ -57,7 +50,7 @@ const mockMessages: IMessage[] = [
 ];
 
 const meta = {
-  title: 'Pages/Chat/ChatComponents/ChatBody',
+  title: 'Pages/ChatPage/ChatComponents/ChatBody/ChatBody',
   component: ChatBody,
   parameters: {
     layout: 'fullscreen',
@@ -66,7 +59,7 @@ const meta = {
   decorators: [
     Story => (
       <Provider store={store}>
-        <div className='bg-grey-5 p-10'>
+        <div className='h-[700px] bg-grey-5 p-10'>
           <Story />
         </div>
       </Provider>
@@ -86,10 +79,11 @@ export const Default: Story = {
   },
 };
 
-export const WithoutChat: Story = {
+export const WihoutMessages: Story = {
   args: {
-    chat: null,
+    chat: mockChat,
     chatMessages: [],
+    role: Role.PATIENT,
   },
 };
 

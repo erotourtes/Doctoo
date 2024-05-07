@@ -39,7 +39,7 @@ const ChatList = ({ chats, className = '' }: ChatListProps) => {
             chats.map((chatItem: IChat, index) => {
               return (
                 <React.Fragment key={'chat' + index}>
-                  <ChatItem chat={chatItem} />
+                  <ChatItem chat={chatItem} active={openedChat?.id === chatItem.id} />
                   {index < chats.length - 1 ? <span className='block h-px bg-grey-5'></span> : null}
                 </React.Fragment>
               );

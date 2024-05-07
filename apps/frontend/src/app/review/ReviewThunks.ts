@@ -7,7 +7,7 @@ import handleError from '@/api/handleError.api';
 export const fetchReviewsByDoctor = createAsyncThunk(
   'reviews/fetch',
   async (
-    { doctorId, includeNames, skip, take }: { doctorId: string; includeNames: string; skip: string; take: string },
+    { doctorId, includeNames, skip, take }: { doctorId: string; includeNames: string; skip?: string; take?: string },
     { dispatch },
   ) => {
     try {

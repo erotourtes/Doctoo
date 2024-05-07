@@ -13,20 +13,14 @@ const mockChat: IChat = {
   patient: {
     firstName: 'John',
     lastName: 'Doe',
-    avatar: {
-      name: 'john.doe.png',
-      url: 'https://thispersondoesnotexist.com',
-    },
+    avatarKey: 'john.doe.png',
   } as IChatPatient,
   doctorId: '2',
   doctor: {
     firstName: 'Jane',
     lastName: 'Doe',
-    specializationName: 'Pediatrics',
-    avatar: {
-      name: 'jane.doe.png',
-      url: 'https://thispersondoesnotexist.com',
-    },
+    specializations: ['Pediatrics'],
+    avatarKey: 'jane.doe.png',
   } as IChatDoctor,
   lastMessage: {
     sender: Role.DOCTOR,
@@ -36,7 +30,7 @@ const mockChat: IChat = {
 };
 
 const meta = {
-  title: 'Pages/Chat/ChatComponents/ChatItem',
+  title: 'Pages/ChatPage/ChatComponents/ChatList/ChatItem',
   component: ChatItem,
   parameters: {
     layout: 'centered',

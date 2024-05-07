@@ -16,5 +16,6 @@ import { DoctorModule } from '../doctor/doctor.module';
   imports: [PassportModule, MailModule, MinioModule, GlobalJwtModule, UserModule, PatientModule, DoctorModule],
   controllers: [AuthController],
   providers: [AuthService, AuthRequestHelper, GoogleStrategy, JwtStrategy],
+  exports: [AuthService],
 })
 export class AuthModule {}

@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { AllergyModule } from 'src/allergy/allergy.module';
-import { ConditionModule } from 'src/declaration/condition/condition.module';
+import { AllergyModule } from '../allergy/allergy.module';
+import { ConditionModule } from '../declaration/condition/condition.module';
 import { AppointmentModule } from '../appointment/appointment.module';
 import { AuthModule } from '../auth/auth.module';
 import auth from '../config/auth';

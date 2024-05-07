@@ -5,7 +5,7 @@ import ChatTab from './ChatTab';
 import '@/index.css';
 
 const meta = {
-  title: 'Pages/Chat/ChatComponents/ChatTab',
+  title: 'Pages/ChatPage/ChatComponents/ChatTab',
   component: ChatTab,
   parameters: {
     layout: 'centered',

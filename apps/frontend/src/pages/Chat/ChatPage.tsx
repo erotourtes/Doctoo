@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { getChats, getMe } from '@/app/chat/ChatThunks';
 import PageHeader from '@/pages/PageHeader';
-import ChatTabs from './Components/ChatComponents/ChatTabs';
+import ChatTabs from './ChatTabs';
 import { VirtualAssistantChat } from './Components/VirtualAssistantChatComponents/VirtualAssistantChat';
 import Chat from './Components/ChatComponents/Chat';
 
@@ -28,8 +28,8 @@ const ChatPage = () => {
       <div className=''>
         <PageHeader iconVariant={'chats'} title='Chats' className='mb-0' />
       </div>
-      <div className='section grid h-full grid-rows-[auto_1fr] pt-6'>
-        <ChatTabs role={me?.role} countChats={chats.length} />
+      <div className='section flex flex-1 grid-rows-[auto_1fr] flex-col overflow-hidden pt-6'>
+        <ChatTabs role={me?.role} countChats={chats.totalChats} />
 
         {getSelected('/my') && <Chat />}
         {getSelected('/assistant') && <VirtualAssistantChat />}
