@@ -25,6 +25,22 @@ services:
     volumes:
       - postgres_prod_db:/var/lib/postgresql/data
 
+  postgres_backup:
+    restart: always
+    image: satont/postgresql-backup-s3:latest
+    environment:
+      POSTGRES_DATABASE: 'all'
+      POSTGRES_HOST: 'postgres'
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      S3_ACCESS_KEY_ID: ${MINIO_ACCESS_KEY}
+      S3_SECRET_ACCESS_KEY: ${MINIO_SECRET_KEY}
+      S3_BUCKET: ${BACKUP_BUCKET_NAME}
+      S3_REGION: ${BACKUP_BUCKET_REGION}
+      S3_ENDPOINT: ${MINIO_ENDPOINT}
+      SCHEDULE: ${BACKUP_SCHEDULE}
+      ENCRYPTION_PASSWORD: ${ENCRYPTION_PASSWORD}
+
   backend:
     restart: always
     image: registry.doctoo.org/radency/doctoo-backend:latest

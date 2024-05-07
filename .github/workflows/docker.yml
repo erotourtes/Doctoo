@@ -113,9 +113,11 @@ jobs:
           POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB=${{ secrets.POSTGRES_DB }}
 
-          # MINIO
-          MINIO_ROOT_USER=${{ secrets.MINIO_ROOT_USER }}
-          MINIO_ROOT_PASSWORD=${{ secrets.MINIO_ROOT_PASSWORD }}
+          # DATABASE BACKUP
+          BACKUP_BUCKET_NAME=${{ secrets.BACKUP_BUCKET_NAME }}
+          BACKUP_BUCKET_REGION=${{ secrets.BACKUP_BUCKET_REGION }}
+          BACKUP_SCHEDULE=${{ secrets.BACKUP_SCHEDULE }}
+          ENCRYPTION_PASSWORD=${{ secrets.ENCRYPTION_PASSWORD }}
 
           # BACKEND
           APP_NAME=${{ secrets.APP_NAME }}
