@@ -1,23 +1,26 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsDate, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
+import { TimeSlotAvailability } from './TimeSlotAvailability';
 
 export class GetDoctorScheduleQuery {
-  @ApiPropertyOptional({ required: false, description: 'Date to get unavailable time slots for.' })
+  @ApiPropertyOptional({ required: false, description: 'Date to get time slots starting from.' })
   @IsOptional()
   @IsDate()
   @Type(() => Date)
-  readonly date?: Date;
+  readonly from?: Date;
 
-  @ApiPropertyOptional({ required: false, description: 'Date to get unavailable time slots starting from.' })
+  @ApiPropertyOptional({ required: false, description: 'Date to get time slots ending before.' })
   @IsOptional()
   @IsDate()
   @Type(() => Date)
-  readonly fromDate?: Date;
+  readonly to?: Date;
 
-  @ApiPropertyOptional({ required: false, description: 'Date to get unavailable time slots starting until.' })
+  @ApiPropertyOptional({
+    required: false,
+    description: 'Used to determine which slots are needed based on their availability.',
+    enum: TimeSlotAvailability,
+  })
   @IsOptional()
-  @IsDate()
-  @Type(() => Date)
-  readonly toDate?: Date;
+  readonly slotAvailability?: TimeSlotAvailability;
 }

@@ -10,7 +10,7 @@ import {
 } from './DoctorSlice';
 import type { paths } from '../../api';
 import api from '../api';
-import type { IDoctor } from '../../dataTypes/Doctor';
+import type { DoctorSchedule, IDoctor } from '../../dataTypes/Doctor';
 
 export type GetDoctorDataPayload = {
   doctors: IDoctor[];
@@ -134,3 +134,22 @@ export const removeDoctorFromFavorites = createAsyncThunk('favorite/removed', as
   const response = await instance.delete(`/favorite/${doctorId}`);
   return response.data;
 });
+
+export type GetDoctorScheduleOptions = {
+  doctorId: string;
+  fromDate?: string | Date;
+  toDate?: string | Date;
+};
+
+export const getDoctorSchedule = createAsyncThunk<DoctorSchedule, GetDoctorScheduleOptions>(
+  'doctor/schedule',
+  async ({ doctorId, fromDate, toDate }) => {
+    const response = await instance.get(`/doctor/${doctorId}`, {
+      params: {
+        fromDate,
+        toDate,
+      },
+    });
+    return response.data;
+  },
+);

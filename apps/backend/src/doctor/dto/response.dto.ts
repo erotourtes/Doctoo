@@ -115,15 +115,15 @@ export class ResponseDoctorDto {
     description: "Doctor's schedule",
   })
   @Expose()
-  @Transform(({ obj }) => {
-    if (!obj.hasOwnProperty('doctorSchedule')) return null;
-    const schedule: { startsWorkHourUTC: number; endsWorkHourUTC: number; unavailableTimeSlots?: string[] } = {
-      startsWorkHourUTC: obj.doctorSchedule?.startsWorkHourUTC || null,
-      endsWorkHourUTC: obj.doctorSchedule?.endsWorkHourUTC || null,
-    };
-    if (obj.appointments) schedule.unavailableTimeSlots = obj.appointments.map(a => a.startedAt);
-    return schedule;
-  })
+  // @Transform(({ obj }) => {
+  //   if (!obj.hasOwnProperty('doctorSchedule')) return null;
+  //   const schedule: { startsWorkHourUTC: number; endsWorkHourUTC: number; unavailableTimeSlots?: string[] } = {
+  //     startsWorkHourUTC: obj.doctorSchedule?.startsWorkHourUTC || null,
+  //     endsWorkHourUTC: obj.doctorSchedule?.endsWorkHourUTC || null,
+  //   };
+  //   if (obj.appointments) schedule.unavailableTimeSlots = obj.appointments.map(a => a.startedAt);
+  //   return schedule;
+  // })
   readonly schedule?: ResponseDoctorScheduleDto;
 
   @Exclude()

@@ -148,6 +148,7 @@ jobs:
           FRONTEND_SIGNUP_PATH=${{ secrets.FRONTEND_SIGNUP_PATH }}
           FRONTEND_CHANGE_EMAIL_PATH=${{ secrets.FRONTEND_CHANGE_EMAIL_PATH }}
           STRIPE_API_KEY=${{ secrets.STRIPE_API_KEY }}
+          TZ=${{ secrets.TZ }}
           EOF
 
       - name: Run new Docker containers

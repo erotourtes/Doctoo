@@ -11,6 +11,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ReviewService } from '../review/review.service';
 import { UserService } from '../user/user.service';
 import { mockConfigs, mockUndefined, pipe } from '../utils/test-injection-mock';
+import { DoctorScheduleService } from './doctor-schedule.service';
+import { TimeSlotService } from './time-slot.service';
 
 describe('DoctorService', () => {
   let doctorService: DoctorService;
@@ -21,7 +23,14 @@ describe('DoctorService', () => {
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [HospitalModule, SpecializationModule, EventEmitterModule.forRoot()],
-      providers: [DoctorService, PrismaService, UserService, { provide: ReviewService, useValue: mockReviewService }],
+      providers: [
+        DoctorService,
+        PrismaService,
+        UserService,
+        DoctorScheduleService,
+        TimeSlotService,
+        { provide: ReviewService, useValue: mockReviewService },
+      ],
     })
       .useMocker(pipe(mockConfigs, mockUndefined))
       .compile();

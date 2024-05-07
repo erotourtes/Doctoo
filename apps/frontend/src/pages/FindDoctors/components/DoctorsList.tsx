@@ -7,7 +7,6 @@ import { NoResults } from './NoResults';
 import { fetchReviewsByDoctor } from '../../../app/review/ReviewThunks';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { generateDoctorTags } from '../../../utils/generateDoctorTags';
-import { generateTimeSlots } from '../../../utils/timeSlots';
 
 type DoctorsListProps = {
   doctors: IDoctor[];
@@ -59,7 +58,7 @@ export const DoctorsList = ({ doctors }: DoctorsListProps) => {
               <DoctorCard.TimeSlots
                 wrapperClassName='lg:col-span-full lg:col-start-1 lg:mt-1 lg:row-start-6 xl:col-start-3 xl:row-span-3 xl:row-start-2 xl:mt-0'
                 slotButtonClassName='lg:w-full xl:w-28'
-                timestamps={generateTimeSlots(doctor.schedule!)}
+                timestamps={doctor.schedule!.timeslots!.map(slot => new Date(slot.timestamp))}
                 onClickMore={() => {
                   setScheduleModalData(prev => ({
                     ...prev,

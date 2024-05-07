@@ -13,10 +13,15 @@ export interface Hospital {
   zipCode: number;
 }
 
+export interface TimeSlot {
+  timestamp: string;
+  available: boolean;
+}
+
 export interface DoctorSchedule {
   startsWorkHourUTC: number;
   endsWorkHourUTC: number;
-  unavailableTimeSlots?: string[];
+  timeslots?: TimeSlot[];
 }
 
 export interface IDoctor {

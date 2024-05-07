@@ -8,10 +8,11 @@ import { DoctorService } from './doctor.service';
 import { ReviewModule } from '../review/review.module';
 import { PatientModule } from '../patient/patient.module';
 import { DoctorScheduleService } from './doctor-schedule.service';
+import { TimeSlotService } from './time-slot.service';
 
 @Module({
   imports: [UserModule, HospitalModule, SpecializationModule, ReviewModule, PatientModule],
-  providers: [DoctorService, DoctorScheduleService, PrismaService],
+  providers: [DoctorService, DoctorScheduleService, PrismaService, TimeSlotService],
   controllers: [DoctorController],
   exports: [DoctorService, DoctorScheduleService],
 })

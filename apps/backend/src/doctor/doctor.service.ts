@@ -13,6 +13,8 @@ import { ReviewUpdatedEvent } from '../review/events/review-updated.event';
 import { ReviewService } from '../review/review.service';
 import { ResponseDoctorListDto } from './dto/response-list.dto';
 import { getDateWithDaysOffset, getMidnightOfDate } from '../utils/dateUtils';
+import { DoctorScheduleService } from './doctor-schedule.service';
+import { TimeSlotAvailability } from './dto/TimeSlotAvailability';
 
 @Injectable()
 export class DoctorService {
@@ -21,6 +23,7 @@ export class DoctorService {
     private readonly userService: UserService,
     private readonly hospitalService: HospitalService,
     private readonly specializationService: SpecializationService,
+    private readonly scheduleService: DoctorScheduleService,
     @Inject(forwardRef(() => ReviewService)) private readonly reviewService: ReviewService,
   ) {}
 
@@ -148,28 +151,22 @@ export class DoctorService {
         hospitals: { select: { hospital: { select: { id: true, name: true } } } },
         specializations: { select: { specialization: true } },
         _count: { select: { reviews: true } },
-        doctorSchedule: { select: { startsWorkHourUTC: true, endsWorkHourUTC: true } },
-        appointments: {
-          select: { startedAt: true },
-          where: {
-            AND: [
-              {
-                startedAt: { gte: new Date() },
-              },
-              {
-                startedAt: { lte: getDateWithDaysOffset(getMidnightOfDate(new Date()), 1) },
-              },
-            ],
-          },
-        },
       },
       where: conditions,
       skip: offset,
       take: itemsPerPage,
     });
     const count = await this.prismaService.doctor.count({ where: conditions });
+    const doctorsWithSchedule = await Promise.all(
+      doctors.map(async doctor => {
+        const schedule = await this.scheduleService.getDoctorSchedule(doctor.id, {
+          slotAvailability: TimeSlotAvailability.FREE,
+        });
+        return { ...doctor, schedule };
+      }),
+    );
 
-    return plainToInstance(ResponseDoctorListDto, { doctors, count });
+    return plainToInstance(ResponseDoctorListDto, { doctors: doctorsWithSchedule, count });
   }
 
   async getDoctor(id: string): Promise<ResponseDoctorDto> {

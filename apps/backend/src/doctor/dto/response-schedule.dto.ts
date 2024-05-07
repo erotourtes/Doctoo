@@ -1,5 +1,6 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Exclude, Expose, Transform } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
+import { Exclude, Transform, plainToInstance } from 'class-transformer';
+import { TimeSlotDto } from './time-slot.dto';
 
 export class ResponseDoctorScheduleDto {
   @ApiProperty({ example: 9, description: 'Hour in UTC the doctor starts working from.' })
@@ -8,14 +9,9 @@ export class ResponseDoctorScheduleDto {
   @ApiProperty({ example: 20, description: 'Hour in UTC the doctor works until.' })
   readonly endsWorkHourUTC: number;
 
-  @Expose()
-  @Transform(({ obj }) => obj.doctor?.appointments?.map(app => app.startedAt))
-  @ApiPropertyOptional({
-    required: false,
-    example: ['2024-05-02T12:00:00.000Z'],
-    description: 'Time slots in from of UTC time strings of slots that are not available to book.',
-  })
-  readonly unavailableTimeSlots?: string[];
+  @Transform(({ value }) => plainToInstance(TimeSlotDto, value))
+  @ApiProperty({ type: TimeSlotDto, isArray: true, description: 'Time slots for doctor.' })
+  readonly timeslots: TimeSlotDto;
 
   @Exclude()
   readonly doctor: any;

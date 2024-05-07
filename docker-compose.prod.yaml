@@ -74,6 +74,7 @@ services:
       FRONTEND_SIGNUP_PATH: ${FRONTEND_SIGNUP_PATH}
       FRONTEND_CHANGE_EMAIL_PATH: ${FRONTEND_CHANGE_EMAIL_PATH}
       STRIPE_API_KEY: ${STRIPE_API_KEY}
+      TZ: ${TZ}
     depends_on:
       - postgres
     networks:

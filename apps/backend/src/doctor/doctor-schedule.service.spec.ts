@@ -4,6 +4,7 @@ import { userStub } from '../user/user.stub';
 import { mockConfigs, mockUndefined, pipe } from '../utils/test-injection-mock';
 import { DoctorScheduleService } from './doctor-schedule.service';
 import { doctorStub } from './doctor.stub';
+import { TimeSlotService } from './time-slot.service';
 
 describe('DoctorScheduleService', () => {
   let scheduleService: DoctorScheduleService;
@@ -15,7 +16,7 @@ describe('DoctorScheduleService', () => {
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
-      providers: [DoctorScheduleService, PrismaService],
+      providers: [DoctorScheduleService, TimeSlotService, PrismaService],
     })
       .useMocker(pipe(mockConfigs, mockUndefined))
       .compile();

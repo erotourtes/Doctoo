@@ -3,13 +3,17 @@ import { CreateDoctorScheduleDto } from './dto/create-schedule.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateDoctorScheduleDto } from './dto/update-schedule.dto';
 import { GetDoctorScheduleQuery } from './dto/get-schedule.query';
-import { getDateWithDaysOffset, getMidnightOfDate } from '../utils/dateUtils';
 import { plainToInstance } from 'class-transformer';
 import { ResponseDoctorScheduleDto } from './dto/response-schedule.dto';
+import { TimeSlotService } from './time-slot.service';
+import { TimeSlotAvailability } from './dto/TimeSlotAvailability';
 
 @Injectable()
 export class DoctorScheduleService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly timeSlotService: TimeSlotService,
+  ) {}
   async createSchedule(doctorId: string, dto: CreateDoctorScheduleDto): Promise<ResponseDoctorScheduleDto> {
     const schedule = await this.prismaService.doctorSchedule.create({
       data: { ...dto, doctor: { connect: { id: doctorId } } },
@@ -18,40 +22,19 @@ export class DoctorScheduleService {
   }
 
   async getDoctorSchedule(doctorId: string, query?: GetDoctorScheduleQuery): Promise<ResponseDoctorScheduleDto> {
-    const appointmentFilters: any = {};
-    if (query?.date)
-      appointmentFilters.AND = [
-        { startedAt: { gte: query?.date } },
-        { startedAt: { lte: getDateWithDaysOffset(query?.date, 1) } },
-      ];
-    if (query?.fromDate && query?.toDate)
-      appointmentFilters.AND = [
-        { startedAt: { gte: query?.fromDate } },
-        { startedAt: { lte: getDateWithDaysOffset(query?.toDate, 1) } },
-      ];
     const schedule = await this.prismaService.doctorSchedule.findUnique({
       where: { doctorId },
       select: {
         startsWorkHourUTC: true,
         endsWorkHourUTC: true,
-        doctor: {
-          select: {
-            appointments: {
-              where: appointmentFilters.AND?.length
-                ? appointmentFilters
-                : {
-                    AND: [
-                      { startedAt: { gte: new Date() } },
-                      { startedAt: getDateWithDaysOffset(getMidnightOfDate(new Date()), 1) },
-                    ],
-                  },
-              select: { startedAt: true },
-            },
-          },
-        },
       },
     });
-    return plainToInstance(ResponseDoctorScheduleDto, schedule);
+    let timeslots = [];
+    if (query?.slotAvailability === TimeSlotAvailability.ALL)
+      timeslots = await this.timeSlotService.getTimeSlotsForDoctor(schedule, doctorId, query.from, query.to);
+    else if (query?.slotAvailability === TimeSlotAvailability.FREE)
+      timeslots = await this.timeSlotService.getNearestFreeTimeSlots(schedule, doctorId);
+    return plainToInstance(ResponseDoctorScheduleDto, { ...schedule, timeslots });
   }
 
   async updateSchedule(doctorId: string, dto: UpdateDoctorScheduleDto): Promise<ResponseDoctorScheduleDto> {

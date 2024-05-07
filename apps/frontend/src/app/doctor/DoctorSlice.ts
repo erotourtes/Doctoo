@@ -2,7 +2,12 @@ import type { RootState } from '@/app/store';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '../createAppSlice';
 import type { IDoctor } from '@/dataTypes/Doctor';
-import { addDoctorToFavorites, removeDoctorFromFavorites, type GetDoctorDataPayload } from './DoctorThunks';
+import {
+  addDoctorToFavorites,
+  getDoctorSchedule,
+  removeDoctorFromFavorites,
+  type GetDoctorDataPayload,
+} from './DoctorThunks';
 import { type components } from '../../api';
 
 interface DoctorData {
@@ -64,6 +69,10 @@ export const doctorSlice = createAppSlice({
       .addCase(removeDoctorFromFavorites.fulfilled, (state, action) => {
         const doctor = state.doctors.find(doc => doc.id === action.meta.arg);
         doctor!.isFavorite = false;
+      })
+      .addCase(getDoctorSchedule.fulfilled, (state, action) => {
+        const doctor = state.doctors.find(doc => doc.id === action.meta.arg.doctorId);
+        doctor!.schedule!.timeslots = action.payload.timeslots;
       }),
 });
 

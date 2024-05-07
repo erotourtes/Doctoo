@@ -1,13 +1,9 @@
 import dayjs from 'dayjs';
 import type { DoctorSchedule } from '../dataTypes/Doctor';
-import { generateLocalDateFromUTCHour } from './dateUtils';
 
 export function generateDoctorTags({ schedule, rating }: { schedule?: DoctorSchedule; rating?: number }) {
   const tags = [];
   if (schedule) {
-    const startsWorking = generateLocalDateFromUTCHour(schedule.startsWorkHourUTC);
-    const endsWorking = generateLocalDateFromUTCHour(schedule.endsWorkHourUTC);
-    const now = dayjs();
     const nextPossibleSlot = dayjs()
       .set('hour', dayjs().hour() + 1)
       .set('minute', 0)
@@ -15,9 +11,9 @@ export function generateDoctorTags({ schedule, rating }: { schedule?: DoctorSche
       .set('millisecond', 0)
       .toISOString();
     if (
-      startsWorking.diff(now, 'hours') <= 1 &&
-      now < endsWorking &&
-      !schedule.unavailableTimeSlots?.includes(nextPossibleSlot)
+      schedule.timeslots?.length &&
+      schedule.timeslots[0].timestamp === nextPossibleSlot &&
+      schedule.timeslots[0].available
     )
       tags.push('Available now');
   }
