@@ -117,6 +117,7 @@ jobs:
           BACKUP_BUCKET_NAME=${{ secrets.BACKUP_BUCKET_NAME }}
           BACKUP_BUCKET_REGION=${{ secrets.BACKUP_BUCKET_REGION }}
           BACKUP_SCHEDULE=${{ secrets.BACKUP_SCHEDULE }}
+          BACKUP_ENDPOINT=https://${{ secrets.MINIO_ENDPOINT }}
           ENCRYPTION_PASSWORD=${{ secrets.ENCRYPTION_PASSWORD }}
 
           # BACKEND
