@@ -14,7 +14,7 @@ import useWindowWide from '../../hooks/useWindowWide';
 
 export const FindDoctorsPage = () => {
   const mobileWidth = useWindowWide(768);
-  const [searchParams, setSearcParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [page, setPage] = useState(Number(searchParams.get('page')) || 1);
   const appointments = useAppSelector(state => state.appointment.appointments);
   const meetingsForDay = appointments.map(appointment => ({
@@ -38,7 +38,7 @@ export const FindDoctorsPage = () => {
       <Link to='/dashboard' className='mb-4 flex items-center text-sm font-medium no-underline'>
         <Icon variant='arrow-right' className='rotate-180 text-center' /> Back to Dashboard
       </Link>
-      <div className='flex flex-col gap-6 bg-background lg:flex-row'>
+      <div className='flex flex-col gap-2 bg-background lg:flex-row lg:gap-6'>
         <div className='shrink grow basis-4/5'>
           <PageHeader
             iconVariant='my-doctors'
@@ -54,9 +54,9 @@ export const FindDoctorsPage = () => {
             value={search || ''}
             setValue={value => {
               setSearch(value);
-              setSearcParams(prev => ({ ...prev, ...(value.length && { search: value }) }));
+              setSearchParams(prev => ({ ...prev, ...(value.length && { search: value }) }));
             }}
-            classNameDiv='w-full'
+            classNameDiv='w-full xl:mt-6 md:mt-4'
             className='w-full'
             placeholder={mobileWidth ? 'Search by doctor, symptom' : 'Search by doctor'}
           />
@@ -69,13 +69,13 @@ export const FindDoctorsPage = () => {
           />
           <DoctorsList doctors={doctors} />
           {doctors.length ? (
-            <div className='mt-2 flex justify-center p-2'>
+            <div className='mt-2 flex justify-center p-2 xl:mb-2'>
               <Pagination
                 currentPage={page}
                 itemsPerPage={10}
                 onClick={pageNumber => {
                   setPage(pageNumber);
-                  setSearcParams(prev => ({ ...prev, ...(pageNumber > 1 && { page: pageNumber }) }));
+                  setSearchParams(prev => ({ ...prev, ...(pageNumber > 1 && { page: pageNumber }) }));
                 }}
                 totalItems={totalCount}
                 wrapperClassName='bg-white p-2 rounded-lg space-x-3'
@@ -83,7 +83,7 @@ export const FindDoctorsPage = () => {
             </div>
           ) : null}
         </div>
-        <div>
+        <div className='mb-2 xl:mb-0'>
           <Calendar meetingsForDay={meetingsForDay} />
         </div>
       </div>

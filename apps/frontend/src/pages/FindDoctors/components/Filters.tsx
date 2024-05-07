@@ -26,27 +26,32 @@ export const Filters = ({
     dispatch(getAllHospitals());
   }, []);
   return (
-    <div className='mt-2'>
-      <div className='flex gap-1'>
+    <div className='mt-4 xl:mt-6'>
+      <div className='flex flex-wrap gap-2 xl:gap-4'>
         <OptionalSelect
           options={specializations}
           defaultOption='All doctors'
           setChosenOptions={selected => setFilters({ ...filters, specializationId: selected })}
           selectedOptions={filters.specializationId}
+          classNameWrapper='w-full lg:w-fit'
+          classNameButton='w-full lg:w-fit'
         />
         <OptionalSelect
           options={hospitals}
           defaultOption='All hospitals'
           setChosenOptions={selected => setFilters({ ...filters, hospitalId: selected })}
           selectedOptions={filters.hospitalId}
+          classNameWrapper='w-full lg:w-fit'
+          classNameButton='w-full lg:w-fit'
         />
       </div>
-      <div className='mt-2 space-x-1 space-y-1'>
+      <div className='mt-2 space-y-2'>
         {filters.hospitalId?.length
           ? filters.hospitalId?.map(id => {
               const hospital = hospitals.find(h => h.id === id);
               return (
                 <Tag
+                  className='mr-2 xl:mr-4'
                   icon
                   text={hospital!.name}
                   key={hospital?.id}
@@ -60,6 +65,7 @@ export const Filters = ({
               const specialization = specializations.find(h => h.id === id);
               return (
                 <Tag
+                  className='mr-2 xl:mr-4'
                   icon
                   text={specialization!.name}
                   key={specialization?.id}

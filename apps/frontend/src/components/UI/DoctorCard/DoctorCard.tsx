@@ -35,14 +35,15 @@ DoctorCard.PayrateLabel = PayrateLabel;
 type ImageProps = {
   url: string;
   className?: string;
+  alt?: string;
 };
 
-function Image({ url, className }: ImageProps) {
+function Image({ url, className, alt }: ImageProps) {
   return (
     <img
       src={url !== '' ? `${import.meta.env.VITE_S3_BASE_URL}/${url}` : ''}
       className={cn('col-span-1 row-span-4 aspect-square h-[112px] rounded-lg object-cover', className)}
-      alt='DOCTOR_AVATAR'
+      alt={alt || "Doctor's image"}
     />
   );
 }
@@ -51,16 +52,17 @@ type ImageWithFavoriteProps = {
   doctorId: string;
   url: string;
   isFavorite: boolean;
+  alt?: string;
 };
 
-function ImageWithFavorite({ doctorId, url, isFavorite }: ImageWithFavoriteProps) {
+function ImageWithFavorite({ doctorId, url, isFavorite, alt }: ImageWithFavoriteProps) {
   const dispatch = useAppDispatch();
   return (
     <div className='group relative col-span-1 row-span-4 aspect-square h-[112px]'>
       <img
         src={url !== '' ? `${import.meta.env.VITE_S3_BASE_URL}/${url}` : ''}
         className='aspect-square rounded-lg object-cover'
-        alt='DOCTOR_AVATAR'
+        alt={alt || "Doctor's image"}
       />
       <div className='absolute left-0 top-0 flex h-full w-full items-end justify-end rounded-lg bg-semi-transparent opacity-0 transition duration-300 group-hover:opacity-100'>
         <button
@@ -99,13 +101,18 @@ function Specializations({ specializations, className }: SpecializationsProps) {
   );
 }
 
-type TagsProps = { tags: string[]; tagClassName?: string };
+type TagsProps = { tags: string[]; tagClassName?: string; wrapperClassName?: string };
 
-function Tags({ tags, tagClassName }: TagsProps) {
+function Tags({ tags, tagClassName, wrapperClassName }: TagsProps) {
   return (
     <>
       {tags.length ? (
-        <div className='col-span-full col-start-2 row-span-1 my-1 flex flex-wrap gap-1 sm:col-span-2 sm:col-start-2 sm:px-2 md:col-span-1 md:col-start-2'>
+        <div
+          className={cn(
+            'col-span-full col-start-2 row-span-1 my-1 flex flex-wrap gap-1 sm:col-span-2 sm:col-start-2 sm:px-2 md:col-span-1 md:col-start-2',
+            wrapperClassName,
+          )}
+        >
           {tags.map((tag, i) => (
             <Tag key={i} text={tag} icon={false} className={cn('h-fit min-w-fit', tagClassName)} />
           ))}
@@ -160,9 +167,15 @@ function BookButton({ className, disabled, onClick }: BookButtonProps) {
   );
 }
 
-type TimeSlotsProps = { timestamps: string[] | Date[]; onClickSlot: (index: number) => void; onClickMore: () => void };
+type TimeSlotsProps = {
+  timestamps: string[] | Date[];
+  onClickSlot: (index: number) => void;
+  onClickMore: () => void;
+  wrapperClassName?: string;
+  slotButtonClassName?: string;
+};
 
-function TimeSlots({ timestamps, onClickSlot, onClickMore }: TimeSlotsProps) {
+function TimeSlots({ timestamps, onClickSlot, onClickMore, wrapperClassName, slotButtonClassName }: TimeSlotsProps) {
   let countToShow = 0;
   if (timestamps.length <= 3) countToShow = timestamps.length;
   else if (timestamps.length === 4) countToShow = timestamps.length;
@@ -171,7 +184,12 @@ function TimeSlots({ timestamps, onClickSlot, onClickMore }: TimeSlotsProps) {
     return dayjs(timestamp).format('hh:mm a');
   };
   return (
-    <div className='col-span-full col-start-1 mt-1 md:row-auto lg:col-start-3 lg:row-span-3 lg:row-start-2 lg:mt-0'>
+    <div
+      className={cn(
+        'col-span-full col-start-1 mt-1 md:row-auto lg:col-start-3 lg:row-span-3 lg:row-start-2 lg:mt-0',
+        wrapperClassName,
+      )}
+    >
       <div
         className={`grid ${timestamps.length > 2 ? 'grid-rows-2' : 'grid-rows-1 md:grid-cols-1'} ${timestamps.length === 1 ? 'grid-cols-1' : 'grid-cols-2'} gap-2 whitespace-nowrap`}
       >
@@ -179,7 +197,10 @@ function TimeSlots({ timestamps, onClickSlot, onClickMore }: TimeSlotsProps) {
           <Button
             key={i}
             type='secondary'
-            className={`min-w-fit px-0 sm:min-w-16 lg:w-28 ${i === 2 && timestamps.length === 3 ? 'lg:col-start-2' : ''}`}
+            className={cn(
+              `min-w-fit px-0 sm:min-w-16 lg:w-28 ${i === 2 && timestamps.length === 3 ? 'lg:col-start-2' : ''}`,
+              slotButtonClassName,
+            )}
             onClick={() => onClickSlot(i)}
             disabled={false}
           >
@@ -190,7 +211,7 @@ function TimeSlots({ timestamps, onClickSlot, onClickMore }: TimeSlotsProps) {
         {timestamps.length > 4 ? (
           <Button
             type='secondary'
-            className='min-w-fit px-0 sm:min-w-16 lg:w-28'
+            className={cn('min-w-fit px-0 sm:min-w-16 lg:w-28', slotButtonClassName)}
             onClick={onClickMore}
             disabled={false}
           >
@@ -202,11 +223,16 @@ function TimeSlots({ timestamps, onClickSlot, onClickMore }: TimeSlotsProps) {
   );
 }
 
-type PayrateLabelProps = { payrate: number; numberClassName?: string };
+type PayrateLabelProps = { payrate: number; numberClassName?: string; className?: string };
 
-function PayrateLabel({ payrate, numberClassName }: PayrateLabelProps) {
+function PayrateLabel({ payrate, numberClassName, className }: PayrateLabelProps) {
   return (
-    <p className='col-start-2 row-span-1 row-start-3 px-2 sm:col-start-3 sm:row-start-1 md:row-start-1 md:text-right'>
+    <p
+      className={cn(
+        'col-start-2 row-span-1 row-start-3 px-2 sm:col-start-3 sm:row-start-1 md:row-start-1 md:text-right',
+        className,
+      )}
+    >
       <span className={cn('text-lg', numberClassName)}>${payrate}</span>
       <span className='text-sm text-grey-1'> / visit</span>
     </p>

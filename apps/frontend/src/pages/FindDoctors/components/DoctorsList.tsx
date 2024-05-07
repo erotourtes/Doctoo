@@ -32,12 +32,13 @@ export const DoctorsList = ({ doctors }: DoctorsListProps) => {
     setScheduleModalData(prev => ({ ...prev, reviews }));
   }, [scheduleModalData.doctorId]);
   return (
-    <div className='mt-2 w-full'>
+    <div className='mt-2 w-full xl:mt-4'>
       {doctors.length ? (
         doctors.map(doctor => (
           <>
             <DoctorCard key={doctor.id} className='my-4'>
               <DoctorCard.ImageWithFavorite
+                alt={doctor.firstName + ' ' + doctor.lastName}
                 isFavorite={doctor.isFavorite!}
                 url={doctor.avatarKey}
                 doctorId={doctor.id}
@@ -46,10 +47,18 @@ export const DoctorsList = ({ doctors }: DoctorsListProps) => {
                 {doctor.firstName} {doctor.lastName}
               </DoctorCard.Name>
               <DoctorCard.Specializations specializations={doctor.specializations} />
-              <DoctorCard.Tags tags={generateDoctorTags({ schedule: doctor.schedule, rating: doctor.rating })} />
+              <DoctorCard.Tags
+                wrapperClassName='lg:col-span-2 xl:col-span-1'
+                tags={generateDoctorTags({ schedule: doctor.schedule, rating: doctor.rating })}
+              />
               <DoctorCard.Rating rating={doctor.rating} reviewsCount={doctor.reviewsCount} doctorId={doctor.id} />
-              <DoctorCard.PayrateLabel payrate={doctor.payrate} />
+              <DoctorCard.PayrateLabel
+                className='lg:col-start-2 lg:row-span-1 lg:row-start-3 lg:text-left xl:col-start-3 xl:row-start-1 xl:text-right'
+                payrate={doctor.payrate}
+              />
               <DoctorCard.TimeSlots
+                wrapperClassName='lg:col-span-full lg:col-start-1 lg:mt-1 lg:row-start-6 xl:col-start-3 xl:row-span-3 xl:row-start-2 xl:mt-0'
+                slotButtonClassName='lg:w-full xl:w-28'
                 timestamps={generateTimeSlots(doctor.schedule!)}
                 onClickMore={() => {
                   setScheduleModalData(prev => ({
