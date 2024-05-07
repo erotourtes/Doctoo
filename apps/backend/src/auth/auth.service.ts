@@ -226,7 +226,10 @@ export class AuthService {
 
     if (existingUser) {
       await this.userService.patchUser(existingUser.id, {
-        ...body,
+        email: body.email,
+        firstName: body.firstName,
+        phone: body.phone,
+        lastName: body.lastName,
         password: await this.hashPassword(body.password),
       });
 
