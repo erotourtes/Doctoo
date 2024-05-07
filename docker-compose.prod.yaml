@@ -40,6 +40,8 @@ services:
       S3_ENDPOINT: ${MINIO_ENDPOINT}
       SCHEDULE: ${BACKUP_SCHEDULE}
       ENCRYPTION_PASSWORD: ${ENCRYPTION_PASSWORD}
+    networks:
+      - doctoo
 
   backend:
     restart: always
