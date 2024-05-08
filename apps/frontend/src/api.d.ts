@@ -778,6 +778,15 @@ export interface components {
        */
       name: string;
     };
+    TimeSlotDto: {
+      /**
+       * @description Timestamp in UTC format for the time slot.
+       * @example 2024-05-08T06:59:25.563Z
+       */
+      timestamp: string;
+      /** @description Boolean that indecates whether the time slot is available for booking or not. */
+      available: boolean;
+    };
     ResponseDoctorScheduleDto: {
       /**
        * @description Hour in UTC the doctor starts working from.
@@ -789,13 +798,8 @@ export interface components {
        * @example 20
        */
       endsWorkHourUTC: number;
-      /**
-       * @description Time slots in from of UTC time strings of slots that are not available to book.
-       * @example [
-       *   "2024-05-02T12:00:00.000Z"
-       * ]
-       */
-      unavailableTimeSlots?: string[];
+      /** @description Time slots for doctor. */
+      timeslots?: components['schemas']['TimeSlotDto'][];
     };
     ResponseDoctorDto: {
       /**

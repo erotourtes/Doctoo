@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Transform, plainToInstance } from 'class-transformer';
 import { TimeSlotDto } from './time-slot.dto';
 
@@ -10,8 +10,8 @@ export class ResponseDoctorScheduleDto {
   readonly endsWorkHourUTC: number;
 
   @Transform(({ value }) => plainToInstance(TimeSlotDto, value))
-  @ApiProperty({ type: TimeSlotDto, isArray: true, description: 'Time slots for doctor.' })
-  readonly timeslots: TimeSlotDto;
+  @ApiPropertyOptional({ type: TimeSlotDto, isArray: true, description: 'Time slots for doctor.' })
+  readonly timeslots?: TimeSlotDto;
 
   @Exclude()
   readonly doctor: any;
