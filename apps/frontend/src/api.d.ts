@@ -1750,15 +1750,11 @@ export interface components {
        */
       text: string;
       /**
-       * Format: date-time
        * @description Time when sent message
-       * @example 2024-05-04T16:34:19.971Z
+       * @example 2024-05-05T22:18:13.234Z
        */
       sentAt: string;
-      /**
-       * @description Array of files
-       * @example []
-       */
+      /** @description Array of files */
       files?: string[];
     };
   };
@@ -2791,12 +2787,12 @@ export interface operations {
   DoctorController_getDoctorSchedule: {
     parameters: {
       query?: {
-        /** @description Date to get unavailable time slots for. */
-        date?: string;
-        /** @description Date to get unavailable time slots starting from. */
-        fromDate?: string;
-        /** @description Date to get unavailable time slots starting until. */
-        toDate?: string;
+        /** @description Date to get time slots starting from. */
+        from?: string;
+        /** @description Date to get time slots ending before. */
+        to?: string;
+        /** @description Used to determine which slots are needed based on their availability. */
+        slotAvailability?: 'all' | 'free';
       };
       path: {
         /**

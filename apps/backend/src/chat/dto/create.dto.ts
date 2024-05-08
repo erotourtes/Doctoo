@@ -19,9 +19,13 @@ export class CreateMessageDto {
   @IsOptional()
   @IsDateString()
   @ApiProperty({ example: '2024-05-05T22:18:13.234Z', description: 'Time when sent message' })
-  readonly sentAt?: Date;
+  readonly sentAt?: string;
 
-  @ApiProperty({ example: [], description: 'Array of files', required: false, isArray: true })
+  @ApiProperty({
+    properties: { file: { type: 'string', format: 'binary' } },
+    description: 'Array of files',
+    required: false,
+  })
   readonly files: Express.Multer.File[];
 }
 
