@@ -149,10 +149,10 @@ jobs:
           FRONTEND_CHANGE_EMAIL_PATH=${{ secrets.FRONTEND_CHANGE_EMAIL_PATH }}
           STRIPE_API_KEY=${{ secrets.STRIPE_API_KEY }}
           TZ=${{ secrets.TZ }}
-          REDIS_HOST: ${{ secrets.REDIS_HOST }}
-          REDIS_PORT: ${{ secrets.REDIS_PORT }}
-          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
-          CACHE_DAYS_TO_LIVE: ${{ secrets.CACHE_DAYS_TO_LIVE }}
+          REDIS_HOST=${{ secrets.REDIS_HOST }}
+          REDIS_PORT=${{ secrets.REDIS_PORT }}
+          REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
+          CACHE_DAYS_TO_LIVE=${{ secrets.CACHE_DAYS_TO_LIVE }}
           EOF
 
       - name: Run new Docker containers
