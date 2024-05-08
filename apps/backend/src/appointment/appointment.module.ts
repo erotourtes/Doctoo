@@ -9,5 +9,6 @@ import { DoctorModule } from '../doctor/doctor.module';
   imports: [PatientModule, DoctorModule],
   controllers: [AppointmentController],
   providers: [AppointmentService, PrismaService],
+  exports: [AppointmentService],
 })
 export class AppointmentModule {}

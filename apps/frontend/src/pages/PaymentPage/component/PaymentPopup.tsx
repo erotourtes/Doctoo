@@ -37,7 +37,7 @@ export const PaymentPopup = ({
     <PopupDoctoo
       popupIsOpen={isOpenModal}
       closePopup={closeModal}
-      modalFullClassName='!max-w-[522px] p-10'
+      modalFullClassName='max-w-[522px] p-10'
       modalBodyClassName=''
     >
       <div className='grid justify-items-start gap-4'>

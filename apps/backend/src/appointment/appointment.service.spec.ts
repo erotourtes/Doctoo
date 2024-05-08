@@ -59,6 +59,7 @@ describe('AppointmentService', () => {
     const expected = {
       id: createdAppointment.id,
       ...appointmentDto,
+      price: 50,
     };
 
     expect(createdAppointment).toMatchObject(expected);

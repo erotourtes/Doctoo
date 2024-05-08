@@ -29,6 +29,9 @@ export class ResponseAppointmentDto {
   @ApiProperty({ example: '123e4567-e89b-12d3-a456-426614174000', description: 'The unique id of the billed payment.' })
   paymentInvoiceKey: string;
 
+  @ApiProperty({ example: 50, description: 'The price of one patient`s appointment with a doctor' })
+  price: number;
+
   @ApiProperty({ description: 'The unique id from the receipt file for the appointment.' })
   paymentReceiptKey?: string;
 

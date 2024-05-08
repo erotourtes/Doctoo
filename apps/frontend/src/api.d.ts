@@ -287,9 +287,13 @@ export interface paths {
     /** Update allergy */
     patch: operations['AllergyController_patchAllergy'];
   };
-  '/payment': {
+  '/payment/{id}': {
     /** Create payment invoice */
     post: operations['PaymentController_createPayment'];
+  };
+  '/payment/successful/{id}': {
+    /** Change appointments status after successful payment */
+    post: operations['PaymentController_successfulPayment'];
   };
   '/chat': {
     /**
@@ -321,6 +325,10 @@ export interface paths {
      * @description This endpoint retrieves attachments for a specific chat.
      */
     get: operations['ChatController_getAttachmentsByChatId'];
+  };
+  '/notification/{patientId}': {
+    /** Get all notification for patient */
+    get: operations['NotificationController_getNotificationsForPatient'];
   };
 }
 
@@ -1425,7 +1433,7 @@ export interface components {
        * @example PLANNED
        * @enum {string}
        */
-      status: 'PENDING_PAYMENT' | 'PLANNED' | 'COMPLETED' | 'CANCELED';
+      status: 'PENDING_PAYMENT' | 'PLANNED' | 'COMPLETED' | 'MISSED' | 'CANCELED';
       /**
        * @description Additional comments left by the patient or doctor.
        * @example Get some blood pressure pills.
@@ -1472,7 +1480,7 @@ export interface components {
        * @description Current status of the appointment.
        * @enum {string}
        */
-      status: 'PENDING_PAYMENT' | 'PLANNED' | 'COMPLETED' | 'CANCELED';
+      status: 'PENDING_PAYMENT' | 'PLANNED' | 'COMPLETED' | 'MISSED' | 'CANCELED';
       /**
        * @description Additional comments left by the patient or doctor.
        * @example Get some blood pressure pills.
@@ -1483,6 +1491,11 @@ export interface components {
        * @example 123e4567-e89b-12d3-a456-426614174000
        */
       paymentInvoiceKey: string;
+      /**
+       * @description The price of one patient`s appointment with a doctor
+       * @example 50
+       */
+      price: number;
       /** @description The unique id from the receipt file for the appointment. */
       paymentReceiptKey: string;
       /**
@@ -1522,7 +1535,7 @@ export interface components {
        * @example PLANNED
        * @enum {string}
        */
-      status?: 'PENDING_PAYMENT' | 'PLANNED' | 'COMPLETED' | 'CANCELED';
+      status?: 'PENDING_PAYMENT' | 'PLANNED' | 'COMPLETED' | 'MISSED' | 'CANCELED';
       /**
        * @description Additional comments left by the patient or doctor.
        * @example Get some blood pressure pills.
@@ -1611,18 +1624,6 @@ export interface components {
        * @example Dust
        */
       name?: string;
-    };
-    CreatePaymentDto: {
-      /**
-       * @description How long appointment has been.
-       * @example 1
-       */
-      appointmentDuration: number;
-      /**
-       * @description Doctor hourly payrate.
-       * @example 200
-       */
-      pricePerHour: number;
     };
     CreateChatDto: {
       /**
@@ -1756,6 +1757,66 @@ export interface components {
       sentAt: string;
       /** @description Array of files */
       files?: string[];
+    };
+    ResponseNotificationDto: {
+      /**
+       * @description Unique notification id.
+       * @example 478e70e3-2de9-4b2c-b7df-eac849365210
+       */
+      id: string;
+      /**
+       * @description Unique patient id.
+       * @example 8834faa9-7dc6-49e6-986c-d8eb74c6188e
+       */
+      patientId: string;
+      /**
+       * @description Unique doctor id.
+       * @example c3f23c8b-b517-4a1a-964e-e232349e2824
+       */
+      doctorId?: string;
+      /**
+       * @description Model ID associated with notification.
+       * @example 478e70e3-2de9-4b2c-b7df-eac849365210
+       */
+      modelId: string;
+      /**
+       * @description Notification model.
+       * @example APPOINTMENT
+       * @enum {string}
+       */
+      model: 'APPOINTMENT' | 'CHAT';
+      /**
+       * @description Notification action.
+       * @example NEW_APPOINTMENT
+       * @enum {string}
+       */
+      action:
+        | 'NEW_APPOINTMENT'
+        | 'CONFIRMED_APPOINTMENT'
+        | 'UPCOMING_APPOINTMENT'
+        | 'COMPLETED_APPOINTMENT'
+        | 'MISSED_APPOINTMENT'
+        | 'CANCELED_APPOINTMENT'
+        | 'FILE_RECEIVED'
+        | 'NEW_MESSAGE'
+        | 'INVOICE_RECEIVED'
+        | 'PAYMENT_SUCCESSFUL';
+      /**
+       * @description Short message for patient.
+       * @example You received an invoice for your appointment with Dr. John Smith for $50
+       */
+      message: string;
+      /**
+       * @description Key for file.
+       * @example 123e45674fdf4v
+       */
+      fileKey?: string;
+      /**
+       * Format: date-time
+       * @description Notification creation date.
+       * @example 2023-05-05T14:48:00.000Z
+       */
+      createdAt: string;
     };
   };
   responses: never;
@@ -4454,9 +4515,13 @@ export interface operations {
   };
   /** Create payment invoice */
   PaymentController_createPayment: {
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreatePaymentDto'];
+    parameters: {
+      path: {
+        /**
+         * @description The appointments unique id.
+         * @example fb40e3fb-c1ee-4c80-b2cf-00e4110eb825
+         */
+        id: string;
       };
     };
     responses: {
@@ -4469,6 +4534,30 @@ export interface operations {
         content: {
           'application/json': components['schemas']['BadRequestResponse'];
         };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /** Change appointments status after successful payment */
+  PaymentController_successfulPayment: {
+    parameters: {
+      path: {
+        /**
+         * @description The appointments unique id.
+         * @example fb40e3fb-c1ee-4c80-b2cf-00e4110eb825
+         */
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: never;
       };
       /** @description Response if an error occurs while processing a request. */
       500: {
@@ -4672,6 +4761,32 @@ export interface operations {
         content: {
           'application/json': components['schemas']['ClassicNestResponse'];
         };
+      };
+    };
+  };
+  /** Get all notification for patient */
+  NotificationController_getNotificationsForPatient: {
+    parameters: {
+      path: {
+        patientId: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseNotificationDto'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Internal server error. */
+      500: {
+        content: never;
       };
     };
   };

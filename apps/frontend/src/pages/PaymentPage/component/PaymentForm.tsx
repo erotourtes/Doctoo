@@ -1,20 +1,15 @@
-import { changeAppointmentStatus } from '@/app/appointment/AppointmentThunks';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { getPaymentIntent } from '@/app/payment/paymentThunks';
-import { Button } from '@/components/UI/Button/Button';
-import { Checkbox } from '@/components/UI/Checkbox/Checkbox';
-import Icon from '@/components/UI/Icon/Icon';
-import { RadioButton } from '@/components/UI/RadioButton/RadioButton';
-import { AppointmentStatus } from '@/dataTypes/Appointment';
-import { Checkout } from '@/pages/PaymentPage/component/Checkout';
-import { NewPaymentCardForm } from '@/pages/PaymentPage/component/NewPaymentCardForm';
-import { PaymentPopup } from '@/pages/PaymentPage/component/PaymentPopup';
-import { joiResolver } from '@hookform/resolvers/joi';
-import { CardCvcElement, CardExpiryElement, CardNumberElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import Joi from 'joi';
 import { useState } from 'react';
 import type { FieldValues, SubmitHandler } from 'react-hook-form';
 import { FormProvider, useForm } from 'react-hook-form';
+import { CardCvcElement, CardExpiryElement, CardNumberElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import Joi from 'joi';
+import { joiResolver } from '@hookform/resolvers/joi';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { getPaymentIntent, updatedAppointmentStatusAfterSuccessfulPayment } from '@/app/payment/paymentThunks';
+import { Button, Icon, Checkbox, RadioButton } from '@/components/UI';
+import { NewPaymentCardForm } from './NewPaymentCardForm';
+import { Checkout } from './Checkout';
+import { PaymentPopup } from './PaymentPopup';
 
 const schema = Joi.object({
   cardholderName: Joi.string()
@@ -28,7 +23,7 @@ export const PaymentForm = () => {
   const elements = useElements();
 
   const dispatch = useAppDispatch();
-  const { appointmentId, appointmentDuration, pricePerHour } = useAppSelector(state => state.payment.data);
+  const { appointmentId } = useAppSelector(state => state.payment.data);
 
   const [isSuccessfulPayment, setIsSuccessfulPayment] = useState<boolean>(false);
   const [paymentDetails, setPaymentDetails] = useState({ id: '', created: 0 });
@@ -65,13 +60,8 @@ export const PaymentForm = () => {
       return;
     }
 
-    const postData = {
-      appointmentDuration: appointmentDuration,
-      pricePerHour: pricePerHour,
-    };
-
     try {
-      const response = await dispatch(getPaymentIntent(postData));
+      const response = await dispatch(getPaymentIntent(appointmentId));
       const clientSecret = response.payload;
 
       const paymentMethod = await stripe.createPaymentMethod({
@@ -100,7 +90,7 @@ export const PaymentForm = () => {
         cardExpiry?.clear();
         cardCVC?.clear();
         setIsOpenModal(true);
-        dispatch(changeAppointmentStatus({ id: appointmentId, status: AppointmentStatus.PLANNED }));
+        dispatch(updatedAppointmentStatusAfterSuccessfulPayment(appointmentId));
       }
     } catch (error) {
       setIsSuccessfulPayment(false);

@@ -22,6 +22,7 @@ import { SpecializationModule } from '../specialization/specialization.module';
 import { UserModule } from '../user/user.module';
 import { ChatModule } from '../chat/chat.module';
 import { AppLoggerModule } from '../app-logger/logger.module';
+import { NotificationModule } from '../notification/notification.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { AppLoggerModule } from '../app-logger/logger.module';
     PaymentModule,
     ChatModule,
     AppLoggerModule,
+    NotificationModule,
   ],
   providers: [MinioService],
 })

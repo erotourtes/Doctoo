@@ -28,6 +28,7 @@ enum AppointmentStatus {
   PENDING_PAYMENT
   PLANNED
   COMPLETED
+  MISSED
   CANCELED
 }
 
@@ -37,8 +38,16 @@ enum NotificationModel {
 }
 
 enum NotificationAction {
-  TODO
-  // TODO: Create add required enums for notifications.
+  NEW_APPOINTMENT
+  CONFIRMED_APPOINTMENT
+  UPCOMING_APPOINTMENT
+  COMPLETED_APPOINTMENT
+  MISSED_APPOINTMENT
+  CANCELED_APPOINTMENT
+  FILE_RECEIVED
+  NEW_MESSAGE
+  INVOICE_RECEIVED
+  PAYMENT_SUCCESSFUL
 }
 
 model User {
@@ -85,13 +94,18 @@ model Review {
 }
 
 model Notification {
-  id        String             @id @default(uuid())
-  patientId String             @map("patient_id")
-  modelId   String             @map("model_id")
-  createdAt DateTime           @default(now()) @map("created_at") @db.Timestamptz()
-  patient   Patient            @relation(fields: [patientId], references: [id])
-  model     NotificationModel
-  action    NotificationAction
+  id          String             @id @default(uuid())
+  patientId   String             @map("patient_id")
+  doctorId    String?            @map("doctor_id")
+  modelId     String             @map("model_id")
+  createdAt   DateTime           @default(now()) @map("created_at") @db.Timestamptz()
+  patient     Patient            @relation(fields: [patientId], references: [id])
+  doctor      Doctor?            @relation(fields: [doctorId], references: [id])
+  appointment Appointment        @relation(fields: [modelId], references: [id])
+  model       NotificationModel
+  action      NotificationAction
+  message     String
+  fileKey     String?            @map("file_key")
 
   @@map("notifications")
 }
@@ -116,6 +130,7 @@ model Doctor {
   favorites       Favorite[]
   reviews         Review[]
   doctorSchedule  DoctorSchedule?
+  Notification    Notification[]
 
   @@map("doctors")
 }
@@ -291,10 +306,12 @@ model Appointment {
   videoRecordKey    String?           @map("video_record_key")
   paymentInvoiceKey String?           @map("payment_invoice_key")
   paymentReceiptKey String?           @map("payment_receipt_key")
+  price             Int               @map("appointment_price")
   startedAt         DateTime          @map("started_at") @db.Timestamptz()
   endedAt           DateTime?         @map("ended_at") @db.Timestamptz()
   patient           Patient           @relation(fields: [patientId], references: [id])
   doctor            Doctor            @relation(fields: [doctorId], references: [id])
+  Notification      Notification[]
 
   @@map("appointments")
 }

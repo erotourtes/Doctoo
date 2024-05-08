@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { plainToInstance } from 'class-transformer';
 import { DoctorService } from '../doctor/doctor.service';
 import { PatientService } from '../patient/patient.service';
@@ -6,8 +7,9 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateAppointmentDto } from './dto/create.dto';
 import { PatchAppointmentDto } from './dto/patch.dto';
 import { ResponseAppointmentDto } from './dto/response.dto';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ChatCreatedEvent } from '../chat/events/chat-created.event';
+import { calculateAppointmentPrice } from '../utils/calculateAppointmentPrice';
+import { emitEventBasedOnAppointmentStatus } from '../utils/emitEventBasedOnAppointmentStatus';
 
 @Injectable()
 export class AppointmentService {
@@ -30,10 +32,14 @@ export class AppointmentService {
     await this.doctorService.isDoctorByIdExists(body.doctorId);
     await this.patientService.isPatientByIdExists(body.patientId);
 
-    const appointment = await this.prismaService.appointment.create({ data: body });
+    const doctor = await this.doctorService.getDoctor(body.doctorId);
+    const price = calculateAppointmentPrice(body.startedAt, doctor.payrate, body.endedAt);
+
+    const appointment = await this.prismaService.appointment.create({ data: { ...body, price } });
 
     // TODO: Use event isntead of directly call payment service.
     this.eventEmitter.emit('chat.create', new ChatCreatedEvent(body.patientId, body.doctorId));
+    emitEventBasedOnAppointmentStatus(this.eventEmitter, appointment);
 
     return plainToInstance(ResponseAppointmentDto, appointment);
   }
@@ -106,6 +112,8 @@ export class AppointmentService {
     await this.isAppointmentExists(id);
 
     const appointment = await this.prismaService.appointment.update({ where: { id }, data: body });
+
+    emitEventBasedOnAppointmentStatus(this.eventEmitter, appointment);
 
     return plainToInstance(ResponseAppointmentDto, appointment);
   }

@@ -1,7 +1,7 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Controller, Param, Post } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiBody,
+  ApiParam,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiOperation,
@@ -11,7 +11,6 @@ import Stripe from 'stripe';
 import { BadRequestResponse } from '../utils/BadRequestResponse';
 import { ClassicNestResponse } from '../utils/ClassicNestResponse';
 import { RESPONSE_STATUS } from '../utils/constants';
-import { CreatePaymentDto } from './dto/create.dto';
 import { PaymentService } from './payment.service';
 
 @ApiTags('Payment Endpoints')
@@ -19,13 +18,22 @@ import { PaymentService } from './payment.service';
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
-  @Post()
+  @Post(':id')
   @ApiOperation({ summary: 'Create payment invoice' })
   @ApiOkResponse({ description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  @ApiBody({ type: CreatePaymentDto })
-  async createPayment(@Body() body: CreatePaymentDto): Promise<Stripe.Response<Stripe.PaymentIntent>> {
-    return this.paymentService.createPayment(body);
+  @ApiParam({ name: 'id', example: 'fb40e3fb-c1ee-4c80-b2cf-00e4110eb825', description: 'The appointments unique id.' })
+  async createPayment(@Param('id') id: string): Promise<Stripe.Response<Stripe.PaymentIntent>> {
+    return await this.paymentService.createPayment(id);
+  }
+
+  @Post('successful/:id')
+  @ApiOperation({ summary: 'Change appointments status after successful payment' })
+  @ApiOkResponse({ description: RESPONSE_STATUS.SUCCESS })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiParam({ name: 'id', example: 'fb40e3fb-c1ee-4c80-b2cf-00e4110eb825', description: 'The appointments unique id.' })
+  async successfulPayment(@Param('id') id: string) {
+    return await this.paymentService.setSuccessfulPayment(id);
   }
 }
