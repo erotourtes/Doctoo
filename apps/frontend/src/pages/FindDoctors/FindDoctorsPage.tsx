@@ -27,7 +27,7 @@ export const FindDoctorsPage = () => {
   const [search, setSearch] = useState(searchParams.get('search'));
 
   useEffect(() => {
-    dispatch(getDoctorData({ search: search || undefined, page, ...filters }));
+    dispatch(getDoctorData({ search: search !== null ? search : undefined, page, ...filters }));
   }, [search, page, filters, appointments]);
 
   useEffect(() => {

@@ -10,7 +10,7 @@ import {
 } from './DoctorSlice';
 import type { paths } from '../../api';
 import api from '../api';
-import type { DoctorSchedule, IDoctor } from '../../dataTypes/Doctor';
+import type { DoctorSchedule, DoctorStatus, IDoctor } from '../../dataTypes/Doctor';
 
 export type GetDoctorDataPayload = {
   doctors: IDoctor[];
@@ -22,6 +22,9 @@ export type GetDoctorDataOptions = {
   page?: number;
   hospitalId?: string[];
   specializationId?: string[];
+  availableFrom?: string;
+  availableUntil?: string;
+  status?: DoctorStatus;
 };
 
 export const getDoctorData = createAsyncThunk<void, GetDoctorDataOptions | undefined>(
@@ -34,6 +37,9 @@ export const getDoctorData = createAsyncThunk<void, GetDoctorDataOptions | undef
           page: options?.page,
           hospitalId: options?.hospitalId,
           specializationId: options?.specializationId,
+          availableFrom: options?.availableFrom,
+          availableUntil: options?.availableUntil,
+          status: options?.status,
         },
       });
       if (response.status === 200) {

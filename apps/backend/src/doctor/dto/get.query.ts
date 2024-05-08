@@ -1,8 +1,8 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsNumber, IsOptional, IsUUID, Min } from 'class-validator';
+import { IsDate, IsEnum, IsNumber, IsOptional, IsUUID, Min } from 'class-validator';
 import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
-import { RatingStatusFilters } from './RatingStatusFilters';
 import { Type } from 'class-transformer';
+import { StatusFilters } from './StatusFilters';
 
 export class GetDoctorsQuery {
   @ApiPropertyOptional({ required: false, isArray: true, description: 'ID of the hospital to filter doctors by' })
@@ -10,10 +10,10 @@ export class GetDoctorsQuery {
   @IsUUID(4, { each: true, message: 'hospitalId should be a UUID' })
   readonly hospitalId?: string | string[];
 
-  @ApiPropertyOptional({ required: false, description: 'Status to filter doctors by', type: RatingStatusFilters })
+  @ApiPropertyOptional({ required: false, description: 'Status to filter doctors by', type: StatusFilters })
   @IsOptional()
-  @IsEnum(RatingStatusFilters)
-  readonly status?: RatingStatusFilters;
+  @IsEnum(StatusFilters)
+  readonly status?: StatusFilters;
 
   @ApiPropertyOptional({ required: false, isArray: true, description: 'ID of the specialization to filter doctors by' })
   @IsOptional()
@@ -37,4 +37,16 @@ export class GetDoctorsQuery {
   @IsNumber()
   @Type(() => Number)
   readonly itemsPerPage?: number;
+
+  @ApiPropertyOptional({ required: false, description: 'Date to filter doctors by availability' })
+  @IsOptional()
+  @IsDate()
+  @Type(() => Date)
+  readonly availableFrom?: Date;
+
+  @ApiPropertyOptional({ required: false, description: 'Date to filter doctors by availability' })
+  @IsOptional()
+  @IsDate()
+  @Type(() => Date)
+  readonly availableUntil?: Date;
 }

@@ -12,9 +12,10 @@ import { OnEvent } from '@nestjs/event-emitter';
 import { ReviewUpdatedEvent } from '../review/events/review-updated.event';
 import { ReviewService } from '../review/review.service';
 import { ResponseDoctorListDto } from './dto/response-list.dto';
-import { getDateWithDaysOffset, getMidnightOfDate } from '../utils/dateUtils';
+import { generateDateFromUTCHour, getDateWithDaysOffset, getMidnightOfDate } from '../utils/dateUtils';
 import { DoctorScheduleService } from './doctor-schedule.service';
 import { TimeSlotAvailability } from './dto/TimeSlotAvailability';
+import { StatusFilters } from './dto/StatusFilters';
 
 @Injectable()
 export class DoctorService {
@@ -102,14 +103,15 @@ export class DoctorService {
 
   // TODO: refactor, extracting filter mapping logic into separate function/s
   async getDoctors(patientId: string, query?: GetDoctorsQuery): Promise<ResponseDoctorListDto> {
-    const { hospitalId, specializationId, search, status } = query;
+    const { hospitalId, specializationId, search, status, availableFrom, availableUntil } = query;
     const page = query.page || 1;
     const itemsPerPage = query.itemsPerPage || 10;
     const offset = (page - 1) * itemsPerPage;
 
-    const hospitalFilter: { id?: any } = {};
-    const specializationFilter: { id?: any } = {};
-    const statusFilter: { rating?: any } = {};
+    const hospitalFilter: any = {};
+    const specializationFilter: any = {};
+    const statusFilter: any = {};
+    const availabilityFilter: any = {};
     const searchFilters = [];
 
     if (hospitalId) hospitalFilter.id = Array.isArray(hospitalId) ? { in: hospitalId } : hospitalId;
@@ -117,7 +119,26 @@ export class DoctorService {
     if (specializationId)
       specializationFilter.id = Array.isArray(specializationId) ? { in: specializationId } : specializationId;
 
-    if (status) statusFilter.rating = { gte: 4.5 };
+    if (status === StatusFilters.TOP_DOCTOR) statusFilter.rating = { gte: 4.5 };
+    if (status === StatusFilters.AVAILABLE_NOW) {
+      statusFilter.doctorSchedule = {
+        AND: [
+          { startsWorkHourUTC: { lte: new Date().getUTCHours() + 1 } },
+          { endsWorkHourUTC: { gte: new Date().getUTCHours() + 2 } },
+        ],
+      };
+      statusFilter.appointments = { none: { startedAt: generateDateFromUTCHour(new Date().getUTCHours() + 1) } };
+    }
+
+    if (availableFrom && availableUntil) {
+      const conditions = [];
+      for (let i = availableFrom.getUTCHours(); i < availableUntil.getUTCHours(); i++)
+        conditions.push({
+          doctorSchedule: { AND: [{ startsWorkHourUTC: { lte: i } }, { endsWorkHourUTC: { gte: i + 1 } }] },
+          appointments: { none: { startedAt: generateDateFromUTCHour(i) } },
+        });
+      availabilityFilter.OR = conditions;
+    }
 
     if (search) {
       searchFilters.push({ hospitals: { some: { hospital: { name: { contains: search, mode: 'insensitive' } } } } });
@@ -141,6 +162,7 @@ export class DoctorService {
         { specializations: { some: { specialization: specializationFilter } } },
         statusFilter,
         searchFilters.length ? { OR: searchFilters } : {},
+        availabilityFilter,
       ],
     };
 

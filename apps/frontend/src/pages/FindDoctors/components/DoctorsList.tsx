@@ -58,7 +58,7 @@ export const DoctorsList = ({ doctors }: DoctorsListProps) => {
               <DoctorCard.TimeSlots
                 wrapperClassName='lg:col-span-full lg:col-start-1 lg:mt-1 lg:row-start-6 xl:col-start-3 xl:row-span-3 xl:row-start-2 xl:mt-0'
                 slotButtonClassName='lg:w-full xl:w-28'
-                timestamps={doctor.schedule!.timeslots!.map(slot => new Date(slot.timestamp))}
+                timestamps={doctor.schedule!.timeslots?.map(slot => new Date(slot.timestamp)) || []}
                 onClickMore={() => {
                   setScheduleModalData(prev => ({
                     ...prev,

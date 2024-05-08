@@ -2627,6 +2627,10 @@ export interface operations {
         page?: number;
         /** @description Items per page count */
         itemsPerPage?: number;
+        /** @description Date to filter doctors by availability */
+        availableFrom?: string;
+        /** @description Date to filter doctors by availability */
+        availableUntil?: string;
       };
     };
     responses: {

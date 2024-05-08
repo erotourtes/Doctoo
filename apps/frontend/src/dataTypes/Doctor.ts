@@ -24,6 +24,11 @@ export interface DoctorSchedule {
   timeslots?: TimeSlot[];
 }
 
+export enum DoctorStatus {
+  AVAILABLE_NOW = 'AVAILABLE_NOW',
+  TOP_DOCTOR = 'TOP_DOCTOR',
+}
+
 export interface IDoctor {
   id: string;
   userId: string;
