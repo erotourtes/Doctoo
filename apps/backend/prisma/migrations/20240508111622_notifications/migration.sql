@@ -26,9 +26,6 @@ ALTER TABLE "notifications" ADD COLUMN     "doctor_id" TEXT,
 ADD COLUMN     "file_key" TEXT,
 ADD COLUMN     "message" TEXT NOT NULL;
 
--- AlterTable
-ALTER TABLE "patients" ADD COLUMN     "identity_card_type" TEXT;
-
 -- AddForeignKey
 ALTER TABLE "notifications" ADD CONSTRAINT "notifications_doctor_id_fkey" FOREIGN KEY ("doctor_id") REFERENCES "doctors"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
