@@ -75,6 +75,10 @@ services:
       FRONTEND_CHANGE_EMAIL_PATH: ${FRONTEND_CHANGE_EMAIL_PATH}
       STRIPE_API_KEY: ${STRIPE_API_KEY}
       TZ: ${TZ}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      CACHE_DAYS_TO_LIVE: ${CACHE_DAYS_TO_LIVE}
     depends_on:
       - postgres
     networks:
