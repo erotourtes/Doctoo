@@ -8,7 +8,11 @@ import { ResponseNotificationDto } from './dto/response.dto';
 export class NotificationService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async getNotificationsForPatient(patientId: string): Promise<Notification[]> {
+  async getNotificationsForPatient(
+    patientId: string,
+    page: number,
+    limit: number,
+  ): Promise<{ notifications: Notification[]; totalCount: number }> {
     const patientExists = await this.prismaService.patient.findUnique({
       where: { id: patientId },
     });
@@ -17,9 +21,17 @@ export class NotificationService {
       throw new NotFoundException(`Patient with ID ${patientId} not found.`);
     }
 
+    const skip = (page - 1) * limit;
+
+    const totalCount = await this.prismaService.notification.count({
+      where: { patientId },
+    });
+
     const notifications = await this.prismaService.notification.findMany({
       where: { patientId },
       orderBy: { createdAt: 'desc' },
+      take: limit,
+      skip: skip,
       include: {
         doctor: {
           select: {
@@ -33,6 +45,7 @@ export class NotificationService {
             hospitals: { select: { hospital: { select: { id: true, name: true } } } },
             specializations: { select: { specialization: true } },
             _count: { select: { reviews: true } },
+            rating: true,
           },
         },
         appointment: {
@@ -44,7 +57,7 @@ export class NotificationService {
       },
     });
 
-    return notifications;
+    return { notifications, totalCount };
   }
 
   async createNotification(createNotificationDto: CreateNotificationDto): Promise<ResponseNotificationDto> {

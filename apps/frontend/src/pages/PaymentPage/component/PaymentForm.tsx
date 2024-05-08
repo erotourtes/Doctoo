@@ -28,6 +28,7 @@ export const PaymentForm = () => {
   const [isSuccessfulPayment, setIsSuccessfulPayment] = useState<boolean>(false);
   const [paymentDetails, setPaymentDetails] = useState({ id: '', created: 0 });
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const methods = useForm({
     mode: 'onChange',
@@ -60,6 +61,9 @@ export const PaymentForm = () => {
       return;
     }
 
+    setIsLoading(true);
+    setIsOpenModal(true);
+
     try {
       const response = await dispatch(getPaymentIntent(appointmentId));
       const clientSecret = response.payload;
@@ -70,12 +74,16 @@ export const PaymentForm = () => {
       });
 
       if (!paymentMethod.paymentMethod) {
+        setIsLoading(false);
+        setIsOpenModal(false);
         return;
       }
 
       const confirmPayment = await stripe.confirmCardPayment(clientSecret, {
         payment_method: paymentMethod.paymentMethod.id,
       });
+
+      setIsLoading(false);
 
       if (confirmPayment.error) {
         setIsSuccessfulPayment(false);
@@ -93,6 +101,7 @@ export const PaymentForm = () => {
         dispatch(updatedAppointmentStatusAfterSuccessfulPayment(appointmentId));
       }
     } catch (error) {
+      setIsLoading(false);
       setIsSuccessfulPayment(false);
       setIsOpenModal(true);
     }
@@ -164,6 +173,7 @@ export const PaymentForm = () => {
           setIsOpenModal={setIsOpenModal}
           isSuccessfulPayment={isSuccessfulPayment}
           paymentDetails={paymentDetails}
+          isLoading={isLoading}
         />
       )}
     </>

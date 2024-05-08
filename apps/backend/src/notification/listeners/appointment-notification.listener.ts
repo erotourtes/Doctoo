@@ -128,7 +128,7 @@ export class AppointmentNotificationListener {
       doctorId: event.doctorId,
       modelId: event.appointmentId,
       model: NotificationModel.APPOINTMENT,
-      message: `Your appointment with ${doctorName} has been successfully paid for`,
+      message: `Your appointment payment with ${doctorName} has been successfully processed`,
       action: NotificationAction.PAYMENT_SUCCESSFUL,
     };
 

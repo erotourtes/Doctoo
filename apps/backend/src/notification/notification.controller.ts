@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { NotificationService } from './notification.service';
 import { Notification } from '@prisma/client';
 import {
@@ -22,7 +22,11 @@ export class NotificationController {
   @ApiOkResponse({ type: ResponseNotificationDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ description: 'Internal server error.' })
-  async getNotificationsForPatient(@Param('patientId') patientId: string): Promise<Notification[]> {
-    return await this.notificationService.getNotificationsForPatient(patientId);
+  async getNotificationsForPatient(
+    @Param('patientId') patientId: string,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ): Promise<{ notifications: Notification[]; totalCount: number }> {
+    return await this.notificationService.getNotificationsForPatient(patientId, page, limit);
   }
 }

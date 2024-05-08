@@ -2,7 +2,8 @@ import { useNavigate } from 'react-router';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { useAppSelector } from '@/app/hooks';
 import { ReceiptPDF } from './ReceiptPDF';
-import { Button, Icon, PopupDoctoo } from '@/components/UI';
+import { Button, Icon, PopupDoctoo, Spinner } from '@/components/UI';
+import { cn } from '@/utils/cn';
 
 interface PaymentPopupProps {
   isOpenModal: boolean;
@@ -12,6 +13,7 @@ interface PaymentPopupProps {
     id: string;
     created: number;
   };
+  isLoading: boolean;
 }
 
 export const PaymentPopup = ({
@@ -19,6 +21,7 @@ export const PaymentPopup = ({
   setIsOpenModal,
   isSuccessfulPayment,
   paymentDetails,
+  isLoading,
 }: PaymentPopupProps) => {
   const { doctorName, appointmentDuration, pricePerHour } = useAppSelector(state => state.payment.data);
   const navigate = useNavigate();
@@ -38,10 +41,12 @@ export const PaymentPopup = ({
       popupIsOpen={isOpenModal}
       closePopup={closeModal}
       modalFullClassName='max-w-[522px] p-10'
-      modalBodyClassName=''
+      modalBodyClassName=' '
     >
-      <div className='grid justify-items-start gap-4'>
-        {isSuccessfulPayment ? (
+      <div className={cn('grid justify-items-start gap-4', isLoading && 'justify-items-center')}>
+        {isLoading && <Spinner size={50} color='#089BAB' />}
+
+        {!isLoading && isSuccessfulPayment && (
           <>
             <h2 className='text-black'>Success!</h2>
             <p>Your appointment have been successfully paid.</p>
@@ -73,7 +78,9 @@ export const PaymentPopup = ({
               </Button>
             </div>
           </>
-        ) : (
+        )}
+
+        {!isLoading && !isSuccessfulPayment && (
           <>
             <h2 className='text-black'>Error!</h2>
             <p>Sorry, something went wrong there. Try again.</p>
