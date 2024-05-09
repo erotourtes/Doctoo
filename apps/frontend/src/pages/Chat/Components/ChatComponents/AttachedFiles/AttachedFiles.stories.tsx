@@ -3,11 +3,13 @@ import type { Meta, StoryObj } from '@storybook/react';
 import AttachedFiles from './AttachedFiles';
 import '@/index.css';
 import { BrowserRouter } from 'react-router-dom';
-import type { IAttachment } from '@/dataTypes/Chat';
 import { fn } from '@storybook/test';
 import { Icon } from '@/components/UI';
+import type { TAttachment } from '@/dataTypes/Chat';
+import { Provider } from 'react-redux';
+import { store } from '@/app/store';
 
-const mockAttachments: IAttachment[] = [
+const mockAttachments: TAttachment[] = [
   {
     id: '1',
     messageId: 'msg1',
@@ -18,7 +20,6 @@ const mockAttachments: IAttachment[] = [
     messageId: 'msg1',
     attachmentKey: 'file2.docx',
   },
-  // Add more mock data as needed
 ];
 
 const meta = {
@@ -30,11 +31,13 @@ const meta = {
   tags: ['autodocs'],
   decorators: [
     Story => (
-      <BrowserRouter>
-        <div className='max-w-80 bg-grey-4 p-10'>
-          <Story />
-        </div>
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <div className='max-w-80 bg-grey-4 p-10'>
+            <Story />
+          </div>
+        </BrowserRouter>
+      </Provider>
     ),
   ],
 } satisfies Meta<typeof AttachedFiles>;

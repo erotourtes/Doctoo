@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { InputSearch } from '@/components/UI';
 import ChatItem from './ChatItem';
-import type { IChat } from '@/dataTypes/Chat';
 import { useAppSelector } from '@/app/hooks';
 import { useLocation } from 'react-router';
 import { cn } from '@/utils/cn';
+import type { TChat } from '@/dataTypes/Chat';
 
 type ChatListProps = {
-  chats?: IChat[];
+  chats?: TChat[];
   className?: string;
 };
 
@@ -36,7 +36,7 @@ const ChatList = ({ chats, className = '' }: ChatListProps) => {
         </div>
         <div className='list flex flex-col gap-3'>
           {chats && chats.length > 0 ? (
-            chats.map((chatItem: IChat, index) => {
+            chats.map((chatItem: TChat, index) => {
               return (
                 <React.Fragment key={'chat' + index}>
                   <ChatItem chat={chatItem} active={openedChat?.id === chatItem.id} />

@@ -1,13 +1,13 @@
 import DayJS from 'dayjs';
 import AttachedFile from '../AttachedFiles/AttachedFile';
-import type { IAttachment } from '@/dataTypes/Chat';
 import { cn } from '@/utils/cn';
+import type { TAttachment } from '@/dataTypes/Chat';
 
 type MessageItemProps = {
   sender: 'me' | 'participant';
   text: string;
   sentAt: Date | string;
-  attaches?: IAttachment[];
+  attaches?: TAttachment[];
 };
 
 const MessageItem = ({ text, sender = 'participant', sentAt, attaches }: MessageItemProps) => {
@@ -42,7 +42,7 @@ const MessageItem = ({ text, sender = 'participant', sentAt, attaches }: Message
           </div>
         )}
       </div>
-      <span className='text-xs text-grey-2'>{DayJS(sentAt).format('HH:mm a')}</span>
+      <span className='text-xs text-grey-2'>{DayJS(sentAt).format('hh:mm a')}</span>
     </div>
   );
 };

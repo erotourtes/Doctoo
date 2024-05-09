@@ -1,11 +1,11 @@
-import type { IAttachment } from '@/dataTypes/Chat';
+import type { TAttachment } from '@/dataTypes/Chat';
 import AttachedFile from './AttachedFile';
 import { cn } from '@/utils/cn';
 import { type ReactNode } from 'react';
 import BookAppointmentBtn from './BookAppointmentBtn';
 
 export type AttachedFilesProps = {
-  chatAttachedFiles: IAttachment[];
+  chatAttachedFiles: TAttachment[];
   className?: string;
   beforeChildren?: ReactNode;
 };

@@ -21,6 +21,8 @@ export default function AppointmentsPage() {
   const [filterState, dispatchFilterAction] = useReducer(filterReducer, initialFilterState);
   const [search, setSearch] = useState('');
 
+  console.log(appointments);
+
   useEffect(() => {
     dispatch(getMyAppointments());
   }, []);

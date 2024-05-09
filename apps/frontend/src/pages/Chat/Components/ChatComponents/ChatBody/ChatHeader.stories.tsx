@@ -2,21 +2,8 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import ChatHeader from './ChatHeader';
 import '@/index.css';
-import type { IChatDoctor, IChatPatient } from '@/dataTypes/Chat';
 import { Provider } from 'react-redux';
 import { store } from '@/app/store';
-
-const mockDoctorParticipant: IChatDoctor = {
-  firstName: 'Jane',
-  lastName: 'Doe',
-  specializations: ['Pediatrics'],
-  avatarKey: 'jane.doe.png',
-};
-const mockPatientParticipant: IChatPatient = {
-  firstName: 'John',
-  lastName: 'Doe',
-  avatarKey: 'john.doe.png',
-};
 
 const meta = {
   title: 'Pages/ChatPage/ChatComponents/ChatHeader',
@@ -44,12 +31,21 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    participant: mockDoctorParticipant,
+    participant: {
+      firstName: 'John',
+      lastName: 'Doe',
+      avatarKey: 'acde070d-8c4c-4f0d-9d8a-162843c10333.jpg',
+      specializations: ['Hematology'],
+    },
   },
 };
 
 export const PatientParticipant: Story = {
   args: {
-    participant: mockPatientParticipant,
+    participant: {
+      firstName: 'John',
+      lastName: 'Doe',
+      avatarKey: 'acde070d-8c4c-4f0d-9d8a-162843c10333.jpg',
+    },
   },
 };

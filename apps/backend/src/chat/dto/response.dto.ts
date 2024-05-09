@@ -1,65 +1,117 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Role } from '@prisma/client';
+import { User } from '@prisma/client';
+import { Exclude, Expose, plainToInstance, Transform } from 'class-transformer';
+import { ResponseMessageDto } from './responseMessage.dto';
 
-export class ResponseChatDto {
-  @ApiProperty({ example: '349c9ffc-1427-459d-a260-1e3f186b9db2', description: 'Unique chat id.' })
+export class ResponseParticipantDto {
+  @Exclude()
   id: string;
 
-  @ApiProperty({ example: '349c9ffc-1427-459d-a260-1e3f186b9db2', description: 'Unique doctor id.' })
+  @Exclude()
+  userId: string;
+
+  @Exclude()
+  payrate: number;
+
+  @Exclude()
+  about: string;
+
+  @Exclude()
+  readonly rating: number;
+
+  @Expose()
+  @Transform(({ obj }) => obj.user && obj.user.firstName)
+  @ApiProperty({
+    description: 'First name of the participant',
+    example: 'John',
+  })
+  readonly firstName: string;
+
+  @Expose()
+  @Transform(({ obj }) => obj.user && obj.user.lastName)
+  @ApiProperty({
+    description: 'Last name of the participant',
+    example: 'Doe',
+  })
+  readonly lastName: string;
+
+  @Expose()
+  @Transform(({ obj }) => obj.user && obj.user.avatarKey)
+  @ApiProperty({
+    description: 'Key of the avatar of the participant',
+    example: 'acde070d-8c4c-4f0d-9d8a-162843c10333.jpg',
+  })
+  readonly avatarKey: string;
+
+  @Exclude()
+  readonly phone: string;
+
+  @Exclude()
+  readonly email: string;
+
+  @Exclude()
+  readonly user: User;
+
+  @Expose()
+  @Transform(({ obj }) => obj.specializations && obj.specializations.map(s => s.specialization.name))
+  @ApiProperty({
+    description: 'Key of the specializations of the participant',
+    example: ['Hematology'],
+    required: false,
+  })
+  readonly specializations?: string[];
+}
+
+export class ResponseChatDto {
+  @ApiProperty({ example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique appointment id.' })
+  @Expose()
+  id: string;
+
+  @ApiProperty({ example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique doctor id.' })
+  @Expose()
   doctorId: string;
 
-  @ApiProperty({ example: '349c9ffc-1427-459d-a260-1e3f186b9db2', description: 'Unique patient id.' })
+  @ApiProperty({ example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique patient id.' })
+  @Expose()
   patientId: string;
 
   @ApiProperty({
-    example: {
-      firstName: 'Josh',
-      lastName: 'Doe',
-      specializations: ['Therapist'],
-      avatarKey: '44440105-e6d4-45e8-83f7-b1ff18aaa283.png',
-    },
-    description: 'Doctor data',
+    description: 'Details of the chat participant.',
+    type: ResponseParticipantDto,
   })
-  doctor: {
-    firstName: string;
-    lastName: string;
-    specializations: string[];
-    avatarKey: string;
-  };
+  @Expose()
+  @Transform(({ value }) => plainToInstance(ResponseParticipantDto, value))
+  participant: ResponseParticipantDto;
+
+  @Exclude()
+  doctor: string;
+
+  @Exclude()
+  patient: string;
+
+  @Exclude()
+  messages: any;
 
   @ApiProperty({
-    example: {
-      firstName: 'Josh',
-      lastName: 'Doe',
-      avatarKey: '44440105-e6d4-45e8-83f7-b1ff18aaa283.png',
-    },
-    description: 'Patient name',
+    description: 'Details of the last message in the chat.',
+    type: ResponseMessageDto,
+    nullable: true,
   })
-  patient: {
-    firstName: string;
-    lastName: string;
-    avatarKey: string;
-  };
-
-  @ApiProperty({
-    example: {
-      sentAt: '2024-05-02T07:41:18.065Z',
-      sender: Role.DOCTOR,
-      text: 'last message text',
-    },
-    description: 'Got last message.',
-  })
-  lastMessage: {
-    sentAt: Date;
-    sender: Role;
-    text: string;
-  } | null;
+  @Expose()
+  lastMessage: ResponseMessageDto | null;
 }
 
-export class GetChatsResponse {
-  @ApiProperty({ type: ResponseChatDto, description: 'Array of response chats.', isArray: true })
+export class ResponseChatArrayDto {
+  @ApiProperty({
+    description: 'Chat list',
+    type: ResponseChatDto,
+    isArray: true,
+  })
   chats: ResponseChatDto[];
 
-  @ApiProperty({ type: 'number', description: 'Total number of chats.' })
+  @ApiProperty({
+    example: 1,
+    description: 'Total number of chats',
+  })
   totalChats: number;
 }

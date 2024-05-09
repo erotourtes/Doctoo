@@ -1,10 +1,10 @@
 import { Icon } from '@/components/UI';
-import type { IChatDoctor, IChatPatient } from '@/dataTypes/Chat';
+import type { TParticipant } from '@/dataTypes/Chat';
 import { cn } from '@/utils/cn';
 import { useState, type ReactNode } from 'react';
 
 type ChatHeaderProps = {
-  participant: IChatDoctor | IChatPatient;
+  participant: TParticipant;
   beforeChildren?: ReactNode;
   afterChildren?: ReactNode;
 };
@@ -18,7 +18,8 @@ const ChatHeader = ({ participant, beforeChildren, afterChildren }: ChatHeaderPr
       <div className='flex flex-1 flex-shrink-0 items-center gap-2'>
         <div
           className={cn(
-            `avatar size-12 overflow-hidden rounded-lg max-md:size-10 max-sm:size-8 ${!participant ? 'bg-grey-1' : ''}`,
+            'avatar size-12 overflow-hidden rounded-lg max-md:size-10 max-sm:size-8',
+            !participant ? 'bg-grey-1' : '',
           )}
         >
           {participant.avatarKey && imageLoaded ? (
@@ -37,9 +38,9 @@ const ChatHeader = ({ participant, beforeChildren, afterChildren }: ChatHeaderPr
           <div className='truncate text-lg font-bold text-black max-md:text-base'>
             {participant ? `${participant?.firstName} ${participant?.lastName}` : `Participant`}
           </div>
-          {participant && 'specializations' in participant && participant.specializations.length > 0 ? (
+          {participant && 'specializations' in participant && participant.specializations!.length ? (
             <div className='truncate text-base font-normal text-black-2 max-md:text-sm'>
-              {participant.specializations.join(', ')}
+              {participant.specializations!.join(', ')}
             </div>
           ) : null}
         </div>

@@ -1,20 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { instance } from '@/api/axios.api';
 import handleError from '@/api/handleError.api';
-import { addMessage, setChatAttachments, setChatMessages, setChats, setMe, setNewChat } from './ChatSlice';
+import { addMessage, openChat, setChatAttachments, setChatMessages, setChats, setNewChat } from './ChatSlice';
 
-export const getMe = createAsyncThunk('chat/fetch', async (_, { dispatch }) => {
-  try {
-    const response = await instance.get(`/user/me`);
-    if (response.status === 200) {
-      dispatch(setMe(response.data));
-    }
-  } catch (e) {
-    handleError(e as Error);
-  }
-});
-
-export const getChats = createAsyncThunk('chat/fetch', async (_, { dispatch }) => {
+export const getChats = createAsyncThunk('chat/fetchChats', async (_, { dispatch }) => {
   try {
     const response = await instance.get(`/chat`);
     if (response.status === 200) {
@@ -25,7 +14,18 @@ export const getChats = createAsyncThunk('chat/fetch', async (_, { dispatch }) =
   }
 });
 
-export const getChatMessages = createAsyncThunk('chatMessages/fetchMessages', async (chatId: string, { dispatch }) => {
+export const getChat = createAsyncThunk('chat/fetchChat', async (chatId: string, { dispatch }) => {
+  try {
+    const response = await instance.get(`/chat/${chatId}`);
+    if (response.status === 200) {
+      dispatch(openChat(response.data));
+    }
+  } catch (e) {
+    handleError(e as Error);
+  }
+});
+
+export const getChatMessages = createAsyncThunk('chat/fetchMessages', async (chatId: string, { dispatch }) => {
   try {
     const response = await instance.get(`/chat/${chatId}/messages`);
     if (response.status === 200) {

@@ -4,6 +4,7 @@ import type { AppointmentStatus, IAppointment, ICreateAppointment } from '../../
 import api from '../api';
 import {
   deleteAppointment,
+  setAppointment,
   setAppointments,
   setChangeAppointmentStatus,
   setNewAppointment,
@@ -34,6 +35,21 @@ export const getMyAppointments = createAsyncThunk('appointment', async (_, { dis
       const res: IAppointment[] = data;
 
       dispatch(setAppointments(res));
+    }
+  } catch (e) {
+    handleError(e as Error | AxiosError);
+  }
+});
+
+export const getAppointment = createAsyncThunk('appointment', async (appointment_id: string, { dispatch }) => {
+  try {
+    const { error, data } = await api.GET(`/appointment/{id}`, {
+      params: { path: { id: appointment_id } },
+    });
+    if (!error) {
+      const res: IAppointment = data;
+
+      dispatch(setAppointment(res));
     }
   } catch (e) {
     handleError(e as Error | AxiosError);

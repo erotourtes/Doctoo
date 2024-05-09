@@ -6,10 +6,12 @@ import dayjs from 'dayjs';
 
 type AppointmentData = {
   appointments: IAppointment[];
+  appointment: IAppointment | null;
 };
 
 const initialState: AppointmentData = {
   appointments: [],
+  appointment: null,
 };
 
 export const appointmentSlice = createAppSlice({
@@ -40,6 +42,10 @@ export const appointmentSlice = createAppSlice({
       }
     },
 
+    setAppointment: (state, action: PayloadAction<IAppointment>) => {
+      state.appointment = action.payload;
+    },
+
     deleteAppointment: (state, action: PayloadAction<string>) => {
       state.appointments = state.appointments.filter(appointment => appointment.id !== action.payload);
     },
@@ -52,6 +58,7 @@ export const {
   deleteAppointment,
   setChangeAppointmentStatus,
   setResheduleAppointment,
+  setAppointment,
 } = appointmentSlice.actions;
 
 export const appointmentData = (state: RootState) => state.appointment.appointments;

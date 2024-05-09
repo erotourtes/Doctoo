@@ -312,6 +312,7 @@ model Appointment {
   patient           Patient           @relation(fields: [patientId], references: [id])
   doctor            Doctor            @relation(fields: [doctorId], references: [id])
   Notification      Notification[]
+  ChatMessage       ChatMessage[]
 
   @@map("appointments")
 }
@@ -331,14 +332,16 @@ model Chat {
 }
 
 model ChatMessage {
-  id          String              @id @default(uuid())
-  chatId      String              @map("chat_id")
-  sender      Role                @map("sender")
-  sentAt      DateTime            @default(now()) @map("sent_at")
-  text        String
-  editedAt    DateTime            @updatedAt @map("edited_at")
-  chat        Chat                @relation(fields: [chatId], references: [id])
-  attachments MessageAttachment[]
+  id            String              @id @default(uuid())
+  chatId        String              @map("chat_id")
+  sender        Role?               @map("sender")
+  sentAt        DateTime            @default(now()) @map("sent_at")
+  text          String?
+  editedAt      DateTime            @updatedAt @map("edited_at")
+  appointmentId String?             @map("appointment_id")
+  appointment   Appointment?        @relation(fields: [appointmentId], references: [id])
+  chat          Chat                @relation(fields: [chatId], references: [id])
+  attachments   MessageAttachment[]
 
   @@map("chat_messages")
 }

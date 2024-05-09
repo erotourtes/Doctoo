@@ -300,12 +300,19 @@ export interface paths {
      * Get a chat list
      * @description This endpoint retrieves a chat list.
      */
-    get: operations['ChatController_getChatsForPatient'];
+    get: operations['ChatController_getChats'];
     /**
      * Create chat
      * @description This endpoint created a chat
      */
     post: operations['ChatController_createChat'];
+  };
+  '/chat/{chatId}': {
+    /**
+     * Get a chat
+     * @description This endpoint retrieves a chat.
+     */
+    get: operations['ChatController_getChat'];
   };
   '/chat/{chatId}/messages': {
     /**
@@ -317,7 +324,7 @@ export interface paths {
      * create a message with uploading files
      * @description This endpoint creates a message in a chat.
      */
-    post: operations['ChatController_uploadFile'];
+    post: operations['ChatController_createMessage'];
   };
   '/chat/{chatId}/attachments': {
     /**
@@ -1632,58 +1639,29 @@ export interface components {
        */
       participantId: string;
     };
-    ResponseChatDto: {
+    ResponseParticipantDto: {
       /**
-       * @description Unique chat id.
-       * @example 349c9ffc-1427-459d-a260-1e3f186b9db2
+       * @description First name of the participant
+       * @example John
        */
-      id: string;
+      firstName: string;
       /**
-       * @description Unique doctor id.
-       * @example 349c9ffc-1427-459d-a260-1e3f186b9db2
+       * @description Last name of the participant
+       * @example Doe
        */
-      doctorId: string;
+      lastName: string;
       /**
-       * @description Unique patient id.
-       * @example 349c9ffc-1427-459d-a260-1e3f186b9db2
+       * @description Key of the avatar of the participant
+       * @example acde070d-8c4c-4f0d-9d8a-162843c10333.jpg
        */
-      patientId: string;
+      avatarKey: string;
       /**
-       * @description Doctor data
-       * @example {
-       *   "firstName": "Josh",
-       *   "lastName": "Doe",
-       *   "specializations": [
-       *     "Therapist"
-       *   ],
-       *   "avatarKey": "44440105-e6d4-45e8-83f7-b1ff18aaa283.png"
-       * }
+       * @description Key of the specializations of the participant
+       * @example [
+       *   "Hematology"
+       * ]
        */
-      doctor: Record<string, never>;
-      /**
-       * @description Patient name
-       * @example {
-       *   "firstName": "Josh",
-       *   "lastName": "Doe",
-       *   "avatarKey": "44440105-e6d4-45e8-83f7-b1ff18aaa283.png"
-       * }
-       */
-      patient: Record<string, never>;
-      /**
-       * @description Got last message.
-       * @example {
-       *   "sentAt": "2024-05-02T07:41:18.065Z",
-       *   "sender": "DOCTOR",
-       *   "text": "last message text"
-       * }
-       */
-      lastMessage: Record<string, never>;
-    };
-    GetChatsResponse: {
-      /** @description Array of response chats. */
-      chats: components['schemas']['ResponseChatDto'][];
-      /** @description Total number of chats. */
-      totalChats: number;
+      specializations?: string[];
     };
     ResponseAttachmentDto: {
       /**
@@ -1701,6 +1679,23 @@ export interface components {
        * @example 123e4567-e89b-12d3-a456-426614174000.jpeg
        */
       attachmentKey: string;
+    };
+    ResponseMessageAppoitnment: {
+      /**
+       * @description Unique appointment id.
+       * @example 349c9ffc-1427-459d-a260-1e3f186b9db2
+       */
+      id: string;
+      /**
+       * @description Time when started appointment.
+       * @example 2024-05-02T07:41:18.065Z
+       */
+      startedAt: string;
+      /**
+       * @description Appointment status.
+       * @example PLANNED
+       */
+      status: string;
     };
     ResponseMessageDto: {
       /**
@@ -1737,8 +1732,43 @@ export interface components {
       editedAt: string;
       /** @description Array of attachments. */
       attachments: components['schemas']['ResponseAttachmentDto'][];
+      /**
+       * @description For appointment message in chat
+       * @example null
+       */
+      appointment: components['schemas']['ResponseMessageAppoitnment'] | null;
     };
-    GetMessageResponse: {
+    ResponseChatDto: {
+      /**
+       * @description Unique appointment id.
+       * @example 123e4567-e89b-12d3-a456-426614174000
+       */
+      id: string;
+      /**
+       * @description Unique doctor id.
+       * @example 123e4567-e89b-12d3-a456-426614174000
+       */
+      doctorId: string;
+      /**
+       * @description Unique patient id.
+       * @example 123e4567-e89b-12d3-a456-426614174000
+       */
+      patientId: string;
+      /** @description Details of the chat participant. */
+      participant: components['schemas']['ResponseParticipantDto'];
+      /** @description Details of the last message in the chat. */
+      lastMessage: components['schemas']['ResponseMessageDto'] | null;
+    };
+    ResponseChatArrayDto: {
+      /** @description Chat list */
+      chats: components['schemas']['ResponseChatDto'][];
+      /**
+       * @description Total number of chats
+       * @example 1
+       */
+      totalChats: number;
+    };
+    ResponseMessageArrayDto: {
       /** @description Array of response messages. */
       messages: components['schemas']['ResponseMessageDto'][];
       /** @description Total number of messages. */
@@ -1751,6 +1781,7 @@ export interface components {
        */
       text: string;
       /**
+       * Format: date-time
        * @description Time when sent message
        * @example 2024-05-05T22:18:13.234Z
        */
@@ -4575,7 +4606,7 @@ export interface operations {
    * Get a chat list
    * @description This endpoint retrieves a chat list.
    */
-  ChatController_getChatsForPatient: {
+  ChatController_getChats: {
     parameters: {
       header?: {
         /** @description JWT token */
@@ -4586,7 +4617,7 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          'application/json': components['schemas']['GetChatsResponse'];
+          'application/json': components['schemas']['ResponseChatArrayDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
@@ -4621,7 +4652,7 @@ export interface operations {
     };
     responses: {
       /** @description Response when the request is successfully processed. */
-      200: {
+      201: {
         content: {
           'application/json': components['schemas']['ResponseChatDto'];
         };
@@ -4630,6 +4661,45 @@ export interface operations {
       400: {
         content: {
           'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      401: {
+        content: {
+          'application/json': components['schemas']['UnauthorizedResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /**
+   * Get a chat
+   * @description This endpoint retrieves a chat.
+   */
+  ChatController_getChat: {
+    parameters: {
+      header?: {
+        /** @description JWT token */
+        Cookie?: string;
+      };
+      path: {
+        /**
+         * @description Unique chat id.
+         * @example 123e4567-e89b-12d3-a456-426614174000
+         */
+        chatId: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseChatDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
@@ -4672,7 +4742,7 @@ export interface operations {
       /** @description Response when the request is successfully processed. */
       200: {
         content: {
-          'application/json': components['schemas']['GetMessageResponse'];
+          'application/json': components['schemas']['ResponseMessageArrayDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */
@@ -4693,7 +4763,7 @@ export interface operations {
    * create a message with uploading files
    * @description This endpoint creates a message in a chat.
    */
-  ChatController_uploadFile: {
+  ChatController_createMessage: {
     parameters: {
       path: {
         /**
@@ -4710,7 +4780,7 @@ export interface operations {
     };
     responses: {
       /** @description Response when the request is successfully processed. */
-      200: {
+      201: {
         content: {
           'application/json': components['schemas']['ResponseMessageDto'];
         };

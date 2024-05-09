@@ -7,10 +7,13 @@ import { useEffect, useState } from 'react';
 
 const BookAppointmentBtn = () => {
   const dispatch = useAppDispatch();
+  const role = useAppSelector(state => state.user.data.role);
   const doctorUser = useAppSelector(state => state.doctor.familyDoctor);
   const reviews = useAppSelector(state => state.review.reviews);
   const openedChat = useAppSelector(state => state.chat.openedChat);
   const [schedulePopupIsOpen, setSchedulePopupIsOpen] = useState(false);
+
+  if (role) return;
 
   useEffect(() => {
     if (openedChat) {

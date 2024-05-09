@@ -18,7 +18,6 @@ export type SocketPayload = { userId?: string; message: any };
     origin: true,
     credentials: true,
   },
-  namespace: 'chat',
 })
 export class ChatGateway extends SocketGateway {
   @WebSocketServer()
@@ -35,27 +34,22 @@ export class ChatGateway extends SocketGateway {
   }
 
   afterInit() {
-    this.chatService.eventEmitter.on('chat.created', response => {
-      this.handleChatCreated(response);
+    this.chatService.eventEmitter.on('chat.created', (response: ResponseChatDto) => {
+      this.handleEvent(response.id, 'chat.created', response);
     });
-    this.chatService.eventEmitter.on('chat.message.create', response => {
-      this.handleCreateMessage(response);
+    this.chatService.eventEmitter.on('chat.message.create', (response: ResponseMessageDto) => {
+      this.handleEvent(response.chatId, `chat.${response.chatId}.add-message`, response);
     });
-  }
-
-  async handleChatCreated(chat: ResponseChatDto) {
-    const userIds = await this.chatService.getUserIdsByChatId(chat.id);
-    userIds.forEach(async userId => {
-      const receiverSocketId = await this.getSocketId(userId);
-      this.server.to(receiverSocketId).emit('chat.created', chat);
+    this.chatService.eventEmitter.on('chat.message.update', (response: ResponseMessageDto) => {
+      this.handleEvent(response.chatId, `chat.${response.chatId}.update-message`, response);
     });
   }
 
-  async handleCreateMessage(message: ResponseMessageDto) {
-    const userIds = await this.chatService.getUserIdsByChatId(message.chatId);
+  async handleEvent(chatId: string, event: string, payload: any) {
+    const userIds = await this.chatService.getUserIdsByChatId(chatId);
     userIds.forEach(async userId => {
       const receiverSocketId = await this.getSocketId(userId);
-      this.server.to(receiverSocketId).emit(`chat.${message.chatId}.add-message`, message);
+      this.server.to(receiverSocketId).emit(event, payload);
     });
   }
 }

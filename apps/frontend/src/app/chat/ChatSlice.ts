@@ -1,20 +1,17 @@
 import type { RootState } from '@/app/store';
-import type { GetChatsResponse, GetMessagesResponse, IAttachment, IChat, IMessage } from '@/dataTypes/Chat';
+import type { TAttachment, TChat, TChats, TMessage, TMessages } from '@/dataTypes/Chat';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '../createAppSlice';
-import type { TUser } from '@/dataTypes/User';
 
 interface chatData {
-  me: TUser | null;
-  chats: GetChatsResponse;
-  openedChat: IChat | null;
+  chats: TChats;
+  openedChat: TChat | null;
   isOpenedChat: boolean;
-  chatMessages: GetMessagesResponse;
-  chatAttachedFiles: IAttachment[];
+  chatMessages: TMessages;
+  chatAttachedFiles: TAttachment[];
 }
 
 const initialState: chatData = {
-  me: null,
   chats: {
     chats: [],
     totalChats: 0,
@@ -32,15 +29,11 @@ export const chatSlice = createAppSlice({
   name: 'chat',
   initialState,
   reducers: {
-    setMe: (state, action: PayloadAction<TUser>) => {
-      state.me = action.payload;
-    },
-
-    setChats: (state, action: PayloadAction<GetChatsResponse>) => {
+    setChats: (state, action: PayloadAction<TChats>) => {
       state.chats = action.payload;
     },
 
-    setNewChat: (state, action: PayloadAction<IChat>) => {
+    setNewChat: (state, action: PayloadAction<TChat>) => {
       const foundedChat = state.chats.chats.find(chat => chat.id === action.payload.id);
       if (!foundedChat) {
         state.chats = {
@@ -63,11 +56,11 @@ export const chatSlice = createAppSlice({
       state.isOpenedChat = false;
     },
 
-    setChatMessages: (state, action: PayloadAction<GetMessagesResponse>) => {
+    setChatMessages: (state, action: PayloadAction<TMessages>) => {
       state.chatMessages = action.payload;
     },
 
-    addMessage: (state, action: PayloadAction<IMessage>) => {
+    addMessage: (state, action: PayloadAction<TMessage>) => {
       const foundedMessage = state.chatMessages.messages.find(message => message.id === action.payload.id);
 
       if (!foundedMessage && state.openedChat?.id === action.payload.chatId) {
@@ -77,11 +70,7 @@ export const chatSlice = createAppSlice({
 
       const chatIndex = state.chats.chats.findIndex(chat => chat.id === action.payload.chatId);
       if (chatIndex !== -1) {
-        state.chats.chats[chatIndex].lastMessage = {
-          sender: action.payload.sender,
-          sentAt: action.payload.sentAt,
-          text: action.payload.text,
-        };
+        state.chats.chats[chatIndex].lastMessage = action.payload;
       }
 
       state.chats.chats.sort((a, b) => {
@@ -91,18 +80,60 @@ export const chatSlice = createAppSlice({
       });
 
       if (action.payload.attachments && action.payload.attachments.length > 0) {
-        state.chatAttachedFiles = [...action.payload.attachments, ...state.chatAttachedFiles];
+        action.payload.attachments.forEach(attachment => {
+          const foundedAttachemt = state.chatAttachedFiles.findIndex(a => a.id === attachment.id);
+          if (!foundedAttachemt) {
+            state.chatAttachedFiles = [attachment, ...state.chatAttachedFiles];
+          }
+        });
       }
     },
 
-    setChatAttachments: (state, action: PayloadAction<IAttachment[]>) => {
+    updateMessage: (state, action: PayloadAction<TMessage>) => {
+      const foundedMessageIndex = state.chatMessages.messages.findIndex(message => message.id === action.payload.id);
+      if (foundedMessageIndex !== -1) {
+        // Assuming you have a new message object to replace the old one, let's call it `newMessage`
+        const updatedMessages = [
+          ...state.chatMessages.messages.slice(0, foundedMessageIndex),
+          action.payload,
+          ...state.chatMessages.messages.slice(foundedMessageIndex + 1),
+        ];
+
+        state.chatMessages.messages = updatedMessages;
+      }
+
+      const chatIndex = state.chats.chats.findIndex(chat => chat.id === action.payload.chatId);
+      if (chatIndex !== -1 && state.chats.chats[chatIndex].lastMessage?.id === action.payload.id) {
+        state.chats.chats[chatIndex].lastMessage = action.payload;
+      }
+
+      state.chatAttachedFiles = state.chatAttachedFiles.filter(a => a.messageId !== action.payload.id);
+      if (action.payload.attachments && action.payload.attachments.length > 0) {
+        action.payload.attachments.forEach(attachment => {
+          const foundedAttachemt = state.chatAttachedFiles.findIndex(a => a.id === attachment.id);
+          if (!foundedAttachemt) {
+            state.chatAttachedFiles = [attachment, ...state.chatAttachedFiles];
+          }
+        });
+      }
+    },
+
+    setChatAttachments: (state, action: PayloadAction<TAttachment[]>) => {
       state.chatAttachedFiles = action.payload;
     },
   },
 });
 
-export const { setMe, setChats, setNewChat, openChat, closeChat, setChatMessages, addMessage, setChatAttachments } =
-  chatSlice.actions;
+export const {
+  setChats,
+  setNewChat,
+  openChat,
+  closeChat,
+  setChatMessages,
+  addMessage,
+  updateMessage,
+  setChatAttachments,
+} = chatSlice.actions;
 
 export const chats = (state: RootState) => state.chat.chats;
 

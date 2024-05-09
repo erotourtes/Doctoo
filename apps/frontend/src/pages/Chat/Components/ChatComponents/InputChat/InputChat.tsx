@@ -1,6 +1,6 @@
 import { Button, Icon } from '@/components/UI';
 import { useEffect, useState } from 'react';
-import AddAttachmentsPopup from '../Popups/AddAttachments';
+import AddAttachmentsPopup from '../Popups/AddAttachmentsPopup';
 import ChatTextArea from './ChatTextArea';
 import InputFile from './InputFile';
 

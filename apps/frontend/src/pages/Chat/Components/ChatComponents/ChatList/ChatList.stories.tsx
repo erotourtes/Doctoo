@@ -2,53 +2,52 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import ChatList from './ChatList';
 import '@/index.css';
-import type { IChat } from '@/dataTypes/Chat';
-import { Role } from '@/dataTypes/User';
 import { Provider } from 'react-redux';
 import { store } from '@/app/store';
 import { BrowserRouter } from 'react-router-dom';
+import type { TChat } from '@/dataTypes/Chat';
 
-const mockChats: IChat[] = [
+const mockChats: TChat[] = [
   {
-    id: '1',
-    patientId: '1',
-    patient: {
+    id: '123e4567-e89b-12d3-a456-426614174000',
+    participant: {
       firstName: 'John',
       lastName: 'Doe',
-      avatarKey: 'john.doe.png',
+      avatarKey: 'acde070d-8c4c-4f0d-9d8a-162843c10333.jpg',
+      specializations: ['Hematology'],
     },
-    doctorId: '2',
-    doctor: {
-      firstName: 'Jane',
-      lastName: 'Doe',
-      specializations: ['Pediatrics'],
-      avatarKey: 'jane.doe.png',
-    },
+    doctorId: '123e4567-e89b-12d3-a456-4266141waw000',
+    patientId: '123e4567-e89b-12d3-a456-4266waw74000',
     lastMessage: {
-      sender: Role.PATIENT,
-      text: 'Hello, how can I assist you today?',
-      sentAt: new Date(),
+      id: '349c9ffc-1427-459d-a260-1e3f186b9db2',
+      chatId: '349c9ffc-1427-459d-a260-1e3f186b9db2',
+      sender: 'DOCTOR',
+      sentAt: '2024-05-02T07:41:18.065Z',
+      text: 'Hello patient!',
+      editedAt: '2024-05-02T07:41:18.065Z',
+      attachments: [],
+      appointment: null,
     },
   },
   {
-    id: '2',
-    patientId: '3',
-    patient: {
-      firstName: 'Bob',
-      lastName: 'Smith',
-      avatarKey: 'bob.smith.png',
+    id: '123e4567-e89b-12d3-a456-426612q24000',
+    participant: {
+      firstName: 'Jane',
+      lastName: 'Moris',
+      avatarKey: 'acde070d-8c4c-4f0d-9d8a-162843c10333.jpg',
+      specializations: ['Hematology'],
     },
-    doctorId: '4',
-    doctor: {
-      firstName: 'Alice',
-      lastName: 'Smith',
-      specializations: ['Pediatrics'],
-      avatarKey: 'alice.smith.png',
-    },
+    doctorId: '123e4567-e89b-12d3-a456-4266141waw000',
+    patientId: '123e4567-e89b-12d3-a456-4266waw74000',
     lastMessage: {
-      sender: Role.PATIENT,
-      text: 'Hi, I need some help with my results.',
-      sentAt: new Date(),
+      id: '349c9ffc-1427-459d-a260-1e3f186b9db2',
+      chatId: '349c9ffc-1427-459d-a260-1e3f186b9db2',
+      sender: 'PATIENT',
+      sentAt: '2024-05-02T07:41:18.065Z',
+      text: 'Hello doctor!',
+      editedAt: '2024-05-02T07:41:18.065Z',
+      attachments: [],
+      appointment: null,
     },
   },
 ];

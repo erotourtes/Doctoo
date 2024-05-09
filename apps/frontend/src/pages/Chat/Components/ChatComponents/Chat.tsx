@@ -1,23 +1,22 @@
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import ChatList from './ChatList/ChatList';
 import { Fragment, useEffect, useState } from 'react';
-import { handleNewChat, handleNewMessages } from '@/app/chat/ChatActions';
+import { handleNewChat, handleMessages } from '@/app/chat/ChatActions';
 import { getChatAttachments, getChatMessages } from '@/app/chat/ChatThunks';
 import { cn } from '@/utils/cn';
 import useWindowWide from '@/hooks/useWindowWide';
-import connectedSocket from '@/app/chat/socket';
 import ChatBody from './ChatBody/ChatBody';
 import { closeChat } from '@/app/chat/ChatSlice';
 import AttachedFiles from './AttachedFiles/AttachedFiles';
 import { Icon } from '@/components/UI';
+import socket from '@/app/socket/socket';
 
 const Chat = () => {
-  const socket = connectedSocket();
   const dispatch = useAppDispatch();
   const w1024 = useWindowWide(1024);
   const w1280 = useWindowWide(1280);
 
-  const me = useAppSelector(state => state.chat.me);
+  const role = useAppSelector(state => state.user.data.role);
   const chats = useAppSelector(state => state.chat.chats);
   const openedChat = useAppSelector(state => state.chat.openedChat);
   const isOpenedChat = useAppSelector(state => state.chat.isOpenedChat);
@@ -25,11 +24,9 @@ const Chat = () => {
   const [openAttachedFiles, setAttachedFiles] = useState(false);
 
   useEffect(() => {
-    if (me) {
-      dispatch(handleNewChat(socket));
-      dispatch(handleNewMessages(socket, chats.chats));
-    }
-  }, [me, chats]);
+    dispatch(handleNewChat(socket));
+    dispatch(handleMessages(socket, chats.chats));
+  }, [chats]);
 
   useEffect(() => {
     if (openedChat) {
@@ -80,7 +77,7 @@ const Chat = () => {
                   ? 'absolute inset-0 z-[1] translate-x-full transition-all ' + (isOpenedChat ? 'translate-x-0' : '')
                   : '',
               )}
-              role={me?.role}
+              role={role}
               showBackBtn={!w1024}
               showFilesBtn={!w1280}
               handleBackToChats={handleBackToChats}

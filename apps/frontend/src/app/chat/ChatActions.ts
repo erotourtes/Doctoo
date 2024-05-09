@@ -1,18 +1,21 @@
 import type { Dispatch } from '@reduxjs/toolkit';
-import type { IChat, IMessage } from '@/dataTypes/Chat';
-import { addMessage, setNewChat } from './ChatSlice';
+import { addMessage, setNewChat, updateMessage } from './ChatSlice';
 import type { Socket } from 'socket.io-client';
+import type { TChat, TMessage } from '@/dataTypes/Chat';
 
 export const handleNewChat = (socket: Socket) => (dispatch: Dispatch) => {
-  socket.on('chat.created', (chat: IChat) => {
+  socket.on('chat.created', (chat: TChat) => {
     dispatch(setNewChat(chat));
   });
 };
 
-export const handleNewMessages = (socket: Socket, chats: IChat[]) => (dispatch: Dispatch) => {
+export const handleMessages = (socket: Socket, chats: TChat[]) => (dispatch: Dispatch) => {
   chats.forEach(chat => {
-    socket.on(`chat.${chat.id}.add-message`, (payload: IMessage) => {
+    socket.on(`chat.${chat.id}.add-message`, (payload: TMessage) => {
       dispatch(addMessage(payload));
+    });
+    socket.on(`chat.${chat.id}.update-message`, (payload: TMessage) => {
+      dispatch(updateMessage(payload));
     });
   });
 };

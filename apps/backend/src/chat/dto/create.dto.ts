@@ -19,7 +19,7 @@ export class CreateMessageDto {
   @IsOptional()
   @IsDateString()
   @ApiProperty({ example: '2024-05-05T22:18:13.234Z', description: 'Time when sent message' })
-  readonly sentAt?: string;
+  readonly sentAt?: Date;
 
   @ApiProperty({
     properties: { file: { type: 'string', format: 'binary' } },
@@ -32,4 +32,10 @@ export class CreateMessageDto {
 export class CreateChatDto {
   @ApiProperty({ example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique user id (doctor or patient).' })
   participantId: string;
+}
+
+export class CreateChatServiceDto {
+  patientId: string;
+  doctorId: string;
+  role?: Role;
 }

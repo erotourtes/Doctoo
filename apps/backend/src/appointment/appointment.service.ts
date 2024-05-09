@@ -7,9 +7,10 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateAppointmentDto } from './dto/create.dto';
 import { PatchAppointmentDto } from './dto/patch.dto';
 import { ResponseAppointmentDto } from './dto/response.dto';
-import { ChatCreatedEvent } from '../chat/events/chat-created.event';
+import { ChatAppointmentCreatedEvent } from '../chat/events/chat-appointment-created.event';
 import { calculateAppointmentPrice } from '../utils/calculateAppointmentPrice';
 import { emitEventBasedOnAppointmentStatus } from '../utils/emitEventBasedOnAppointmentStatus';
+import { ChatAppointmentUpdatedEvent } from 'src/chat/events/chat-appointment-updated.event copy';
 
 @Injectable()
 export class AppointmentService {
@@ -38,7 +39,12 @@ export class AppointmentService {
     const appointment = await this.prismaService.appointment.create({ data: { ...body, price } });
 
     // TODO: Use event isntead of directly call payment service.
-    this.eventEmitter.emit('chat.create', new ChatCreatedEvent(body.patientId, body.doctorId));
+    if (appointment) {
+      this.eventEmitter.emit(
+        'chat.appointment-created',
+        new ChatAppointmentCreatedEvent(body.patientId, body.doctorId, appointment),
+      );
+    }
     emitEventBasedOnAppointmentStatus(this.eventEmitter, appointment);
 
     return plainToInstance(ResponseAppointmentDto, appointment);
@@ -103,7 +109,27 @@ export class AppointmentService {
   async getAppointment(id: string): Promise<ResponseAppointmentDto> {
     await this.isAppointmentExists(id);
 
-    const appointment = await this.prismaService.appointment.findUnique({ where: { id } });
+    const appointment = await this.prismaService.appointment.findUnique({
+      where: { id },
+      include: {
+        patient: {
+          include: {
+            user: {
+              select: { firstName: true, lastName: true, avatarKey: true, phone: true, email: true },
+            },
+          },
+        },
+        doctor: {
+          include: {
+            user: {
+              select: { firstName: true, lastName: true, avatarKey: true, phone: true, email: true },
+            },
+            hospitals: { select: { hospital: { select: { id: true, name: true } } } },
+            specializations: { select: { specialization: true } },
+          },
+        },
+      },
+    });
 
     return plainToInstance(ResponseAppointmentDto, appointment);
   }
@@ -113,6 +139,9 @@ export class AppointmentService {
 
     const appointment = await this.prismaService.appointment.update({ where: { id }, data: body });
 
+    if (appointment) {
+      this.eventEmitter.emit('chat.appointment-updated', new ChatAppointmentUpdatedEvent(appointment));
+    }
     emitEventBasedOnAppointmentStatus(this.eventEmitter, appointment);
 
     return plainToInstance(ResponseAppointmentDto, appointment);

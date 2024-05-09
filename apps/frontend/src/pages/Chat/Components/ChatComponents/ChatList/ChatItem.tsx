@@ -1,14 +1,14 @@
 import { openChat } from '@/app/chat/ChatSlice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { Icon } from '@/components/UI';
-import type { IChat, IChatDoctor, IChatPatient } from '@/dataTypes/Chat';
+import type { TChat } from '@/dataTypes/Chat';
 import { Role } from '@/dataTypes/User';
 import { cn } from '@/utils/cn';
-import DayJS from 'dayjs';
+import { formatDateChat } from '@/utils/formatDateChat';
 import { useEffect, useState } from 'react';
 
 type ChatItemProps = {
-  chat: IChat;
+  chat: TChat;
   active?: boolean;
 };
 
@@ -16,15 +16,12 @@ const ChatItem = ({ chat, active = false }: ChatItemProps) => {
   const dispatch = useAppDispatch();
   const [imageLoaded, setImageLoaded] = useState(true);
 
-  const user = useAppSelector(state => state.user.data);
+  const role = useAppSelector(state => state.user.data.role);
   const openedChat = useAppSelector(state => state.chat.openedChat);
   const isOpenedChat = useAppSelector(state => state.chat.isOpenedChat);
 
-  const formattedDate = chat.lastMessage ? formatDate(chat.lastMessage.sentAt) : null;
-  let participant: IChatDoctor | IChatPatient = chat.doctor;
-  if (user.role === Role.DOCTOR) {
-    participant = chat.patient;
-  }
+  const formattedDate = chat.lastMessage ? formatDateChat(chat.lastMessage.sentAt) : null;
+  const participant = chat.participant;
 
   useEffect(() => {
     active = openedChat?.id === chat.id && isOpenedChat;
@@ -57,7 +54,7 @@ const ChatItem = ({ chat, active = false }: ChatItemProps) => {
       </div>
       <div className='flex flex-1 items-start gap-2'>
         <div className='grid flex-1 gap-1'>
-          <div className='truncate text-base font-bold text-black'>{`${user.role === Role.PATIENT ? 'Dr.' : ''} ${participant.firstName} ${participant.lastName}`}</div>
+          <div className='truncate text-base font-bold text-black'>{`${role === Role.PATIENT ? 'Dr.' : ''} ${participant.firstName} ${participant.lastName}`}</div>
           <div className='truncate text-sm font-normal text-black-2'>{chat.lastMessage?.text}</div>
         </div>
         <div className='flex shrink-0 flex-col items-end gap-1'>
@@ -71,21 +68,6 @@ const ChatItem = ({ chat, active = false }: ChatItemProps) => {
       </div>
     </button>
   );
-};
-
-const formatDate = (date: Date): string => {
-  const currentDay = DayJS().startOf('day');
-  const messageDay = DayJS(date).startOf('day');
-  const isToday = currentDay.isSame(messageDay);
-  const isThisWeek = currentDay.diff(messageDay, 'days') < 7;
-
-  if (isToday) {
-    return DayJS(date).format('HH:mm');
-  } else if (isThisWeek) {
-    return DayJS(date).format('ddd');
-  } else {
-    return DayJS(date).format('DD.MM.YYYY');
-  }
 };
 
 export default ChatItem;

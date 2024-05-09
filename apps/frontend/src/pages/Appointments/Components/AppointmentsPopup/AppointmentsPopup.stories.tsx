@@ -62,6 +62,7 @@ const mockStore = configureStore({
   preloadedState: {
     appointment: {
       appointments: mockAppointments,
+      appointment: null,
     },
   },
 });

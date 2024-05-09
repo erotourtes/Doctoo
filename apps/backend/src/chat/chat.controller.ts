@@ -3,6 +3,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
   Query,
@@ -18,6 +20,7 @@ import {
   ApiBadRequestResponse,
   ApiBody,
   ApiConsumes,
+  ApiCreatedResponse,
   ApiHeader,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
@@ -26,12 +29,12 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { GetChatsResponse, ResponseChatDto } from './dto/response.dto';
+import { ResponseChatArrayDto, ResponseChatDto } from './dto/response.dto';
 import { ClassicNestResponse } from '../utils/ClassicNestResponse';
 import { BadRequestResponse } from '../utils/BadRequestResponse';
 import { RESPONSE_STATUS } from '../utils/constants';
 import { UnauthorizedResponse } from '../utils/UnauthorizedResponse';
-import { GetMessageResponse, ResponseMessageDto } from './dto/responseMessage.dto';
+import { ResponseMessageArrayDto, ResponseMessageDto } from './dto/responseMessage.dto';
 import { Role, User } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateChatDto, CreateMessageDto } from './dto/create.dto';
@@ -48,12 +51,13 @@ export class ChatController {
   ) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: 'Create chat',
     description: 'This endpoint created a chat',
   })
   @ApiHeader({ name: 'Cookie', example: 'jwt=eyJhbGci...', description: 'JWT token' })
-  @ApiOkResponse({ type: ResponseChatDto, description: RESPONSE_STATUS.SUCCESS })
+  @ApiCreatedResponse({ type: ResponseChatDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
@@ -68,7 +72,7 @@ export class ChatController {
       where: { userId: user.role === Role.DOCTOR ? user.id : participantId },
     });
 
-    return this.chatService.createChat(patient.id, doctor.id);
+    return this.chatService.createChat({ patientId: patient.id, doctorId: doctor.id, role: user.role });
   }
 
   @Get()
@@ -77,13 +81,29 @@ export class ChatController {
     description: 'This endpoint retrieves a chat list.',
   })
   @ApiHeader({ name: 'Cookie', example: 'jwt=eyJhbGci...', description: 'JWT token' })
-  @ApiOkResponse({ type: GetChatsResponse, description: RESPONSE_STATUS.SUCCESS })
+  @ApiOkResponse({ type: ResponseChatArrayDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
   @UseGuards(JWTGuard)
-  async getChatsForPatient(@Req() req: Request) {
+  async getChats(@Req() req: Request) {
     const user: User = req['user'];
     return this.chatService.getChatsByUserId(user.id, user.role);
+  }
+
+  @Get('/:chatId')
+  @ApiOperation({
+    summary: 'Get a chat',
+    description: 'This endpoint retrieves a chat.',
+  })
+  @ApiHeader({ name: 'Cookie', example: 'jwt=eyJhbGci...', description: 'JWT token' })
+  @ApiOkResponse({ type: ResponseChatDto, description: RESPONSE_STATUS.SUCCESS })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiParam({ name: 'chatId', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique chat id.' })
+  @UseGuards(JWTGuard)
+  async getChat(@Req() req: Request, @Param('chatId') chatId: string) {
+    const user: User = req['user'];
+    return this.chatService.getChatByIdAndUserId(chatId, user.id, user.role);
   }
 
   @Get('/:chatId/messages')
@@ -92,7 +112,7 @@ export class ChatController {
     description: 'This endpoint retrieves chat messages.',
   })
   @ApiHeader({ name: 'Cookie', example: 'jwt=eyJhbGci...', description: 'JWT token' })
-  @ApiOkResponse({ type: GetMessageResponse, description: RESPONSE_STATUS.SUCCESS })
+  @ApiOkResponse({ type: ResponseMessageArrayDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiParam({ name: 'chatId', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique chat id.' })
@@ -117,6 +137,7 @@ export class ChatController {
   }
 
   @Post('/:chatId/messages')
+  @HttpCode(HttpStatus.CREATED)
   @UseGuards(JWTGuard)
   @UseInterceptors(FilesInterceptor('files'))
   @ApiOperation({
@@ -126,11 +147,11 @@ export class ChatController {
   @ApiParam({ name: 'chatId', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique chat id.' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: CreateMessageDto })
-  @ApiOkResponse({ type: ResponseMessageDto, description: RESPONSE_STATUS.SUCCESS })
+  @ApiCreatedResponse({ type: ResponseMessageDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
   @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
-  uploadFile(
+  createMessage(
     @Req() req: Request,
     @UploadedFiles() files: Array<Express.Multer.File>,
     @Body() bodyData: { text: string; sentAt?: Date },

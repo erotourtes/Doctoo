@@ -1,60 +1,17 @@
 import type { paths } from '@/api';
-import type { Role } from './User';
 
-export interface IChatDoctor {
-  firstName: string;
-  lastName: string;
-  specializations: string[];
-  avatarKey: string;
-}
+export type TChats = paths['/chat']['get']['responses']['200']['content']['application/json'];
 
-export interface IChatPatient {
-  firstName: string;
-  lastName: string;
-  avatarKey: string;
-}
+export type TChat = paths['/chat/{chatId}']['get']['responses']['200']['content']['application/json'];
 
-export interface LastMessage {
-  sentAt: Date;
-  sender: Role;
-  text: string;
-}
+export type TParticipant = TChat['participant'];
 
-export interface IChat {
-  id: string;
-  doctorId: string;
-  patientId: string;
-  doctor: IChatDoctor;
-  patient: IChatPatient;
-  lastMessage: LastMessage | null;
-}
+export type TMessages = paths['/chat/{chatId}/messages']['get']['responses']['200']['content']['application/json'];
 
-export interface GetChatsResponse {
-  chats: IChat[];
-  totalChats: number;
-}
+export type TMessage = TMessages['messages'][0];
 
-export interface IMessage {
-  id: string;
-  chatId: string;
-  sender: Role;
-  sentAt: Date;
-  text: string;
-  editedAt: Date;
-  attachments: IAttachment[];
-}
+export type TMessageAppointment = TMessage['appointment'];
 
-export interface GetMessagesResponse {
-  messages: IMessage[];
-  totalMessages: number;
-}
-
-export interface IAttachment {
-  id: string;
-  messageId: string;
-  attachmentKey: string;
-}
-
-export interface IAttachment {}
+export type TAttachment = TMessage['attachments'][0];
 
 export type TUser = paths['/user/me']['get']['responses']['200']['content']['application/json'];

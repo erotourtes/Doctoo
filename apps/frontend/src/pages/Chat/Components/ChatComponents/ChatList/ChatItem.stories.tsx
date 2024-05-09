@@ -3,29 +3,35 @@ import type { Meta, StoryObj } from '@storybook/react';
 import ChatItem from './ChatItem';
 import '@/index.css';
 import { Role } from '@/dataTypes/User';
-import type { IChat, IChatDoctor, IChatPatient } from '@/dataTypes/Chat';
 import { Provider } from 'react-redux';
 import { store } from '@/app/store';
+import type { TChat } from '@/dataTypes/Chat';
 
-const mockChat: IChat = {
-  id: '1',
-  patientId: '1',
-  patient: {
+const mockChat: TChat = {
+  id: '123e4567-e89b-12d3-a456-426614174000',
+  participant: {
     firstName: 'John',
     lastName: 'Doe',
-    avatarKey: 'john.doe.png',
-  } as IChatPatient,
-  doctorId: '2',
-  doctor: {
-    firstName: 'Jane',
-    lastName: 'Doe',
-    specializations: ['Pediatrics'],
-    avatarKey: 'jane.doe.png',
-  } as IChatDoctor,
+    avatarKey: 'acde070d-8c4c-4f0d-9d8a-162843c10333.jpg',
+    specializations: ['Hematology'],
+  },
+  doctorId: '123e4567-e89b-12d3-a456-4266141waw000',
+  patientId: '123e4567-e89b-12d3-a456-4266waw74000',
   lastMessage: {
-    sender: Role.DOCTOR,
-    text: 'Hello, how can I assist you today?',
-    sentAt: new Date(),
+    id: '349c9ffc-1427-459d-a260-1e3f186b9db2',
+    chatId: '349c9ffc-1427-459d-a260-1e3f186b9db2',
+    sender: 'DOCTOR',
+    sentAt: '2024-05-02T07:41:18.065Z',
+    text: 'Hello patient!',
+    editedAt: '2024-05-02T07:41:18.065Z',
+    attachments: [
+      {
+        id: '349c9ffc-1427-459d-a260-1e3f186b9db2',
+        messageId: '349c9ffc-1427-459d-a260-1e3f186b9db2',
+        attachmentKey: '123e4567-e89b-12d3-a456-426614174000.jpeg',
+      },
+    ],
+    appointment: null,
   },
 };
 
