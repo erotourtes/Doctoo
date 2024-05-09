@@ -39,7 +39,7 @@ const HealthData = () => {
 
       if (data.entry && data.entry.length > 0) {
         const firstEntry = data.entry[0];
-        console.log(firstEntry);
+        console.log(firstEntry, client);
         setResult(`Your HgA1C was tested on ${firstEntry.resource.effectiveDateTime}<br/><br/>
           Your HgA1C was ${firstEntry.resource.valueQuantity.value}<br/><br/>
           <a href='https://en.wikipedia.org/wiki/Glycated_hemoglobin'>According to Wikipedia</a>, A1c is measured primarily to determine the three-month average blood sugar level and can be used as a diagnostic test for diabetes mellitus. <5.7% Normal, 5.7-6.4% Prediabetes, >6.5% Diabetes.`);
