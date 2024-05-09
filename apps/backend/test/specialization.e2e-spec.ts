@@ -1,4 +1,4 @@
-import { INestApplication } from '@nestjs/common';
+import { BadRequestException, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { randomUUID } from 'crypto';
 import * as request from 'supertest';
@@ -18,6 +18,20 @@ describe('SpecializationController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        transform: true,
+        exceptionFactory: errors => {
+          const formattedErrors = errors.map(error => ({
+            property: error.property,
+            message: error.constraints[Object.keys(error.constraints)[0]],
+          }));
+
+          return new BadRequestException({ message: 'Validation failed', errors: formattedErrors });
+        },
+      }),
+    );
 
     await app.init();
 

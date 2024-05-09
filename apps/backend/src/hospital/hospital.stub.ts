@@ -4,5 +4,6 @@ export const hospitalStub = () => {
     city: 'test',
     country: 'test',
     street: 'test',
+    zipCode: 10110,
   };
 };

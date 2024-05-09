@@ -1,4 +1,4 @@
-import { INestApplication } from '@nestjs/common';
+import { BadRequestException, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { CreateHospitalDto } from '../src/hospital/dto/create.dto';
@@ -7,7 +7,6 @@ import { HospitalModule } from '../src/hospital/hospital.module';
 import { hospitalStub } from '../src/hospital/hospital.stub';
 import { PrismaService } from '../src/prisma/prisma.service';
 
-// TODO: Rewrite this tests.
 describe('HospitalController (e2e)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
@@ -19,6 +18,20 @@ describe('HospitalController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        transform: true,
+        exceptionFactory: errors => {
+          const formattedErrors = errors.map(error => ({
+            property: error.property,
+            message: error.constraints[Object.keys(error.constraints)[0]],
+          }));
+
+          return new BadRequestException({ message: 'Validation failed', errors: formattedErrors });
+        },
+      }),
+    );
 
     await app.init();
 

@@ -30,7 +30,7 @@ export class UserService {
   private async isEmailExists(email: string): Promise<boolean> {
     const isEmailExists = await this.prismaService.user.findUnique({ where: { email } });
 
-    if (isEmailExists) throw new NotFoundException('A user with this email already exists.');
+    if (isEmailExists) throw new BadRequestException('A user with this email already exists.');
 
     return true;
   }
