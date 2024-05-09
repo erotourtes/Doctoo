@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import FHIR from 'fhirclient';
 
 interface ApiResponse {
@@ -6,8 +6,6 @@ interface ApiResponse {
 }
 
 const HealthData = () => {
-  const [result, setResult] = useState<string>('');
-
   useEffect(() => {
     async function authorizeAndFetchData() {
       const client: any = await FHIR.oauth2.ready();
@@ -51,50 +49,11 @@ const HealthData = () => {
 
       const AllergiesResponse = await AllergyIntoleranceResponse.json();
       console.log('Allergies: ', AllergiesResponse.entry[0].resource.code.coding[0].display);
-
-      const Conditions = await fetch(
-        client.state.serverUrl +
-          '/Condition?clinical-status=active,inactive,resolved&patient=' +
-          client.patient.id +
-          '&category=problem-list-item',
-        {
-          headers: {
-            Accept: 'application/json+fhir',
-            Authorization: 'Bearer ' + client.state.tokenResponse.access_token,
-          },
-        },
-      ).then(function (data) {
-        return data;
-      });
-
-      const ConditionsResponse = await Conditions.json();
-
-      console.log('Conditions: ', ConditionsResponse.entry[0].resource.code.coding[0].display);
-
-      const Observation = await fetch(
-        client.state.serverUrl +
-          '/Observation?patient=' +
-          client.patient.id +
-          '&subject=' +
-          client.patient.id +
-          '&category=vital-signs&code=29463-7&date=2021-01-01',
-        {
-          headers: {
-            Accept: 'application/json+fhir',
-            Authorization: 'Bearer ' + client.state.tokenResponse.access_token,
-          },
-        },
-      );
-
-      setResult('Observation: ');
-      const obsResponse = await Observation.json();
-
-      console.log('Wheight: ', obsResponse.entry[0].resource.valueQuantity.value);
     }
 
     authorizeAndFetchData();
   }, []);
-  return <div dangerouslySetInnerHTML={{ __html: result }} />;
+  return <div>Sup</div>;
 };
 
 export default HealthData;
