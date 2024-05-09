@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import FHIR from 'fhirclient';
 
 interface ApiResponse {
@@ -90,12 +90,11 @@ const HealthData = () => {
       const obsResponse = await Observation.json();
 
       console.log('Wheight: ', obsResponse.entry[0].resource.valueQuantity.value);
-
     }
 
     authorizeAndFetchData();
   }, []);
-    return <div dangerouslySetInnerHTML={{ __html: result }} />;
+  return <div dangerouslySetInnerHTML={{ __html: result }} />;
 };
 
 export default HealthData;
