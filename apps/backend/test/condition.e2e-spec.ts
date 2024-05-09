@@ -1,10 +1,10 @@
 import { BadRequestException, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
+import { ConditionModule } from '../src/condition/condition.module';
+import { CreateConditionDto } from '../src/condition/dto/create.dto';
+import { UpdateConditionDto } from '../src/condition/dto/update.dto';
 import { PrismaService } from '../src/prisma/prisma.service';
-import { ConditionModule } from '../src/declaration/condition/condition.module';
-import { CreateConditionDto } from '../src/declaration/condition/dto/create.dto';
-import { UpdateConditionDto } from '../src/declaration/condition/dto/update.dto';
 
 describe('ConditionController (e2e)', () => {
   let app: INestApplication;

@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { ConditionService } from './condition.service';
 import { CreateConditionDto } from './dto/create.dto';
 import { UpdateConditionDto } from './dto/update.dto';
@@ -31,7 +31,7 @@ describe('ConditionService', () => {
   });
 
   it('should create condition', async () => {
-    const createdCondtion = await conditionService.createCondition(conditionDto);
+    const createdCondtion = await conditionService.create(conditionDto);
 
     expect(createdCondtion).toMatchObject(conditionDto);
     expect(createdCondtion.id).toBeDefined();
@@ -40,7 +40,7 @@ describe('ConditionService', () => {
   it('should return condition by id', async () => {
     const { id } = await prisma.condition.create({ data: conditionDto });
 
-    const condition = await conditionService.findCondition(id);
+    const condition = await conditionService.getCondition(id);
 
     expect(condition).toMatchObject({ ...conditionDto, id });
   });
@@ -50,7 +50,7 @@ describe('ConditionService', () => {
 
     const data: UpdateConditionDto = { name: 'test-updated' };
 
-    const updatedCondition = await conditionService.updateCondition(id, data);
+    const updatedCondition = await conditionService.patch(id, data);
 
     expect(updatedCondition).toMatchObject({ ...conditionDto, ...data, id });
   });
@@ -58,8 +58,8 @@ describe('ConditionService', () => {
   it('should remove condition', async () => {
     const { id } = await prisma.condition.create({ data: conditionDto });
 
-    const removedCondition = await conditionService.removeCondition(id);
+    const removedCondition = await conditionService.delete(id);
 
-    expect(removedCondition).toMatchObject({ id, ...conditionDto });
+    expect(removedCondition).toBeUndefined();
   });
 });

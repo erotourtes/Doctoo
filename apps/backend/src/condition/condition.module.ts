@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ConditionService } from './condition.service';
-import { ConditionController } from './condition.controller';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { ConditionController } from './condition.controller';
+import { ConditionService } from './condition.service';
 
 @Module({
   controllers: [ConditionController],
