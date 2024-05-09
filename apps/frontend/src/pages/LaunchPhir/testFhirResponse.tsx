@@ -11,6 +11,7 @@ const HealthData = () => {
   useEffect(() => {
     async function authorizeAndFetchData() {
       const client: any = await FHIR.oauth2.ready();
+      console.log(client);
       if (!client.state.tokenResponse.access_token) return;
       fetchData(client);
     }
@@ -28,7 +29,7 @@ const HealthData = () => {
       );
 
       const patientData: ApiResponse = await patientResponse.json();
-
+      console.log(patientData);
       if (
         patientData &&
         patientData.entry &&
