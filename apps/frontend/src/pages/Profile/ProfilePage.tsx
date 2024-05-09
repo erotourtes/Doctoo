@@ -120,7 +120,6 @@ const ProfilePage = () => {
           data: {
             firstName: resource.name[0].given[0],
             lastName: resource.name[0].family,
-            phone: resource.telecom[0].value,
           },
         }),
       );
@@ -133,8 +132,6 @@ const ProfilePage = () => {
           id: patient.id,
           body: {
             city: resource.address[0].city,
-            country: resource.address[0].country,
-            zipCode: resource.address[0].postalCode,
             street: resource.address[0].line[0],
             apartment: resource.address[0].line[1],
             gender: resource.gender,
