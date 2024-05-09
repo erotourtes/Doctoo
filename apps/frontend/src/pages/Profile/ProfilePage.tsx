@@ -9,7 +9,7 @@ import { capitalizeString } from '@/utils/capitalizeString';
 import { useEffect } from 'react';
 import { getAllConditions } from '@/app/condition/ConditionThunks';
 import { getAllAllergies } from '@/app/allergy/AllergyThunks';
-import { getPatientData, patchPatientData } from '@/app/patient/PatientThunks';
+import { getPatientData, patchUserData } from '@/app/patient/PatientThunks';
 import { Link } from 'react-router-dom';
 import FHIR from 'fhirclient';
 
@@ -50,14 +50,12 @@ const ProfilePage = () => {
       console.log(patientData.entry[0].resource);
 
       dispatch(
-        patchPatientData({ id: patient.id, body: { firstName: patientData.entry[0].resource.name[0].given[0] } }),
+        patchUserData({ id: patient.userId, data: { firstName: patientData.entry[0].resource.name[0].given[0] } }),
       );
 
-
-      dispatch(patchPatientData({ id: patient.id, body: { lastName: patientData.entry[0].resource.name[0].family } }));
+      dispatch(patchUserData({ id: patient.userId, data: { lastName: patientData.entry[0].resource.name[0].family } }));
       console.log('Patient: ', patientData.entry[0].resource.name[0].given[0]);
       console.log('Patient: ', patientData.entry[0].resource.name[0].family);
-
 
       const patientAllergiesLionics = [encodeURIComponent('http://loinc.org|8601-7')];
 
