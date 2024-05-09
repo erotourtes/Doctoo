@@ -333,6 +333,10 @@ export interface paths {
      */
     get: operations['ChatController_getAttachmentsByChatId'];
   };
+  '/notification/my': {
+    /** Get all notification for patient */
+    get: operations['NotificationController_getMyNotifications'];
+  };
   '/notification/{patientId}': {
     /** Get all notification for patient */
     get: operations['NotificationController_getNotificationsForPatient'];
@@ -4839,8 +4843,41 @@ export interface operations {
     };
   };
   /** Get all notification for patient */
+  NotificationController_getMyNotifications: {
+    parameters: {
+      query: {
+        page: number;
+        limit: number;
+        filter: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseNotificationDto'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Internal server error. */
+      500: {
+        content: never;
+      };
+    };
+  };
+  /** Get all notification for patient */
   NotificationController_getNotificationsForPatient: {
     parameters: {
+      query: {
+        page: number;
+        limit: number;
+        filter: string;
+      };
       path: {
         patientId: string;
       };

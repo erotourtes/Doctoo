@@ -12,6 +12,7 @@ export class NotificationService {
     patientId: string,
     page: number,
     limit: number,
+    filter: 'all' | 'appointment' | 'payment' | 'message',
   ): Promise<{ notifications: Notification[]; totalCount: number }> {
     const patientExists = await this.prismaService.patient.findUnique({
       where: { id: patientId },
@@ -23,12 +24,14 @@ export class NotificationService {
 
     const skip = (page - 1) * limit;
 
+    const notificationFilter = this.notificationFilter(filter, patientId);
+
     const totalCount = await this.prismaService.notification.count({
-      where: { patientId },
+      where: notificationFilter,
     });
 
     const notifications = await this.prismaService.notification.findMany({
-      where: { patientId },
+      where: notificationFilter,
       orderBy: { createdAt: 'desc' },
       take: limit,
       skip: skip,
@@ -103,5 +106,38 @@ export class NotificationService {
     }
 
     return `Dr. ${doctor.user.firstName} ${doctor.user.lastName}`;
+  }
+
+  private notificationFilter(filterType: string, patientId: string) {
+    const notification: any = { patientId };
+
+    switch (filterType.toLowerCase()) {
+      case 'appointment':
+        notification.action = {
+          in: [
+            'NEW_APPOINTMENT',
+            'CONFIRMED_APPOINTMENT',
+            'UPCOMING_APPOINTMENT',
+            'COMPLETED_APPOINTMENT',
+            'MISSED_APPOINTMENT',
+            'CANCELED_APPOINTMENT',
+          ],
+        };
+        break;
+      case 'payment':
+        notification.action = {
+          in: ['INVOICE_RECEIVED', 'PAYMENT_SUCCESSFUL'],
+        };
+        break;
+      case 'message':
+        notification.action = {
+          in: ['FILE_RECEIVED', 'NEW_MESSAGE'],
+        };
+        break;
+      default:
+        break;
+    }
+
+    return notification;
   }
 }

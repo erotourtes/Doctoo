@@ -260,6 +260,16 @@ export class ChatService {
     if (files && files.length > 0) {
       uploadedFiles = await Promise.all(files.map(async file => (await this.minioService.upload(file)).name));
       message.attachments = await this.addAttachmentsByMessageId(message.id, uploadedFiles);
+
+      if (message.sender === Role.DOCTOR) {
+        const event = {
+          patientId: chat.patientId,
+          doctorId: chat.doctorId,
+          fileId: uploadedFiles,
+        };
+
+        this.eventEmitter.emit('file.received', event);
+      }
     }
 
     const formatedMessage = plainToClass(ResponseMessageDto, message);
