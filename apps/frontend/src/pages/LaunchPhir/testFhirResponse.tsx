@@ -6,6 +6,8 @@ interface ApiResponse {
 }
 
 const HealthData = () => {
+  const [result, setResult] = useState<string>('');
+
   useEffect(() => {
     async function authorizeAndFetchData() {
       const client: any = await FHIR.oauth2.ready();
@@ -84,6 +86,7 @@ const HealthData = () => {
         },
       );
 
+      setResult('Observation: ');
       const obsResponse = await Observation.json();
 
       console.log('Wheight: ', obsResponse.entry[0].resource.valueQuantity.value);
@@ -92,11 +95,7 @@ const HealthData = () => {
 
     authorizeAndFetchData();
   }, []);
-  return (
-    <div>
-      <div />
-    </div>
-  );
+    return <div dangerouslySetInnerHTML={{ __html: result }} />;
 };
 
 export default HealthData;
