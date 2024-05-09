@@ -49,11 +49,7 @@ const ProfilePage = () => {
 
       const patientData: ApiResponse = await patientResponse.json();
 
-      console.log(patientData.entry[0].resource);
       const resource = patientData.entry[0].resource;
-
-      console.log('Patient: ', patientData.entry[0].resource.name[0].given[0]);
-      console.log('Patient: ', patientData.entry[0].resource.name[0].family);
 
       const patientAllergiesLionics = [encodeURIComponent('http://loinc.org|8601-7')];
 
@@ -89,9 +85,7 @@ const ProfilePage = () => {
       });
 
       const ConditionsResponse = await Conditions.json();
-
-      console.log('Conditions: ', ConditionsResponse.entry[0].resource.code.coding[0].display);
-
+      console.log(ConditionsResponse);
       const Observation = await fetch(
         client.state.serverUrl +
           '/Observation?patient=' +
@@ -109,11 +103,8 @@ const ProfilePage = () => {
 
       const ObservationResponse = await Observation.json();
 
-      console.log('Observation: ', ObservationResponse.entry[0].resource.valueQuantity.value);
-
       const AllergiesResponse = await AllergyIntoleranceResponse.json();
-      console.log('Allergies: ', AllergiesResponse.entry[0].resource.code.coding[0].display);
-
+      console.log(AllergiesResponse);
       dispatch(
         patchUserData({
           id: patient.userId,
@@ -125,7 +116,7 @@ const ProfilePage = () => {
       );
 
       const age = new Date().getFullYear() - new Date(resource.birthDate).getFullYear();
-      console.log('Age: ', age);
+
       dispatch(
         patchPatientData({
           id: patient.id,
@@ -133,6 +124,7 @@ const ProfilePage = () => {
             city: resource.address[0].city,
             street: resource.address[0].line[0],
             apartment: resource.address[0].line[1],
+            state: resource.address[0].district,
             gender: resource.gender.toUpperCase(),
             age: age,
             weight: ObservationResponse.entry[0].resource.valueQuantity.value,
