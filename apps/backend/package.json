@@ -14,7 +14,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "lint": "eslint \"{src,test}/**/*.ts\" --fix && tsc --noemit"
+    "lint": "eslint \"{src,test}/**/*.ts\" --fix && tsc --noemit",
+    "gen": "tsc src/generate.ts && node src/generate.js; rm src/generate.js"
   },
   "dependencies": {
     "@brakebein/nestjs-redoc": "2.4.0",
@@ -53,6 +54,7 @@
     "swagger-stats": "0.99.7"
   },
   "devDependencies": {
+    "@faker-js/faker": "8.4.1",
     "@nestjs/cli": "10.3.2",
     "@nestjs/schematics": "10.1.1",
     "@nestjs/testing": "10.3.7",
