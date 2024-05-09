@@ -9,7 +9,7 @@ import { capitalizeString } from '@/utils/capitalizeString';
 import { useEffect } from 'react';
 import { getAllConditions } from '@/app/condition/ConditionThunks';
 import { getAllAllergies } from '@/app/allergy/AllergyThunks';
-import { getPatientData } from '@/app/patient/PatientThunks';
+import { getPatientData, patchPatientData } from '@/app/patient/PatientThunks';
 import { Link } from 'react-router-dom';
 import FHIR from 'fhirclient';
 
@@ -48,6 +48,10 @@ const ProfilePage = () => {
       const patientData: ApiResponse = await patientResponse.json();
 
       console.log(patientData.entry[0].resource);
+
+      dispatch(
+        patchPatientData({ id: patient.id, body: { firstName: patientData.entry[0].resource.name[0].given[0] } }),
+      );
 
       const patientAllergiesLionics = [encodeURIComponent('http://loinc.org|8601-7')];
 
