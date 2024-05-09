@@ -57,6 +57,6 @@ export class AllergyService {
   async deleteAllergy(id: string): Promise<void> {
     await this.isAllergyExist(id);
 
-    this.prismaService.allergy.delete({ where: { id } });
+    await this.prismaService.allergy.delete({ where: { id } });
   }
 }
