@@ -15,7 +15,6 @@ import { Link } from 'react-router-dom';
 const ProfilePage = () => {
   const patient = useAppSelector(state => state.patient.data);
   const dispatch = useAppDispatch();
-
   useEffect(() => {
     dispatch(getPatientData(patient.id));
     dispatch(getAllConditions());

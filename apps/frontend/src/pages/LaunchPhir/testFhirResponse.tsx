@@ -1,17 +1,8 @@
 import { useEffect, useState } from 'react';
 import FHIR from 'fhirclient';
 
-interface ObservationEntry {
-  resource: {
-    effectiveDateTime: string;
-    valueQuantity: {
-      value: number;
-    };
-  };
-}
-
 interface ApiResponse {
-  entry: ObservationEntry[];
+  entry: any;
 }
 
 const HealthData = () => {
@@ -20,13 +11,14 @@ const HealthData = () => {
   useEffect(() => {
     async function authorizeAndFetchData() {
       const client: any = await FHIR.oauth2.ready();
+      if (!client.state.tokenResponse.access_token) return;
       fetchData(client);
     }
 
     async function fetchData(client: any) {
-      const loincs = [encodeURIComponent('http://loinc.org|4548-4')];
-      const response = await fetch(
-        `${client.state.serverUrl}/Observation?patient=${client.patient.id}&limit=50&code=${loincs.join(',')}`,
+      const loincs = [encodeURIComponent('http://loinc.org|2106-3')];
+      const patientResponse = await fetch(
+        `${client.state.serverUrl}/Patient?patient=${client.patient.id}&limit=50&code=${loincs.join(',')}`,
         {
           headers: {
             Accept: 'application/json+fhir',
@@ -35,22 +27,25 @@ const HealthData = () => {
         },
       );
 
-      const data: ApiResponse = await response.json();
+      const patientData: ApiResponse = await patientResponse.json();
 
-      if (data.entry && data.entry.length > 0) {
-        const firstEntry = data.entry[0];
-        console.log(firstEntry, client);
-        setResult(`Your HgA1C was tested on ${firstEntry.resource.effectiveDateTime}<br/><br/>
-          Your HgA1C was ${firstEntry.resource.valueQuantity.value}<br/><br/>
-          <a href='https://en.wikipedia.org/wiki/Glycated_hemoglobin'>According to Wikipedia</a>, A1c is measured primarily to determine the three-month average blood sugar level and can be used as a diagnostic test for diabetes mellitus. <5.7% Normal, 5.7-6.4% Prediabetes, >6.5% Diabetes.`);
+      if (
+        patientData &&
+        patientData.entry &&
+        patientData.entry[0] &&
+        patientData.entry[0].resource &&
+        patientData.entry[0].resource.address
+      ) {
+        setResult(patientData.entry[0].resource.address[0]); // Assuming the first address is what you need
       } else {
-        setResult('No HgA1C data found.');
+        setResult('No address found');
       }
+
+      console.log(result);
     }
 
     authorizeAndFetchData();
   }, []);
-
   return <div dangerouslySetInnerHTML={{ __html: result }} />;
 };
 
