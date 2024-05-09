@@ -126,7 +126,6 @@ const ProfilePage = () => {
 
       const age = new Date().getFullYear() - new Date(resource.birthDate).getFullYear();
       console.log('Age: ', age);
-
       dispatch(
         patchPatientData({
           id: patient.id,
@@ -134,7 +133,7 @@ const ProfilePage = () => {
             city: resource.address[0].city,
             street: resource.address[0].line[0],
             apartment: resource.address[0].line[1],
-            gender: resource.gender,
+            gender: resource.gender.toUpperCase(),
             age: age,
             weight: ObservationResponse.entry[0].resource.valueQuantity.value,
           },
