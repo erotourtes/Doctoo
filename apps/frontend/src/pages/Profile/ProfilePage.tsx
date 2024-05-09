@@ -10,10 +10,10 @@ import { useEffect } from 'react';
 import { getAllConditions } from '@/app/condition/ConditionThunks';
 import { getAllAllergies } from '@/app/allergy/AllergyThunks';
 import { getPatientData } from '@/app/patient/PatientThunks';
+import { Link } from 'react-router-dom';
 
 const ProfilePage = () => {
   const patient = useAppSelector(state => state.patient.data);
-
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -24,8 +24,10 @@ const ProfilePage = () => {
 
   return (
     <div>
-      <PageHeader iconVariant='account' title='Profile' />
-
+      <div>
+        <PageHeader iconVariant='account' title='Profile' />
+        <Link to='/launch'>Epic Login</Link>
+      </div>
       <section className='flex w-full flex-col gap-7 overflow-y-auto bg-background pt-7 lg:flex-row lg:gap-3 xl:gap-7'>
         <div className='flex w-full flex-col gap-7'>
           <PersonalInfo />

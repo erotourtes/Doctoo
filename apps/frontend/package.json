@@ -26,6 +26,7 @@
     "axios": "1.6.8",
     "clsx": "2.1.0",
     "dayjs": "1.11.10",
+    "fhirclient": "2.5.3",
     "joi": "17.12.3",
     "lucide-react": "0.377.0",
     "openapi-fetch": "0.9.4",
