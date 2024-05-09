@@ -14,7 +14,7 @@ const LaunchPage = () => {
         FHIR.oauth2.authorize({
           client_id: '586f2d92-d53b-49f3-8b7f-c986c04fdbff',
           scope: 'PATIENT.READ, PATIENT.SEARCH, OBSERVATION.READ, OBSERVATION.SEARCH',
-          redirect_uri: 'https://doctoo.org/profile',
+          redirect_uri: 'https://doctoo.org/health',
           iss: 'https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4',
         });
       }

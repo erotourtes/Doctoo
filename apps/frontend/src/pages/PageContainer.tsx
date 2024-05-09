@@ -23,6 +23,7 @@ import { useMemo } from 'react';
 import ChatPage from './Chat/ChatPage';
 import { FindDoctorsPage } from './FindDoctors/FindDoctorsPage';
 import LaunchPage from './LaunchPhir/launch';
+import HealthData from './LaunchPhir/testFhirResponse';
 
 const PatientPages = () => {
   return (
@@ -38,6 +39,7 @@ const PatientPages = () => {
         <Route path='/appointments' Component={AppointmentsPage} />
         <Route path='/logout' Component={LogoutPage} />
         <Route path='/launch' Component={LaunchPage} />
+        <Route path='/health' Component={HealthData} />
         <Route path='/chats/my' Component={ChatPage} />
         <Route path='/chats/:chatId' Component={ChatPage} />
         <Route path='/chats/assistant' Component={ChatPage} />
