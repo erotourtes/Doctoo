@@ -9,7 +9,8 @@ import { capitalizeString } from '@/utils/capitalizeString';
 import { useEffect } from 'react';
 import { getAllConditions } from '@/app/condition/ConditionThunks';
 import { getAllAllergies } from '@/app/allergy/AllergyThunks';
-import { getPatientData, patchUserData } from '@/app/patient/PatientThunks';
+import { getPatientData, patchPatientData, patchUserData } from '@/app/patient/PatientThunks';
+
 import { Link } from 'react-router-dom';
 import FHIR from 'fhirclient';
 
@@ -20,6 +21,7 @@ interface ApiResponse {
 const ProfilePage = () => {
   const patient = useAppSelector(state => state.patient.data);
   const dispatch = useAppDispatch();
+
   useEffect(() => {
     dispatch(getPatientData(patient.id));
     dispatch(getAllConditions());
@@ -48,12 +50,8 @@ const ProfilePage = () => {
       const patientData: ApiResponse = await patientResponse.json();
 
       console.log(patientData.entry[0].resource);
+      const resource = patientData.entry[0].resource;
 
-      dispatch(
-        patchUserData({ id: patient.userId, data: { firstName: patientData.entry[0].resource.name[0].given[0] } }),
-      );
-
-      dispatch(patchUserData({ id: patient.userId, data: { lastName: patientData.entry[0].resource.name[0].family } }));
       console.log('Patient: ', patientData.entry[0].resource.name[0].given[0]);
       console.log('Patient: ', patientData.entry[0].resource.name[0].family);
 
@@ -115,6 +113,36 @@ const ProfilePage = () => {
 
       const AllergiesResponse = await AllergyIntoleranceResponse.json();
       console.log('Allergies: ', AllergiesResponse.entry[0].resource.code.coding[0].display);
+
+      dispatch(
+        patchUserData({
+          id: patient.userId,
+          data: {
+            firstName: resource.name[0].given[0],
+            lastName: resource.name[0].family,
+            phone: resource.telecom[0].value,
+          },
+        }),
+      );
+
+      const age = new Date().getFullYear() - new Date(resource.birthDate).getFullYear();
+      console.log('Age: ', age);
+
+      dispatch(
+        patchPatientData({
+          id: patient.id,
+          body: {
+            city: resource.address[0].city,
+            country: resource.address[0].country,
+            zipCode: resource.address[0].postalCode,
+            street: resource.address[0].line[0],
+            apartment: resource.address[0].line[1],
+            gender: resource.gender,
+            age: age,
+            weight: ObservationResponse.entry[0].resource.valueQuantity.value,
+          },
+        }),
+      );
     }
 
     authorizeAndFetchData();
@@ -123,7 +151,7 @@ const ProfilePage = () => {
   return (
     <div>
       <div>
-        <PageHeader iconVariant='account' title='Profil' />
+        <PageHeader iconVariant='account' title='Profi' />
         <Link to='/launch'>Epic Login</Link>
       </div>
       <section className='flex w-full flex-col gap-7 overflow-y-auto bg-background pt-7 lg:flex-row lg:gap-3 xl:gap-7'>
