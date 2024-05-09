@@ -15,7 +15,7 @@ const LaunchPage = () => {
           client_id: '6203c6e4-9e73-4af5-ab6b-a212614d2bd4',
           scope:
             'PATIENT.READ PATIENT.SEARCH, OBSERVATION.SEARCH, OBSERVATION.READ ALLERGYINTOLERANCE.SEARCH, CONDITION.SEARCH',
-          redirect_uri: 'https://doctoo.org/health',
+          redirect_uri: 'https://doctoo.org/profile',
           iss: 'https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4',
         });
       }

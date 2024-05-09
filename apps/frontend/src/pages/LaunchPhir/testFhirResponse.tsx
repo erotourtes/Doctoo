@@ -91,7 +91,7 @@ const HealthData = () => {
 
     authorizeAndFetchData();
   }, []);
-  return <div>Sup</div>;
+  return <div>Su</div>;
 };
 
 export default HealthData;
