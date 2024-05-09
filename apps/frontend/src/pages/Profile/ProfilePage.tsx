@@ -53,6 +53,12 @@ const ProfilePage = () => {
         patchPatientData({ id: patient.id, body: { firstName: patientData.entry[0].resource.name[0].given[0] } }),
       );
 
+
+      dispatch(patchPatientData({ id: patient.id, body: { lastName: patientData.entry[0].resource.name[0].family } }));
+      console.log('Patient: ', patientData.entry[0].resource.name[0].given[0]);
+      console.log('Patient: ', patientData.entry[0].resource.name[0].family);
+
+
       const patientAllergiesLionics = [encodeURIComponent('http://loinc.org|8601-7')];
 
       const AllergyIntoleranceResponse = await fetch(
@@ -119,7 +125,7 @@ const ProfilePage = () => {
   return (
     <div>
       <div>
-        <PageHeader iconVariant='account' title='Profile' />
+        <PageHeader iconVariant='account' title='Profil' />
         <Link to='/launch'>Epic Login</Link>
       </div>
       <section className='flex w-full flex-col gap-7 overflow-y-auto bg-background pt-7 lg:flex-row lg:gap-3 xl:gap-7'>
