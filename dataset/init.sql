@@ -25,11 +25,11 @@ VALUES
 ('b7c3243f-7b52-4d25-bc7f-67d48b0385fe', '4c9a25f6-c272-41e9-b9d6-2d15d0de8fcd', '5ae9d6a1-82a1-4af8-b878-9661f0b8c6a9');
 
 -- Insert data into Appointments
-INSERT INTO appointments (id, patient_id, doctor_id, created_at, status, notes, started_at)
+INSERT INTO appointments (id, patient_id, doctor_id, created_at, status, notes, started_at, price)
 VALUES 
-('01650e8f-9b7a-4d9a-b7de-25d5c5a92a75', '0c9451e9-c4a4-4a3d-a087-09d6d9ad8b37', '5ae9d6a1-82a1-4af8-b878-9661f0b8c6a9', '2024-05-01 14:00:00+00', 'PLANNED', 'Initial consultation for skin checkup.','2024-05-01 14:00:00+00'),
-('3077c5f3-7077-4fba-8816-8dd594b66fe5', '0c9451e9-c4a4-4a3d-a087-09d6d9ad8b37', '5ae9d6a1-82a1-4af8-b878-9661f0b8c6a9', '2024-05-01 14:00:00+00', 'PENDING_PAYMENT', 'Initial consultation for skin checkup.','2024-05-03 20:00:00+00'),
-('0d7ec0cb-d13f-4688-b8da-6a98df310559', '0c9451e9-c4a4-4a3d-a087-09d6d9ad8b37', '5ae9d6a1-82a1-4af8-b878-9661f0b8c6a9', '2024-05-01 14:00:00+00', 'CANCELED', 'Initial consultation for skin checkup.','2024-05-10 14:00:00+00');
+('01650e8f-9b7a-4d9a-b7de-25d5c5a92a75', '0c9451e9-c4a4-4a3d-a087-09d6d9ad8b37', '5ae9d6a1-82a1-4af8-b878-9661f0b8c6a9', '2024-05-01 14:00:00+00', 'PLANNED', 'Initial consultation for skin checkup.','2024-05-01 14:00:00+00', 10),
+('3077c5f3-7077-4fba-8816-8dd594b66fe5', '0c9451e9-c4a4-4a3d-a087-09d6d9ad8b37', '5ae9d6a1-82a1-4af8-b878-9661f0b8c6a9', '2024-05-01 14:00:00+00', 'PENDING_PAYMENT', 'Initial consultation for skin checkup.','2024-05-03 20:00:00+00', 10),
+('0d7ec0cb-d13f-4688-b8da-6a98df310559', '0c9451e9-c4a4-4a3d-a087-09d6d9ad8b37', '5ae9d6a1-82a1-4af8-b878-9661f0b8c6a9', '2024-05-01 14:00:00+00', 'CANCELED', 'Initial consultation for skin checkup.','2024-05-10 14:00:00+00', 10);
 
 -- Insert data into Reviews
 INSERT INTO reviews (id, text, rate, doctor_id, patient_id, created_at, updated_at)
