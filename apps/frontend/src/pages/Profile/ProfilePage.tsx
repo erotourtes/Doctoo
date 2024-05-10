@@ -9,7 +9,8 @@ import { capitalizeString } from '@/utils/capitalizeString';
 import { useEffect } from 'react';
 import { getAllConditions } from '@/app/condition/ConditionThunks';
 import { getAllAllergies } from '@/app/allergy/AllergyThunks';
-import { getPatientData, patchUserData } from '@/app/patient/PatientThunks';
+import { getPatientData } from '@/app/patient/PatientThunks';
+
 
 import { Link } from 'react-router-dom';
 import FHIR from 'fhirclient';
@@ -40,6 +41,7 @@ const ProfilePage = () => {
       );
 
       const patientResource = patientData.entry[0].resource;
+      console.log(patientResource);
 
       const allergyData = await fetchAllergies(
         client.state.serverUrl,
@@ -63,16 +65,6 @@ const ProfilePage = () => {
       );
 
       console.log(observationData);
-
-      dispatch(
-        patchUserData({
-          id: patient.userId,
-          data: {
-            firstName: patientResource.name[0].given[0],
-            lastName: patientResource.name[0].family,
-          },
-        }),
-      );
     }
 
     authorizeAndFetchData();
