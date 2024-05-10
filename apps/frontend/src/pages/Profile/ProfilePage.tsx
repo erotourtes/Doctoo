@@ -16,10 +16,10 @@ import FHIR from 'fhirclient';
 import { fetchObservations, fetchPatientData } from '../LaunchPhir/FhirThunks';
 
 const ProfilePage = () => {
-  const lastFetchedPatientId = useRef(null);
+  let lastFetchedPatientId = useRef(null);
   const patient = useAppSelector(state => state.patient.data);
   const dispatch = useAppDispatch();
-
+  console.log(lastFetchedPatientId);
   useEffect(() => {
     dispatch(getPatientData(patient.id));
     dispatch(getAllConditions());
@@ -31,13 +31,15 @@ const ProfilePage = () => {
       const client: any = await FHIR.oauth2.ready();
       if (!client.state.tokenResponse.access_token) return;
 
-      if (client.patient.id === lastFetchedPatientId.current) {
-        return; // Exit if the IDs match, avoiding re-fetching data
+      if (client.patient.id === lastFetchedPatientId) {
+        return;
       }
+      console.log('1');
 
       fetchData(client);
 
-      lastFetchedPatientId.current = client.patient.id;
+      lastFetchedPatientId = client.patient.id;
+      console.log('2');
     }
 
     async function fetchData(client: any) {
