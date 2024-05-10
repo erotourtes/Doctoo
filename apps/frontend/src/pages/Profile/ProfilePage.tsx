@@ -80,11 +80,9 @@ const ProfilePage = () => {
           },
         }),
       );
-
     }
 
-      authorizeAndFetchData();
-    }
+    authorizeAndFetchData();
   }, []);
 
   return (
