@@ -13,7 +13,10 @@ import { getPatientData, patchPatientData, patchUserData } from '@/app/patient/P
 
 import { Link } from 'react-router-dom';
 import FHIR from 'fhirclient';
-import { fetchAllergies, fetchConditions, fetchObservations, fetchPatientData } from '../../app/fhir/FhirThunks';
+
+interface ApiResponse {
+  entry: any;
+}
 
 const ProfilePage = () => {
   const patient = useAppSelector(state => state.patient.data);
@@ -27,71 +30,104 @@ const ProfilePage = () => {
 
   useEffect(() => {
     async function authorizeAndFetchData() {
-      let client: any = await FHIR.oauth2.ready();
+      const client: any = await FHIR.oauth2.ready();
       if (!client.state.tokenResponse.access_token) return;
       fetchData(client);
-      client = {};
     }
 
     async function fetchData(client: any) {
-      const patientData = await fetchPatientData(
-        client.state.serverUrl,
-        client.patient.id,
-        client.state.tokenResponse.access_token,
+      const loincs = [encodeURIComponent('http://loinc.org|2106-3')];
+      const patientResponse = await fetch(
+        `${client.state.serverUrl}/Patient?patient=${client.patient.id}&limit=50&code=${loincs.join(',')}`,
+        {
+          headers: {
+            Accept: 'application/json+fhir',
+            Authorization: `Bearer ${client.state.tokenResponse.access_token}`,
+          },
+        },
       );
 
-      const allergyData = await fetchAllergies(
-        client.state.serverUrl,
-        client.patient.id,
-        client.state.tokenResponse.access_token,
-      );
+      const patientData: ApiResponse = await patientResponse.json();
 
-      const conditionData = await fetchConditions(
-        client.state.serverUrl,
-        client.patient.id,
-        client.state.tokenResponse.access_token,
-      );
+      const resource = patientData.entry[0].resource;
 
-      const observationData = await fetchObservations(
-        client.state.serverUrl,
-        client.patient.id,
-        client.state.tokenResponse.access_token,
-      );
-      const ConditionsResponse = await conditionData.json();
+      const patientAllergiesLionics = [encodeURIComponent('http://loinc.org|8601-7')];
+
+      const AllergyIntoleranceResponse = await fetch(
+        client.state.serverUrl +
+          '/AllergyIntolerance?clinical-status=active&patient=' +
+          client.patient.id +
+          '&limit=50&code=' +
+          patientAllergiesLionics.join(','),
+        {
+          headers: {
+            Accept: 'application/json+fhir',
+            Authorization: 'Bearer ' + client.state.tokenResponse.access_token,
+          },
+        },
+      ).then(function (data) {
+        return data;
+      });
+
+      const Conditions = await fetch(
+        client.state.serverUrl +
+          '/Condition?clinical-status=active,inactive,resolved&patient=' +
+          client.patient.id +
+          '&category=problem-list-item',
+        {
+          headers: {
+            Accept: 'application/json+fhir',
+            Authorization: 'Bearer ' + client.state.tokenResponse.access_token,
+          },
+        },
+      ).then(function (data) {
+        return data;
+      });
+
+      const ConditionsResponse = await Conditions.json();
       console.log(ConditionsResponse);
+      const Observation = await fetch(
+        client.state.serverUrl +
+          '/Observation?patient=' +
+          client.patient.id +
+          '&subject=' +
+          client.patient.id +
+          '&category=vital-signs&code=29463-7&date=2021-01-01',
+        {
+          headers: {
+            Accept: 'application/json+fhir',
+            Authorization: 'Bearer ' + client.state.tokenResponse.access_token,
+          },
+        },
+      );
 
-      const AllergiesResponse = await allergyData.json();
+      const ObservationResponse = await Observation.json();
+
+      const AllergiesResponse = await AllergyIntoleranceResponse.json();
       console.log(AllergiesResponse);
+      dispatch(
+        patchUserData({
+          id: patient.userId,
+          data: {
+            firstName: resource.name[0].given[0],
+            lastName: resource.name[0].family,
+          },
+        }),
+      );
 
-      const patientResponse = await patientData.json();
-      const ObservationResponse = await observationData.json();
-
-      const patientResource = patientResponse.entry[0].resource;
-
-      const age = new Date().getFullYear() - new Date(patientResource.birthDate).getFullYear();
+      const age = new Date().getFullYear() - new Date(resource.birthDate).getFullYear();
 
       dispatch(
         patchPatientData({
           id: patient.id,
           body: {
-            city: patientResource.address[0].city,
-            street: patientResource.address[0].line[0],
-            apartment: patientResource.address[0].line[1],
-            state: patientResource.address[0].district,
-            gender: patientResource.gender.toUpperCase(),
-
+            city: resource.address[0].city,
+            street: resource.address[0].line[0],
+            apartment: resource.address[0].line[1],
+            state: resource.address[0].district,
+            gender: resource.gender.toUpperCase(),
             age: age,
             weight: ObservationResponse.entry[0].resource.valueQuantity.value,
-          },
-        }),
-      );
-
-      dispatch(
-        patchUserData({
-          id: patient.userId,
-          data: {
-            firstName: patientResource.name[0].given[0],
-            lastName: patientResource.name[0].family,
           },
         }),
       );
