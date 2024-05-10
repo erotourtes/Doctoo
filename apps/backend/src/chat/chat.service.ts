@@ -126,7 +126,7 @@ export class ChatService {
         [participant]: {
           include: includeFields,
         },
-        messages: { orderBy: { sentAt: 'desc' }, take: 1 },
+        messages: { orderBy: { sentAt: 'desc' }, take: 1, include: { appointment: true } },
       },
       skip,
       take,
@@ -135,6 +135,7 @@ export class ChatService {
     const formatedChats = chats.map(chat => {
       const lastMessage = chat.messages[0];
       const participantData = chat[participant];
+
       return plainToClass(ResponseChatDto, {
         ...chat,
         lastMessage: lastMessage,
@@ -252,7 +253,11 @@ export class ChatService {
       const newMessage: ResponseMessageDto = await prisma.chatMessage.create({
         data: { chatId, sender, text, sentAt },
       });
-      await prisma.chat.update({ where: { id: chatId }, data: { [recipient]: { increment: 1 } } });
+      const chat = await prisma.chat.update({ where: { id: chatId }, data: { [recipient]: { increment: 1 } } });
+      this.eventEmitter.emit('chat.read-messages', {
+        chatId,
+        [recipient]: chat[recipient],
+      });
 
       return newMessage;
     });
@@ -300,6 +305,21 @@ export class ChatService {
     const formatedMessages = plainToClass(ResponseMessageDto, messages);
 
     return { messages: formatedMessages, totalMessages };
+  }
+
+  async readMessagesByUser(chatId: string, role: Role): Promise<number> {
+    const recipient = role === Role.DOCTOR ? 'missedMessagesDoctor' : 'missedMessagesPatient';
+    const updatedChat = await this.prismaService.chat.update({
+      where: { id: chatId },
+      data: {
+        [recipient]: 0,
+      },
+    });
+    this.eventEmitter.emit('chat.read-messages', {
+      chatId,
+      [recipient]: updatedChat[recipient],
+    });
+    return updatedChat[recipient];
   }
 
   private async addAttachmentsByMessageId(

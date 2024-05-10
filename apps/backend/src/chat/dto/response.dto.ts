@@ -99,6 +99,14 @@ export class ResponseChatDto {
   })
   @Expose()
   lastMessage: ResponseMessageDto | null;
+
+  @ApiProperty({ example: 0, description: 'Number of missed messages by the doctor.' })
+  @Expose()
+  missedMessagesDoctor: number;
+
+  @ApiProperty({ example: 0, description: 'Number of missed messages by the patient.' })
+  @Expose()
+  missedMessagesPatient: number;
 }
 
 export class ResponseChatArrayDto {

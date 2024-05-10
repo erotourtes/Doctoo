@@ -314,6 +314,13 @@ export interface paths {
      */
     get: operations['ChatController_getChat'];
   };
+  '/chat/{chatId}/read-messages': {
+    /**
+     * Read messages (set count messages 0)
+     * @description This endpoint for read message (set count messages 0).
+     */
+    patch: operations['ChatController_readMessages'];
+  };
   '/chat/{chatId}/messages': {
     /**
      * Get chat messages
@@ -1762,6 +1769,16 @@ export interface components {
       participant: components['schemas']['ResponseParticipantDto'];
       /** @description Details of the last message in the chat. */
       lastMessage: components['schemas']['ResponseMessageDto'] | null;
+      /**
+       * @description Number of missed messages by the doctor.
+       * @example 0
+       */
+      missedMessagesDoctor: number;
+      /**
+       * @description Number of missed messages by the patient.
+       * @example 0
+       */
+      missedMessagesPatient: number;
     };
     ResponseChatArrayDto: {
       /** @description Chat list */
@@ -4704,6 +4721,45 @@ export interface operations {
       200: {
         content: {
           'application/json': components['schemas']['ResponseChatDto'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      401: {
+        content: {
+          'application/json': components['schemas']['UnauthorizedResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /**
+   * Read messages (set count messages 0)
+   * @description This endpoint for read message (set count messages 0).
+   */
+  ChatController_readMessages: {
+    parameters: {
+      header?: {
+        /** @description JWT token */
+        Cookie?: string;
+      };
+      path: {
+        /**
+         * @description Unique chat id.
+         * @example 123e4567-e89b-12d3-a456-426614174000
+         */
+        chatId: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          'application/json': number;
         };
       };
       /** @description Response if an error occurs while processing a request. */

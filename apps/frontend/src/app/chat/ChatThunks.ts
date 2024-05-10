@@ -25,6 +25,14 @@ export const getChat = createAsyncThunk('chat/fetchChat', async (chatId: string,
   }
 });
 
+export const fetchReadMessages = createAsyncThunk('chat/readMessages', async (chatId: string) => {
+  try {
+    await instance.patch(`/chat/${chatId}/read-messages`);
+  } catch (e) {
+    handleError(e as Error);
+  }
+});
+
 export const getChatMessages = createAsyncThunk('chat/fetchMessages', async (chatId: string, { dispatch }) => {
   try {
     const response = await instance.get(`/chat/${chatId}/messages`);

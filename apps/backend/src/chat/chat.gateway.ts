@@ -43,6 +43,9 @@ export class ChatGateway extends SocketGateway {
     this.chatService.eventEmitter.on('chat.message.update', (response: ResponseMessageDto) => {
       this.handleEvent(response.chatId, `chat.${response.chatId}.update-message`, response);
     });
+    this.chatService.eventEmitter.on('chat.read-messages', response => {
+      this.handleEvent(response.chatId, `chat.${response.chatId}.read-messages`, response);
+    });
   }
 
   async handleEvent(chatId: string, event: string, payload: any) {

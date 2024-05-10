@@ -16,6 +16,8 @@ const mockChats: TChat[] = [
       avatarKey: 'acde070d-8c4c-4f0d-9d8a-162843c10333.jpg',
       specializations: ['Hematology'],
     },
+    missedMessagesDoctor: 0,
+    missedMessagesPatient: 1,
     doctorId: '123e4567-e89b-12d3-a456-4266141waw000',
     patientId: '123e4567-e89b-12d3-a456-4266waw74000',
     lastMessage: {
@@ -37,6 +39,8 @@ const mockChats: TChat[] = [
       avatarKey: 'acde070d-8c4c-4f0d-9d8a-162843c10333.jpg',
       specializations: ['Hematology'],
     },
+    missedMessagesDoctor: 0,
+    missedMessagesPatient: 1,
     doctorId: '123e4567-e89b-12d3-a456-4266141waw000',
     patientId: '123e4567-e89b-12d3-a456-4266waw74000',
     lastMessage: {

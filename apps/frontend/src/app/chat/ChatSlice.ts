@@ -92,7 +92,6 @@ export const chatSlice = createAppSlice({
     updateMessage: (state, action: PayloadAction<TMessage>) => {
       const foundedMessageIndex = state.chatMessages.messages.findIndex(message => message.id === action.payload.id);
       if (foundedMessageIndex !== -1) {
-        // Assuming you have a new message object to replace the old one, let's call it `newMessage`
         const updatedMessages = [
           ...state.chatMessages.messages.slice(0, foundedMessageIndex),
           action.payload,
@@ -121,6 +120,18 @@ export const chatSlice = createAppSlice({
     setChatAttachments: (state, action: PayloadAction<TAttachment[]>) => {
       state.chatAttachedFiles = action.payload;
     },
+
+    readMessages: (state, action: PayloadAction<any>) => {
+      const foundedChat = state.chats.chats.find(chat => chat.id === action.payload.chatId);
+      if (foundedChat) {
+        if ('missedMessagesDoctor' in action.payload) {
+          foundedChat.missedMessagesDoctor = action.payload.missedMessagesDoctor;
+        }
+        if ('missedMessagesPatient' in action.payload) {
+          foundedChat.missedMessagesPatient = action.payload.missedMessagesPatient;
+        }
+      }
+    },
   },
 });
 
@@ -133,6 +144,7 @@ export const {
   addMessage,
   updateMessage,
   setChatAttachments,
+  readMessages,
 } = chatSlice.actions;
 
 export const chats = (state: RootState) => state.chat.chats;

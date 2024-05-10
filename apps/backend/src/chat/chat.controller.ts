@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Query,
   Req,
@@ -104,6 +105,22 @@ export class ChatController {
   async getChat(@Req() req: Request, @Param('chatId') chatId: string) {
     const user: User = req['user'];
     return this.chatService.getChatByIdAndUserId(chatId, user.id, user.role);
+  }
+
+  @Patch('/:chatId/read-messages')
+  @ApiOperation({
+    summary: 'Read messages (set count messages 0)',
+    description: 'This endpoint for read message (set count messages 0).',
+  })
+  @ApiHeader({ name: 'Cookie', example: 'jwt=eyJhbGci...', description: 'JWT token' })
+  @ApiOkResponse({ type: Number, description: RESPONSE_STATUS.SUCCESS })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiParam({ name: 'chatId', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique chat id.' })
+  @UseGuards(JWTGuard)
+  async readMessages(@Req() req: Request, @Param('chatId') chatId: string) {
+    const user: User = req['user'];
+    return this.chatService.readMessagesByUser(chatId, user.role);
   }
 
   @Get('/:chatId/messages')

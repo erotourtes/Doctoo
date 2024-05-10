@@ -1,4 +1,5 @@
 import { openChat } from '@/app/chat/ChatSlice';
+import { fetchReadMessages } from '@/app/chat/ChatThunks';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { Icon } from '@/components/UI';
 import type { TChat } from '@/dataTypes/Chat';
@@ -20,6 +21,9 @@ const ChatItem = ({ chat, active = false }: ChatItemProps) => {
   const openedChat = useAppSelector(state => state.chat.openedChat);
   const isOpenedChat = useAppSelector(state => state.chat.isOpenedChat);
 
+  const recipient = role === Role.DOCTOR ? 'missedMessagesDoctor' : 'missedMessagesPatient';
+  let missedMessages = chat[recipient];
+
   const formattedDate = chat.lastMessage ? formatDateChat(chat.lastMessage.sentAt) : null;
   const participant = chat.participant;
 
@@ -27,8 +31,19 @@ const ChatItem = ({ chat, active = false }: ChatItemProps) => {
     active = openedChat?.id === chat.id && isOpenedChat;
   }, [openedChat, isOpenedChat]);
 
+  useEffect(() => {
+    if (openedChat && chat[recipient] > 0) {
+      dispatch(fetchReadMessages(openedChat.id)).then(res => {
+        if (!('error' in res)) {
+          missedMessages = 0;
+        }
+      });
+    }
+  }, [chat[recipient], openedChat]);
+
   const handleOnClick = () => {
     dispatch(openChat({ chatId: chat.id }));
+    dispatch(fetchReadMessages(chat.id));
   };
 
   return (
@@ -55,15 +70,19 @@ const ChatItem = ({ chat, active = false }: ChatItemProps) => {
       <div className='flex flex-1 items-start gap-2'>
         <div className='grid flex-1 gap-1'>
           <div className='truncate text-base font-bold text-black'>{`${role === Role.PATIENT ? 'Dr.' : ''} ${participant.firstName} ${participant.lastName}`}</div>
-          <div className='truncate text-sm font-normal text-black-2'>{chat.lastMessage?.text}</div>
+          <div className='truncate text-sm font-normal text-black-2'>
+            {chat.lastMessage?.appointment
+              ? `Appointment at ${formatDateChat(chat.lastMessage.appointment.startedAt, true)}`
+              : chat.lastMessage?.text}
+          </div>
         </div>
         <div className='flex shrink-0 flex-col items-end gap-1'>
           <div className='text-sm font-normal text-grey-3'>{formattedDate}</div>
-          {/* {chat.countNewMessage ?
-          <div className="flex items-center justify-center size-6 bg-main rounded-full text-sm text-center text-white">
-          {chat.countNewMessage}
-          </div>
-        : null} */}
+          {missedMessages > 0 && (
+            <div className='flex size-6 items-center justify-center rounded-full bg-main text-center text-sm text-white'>
+              {missedMessages}
+            </div>
+          )}
         </div>
       </div>
     </button>
