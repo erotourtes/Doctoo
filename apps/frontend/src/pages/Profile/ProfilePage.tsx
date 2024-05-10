@@ -6,7 +6,7 @@ import MedicalCondition from './components/MedicalCondition/MedicalCondition';
 import AddressInfo from './components/AddressInfo/AddressInfo';
 import PaymentMethods from './components/PaymentMethods/PaymentMethods';
 import { capitalizeString } from '@/utils/capitalizeString';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { getAllConditions } from '@/app/condition/ConditionThunks';
 import { getAllAllergies } from '@/app/allergy/AllergyThunks';
 import { getPatientData, patchPatientData, patchUserData } from '@/app/patient/PatientThunks';
@@ -16,10 +16,8 @@ import FHIR from 'fhirclient';
 import { fetchObservations, fetchPatientData } from '../LaunchPhir/FhirThunks';
 
 const ProfilePage = () => {
-  const lastFetchedPatientId = useRef('');
   const patient = useAppSelector(state => state.patient.data);
   const dispatch = useAppDispatch();
-  console.log(lastFetchedPatientId);
   useEffect(() => {
     dispatch(getPatientData(patient.id));
     dispatch(getAllConditions());
@@ -30,16 +28,17 @@ const ProfilePage = () => {
     async function authorizeAndFetchData() {
       const client: any = await FHIR.oauth2.ready();
       if (!client.state.tokenResponse.access_token) return;
+      const storedPatientId = localStorage.getItem('lastFetchedPatientId');
 
-      if (client.patient.id === lastFetchedPatientId.current) {
+      if (client.patient.id === storedPatientId) {
+        console.log('Skipping data fetch for the same patient ID');
         return;
       }
-      console.log('1');
+      console.log('Fetching data for a new patient ID');
 
       fetchData(client);
 
-      lastFetchedPatientId.current = client.patient.id;
-      console.log('2');
+      localStorage.setItem('lastFetchedPatientId', client.patient.id);
     }
 
     async function fetchData(client: any) {
