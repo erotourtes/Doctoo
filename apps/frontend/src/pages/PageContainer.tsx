@@ -23,6 +23,7 @@ import { useMemo } from 'react';
 import ChatPage from './Chat/ChatPage';
 import { FindDoctorsPage } from './FindDoctors/FindDoctorsPage';
 import LaunchPage from './LaunchPhir/launch';
+import NotFoundPage from './NotFound/NotFoundPage';
 
 const PatientPages = () => {
   return (
@@ -39,9 +40,10 @@ const PatientPages = () => {
         <Route path='/logout' Component={LogoutPage} />
         <Route path='/launch' Component={LaunchPage} />
         <Route path='/chats/my' Component={ChatPage} />
-        <Route path='/chats/:chatId' Component={ChatPage} />
         <Route path='/chats/assistant' Component={ChatPage} />
         <Route path='/doctors' Component={FindDoctorsPage} />
+
+        <Route path='*' element={<Navigate to={'/404'} />} />
       </Route>
     </Routes>
   );
@@ -62,6 +64,8 @@ const DoctorPages = () => {
         <Route path='/logout' Component={LogoutPage} />
         <Route path='/chats/my' Component={ChatPage} />
         <Route path='/chats/assistant' Component={ChatPage} />
+
+        <Route path='*' element={<Navigate to={'/404'} />} />
       </Route>
     </Routes>
   );
@@ -128,6 +132,8 @@ const Navigation = () => {
       <Route path='/login' Component={LoginPage} />
       <Route path='/login/doctor' Component={DoctorLoginPage} />
       <Route path='/change-email' Component={EmailChangePage} />
+
+      <Route path='/404' Component={NotFoundPage} />
     </Routes>
   );
 };
