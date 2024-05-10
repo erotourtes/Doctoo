@@ -13,7 +13,7 @@ import { getPatientData, patchPatientData, patchUserData } from '@/app/patient/P
 
 import { Link } from 'react-router-dom';
 import FHIR from 'fhirclient';
-import { fetchPatientData } from '../LaunchPhir/FhirThunks';
+import { fetchAllergies, fetchConditions, fetchObservations, fetchPatientData } from '../LaunchPhir/FhirThunks';
 
 const ProfilePage = () => {
   const patient = useAppSelector(state => state.patient.data);
@@ -29,8 +29,7 @@ const ProfilePage = () => {
     async function authorizeAndFetchData() {
       let client: any = await FHIR.oauth2.ready();
       if (!client.state.tokenResponse.access_token) return;
-      fetchData(client);
-      client = null;
+      fetchData(client);  
     }
 
     async function fetchData(client: any) {
@@ -42,60 +41,30 @@ const ProfilePage = () => {
 
       const patientResource = patientData.entry[0].resource;
 
-      const patientAllergiesLionics = [encodeURIComponent('http://loinc.org|8601-7')];
-
-      const AllergyIntoleranceResponse = await fetch(
-        client.state.serverUrl +
-          '/AllergyIntolerance?clinical-status=active&patient=' +
-          client.patient.id +
-          '&limit=50&code=' +
-          patientAllergiesLionics.join(','),
-        {
-          headers: {
-            Accept: 'application/json+fhir',
-            Authorization: 'Bearer ' + client.state.tokenResponse.access_token,
-          },
-        },
-      ).then(function (data) {
-        return data;
-      });
-
-      const Conditions = await fetch(
-        client.state.serverUrl +
-          '/Condition?clinical-status=active,inactive,resolved&patient=' +
-          client.patient.id +
-          '&category=problem-list-item',
-        {
-          headers: {
-            Accept: 'application/json+fhir',
-            Authorization: 'Bearer ' + client.state.tokenResponse.access_token,
-          },
-        },
-      ).then(function (data) {
-        return data;
-      });
-
-      const ConditionsResponse = await Conditions.json();
-      console.log(ConditionsResponse);
-      const Observation = await fetch(
-        client.state.serverUrl +
-          '/Observation?patient=' +
-          client.patient.id +
-          '&subject=' +
-          client.patient.id +
-          '&category=vital-signs&code=29463-7&date=2021-01-01',
-        {
-          headers: {
-            Accept: 'application/json+fhir',
-            Authorization: 'Bearer ' + client.state.tokenResponse.access_token,
-          },
-        },
+      const allergyData = await fetchAllergies(
+        client.state.serverUrl,
+        client.patient.id,
+        client.state.tokenResponse.access_token,
       );
 
-      const ObservationResponse = await Observation.json();
+      console.log(allergyData);
 
-      const AllergiesResponse = await AllergyIntoleranceResponse.json();
-      console.log(AllergiesResponse);
+      const conditionData = await fetchConditions(
+        client.state.serverUrl,
+        client.patient.id,
+        client.state.tokenResponse.access_token,
+      );
+
+      console.log(conditionData);
+      
+      const observationData = await fetchObservations(
+        client.state.serverUrl,
+        client.patient.id,
+        client.state.tokenResponse.access_token,
+      );
+
+      const age = new Date().getFullYear() - new Date(patientResource.birthDate).getFullYear();
+
       dispatch(
         patchUserData({
           id: patient.userId,
@@ -105,6 +74,7 @@ const ProfilePage = () => {
           },
         }),
       );
+
 
       const age = new Date().getFullYear() - new Date(patientResource.birthDate).getFullYear();
 
@@ -118,7 +88,7 @@ const ProfilePage = () => {
             state: patientResource.address[0].district,
             gender: patientResource.gender.toUpperCase(),
             age: age,
-            weight: ObservationResponse.entry[0].resource.valueQuantity.value,
+            weight: observationData.entry[0].resource.valueQuantity.value,
           },
         }),
       );
@@ -130,7 +100,7 @@ const ProfilePage = () => {
   return (
     <div>
       <div>
-        <PageHeader iconVariant='account' title='Profi' />
+        <PageHeader iconVariant='account' title='Profil' />
         <Link to='/launch'>Epic Login</Link>
       </div>
       <section className='flex w-full flex-col gap-7 overflow-y-auto bg-background pt-7 lg:flex-row lg:gap-3 xl:gap-7'>
