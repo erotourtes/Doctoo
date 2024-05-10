@@ -13,10 +13,7 @@ import { getPatientData, patchPatientData, patchUserData } from '@/app/patient/P
 
 import { Link } from 'react-router-dom';
 import FHIR from 'fhirclient';
-
-interface ApiResponse {
-  entry: any;
-}
+import { fetchPatientData } from '../LaunchPhir/FhirThunks';
 
 const ProfilePage = () => {
   const patient = useAppSelector(state => state.patient.data);
@@ -30,26 +27,20 @@ const ProfilePage = () => {
 
   useEffect(() => {
     async function authorizeAndFetchData() {
-      const client: any = await FHIR.oauth2.ready();
+      let client: any = await FHIR.oauth2.ready();
       if (!client.state.tokenResponse.access_token) return;
       fetchData(client);
+      client = null;
     }
 
     async function fetchData(client: any) {
-      const loincs = [encodeURIComponent('http://loinc.org|2106-3')];
-      const patientResponse = await fetch(
-        `${client.state.serverUrl}/Patient?patient=${client.patient.id}&limit=50&code=${loincs.join(',')}`,
-        {
-          headers: {
-            Accept: 'application/json+fhir',
-            Authorization: `Bearer ${client.state.tokenResponse.access_token}`,
-          },
-        },
+      const patientData = await fetchPatientData(
+        client.state.serverUrl,
+        client.patient.id,
+        client.state.tokenResponse.access_token,
       );
 
-      const patientData: ApiResponse = await patientResponse.json();
-
-      const resource = patientData.entry[0].resource;
+      const patientResource = patientData.entry[0].resource;
 
       const patientAllergiesLionics = [encodeURIComponent('http://loinc.org|8601-7')];
 
@@ -109,23 +100,23 @@ const ProfilePage = () => {
         patchUserData({
           id: patient.userId,
           data: {
-            firstName: resource.name[0].given[0],
-            lastName: resource.name[0].family,
+            firstName: patientResource.name[0].given[0],
+            lastName: patientResource.name[0].family,
           },
         }),
       );
 
-      const age = new Date().getFullYear() - new Date(resource.birthDate).getFullYear();
+      const age = new Date().getFullYear() - new Date(patientResource.birthDate).getFullYear();
 
       dispatch(
         patchPatientData({
           id: patient.id,
           body: {
-            city: resource.address[0].city,
-            street: resource.address[0].line[0],
-            apartment: resource.address[0].line[1],
-            state: resource.address[0].district,
-            gender: resource.gender.toUpperCase(),
+            city: patientResource.address[0].city,
+            street: patientResource.address[0].line[0],
+            apartment: patientResource.address[0].line[1],
+            state: patientResource.address[0].district,
+            gender: patientResource.gender.toUpperCase(),
             age: age,
             weight: ObservationResponse.entry[0].resource.valueQuantity.value,
           },
