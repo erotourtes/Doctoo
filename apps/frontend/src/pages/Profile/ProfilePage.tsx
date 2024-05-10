@@ -9,7 +9,7 @@ import { capitalizeString } from '@/utils/capitalizeString';
 import { useEffect } from 'react';
 import { getAllConditions } from '@/app/condition/ConditionThunks';
 import { getAllAllergies } from '@/app/allergy/AllergyThunks';
-import { getPatientData, patchPatientData } from '@/app/patient/PatientThunks';
+import { getPatientData, patchPatientData, patchUserData } from '@/app/patient/PatientThunks';
 
 import { Link } from 'react-router-dom';
 import FHIR from 'fhirclient';
@@ -65,6 +65,16 @@ const ProfilePage = () => {
       const patientResource = patientData.entry[0].resource;
 
       const age = new Date().getFullYear() - new Date(patientResource.birthDate).getFullYear();
+
+      dispatch(
+        patchUserData({
+          id: patient.userId,
+          data: {
+            firstName: patientResource.name[0].given[0],
+            lastName: patientResource.name[0].family,
+          },
+        }),
+      );
 
       dispatch(
         patchPatientData({
