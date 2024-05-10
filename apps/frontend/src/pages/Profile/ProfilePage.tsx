@@ -27,9 +27,10 @@ const ProfilePage = () => {
 
   useEffect(() => {
     async function authorizeAndFetchData() {
-      let client: any = await FHIR.oauth2.ready();
+      const client: any = await FHIR.oauth2.ready();
       if (!client.state.tokenResponse.access_token) return;
-      fetchData(client);  
+      fetchData(client);
+
     }
 
     async function fetchData(client: any) {
@@ -56,14 +57,11 @@ const ProfilePage = () => {
       );
 
       console.log(conditionData);
-      
       const observationData = await fetchObservations(
         client.state.serverUrl,
         client.patient.id,
         client.state.tokenResponse.access_token,
       );
-
-      const age = new Date().getFullYear() - new Date(patientResource.birthDate).getFullYear();
 
       dispatch(
         patchUserData({
@@ -74,7 +72,6 @@ const ProfilePage = () => {
           },
         }),
       );
-
 
       const age = new Date().getFullYear() - new Date(patientResource.birthDate).getFullYear();
 
