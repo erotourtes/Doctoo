@@ -44,14 +44,18 @@ export const patchPatientData = createAsyncThunk(
 
 export const patchUserData = createAsyncThunk(
   'patient',
-  async ({ id, data }: { id: string; data: Partial<TUser> }, { dispatch }) => {
+  async ({ userId, patientId, data }: { userId: string; data: Partial<TUser>; patientId: string }, { dispatch }) => {
     try {
       if (!data) throw new Error('Data is empty');
-      const { data: responseData, error } = await api.PATCH('/user/{id}', { params: { path: { id } }, body: data });
+      const { data: responseData, error } = await api.PATCH('/user/{id}', {
+        params: { path: { id: userId } },
+        body: data,
+      });
       if (error) {
         throw new Error('Failed to update user data PATCH /user/:id');
       }
-      dispatch(updatePatientData(responseData));
+
+      dispatch(updatePatientData({ ...responseData, id: patientId }));
     } catch (e) {
       const error = e as Error;
       throw error;

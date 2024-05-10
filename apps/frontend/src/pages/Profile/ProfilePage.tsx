@@ -68,7 +68,8 @@ const ProfilePage = () => {
 
       dispatch(
         patchUserData({
-          id: patient.userId,
+          userId: patient.userId,
+          patientId: patient.id,
           data: {
             firstName: patientResource.name[0].given[0],
             lastName: patientResource.name[0].family,

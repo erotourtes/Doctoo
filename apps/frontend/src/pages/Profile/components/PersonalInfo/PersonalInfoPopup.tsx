@@ -84,7 +84,7 @@ const PersonalInfoPopup = ({ isOpen, onClose }: PersonalInfoPopupProps) => {
 
     const userData: Partial<TUser> = { email, phone: data.phone, firstName, lastName, avatarKey };
 
-    dispatch(patchUserData({ id: patient.userId, data: userData }));
+    dispatch(patchUserData({ userId: patient.userId, data: userData, patientId: patient.id }));
 
     setFile(null);
 
