@@ -48,6 +48,15 @@ export class UserController {
     return this.userService.getUser(id);
   }
 
+  @Get()
+  @ApiOperation({ summary: 'Get all users' })
+  @ApiOkResponse({ type: ResponseUserDto, description: RESPONSE_STATUS.ERROR })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  getAllUsers() {
+    return this.userService.getAllUsers();
+  }
+
   @Post()
   @ApiOperation({ summary: 'Create user' })
   @ApiOkResponse({ type: ResponseUserDto, description: RESPONSE_STATUS.SUCCESS })

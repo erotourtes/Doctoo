@@ -27,6 +27,12 @@ export class UserService {
     return true;
   }
 
+  async getAllUsers(): Promise<ResponseUserDto[]> {
+    const users = await this.prismaService.user.findMany();
+
+    return users.map(user => plainToInstance(ResponseUserDto, user));
+  }
+
   private async isEmailExists(email: string): Promise<boolean> {
     const isEmailExists = await this.prismaService.user.findUnique({ where: { email } });
 
