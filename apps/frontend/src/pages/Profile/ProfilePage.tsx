@@ -6,16 +6,17 @@ import MedicalCondition from './components/MedicalCondition/MedicalCondition';
 import AddressInfo from './components/AddressInfo/AddressInfo';
 import PaymentMethods from './components/PaymentMethods/PaymentMethods';
 import { capitalizeString } from '@/utils/capitalizeString';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { getAllConditions } from '@/app/condition/ConditionThunks';
 import { getAllAllergies } from '@/app/allergy/AllergyThunks';
 import { getPatientData, patchPatientData, patchUserData } from '@/app/patient/PatientThunks';
 
 import { Link } from 'react-router-dom';
 import FHIR from 'fhirclient';
-import { fetchAllergies, fetchConditions, fetchObservations, fetchPatientData } from '../LaunchPhir/FhirThunks';
+import { fetchObservations, fetchPatientData } from '../LaunchPhir/FhirThunks';
 
 const ProfilePage = () => {
+  const lastFetchedPatientId = useRef(null);
   const patient = useAppSelector(state => state.patient.data);
   const dispatch = useAppDispatch();
 
@@ -29,7 +30,14 @@ const ProfilePage = () => {
     async function authorizeAndFetchData() {
       const client: any = await FHIR.oauth2.ready();
       if (!client.state.tokenResponse.access_token) return;
+
+      if (client.patient.id === lastFetchedPatientId.current) {
+        return; // Exit if the IDs match, avoiding re-fetching data
+      }
+
       fetchData(client);
+
+      lastFetchedPatientId.current = client.patient.id;
     }
 
     async function fetchData(client: any) {
@@ -39,28 +47,11 @@ const ProfilePage = () => {
         client.state.tokenResponse.access_token,
       );
 
-      const allergyData = await fetchAllergies(
-        client.state.serverUrl,
-        client.patient.id,
-        client.state.tokenResponse.access_token,
-      );
-
-      console.log(allergyData);
-
-      const conditionData = await fetchConditions(
-        client.state.serverUrl,
-        client.patient.id,
-        client.state.tokenResponse.access_token,
-      );
-
-      console.log(conditionData);
       const observationData = await fetchObservations(
         client.state.serverUrl,
         client.patient.id,
         client.state.tokenResponse.access_token,
       );
-
-      console.log(observationData);
 
       const patientResource = patientData.entry[0].resource;
 
