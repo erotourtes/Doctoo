@@ -9,8 +9,7 @@ import { capitalizeString } from '@/utils/capitalizeString';
 import { useEffect } from 'react';
 import { getAllConditions } from '@/app/condition/ConditionThunks';
 import { getAllAllergies } from '@/app/allergy/AllergyThunks';
-import { getPatientData } from '@/app/patient/PatientThunks';
-
+import { getPatientData, patchPatientData } from '@/app/patient/PatientThunks';
 
 import { Link } from 'react-router-dom';
 import FHIR from 'fhirclient';
@@ -40,9 +39,6 @@ const ProfilePage = () => {
         client.state.tokenResponse.access_token,
       );
 
-      const patientResource = patientData.entry[0].resource;
-      console.log(patientResource);
-
       const allergyData = await fetchAllergies(
         client.state.serverUrl,
         client.patient.id,
@@ -65,15 +61,36 @@ const ProfilePage = () => {
       );
 
       console.log(observationData);
+
+      const patientResource = patientData.entry[0].resource;
+
+      const age = new Date().getFullYear() - new Date(patientResource.birthDate).getFullYear();
+
+      dispatch(
+        patchPatientData({
+          id: patient.id,
+          body: {
+            city: patientResource.address[0].city,
+            street: patientResource.address[0].line[0],
+            apartment: patientResource.address[0].line[1],
+            state: patientResource.address[0].district,
+            gender: patientResource.gender.toUpperCase(),
+            age: age,
+            weight: observationData.entry[0].resource.valueQuantity.value,
+          },
+        }),
+      );
+
     }
 
-    authorizeAndFetchData();
+      authorizeAndFetchData();
+    }
   }, []);
 
   return (
     <div>
       <div>
-        <PageHeader iconVariant='account' title='Profi' />
+        <PageHeader iconVariant='account' title='Profile' />
         <Link to='/launch'>Epic Login</Link>
       </div>
       <section className='flex w-full flex-col gap-7 overflow-y-auto bg-background pt-7 lg:flex-row lg:gap-3 xl:gap-7'>
