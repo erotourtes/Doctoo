@@ -9,7 +9,7 @@ import { capitalizeString } from '@/utils/capitalizeString';
 import { useEffect } from 'react';
 import { getAllConditions } from '@/app/condition/ConditionThunks';
 import { getAllAllergies } from '@/app/allergy/AllergyThunks';
-import { getPatientData, patchPatientData, patchUserData } from '@/app/patient/PatientThunks';
+import { getPatientData, patchUserData } from '@/app/patient/PatientThunks';
 
 import { Link } from 'react-router-dom';
 import FHIR from 'fhirclient';
@@ -30,7 +30,6 @@ const ProfilePage = () => {
       const client: any = await FHIR.oauth2.ready();
       if (!client.state.tokenResponse.access_token) return;
       fetchData(client);
-
     }
 
     async function fetchData(client: any) {
@@ -63,29 +62,14 @@ const ProfilePage = () => {
         client.state.tokenResponse.access_token,
       );
 
+      console.log(observationData);
+
       dispatch(
         patchUserData({
           id: patient.userId,
           data: {
             firstName: patientResource.name[0].given[0],
             lastName: patientResource.name[0].family,
-          },
-        }),
-      );
-
-      const age = new Date().getFullYear() - new Date(patientResource.birthDate).getFullYear();
-
-      dispatch(
-        patchPatientData({
-          id: patient.id,
-          body: {
-            city: patientResource.address[0].city,
-            street: patientResource.address[0].line[0],
-            apartment: patientResource.address[0].line[1],
-            state: patientResource.address[0].district,
-            gender: patientResource.gender.toUpperCase(),
-            age: age,
-            weight: observationData.entry[0].resource.valueQuantity.value,
           },
         }),
       );
@@ -97,7 +81,7 @@ const ProfilePage = () => {
   return (
     <div>
       <div>
-        <PageHeader iconVariant='account' title='Profil' />
+        <PageHeader iconVariant='account' title='Profi' />
         <Link to='/launch'>Epic Login</Link>
       </div>
       <section className='flex w-full flex-col gap-7 overflow-y-auto bg-background pt-7 lg:flex-row lg:gap-3 xl:gap-7'>
