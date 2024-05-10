@@ -16,7 +16,7 @@ import FHIR from 'fhirclient';
 import { fetchObservations, fetchPatientData } from '../LaunchPhir/FhirThunks';
 
 const ProfilePage = () => {
-  let lastFetchedPatientId = useRef(null);
+  const lastFetchedPatientId = useRef('');
   const patient = useAppSelector(state => state.patient.data);
   const dispatch = useAppDispatch();
   console.log(lastFetchedPatientId);
@@ -31,14 +31,14 @@ const ProfilePage = () => {
       const client: any = await FHIR.oauth2.ready();
       if (!client.state.tokenResponse.access_token) return;
 
-      if (client.patient.id === lastFetchedPatientId) {
+      if (client.patient.id === lastFetchedPatientId.current) {
         return;
       }
       console.log('1');
 
       fetchData(client);
 
-      lastFetchedPatientId = client.patient.id;
+      lastFetchedPatientId.current = client.patient.id;
       console.log('2');
     }
 
