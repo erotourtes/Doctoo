@@ -93,9 +93,11 @@ const ProfilePage = () => {
 
   return (
     <div>
-      <div>
+      <div className='md:grid lg:flex'>
         <PageHeader iconVariant='account' title='Profile' />
-        <Link to='/launch'>Epic Login</Link>
+        <Link to='/launch' className='hover:text-main sm:text-wrap lg:text-nowrap'>
+          Are you a patient at an Epic System? Login here.
+        </Link>
       </div>
       <section className='flex w-full flex-col gap-7 overflow-y-auto bg-background pt-7 lg:flex-row lg:gap-3 xl:gap-7'>
         <div className='flex w-full flex-col gap-7'>
