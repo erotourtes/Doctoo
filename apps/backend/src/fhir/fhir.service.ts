@@ -11,7 +11,10 @@ export class FhirService {
   constructor(private httpService: HttpService) {}
 
   fetchPatientData(patientId: string, body: CreateFhirDto): Observable<AxiosResponse<any>> {
-    const url = `${body.serverUrl}/Patient/${patientId}`;
+
+    const patientLionics = [encodeURIComponent('http://loinc.org|2106-3')];
+    const url = `${body.serverUrl}/Patient?patient=${patientId}&limit=50&code=${patientLionics}`;
+
     try {
       return this.httpService
         .get(url, {
