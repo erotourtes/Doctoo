@@ -13,7 +13,7 @@ import { getPatientData, patchPatientData, patchUserData } from '@/app/patient/P
 
 import { Link } from 'react-router-dom';
 import FHIR from 'fhirclient';
-import { fetchObservations, fetchPatientData } from '../LaunchPhir/FhirThunks';
+import { fetchObservationData, fetchPatientData } from '../../app/fhir/FhirThunks';
 
 const ProfilePage = () => {
   const patient = useAppSelector(state => state.patient.data);
@@ -42,19 +42,22 @@ const ProfilePage = () => {
     }
 
     async function fetchData(client: any) {
-      const patientData = await fetchPatientData(
-        client.state.serverUrl,
-        client.patient.id,
-        client.state.tokenResponse.access_token,
-      );
+      const FetchParams = {
+        serverUrl: client.state.serverUrl,
+        token: client.state.tokenResponse.access_token,
+        patientId: client.patient.id,
+      };
 
-      const observationData = await fetchObservations(
-        client.state.serverUrl,
-        client.patient.id,
-        client.state.tokenResponse.access_token,
-      );
+      const patientDataResponse = await fetchPatientData(FetchParams);
 
-      const patientResource = patientData.entry[0].resource;
+      const observationDataResponse = await fetchObservationData(FetchParams);
+
+      if (!patientDataResponse.data || !observationDataResponse.data) {
+        console.error('Failed to fetch data');
+        return;
+      }
+
+      const patientResource = patientDataResponse.data.entry[0].resource;
 
       const age = new Date().getFullYear() - new Date(patientResource.birthDate).getFullYear();
 
@@ -79,7 +82,7 @@ const ProfilePage = () => {
             state: patientResource.address[0].district,
             gender: patientResource.gender.toUpperCase(),
             age: age,
-            weight: observationData.entry[0].resource.valueQuantity.value,
+            weight: observationDataResponse.data.entry[0].resource.valueQuantity.value,
           },
         }),
       );

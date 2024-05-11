@@ -63,6 +63,8 @@ export interface paths {
     patch: operations['UserController_patchUser'];
   };
   '/user': {
+    /** Get all users */
+    get: operations['UserController_getAllUsers'];
     /** Create user */
     post: operations['UserController_createUser'];
   };
@@ -245,33 +247,18 @@ export interface paths {
     get: operations['DeclarationController_getDeclarationByDoctorId'];
   };
   '/condition': {
-    /**
-     * Get all conditions
-     * @description This endpoint retrieves all conditions.
-     */
-    get: operations['ConditionController_findAll'];
-    /**
-     * Create a new condition
-     * @description This endpoint creates a new condition.
-     */
+    /** Get all conditions */
+    get: operations['ConditionController_getConditions'];
+    /** Create a new condition */
     post: operations['ConditionController_create'];
   };
   '/condition/{id}': {
-    /**
-     * Get a condition by ID
-     * @description This endpoint retrieves a condition object by ID.
-     */
-    get: operations['ConditionController_findOne'];
-    /**
-     * Delete a condition by ID
-     * @description This endpoint deletes a condition object by ID.
-     */
-    delete: operations['ConditionController_remove'];
-    /**
-     * Update a condition by ID
-     * @description This endpoint updates a condition object by ID.
-     */
-    patch: operations['ConditionController_update'];
+    /** Get a condition by ID */
+    get: operations['ConditionController_getCondition'];
+    /** Delete a condition */
+    delete: operations['ConditionController_delete'];
+    /** Update a condition */
+    patch: operations['ConditionController_patch'];
   };
   '/allergy': {
     /** Get all allergies */
@@ -347,6 +334,12 @@ export interface paths {
   '/notification/{patientId}': {
     /** Get all notification for patient */
     get: operations['NotificationController_getNotificationsForPatient'];
+  };
+  '/fhir/patient/{patientId}': {
+    post: operations['FhirController_fetchPatient'];
+  };
+  '/fhir/observation/{patientId}': {
+    post: operations['FhirController_fetchObservation'];
   };
 }
 
@@ -1605,26 +1598,26 @@ export interface components {
     };
     CreateConditionDto: {
       /**
-       * @description Condition name
+       * @description Unique condtion name.
        * @example Asthma
        */
       name: string;
     };
     ResponseCondtionDto: {
       /**
-       * @description Condition id
-       * @example 1
+       * @description Unique condition id.
+       * @example f95dad68-4d01-4e9e-b944-6a45ec494502
        */
       id: string;
       /**
-       * @description Condition name
+       * @description Unique condtion name.
        * @example Asthma
        */
       name: string;
     };
     UpdateConditionDto: {
       /**
-       * @description Condition name
+       * @description Unique condtion name.
        * @example Asthma
        */
       name?: string;
@@ -1870,6 +1863,7 @@ export interface components {
        */
       createdAt: string;
     };
+    CreateFhirDto: Record<string, never>;
   };
   responses: never;
   parameters: never;
@@ -2355,6 +2349,29 @@ export interface operations {
     };
     responses: {
       /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseUserDto'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /** Get all users */
+  UserController_getAllUsers: {
+    responses: {
+      /** @description Response if an error occurs while processing a request. */
       200: {
         content: {
           'application/json': components['schemas']['ResponseUserDto'];
@@ -4240,25 +4257,22 @@ export interface operations {
       };
     };
   };
-  /**
-   * Get all conditions
-   * @description This endpoint retrieves all conditions.
-   */
-  ConditionController_findAll: {
+  /** Get all conditions */
+  ConditionController_getConditions: {
     responses: {
-      /** @description Return conditions list */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
           'application/json': components['schemas']['ResponseCondtionDto'][];
         };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           'application/json': components['schemas']['BadRequestResponse'];
         };
       };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           'application/json': components['schemas']['ClassicNestResponse'];
@@ -4266,10 +4280,7 @@ export interface operations {
       };
     };
   };
-  /**
-   * Create a new condition
-   * @description This endpoint creates a new condition.
-   */
+  /** Create a new condition */
   ConditionController_create: {
     requestBody: {
       content: {
@@ -4277,19 +4288,19 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Condition created */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
           'application/json': components['schemas']['ResponseCondtionDto'];
         };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           'application/json': components['schemas']['BadRequestResponse'];
         };
       };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           'application/json': components['schemas']['ClassicNestResponse'];
@@ -4297,34 +4308,31 @@ export interface operations {
       };
     };
   };
-  /**
-   * Get a condition by ID
-   * @description This endpoint retrieves a condition object by ID.
-   */
-  ConditionController_findOne: {
+  /** Get a condition by ID */
+  ConditionController_getCondition: {
     parameters: {
       path: {
         /**
-         * @description Condition ID
+         * @description Unique condition id.
          * @example acde070d-8c4c-4f0d-9d8a-162843c10333
          */
         id: string;
       };
     };
     responses: {
-      /** @description Return condition by id */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
           'application/json': components['schemas']['ResponseCondtionDto'];
         };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           'application/json': components['schemas']['BadRequestResponse'];
         };
       };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           'application/json': components['schemas']['ClassicNestResponse'];
@@ -4332,40 +4340,31 @@ export interface operations {
       };
     };
   };
-  /**
-   * Delete a condition by ID
-   * @description This endpoint deletes a condition object by ID.
-   */
-  ConditionController_remove: {
+  /** Delete a condition */
+  ConditionController_delete: {
     parameters: {
       path: {
         /**
-         * @description Condition id
-         * @example 1
+         * @description Unique condition id.
+         * @example acde070d-8c4c-4f0d-9d8a-162843c10333
          */
         id: string;
       };
     };
     responses: {
-      /** @description Condition deleted */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
           'application/json': components['schemas']['ResponseCondtionDto'];
         };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           'application/json': components['schemas']['BadRequestResponse'];
         };
       };
-      /** @description Condition not found */
-      404: {
-        content: {
-          'application/json': components['schemas']['ClassicNestResponse'];
-        };
-      };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           'application/json': components['schemas']['ClassicNestResponse'];
@@ -4373,15 +4372,12 @@ export interface operations {
       };
     };
   };
-  /**
-   * Update a condition by ID
-   * @description This endpoint updates a condition object by ID.
-   */
-  ConditionController_update: {
+  /** Update a condition */
+  ConditionController_patch: {
     parameters: {
       path: {
         /**
-         * @description Condition id
+         * @description Unique condition id.
          * @example acde070d-8c4c-4f0d-9d8a-162843c10333
          */
         id: string;
@@ -4393,19 +4389,19 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Condition updated */
+      /** @description Response when the request is successfully processed. */
       200: {
         content: {
           'application/json': components['schemas']['ResponseCondtionDto'];
         };
       };
-      /** @description Bad request */
+      /** @description Response if an error occurs while processing a request. */
       400: {
         content: {
           'application/json': components['schemas']['BadRequestResponse'];
         };
       };
-      /** @description Internal server error */
+      /** @description Response if an error occurs while processing a request. */
       500: {
         content: {
           'application/json': components['schemas']['ClassicNestResponse'];
@@ -4953,6 +4949,40 @@ export interface operations {
       };
       /** @description Internal server error. */
       500: {
+        content: never;
+      };
+    };
+  };
+  FhirController_fetchPatient: {
+    parameters: {
+      path: {
+        patientId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateFhirDto'];
+      };
+    };
+    responses: {
+      201: {
+        content: never;
+      };
+    };
+  };
+  FhirController_fetchObservation: {
+    parameters: {
+      path: {
+        patientId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateFhirDto'];
+      };
+    };
+    responses: {
+      201: {
         content: never;
       };
     };
