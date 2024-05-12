@@ -1,13 +1,35 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { instance } from '@/api/axios.api';
 import handleError from '@/api/handleError.api';
-import { addMessage, openChat, setChatAttachments, setChatMessages, setChats, setNewChat } from './ChatSlice';
+import {
+  addMessage,
+  openChat,
+  setChatAttachments,
+  setChatMessages,
+  setChats,
+  setNewChat,
+  setSearchedChats,
+} from './ChatSlice';
 
-export const getChats = createAsyncThunk('chat/fetchChats', async (_, { dispatch }) => {
+export const getChats = createAsyncThunk(
+  'chat/fetchChats',
+  async ({ skip = 0, take = 10 }: { skip?: number; take?: number }, { dispatch }) => {
+    try {
+      const response = await instance.get(`/chat?skip=${skip}&take=${take}`);
+      if (response.status === 200) {
+        dispatch(setChats({ chats: response.data, skip }));
+      }
+    } catch (e) {
+      handleError(e as Error);
+    }
+  },
+);
+
+export const searchChats = createAsyncThunk('chat/searchChats', async (q: string, { dispatch }) => {
   try {
-    const response = await instance.get(`/chat`);
+    const response = await instance.get(`/chat/search?q=${q}`);
     if (response.status === 200) {
-      dispatch(setChats(response.data));
+      dispatch(setSearchedChats(response.data));
     }
   } catch (e) {
     handleError(e as Error);
@@ -33,16 +55,19 @@ export const fetchReadMessages = createAsyncThunk('chat/readMessages', async (ch
   }
 });
 
-export const getChatMessages = createAsyncThunk('chat/fetchMessages', async (chatId: string, { dispatch }) => {
-  try {
-    const response = await instance.get(`/chat/${chatId}/messages`);
-    if (response.status === 200) {
-      dispatch(setChatMessages(response.data));
+export const getChatMessages = createAsyncThunk(
+  'chat/fetchMessages',
+  async ({ chatId, skip = 0, take = 10 }: { chatId: string; skip?: number; take?: number }, { dispatch }) => {
+    try {
+      const response = await instance.get(`/chat/${chatId}/messages?skip=${skip}&take=${take}`);
+      if (response.status === 200) {
+        dispatch(setChatMessages({ messages: response.data, skip }));
+      }
+    } catch (e) {
+      handleError(e as Error);
     }
-  } catch (e) {
-    handleError(e as Error);
-  }
-});
+  },
+);
 
 export const createChat = createAsyncThunk('chat/createChat', async (createChatData, { dispatch }) => {
   try {
@@ -73,13 +98,16 @@ export const sendMessage = createAsyncThunk(
   },
 );
 
-export const getChatAttachments = createAsyncThunk('chat/sendMessage', async (chatId: string, { dispatch }) => {
-  try {
-    const response = await instance.get(`/chat/${chatId}/attachments`);
-    if (response.status === 200) {
-      dispatch(setChatAttachments(response.data));
+export const getChatAttachments = createAsyncThunk(
+  'chat/sendMessage',
+  async ({ chatId, skip = 0, take = 10 }: { chatId: string; skip?: number; take?: number }, { dispatch }) => {
+    try {
+      const response = await instance.get(`/chat/${chatId}/attachments?skip=${skip}&take=${take}`);
+      if (response.status === 200) {
+        dispatch(setChatAttachments({ attachments: response.data, skip }));
+      }
+    } catch (e) {
+      handleError(e as Error);
     }
-  } catch (e) {
-    handleError(e as Error);
-  }
-});
+  },
+);

@@ -1,14 +1,23 @@
 import type { RootState } from '@/app/store';
-import type { TAttachment, TChat, TChats, TMessage, TMessages } from '@/dataTypes/Chat';
+import type {
+  TAttachments,
+  TChat,
+  TChatMessagesSearchResult,
+  TChats,
+  TMessage,
+  TMessages,
+  TSearchedChats,
+} from '@/dataTypes/Chat';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '../createAppSlice';
 
 interface chatData {
   chats: TChats;
-  openedChat: TChat | null;
+  openedChat: TChat | TChatMessagesSearchResult | null;
   isOpenedChat: boolean;
   chatMessages: TMessages;
-  chatAttachedFiles: TAttachment[];
+  chatAttachedFiles: TAttachments;
+  searchedChats: TSearchedChats;
 }
 
 const initialState: chatData = {
@@ -22,15 +31,27 @@ const initialState: chatData = {
     messages: [],
     totalMessages: 0,
   },
-  chatAttachedFiles: [],
+  chatAttachedFiles: {
+    attachments: [],
+    totalAttachments: 0,
+  },
+  searchedChats: {
+    messagesSearchResults: [],
+    namesSearchResults: [],
+  },
 };
 
 export const chatSlice = createAppSlice({
   name: 'chat',
   initialState,
   reducers: {
-    setChats: (state, action: PayloadAction<TChats>) => {
-      state.chats = action.payload;
+    setChats: (state, action: PayloadAction<{ chats: TChats; skip: number }>) => {
+      if (action.payload.skip === 0) {
+        state.chats = action.payload.chats;
+      } else {
+        state.chats.totalChats = action.payload.chats.totalChats;
+        state.chats.chats = [...state.chats.chats, ...action.payload.chats.chats];
+      }
     },
 
     setNewChat: (state, action: PayloadAction<TChat>) => {
@@ -43,21 +64,31 @@ export const chatSlice = createAppSlice({
       }
     },
 
-    openChat: (state, action: PayloadAction<{ chatId: string }>) => {
-      state.chats.chats.forEach(chat => {
-        if (chat.id === action.payload.chatId) {
-          state.openedChat = chat || null;
-          state.isOpenedChat = true;
-        }
-      });
+    openChat: (state, action: PayloadAction<TChat | TChatMessagesSearchResult>) => {
+      state.openedChat = action.payload;
+      state.chatMessages = {
+        messages: [],
+        totalMessages: 0,
+      };
+      state.chatAttachedFiles = {
+        attachments: [],
+        totalAttachments: 0,
+      };
+
+      state.isOpenedChat = true;
     },
 
     closeChat: state => {
       state.isOpenedChat = false;
     },
 
-    setChatMessages: (state, action: PayloadAction<TMessages>) => {
-      state.chatMessages = action.payload;
+    setChatMessages: (state, action: PayloadAction<{ messages: TMessages; skip: number }>) => {
+      if (action.payload.skip === 0) {
+        state.chatMessages = action.payload.messages;
+      } else {
+        state.chatMessages.totalMessages = action.payload.messages.totalMessages;
+        state.chatMessages.messages = [...state.chatMessages.messages, ...action.payload.messages.messages];
+      }
     },
 
     addMessage: (state, action: PayloadAction<TMessage>) => {
@@ -81,9 +112,10 @@ export const chatSlice = createAppSlice({
 
       if (action.payload.attachments && action.payload.attachments.length > 0) {
         action.payload.attachments.forEach(attachment => {
-          const foundedAttachemt = state.chatAttachedFiles.findIndex(a => a.id === attachment.id);
-          if (!foundedAttachemt) {
-            state.chatAttachedFiles = [attachment, ...state.chatAttachedFiles];
+          const foundedAttachemt = state.chatAttachedFiles.attachments.findIndex(a => a.id === attachment.id);
+          if (foundedAttachemt === -1) {
+            state.chatAttachedFiles.attachments = [attachment, ...state.chatAttachedFiles.attachments];
+            state.chatAttachedFiles.totalAttachments = state.chatAttachedFiles.totalAttachments + 1;
           }
         });
       }
@@ -106,19 +138,32 @@ export const chatSlice = createAppSlice({
         state.chats.chats[chatIndex].lastMessage = action.payload;
       }
 
-      state.chatAttachedFiles = state.chatAttachedFiles.filter(a => a.messageId !== action.payload.id);
+      state.chatAttachedFiles.attachments = state.chatAttachedFiles.attachments.filter(
+        a => a.messageId !== action.payload.id,
+      );
       if (action.payload.attachments && action.payload.attachments.length > 0) {
         action.payload.attachments.forEach(attachment => {
-          const foundedAttachemt = state.chatAttachedFiles.findIndex(a => a.id === attachment.id);
-          if (!foundedAttachemt) {
-            state.chatAttachedFiles = [attachment, ...state.chatAttachedFiles];
+          const foundedAttachemt = state.chatAttachedFiles.attachments.findIndex(a => a.id === attachment.id);
+          if (foundedAttachemt === -1) {
+            state.chatAttachedFiles.attachments = [attachment, ...state.chatAttachedFiles.attachments];
+            state.chatAttachedFiles.totalAttachments = state.chatAttachedFiles.totalAttachments + 1;
           }
         });
       }
     },
 
-    setChatAttachments: (state, action: PayloadAction<TAttachment[]>) => {
-      state.chatAttachedFiles = action.payload;
+    setChatAttachments: (state, action: PayloadAction<{ attachments: TAttachments; skip: number }>) => {
+      if (action.payload.skip === 0) {
+        state.chatAttachedFiles = action.payload.attachments;
+      } else {
+        state.chatAttachedFiles.totalAttachments = action.payload.attachments.totalAttachments;
+        action.payload.attachments.attachments.forEach(attachment => {
+          const foundedAttachemt = state.chatAttachedFiles.attachments.findIndex(a => a.id === attachment.id);
+          if (foundedAttachemt === -1) {
+            state.chatAttachedFiles.attachments = [...state.chatAttachedFiles.attachments, attachment];
+          }
+        });
+      }
     },
 
     readMessages: (state, action: PayloadAction<any>) => {
@@ -131,6 +176,17 @@ export const chatSlice = createAppSlice({
           foundedChat.missedMessagesPatient = action.payload.missedMessagesPatient;
         }
       }
+    },
+
+    setSearchedChats(state, action: PayloadAction<TSearchedChats>) {
+      state.searchedChats = action.payload;
+    },
+
+    resetsetSearchedChats(state) {
+      state.searchedChats = {
+        messagesSearchResults: [],
+        namesSearchResults: [],
+      };
     },
   },
 });
@@ -145,6 +201,8 @@ export const {
   updateMessage,
   setChatAttachments,
   readMessages,
+  setSearchedChats,
+  resetsetSearchedChats,
 } = chatSlice.actions;
 
 export const chats = (state: RootState) => state.chat.chats;

@@ -27,6 +27,7 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -40,7 +41,8 @@ import { Role, User } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateChatDto, CreateMessageDto } from './dto/create.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { ResponseAttachmentDto } from './dto/responseMessageAttachment.dto';
+import { ResponseAttachmentArrayDto } from './dto/responseMessageAttachment.dto';
+import { ResponseSearchedChatsDto } from './dto/responseSearchedChats';
 
 @ApiTags('Chat Endpoints')
 @Controller('chat')
@@ -85,10 +87,43 @@ export class ChatController {
   @ApiOkResponse({ type: ResponseChatArrayDto, description: RESPONSE_STATUS.SUCCESS })
   @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiQuery({ name: 'skip', required: false, type: Number, description: 'Number of chats to skip.' })
+  @ApiQuery({ name: 'take', required: false, type: Number, description: 'Number of chats to take.' })
   @UseGuards(JWTGuard)
-  async getChats(@Req() req: Request) {
+  async getChats(@Req() req: Request, @Query('skip') skipQuery: string, @Query('take') takeQuery: string) {
+    const skip = skipQuery ? Number(skipQuery) : undefined;
+    const take = takeQuery ? Number(takeQuery) : undefined;
+
+    // TODO: Add better validation.
+    if (skipQuery && isNaN(skip)) {
+      throw new BadRequestException('Skip query parameter must be a number.');
+    }
+
+    if (takeQuery && isNaN(take)) {
+      throw new BadRequestException('Take query parameter must be a number.');
+    }
+
     const user: User = req['user'];
-    return this.chatService.getChatsByUserId(user.id, user.role);
+    return this.chatService.getChatsByUserId(user.id, user.role, skip, take);
+  }
+
+  @Get('search')
+  @ApiOperation({
+    summary: 'Search Chats',
+    description: 'Search for chats by messages or participant names.',
+  })
+  @ApiHeader({ name: 'Cookie', example: 'jwt=eyJhbGci...', description: 'JWT token' })
+  @ApiOkResponse({ type: ResponseSearchedChatsDto, description: 'Successful chat search.' })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: 'Unauthorized access.' })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: 'Internal server error.' })
+  @ApiQuery({ name: 'q', required: true, type: String, description: 'Search text' })
+  @UseGuards(JWTGuard)
+  async searchChats(@Req() req: Request, @Query('q') q: string) {
+    if (q === '') {
+      throw new BadRequestException('Search text is empty');
+    }
+    const user: User = req['user'];
+    return this.chatService.searchChat(user.id, user.role, q);
   }
 
   @Get('/:chatId')
@@ -109,8 +144,8 @@ export class ChatController {
 
   @Patch('/:chatId/read-messages')
   @ApiOperation({
-    summary: 'Read messages (set count messages 0)',
-    description: 'This endpoint for read message (set count messages 0).',
+    summary: 'Read messages (set count missed messages to 0)',
+    description: 'This endpoint for read message (set count missed messages to 0).',
   })
   @ApiHeader({ name: 'Cookie', example: 'jwt=eyJhbGci...', description: 'JWT token' })
   @ApiOkResponse({ type: Number, description: RESPONSE_STATUS.SUCCESS })
@@ -133,6 +168,8 @@ export class ChatController {
   @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
   @ApiParam({ name: 'chatId', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique chat id.' })
+  @ApiQuery({ name: 'skip', required: false, type: Number, description: 'Number of messages to skip.' })
+  @ApiQuery({ name: 'take', required: false, type: Number, description: 'Number of messages to take.' })
   async getChatMessages(
     @Param('chatId') chatId: string,
     @Query('skip') skipQuery: string,
@@ -190,12 +227,29 @@ export class ChatController {
     description: 'This endpoint retrieves attachments for a specific chat.',
   })
   @ApiHeader({ name: 'Cookie', example: 'jwt=eyJhbGci...', description: 'JWT token' })
-  @ApiOkResponse({ type: [ResponseAttachmentDto], description: 'Attachments retrieved successfully' })
+  @ApiOkResponse({ type: ResponseAttachmentArrayDto, description: 'Attachments retrieved successfully' })
   @ApiParam({ name: 'chatId', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique chat id.' })
   @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiQuery({ name: 'skip', required: false, type: Number, description: 'Number of attachments to skip.' })
+  @ApiQuery({ name: 'take', required: false, type: Number, description: 'Number of attachments to take.' })
   @UseGuards(JWTGuard)
-  async getAttachmentsByChatId(@Param('chatId') chatId: string) {
-    const attachments = await this.chatService.getAttachmentsByChatId(chatId);
+  async getAttachmentsByChatId(
+    @Param('chatId') chatId: string,
+    @Query('skip') skipQuery: string,
+    @Query('take') takeQuery: string,
+  ) {
+    const skip = skipQuery ? Number(skipQuery) : undefined;
+    const take = takeQuery ? Number(takeQuery) : undefined;
+
+    // TODO: Add better validation.
+    if (skipQuery && isNaN(skip)) {
+      throw new BadRequestException('Skip query parameter must be a number.');
+    }
+
+    if (takeQuery && isNaN(take)) {
+      throw new BadRequestException('Take query parameter must be a number.');
+    }
+    const attachments = await this.chatService.getAttachmentsByChatId(chatId, skip, take);
     return attachments;
   }
 }

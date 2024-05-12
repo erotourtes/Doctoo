@@ -6,10 +6,11 @@ import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { MinioService } from '../minio/minio.service';
 import { ChatAppointmentCreatedEvent } from './events/chat-appointment-created.event';
 import { ResponseMessageDto } from './dto/responseMessage.dto';
-import { ResponseAttachmentDto } from './dto/responseMessageAttachment.dto';
+import { ResponseAttachmentArrayDto, ResponseAttachmentDto } from './dto/responseMessageAttachment.dto';
 import { CreateChatServiceDto, TCreateMessage } from './dto/create.dto';
 import { plainToClass } from 'class-transformer';
 import { ChatAppointmentUpdatedEvent } from './events/chat-appointment-updated.event copy';
+import { ResponseMessagesSearchResultDto, ResponseSearchedChatsDto } from './dto/responseSearchedChats';
 
 @Injectable()
 export class ChatService {
@@ -126,7 +127,7 @@ export class ChatService {
         [participant]: {
           include: includeFields,
         },
-        messages: { orderBy: { sentAt: 'desc' }, take: 1, include: { appointment: true } },
+        messages: { orderBy: { sentAt: 'desc' }, take: 1, include: { appointment: true, attachments: true } },
       },
       skip,
       take,
@@ -144,6 +145,138 @@ export class ChatService {
     });
 
     return { chats: formatedChats, totalChats: totalChats };
+  }
+
+  async searchChat(userId: string, role: Role, searchText: string): Promise<ResponseSearchedChatsDto> {
+    const participant = role === Role.PATIENT ? Role.DOCTOR.toLowerCase() : Role.PATIENT.toLocaleLowerCase();
+    let includeFields: any = {
+      user: true,
+    };
+
+    // Conditionally include specializations based on the role
+    if (participant === Role.DOCTOR.toLowerCase()) {
+      includeFields = {
+        ...includeFields,
+        specializations: {
+          select: {
+            specialization: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      };
+    }
+
+    const messages = await this.prismaService.chatMessage.findMany({
+      where: {
+        AND: [
+          {
+            chat: {
+              [role.toLocaleLowerCase()]: { userId },
+            },
+          },
+          {
+            text: {
+              contains: searchText,
+              mode: 'insensitive',
+            },
+          },
+        ],
+      },
+      include: {
+        chat: {
+          include: {
+            [participant]: {
+              include: includeFields,
+            },
+          },
+        },
+        attachments: true,
+        appointment: true,
+      },
+    });
+
+    const formatedNames = searchText.trim();
+    const [firstName, lastName] = formatedNames.split(' ');
+
+    const searchedChats = await this.prismaService.chat.findMany({
+      where: {
+        AND: [
+          {
+            [role.toLocaleLowerCase()]: { userId },
+          },
+          {
+            [participant]: {
+              user: {
+                OR: [
+                  {
+                    firstName: {
+                      contains: firstName,
+                      mode: 'insensitive',
+                    },
+                    lastName: {
+                      contains: lastName,
+                      mode: 'insensitive',
+                    },
+                  },
+                  {
+                    firstName: {
+                      contains: lastName,
+                      mode: 'insensitive',
+                    },
+                    lastName: {
+                      contains: firstName,
+                      mode: 'insensitive',
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      include: {
+        [participant]: {
+          include: includeFields,
+        },
+        messages: { orderBy: { sentAt: 'desc' }, take: 1, include: { appointment: true, attachments: true } },
+      },
+    });
+
+    const chats = messages.map(message => {
+      const chat = message.chat;
+      delete message.chat;
+      return {
+        ...chat,
+        searchedMessage: message,
+      };
+    });
+
+    const formatedSearchChatsByMessage = chats.map(chat => {
+      const searchedMessage = plainToClass(ResponseMessageDto, chat.searchedMessage);
+      const participantData = chat[participant];
+
+      return plainToClass(ResponseMessagesSearchResultDto, {
+        ...chat,
+        searchedMessage: searchedMessage,
+        participant: participantData,
+      });
+    });
+
+    const formatedSearchChatsByNames = searchedChats.map(chat => {
+      const lastMessage = chat.messages[0];
+      const participantData = chat[participant];
+
+      return plainToClass(ResponseChatDto, {
+        ...chat,
+        lastMessage: lastMessage,
+        participant: participantData,
+      });
+    });
+
+    return { messagesSearchResults: formatedSearchChatsByMessage, namesSearchResults: formatedSearchChatsByNames };
   }
 
   async existsChatByDoctorAndPatient(patientId: string, doctorId: string): Promise<Chat> {
@@ -337,21 +470,27 @@ export class ChatService {
     return this.prismaService.messageAttachment.findMany({ where: { messageId } });
   }
 
-  async getAttachmentsByChatId(chatId: string): Promise<ResponseAttachmentDto[]> {
-    return this.prismaService.messageAttachment.findMany({
-      where: {
-        message: {
-          chat: {
-            id: chatId,
-          },
+  async getAttachmentsByChatId(chatId: string, skip = 0, take?: number): Promise<ResponseAttachmentArrayDto> {
+    const where = {
+      message: {
+        chat: {
+          id: chatId,
         },
       },
+    };
+    const totalAttachments = await this.prismaService.messageAttachment.count({ where });
+    const attachments = await this.prismaService.messageAttachment.findMany({
+      where,
       orderBy: {
         message: {
           sentAt: 'desc',
         },
       },
+      skip,
+      take,
     });
+
+    return { attachments, totalAttachments };
   }
 
   async createAppointmentMessage(chatId: string, appointment: Appointment) {
@@ -388,8 +527,12 @@ export class ChatService {
         },
       },
     });
-    const formatedMessage = plainToClass(ResponseMessageDto, message);
-    this.eventEmitter.emit('chat.message.update', formatedMessage);
-    return formatedMessage;
+    if (message) {
+      const formatedMessage = plainToClass(ResponseMessageDto, message);
+      this.eventEmitter.emit('chat.message.update', formatedMessage);
+      return formatedMessage;
+    } else {
+      return null;
+    }
   }
 }

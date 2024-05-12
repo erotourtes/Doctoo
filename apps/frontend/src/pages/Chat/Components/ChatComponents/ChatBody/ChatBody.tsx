@@ -1,22 +1,23 @@
 import DayJS from 'dayjs';
 import { Fragment } from 'react/jsx-runtime';
-import MessageItem from './Message';
+import MessageItem from './MessageItem';
 import { cn } from '@/utils/cn';
 import ChatHeader from './ChatHeader';
 import type { Role } from '@/dataTypes/User';
 import { Icon } from '@/components/UI';
 import InputChat from '../InputChat/InputChat';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { sendMessage } from '@/app/chat/ChatThunks';
-import type { TChat, TMessage } from '@/dataTypes/Chat';
+import { getChatMessages, sendMessage } from '@/app/chat/ChatThunks';
+import type { TChat, TChatMessagesSearchResult, TMessage, TMessages } from '@/dataTypes/Chat';
 import AppointmentMessage from './AppointmentMessage';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getAppointment } from '@/app/appointment/AppointmentThunks';
 import ChatAppointmentPopup from '../Popups/ChatAppointmentPopup';
+import useInfiniteScroll from '@/hooks/useInfiniteScroll';
 
 type ChatBodyProps = {
-  chat: TChat;
-  chatMessages: TMessage[];
+  chat: TChat | TChatMessagesSearchResult;
+  chatMessages: TMessages;
   className?: string;
   role?: string | Role;
   showBackBtn?: boolean;
@@ -39,6 +40,29 @@ const ChatBody = ({
   const [openedAppointmentId, setOpenedAppointmentId] = useState<string | null>(null);
   const [openedAppointmentDetails, setOpenedAppointmentDetails] = useState(false);
   const openedAppointment = useAppSelector(state => state.appointment.appointment);
+  const scrolledRef = useRef<HTMLDivElement>(null);
+  const bodyMessagesRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if ('searchedMessage' in chat) {
+      const foundedMessage = chatMessages.messages.find(message => message.id === chat.searchedMessage?.id);
+      if (!foundedMessage && chatMessages.totalMessages > chatMessages.messages.length) {
+        dispatch(getChatMessages({ chatId: chat.id, skip: chatMessages.messages.length }));
+      }
+    }
+  }, [chat, chatMessages]);
+
+  useEffect(() => {
+    if (bodyMessagesRef && bodyMessagesRef.current) {
+      bodyMessagesRef.current.scrollTop = 0;
+    }
+  }, [chat, bodyMessagesRef]);
+
+  useEffect(() => {
+    if (scrolledRef && scrolledRef.current) {
+      scrolledRef.current.scrollIntoView({ block: 'center', inline: 'nearest' });
+    }
+  }, [scrolledRef.current, chatMessages]);
 
   useEffect(() => {
     if (openedAppointmentId) {
@@ -47,13 +71,24 @@ const ChatBody = ({
   }, [openedAppointmentId]);
 
   useEffect(() => {
-    if (chatMessages.length) {
-      const message = chatMessages.find(m => m.appointment?.id === openedAppointmentId);
+    if (chatMessages.messages.length) {
+      const message = chatMessages.messages.find(m => m.appointment?.id === openedAppointmentId);
       if (message && openedAppointmentId) {
         dispatch(getAppointment(openedAppointmentId));
       }
     }
-  }, [chatMessages]);
+  }, [chatMessages.messages]);
+
+  useInfiniteScroll(
+    bodyMessagesRef,
+    () => {
+      if (chatMessages.totalMessages > chatMessages.messages.length) {
+        dispatch(getChatMessages({ chatId: chat.id, skip: chatMessages.messages.length }));
+      }
+    },
+    [chatMessages],
+    true,
+  );
 
   const handleSend = (formData: FormData) => {
     let success = true;
@@ -93,19 +128,27 @@ const ChatBody = ({
         />
 
         {/* Body messages */}
-        <div className='flex flex-grow flex-col-reverse items-start gap-4 overflow-y-auto bg-background px-5 py-3'>
-          {chatMessages && chatMessages.length ? (
-            chatMessages.map((message: TMessage, index) => {
+        <div
+          ref={bodyMessagesRef}
+          className='flex flex-grow flex-col-reverse items-start gap-4 overflow-y-auto bg-background px-5 py-3'
+        >
+          {chatMessages.messages.length ? (
+            chatMessages.messages.map((message: TMessage, index) => {
               const currentDate = new Date(message.sentAt);
-              const isFirstMessage = index === chatMessages.length - 1;
-              const previousMessageDate = isFirstMessage ? null : new Date(chatMessages[index + 1].sentAt);
+              const isFirstMessage = index === chatMessages.messages.length - 1;
+              const previousMessageDate = isFirstMessage ? null : new Date(chatMessages.messages[index + 1].sentAt);
               const isDateDifferent =
                 DayJS(currentDate).format('YYYY-MM-DD') !== DayJS(previousMessageDate).format('YYYY-MM-DD');
+              let isOpenMessage = false;
+              if ('searchedMessage' in chat) {
+                isOpenMessage = chat.searchedMessage?.id === message.id;
+              }
 
               return (
                 <Fragment key={message.id}>
                   {!message.appointment ? (
                     <MessageItem
+                      ref={isOpenMessage ? scrolledRef : null}
                       text={message.text}
                       sentAt={message.sentAt}
                       sender={message.sender === role || message.sender === role ? 'me' : 'participant'}

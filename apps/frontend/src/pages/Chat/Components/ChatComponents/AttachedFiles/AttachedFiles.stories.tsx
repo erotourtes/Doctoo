@@ -5,22 +5,25 @@ import '@/index.css';
 import { BrowserRouter } from 'react-router-dom';
 import { fn } from '@storybook/test';
 import { Icon } from '@/components/UI';
-import type { TAttachment } from '@/dataTypes/Chat';
+import type { TAttachments } from '@/dataTypes/Chat';
 import { Provider } from 'react-redux';
 import { store } from '@/app/store';
 
-const mockAttachments: TAttachment[] = [
-  {
-    id: '1',
-    messageId: 'msg1',
-    attachmentKey: 'file1.pdf',
-  },
-  {
-    id: '2',
-    messageId: 'msg1',
-    attachmentKey: 'file2.docx',
-  },
-];
+const mockAttachments: TAttachments = {
+  attachments: [
+    {
+      id: '1',
+      messageId: 'msg1',
+      attachmentKey: 'file1.pdf',
+    },
+    {
+      id: '2',
+      messageId: 'msg1',
+      attachmentKey: 'file2.docx',
+    },
+  ],
+  totalAttachments: 2,
+};
 
 const meta = {
   title: 'Pages/ChatPage/ChatComponents/AttachedFiles/AttachedFiles',

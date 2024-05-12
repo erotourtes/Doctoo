@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import MessageItem from './Message';
+import MessageItem from './MessageItem';
 import '@/index.css';
 import { BrowserRouter } from 'react-router-dom';
 

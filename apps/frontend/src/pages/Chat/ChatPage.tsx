@@ -19,7 +19,7 @@ const ChatPage = () => {
   };
 
   useEffect(() => {
-    dispatch(getChats());
+    dispatch(getChats({}));
   }, []);
 
   return (

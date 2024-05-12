@@ -13,3 +13,11 @@ export class ResponseAttachmentDto {
   })
   attachmentKey: string;
 }
+
+export class ResponseAttachmentArrayDto {
+  @ApiProperty({ type: ResponseAttachmentDto, description: 'Array of response attachments.', isArray: true })
+  attachments: ResponseAttachmentDto[];
+
+  @ApiProperty({ type: 'number', description: 'Total number of attachments.' })
+  totalAttachments: number;
+}

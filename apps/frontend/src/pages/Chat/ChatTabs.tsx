@@ -19,7 +19,7 @@ const ChatTabs = ({ countChats, role = Role.PATIENT }: ChatTabsProps) => {
         <ChatTab to='/my' active={getSelected('/my')}>
           {role === Role.PATIENT ? 'Doctors' : 'Patients'}
           {countChats ? (
-            <span className='flex size-6 items-center justify-center rounded-2xl bg-grey-5'>{countChats}</span>
+            <span className='flex size-6 items-center justify-center rounded-2xl bg-grey-5 text-sm'>{countChats}</span>
           ) : null}
         </ChatTab>
         <ChatTab to='/assistant' active={getSelected('/assistant')}>

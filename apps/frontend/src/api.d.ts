@@ -294,6 +294,13 @@ export interface paths {
      */
     post: operations['ChatController_createChat'];
   };
+  '/chat/search': {
+    /**
+     * Search Chats
+     * @description Search for chats by messages or participant names.
+     */
+    get: operations['ChatController_searchChats'];
+  };
   '/chat/{chatId}': {
     /**
      * Get a chat
@@ -303,8 +310,8 @@ export interface paths {
   };
   '/chat/{chatId}/read-messages': {
     /**
-     * Read messages (set count messages 0)
-     * @description This endpoint for read message (set count messages 0).
+     * Read messages (set count missed messages to 0)
+     * @description This endpoint for read message (set count missed messages to 0).
      */
     patch: operations['ChatController_readMessages'];
   };
@@ -1782,6 +1789,41 @@ export interface components {
        */
       totalChats: number;
     };
+    ResponseMessagesSearchResultDto: {
+      /**
+       * @description Unique appointment id.
+       * @example 123e4567-e89b-12d3-a456-426614174000
+       */
+      id: string;
+      /**
+       * @description Unique doctor id.
+       * @example 123e4567-e89b-12d3-a456-426614174000
+       */
+      doctorId: string;
+      /**
+       * @description Unique patient id.
+       * @example 123e4567-e89b-12d3-a456-426614174000
+       */
+      patientId: string;
+      /** @description Details of the chat participant. */
+      participant: components['schemas']['ResponseParticipantDto'];
+      /** @description Details of the last message in the chat. */
+      searchedMessage: components['schemas']['ResponseMessageDto'] | null;
+      /**
+       * @description Number of missed messages by the doctor.
+       * @example 0
+       */
+      missedMessagesDoctor: number;
+      /**
+       * @description Number of missed messages by the patient.
+       * @example 0
+       */
+      missedMessagesPatient: number;
+    };
+    ResponseSearchedChatsDto: {
+      messagesSearchResults: components['schemas']['ResponseMessagesSearchResultDto'][];
+      namesSearchResults: components['schemas']['ResponseChatDto'][];
+    };
     ResponseMessageArrayDto: {
       /** @description Array of response messages. */
       messages: components['schemas']['ResponseMessageDto'][];
@@ -1802,6 +1844,12 @@ export interface components {
       sentAt: string;
       /** @description Array of files */
       files?: string[];
+    };
+    ResponseAttachmentArrayDto: {
+      /** @description Array of response attachments. */
+      attachments: components['schemas']['ResponseAttachmentDto'][];
+      /** @description Total number of attachments. */
+      totalAttachments: number;
     };
     ResponseNotificationDto: {
       /**
@@ -4625,6 +4673,12 @@ export interface operations {
    */
   ChatController_getChats: {
     parameters: {
+      query?: {
+        /** @description Number of chats to skip. */
+        skip?: number;
+        /** @description Number of chats to take. */
+        take?: number;
+      };
       header?: {
         /** @description JWT token */
         Cookie?: string;
@@ -4695,6 +4749,42 @@ export interface operations {
     };
   };
   /**
+   * Search Chats
+   * @description Search for chats by messages or participant names.
+   */
+  ChatController_searchChats: {
+    parameters: {
+      query: {
+        /** @description Search text */
+        q: string;
+      };
+      header?: {
+        /** @description JWT token */
+        Cookie?: string;
+      };
+    };
+    responses: {
+      /** @description Successful chat search. */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseSearchedChatsDto'];
+        };
+      };
+      /** @description Unauthorized access. */
+      401: {
+        content: {
+          'application/json': components['schemas']['UnauthorizedResponse'];
+        };
+      };
+      /** @description Internal server error. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /**
    * Get a chat
    * @description This endpoint retrieves a chat.
    */
@@ -4734,8 +4824,8 @@ export interface operations {
     };
   };
   /**
-   * Read messages (set count messages 0)
-   * @description This endpoint for read message (set count messages 0).
+   * Read messages (set count missed messages to 0)
+   * @description This endpoint for read message (set count missed messages to 0).
    */
   ChatController_readMessages: {
     parameters: {
@@ -4778,9 +4868,11 @@ export interface operations {
    */
   ChatController_getChatMessages: {
     parameters: {
-      query: {
-        skip: string;
-        take: string;
+      query?: {
+        /** @description Number of messages to skip. */
+        skip?: number;
+        /** @description Number of messages to take. */
+        take?: number;
       };
       header?: {
         /** @description JWT token */
@@ -4867,6 +4959,12 @@ export interface operations {
    */
   ChatController_getAttachmentsByChatId: {
     parameters: {
+      query?: {
+        /** @description Number of attachments to skip. */
+        skip?: number;
+        /** @description Number of attachments to take. */
+        take?: number;
+      };
       header?: {
         /** @description JWT token */
         Cookie?: string;
@@ -4883,7 +4981,7 @@ export interface operations {
       /** @description Attachments retrieved successfully */
       200: {
         content: {
-          'application/json': components['schemas']['ResponseAttachmentDto'][];
+          'application/json': components['schemas']['ResponseAttachmentArrayDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */

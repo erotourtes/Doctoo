@@ -26,12 +26,12 @@ const Chat = () => {
   useEffect(() => {
     dispatch(handleNewChat(socket));
     dispatch(handleMessages(socket, chats.chats));
-  }, [chats]);
+  }, [chats.chats]);
 
   useEffect(() => {
     if (openedChat) {
-      dispatch(getChatMessages(openedChat.id));
-      dispatch(getChatAttachments(openedChat.id));
+      dispatch(getChatMessages({ chatId: openedChat.id }));
+      dispatch(getChatAttachments({ chatId: openedChat.id }));
     }
   }, [openedChat]);
 
@@ -57,7 +57,7 @@ const Chat = () => {
 
   return (
     <div className='relative grid h-full max-w-full grid-cols-[minmax(250px,25%)_auto] overflow-hidden rounded-xl rounded-ss-none max-lg:grid-cols-[1fr]'>
-      <ChatList chats={chats.chats} className={cn(!w1024 ? 'absolute inset-0 z-[1]' : '')} />
+      <ChatList chats={chats} className={cn(!w1024 ? 'absolute inset-0 z-[1]' : '')} />
 
       <div className='relative flex w-full overflow-hidden'>
         {!openedChat ? (
@@ -70,7 +70,7 @@ const Chat = () => {
           <Fragment>
             <ChatBody
               chat={openedChat}
-              chatMessages={chatMessages.messages}
+              chatMessages={chatMessages}
               className={cn(
                 'border-l border-l-grey-5 max-lg:border-l-0',
                 !w1024

@@ -12,6 +12,11 @@ export type TMessage = TMessages['messages'][0];
 
 export type TMessageAppointment = TMessage['appointment'];
 
-export type TAttachment = TMessage['attachments'][0];
+export type TAttachments =
+  paths['/chat/{chatId}/attachments']['get']['responses']['200']['content']['application/json'];
 
-export type TUser = paths['/user/me']['get']['responses']['200']['content']['application/json'];
+export type TAttachment = TAttachments['attachments'][0];
+
+export type TSearchedChats = paths['/chat/search']['get']['responses']['200']['content']['application/json'];
+
+export type TChatMessagesSearchResult = TSearchedChats['messagesSearchResults'][0];

@@ -4,7 +4,7 @@ import { Role } from '@/dataTypes/User';
 import { Provider } from 'react-redux';
 import { store } from '@/app/store';
 import ChatBody from './ChatBody';
-import type { TChat, TMessage } from '@/dataTypes/Chat';
+import type { TChat, TMessages } from '@/dataTypes/Chat';
 
 const mockChat: TChat = {
   id: '123e4567-e89b-12d3-a456-426614174000',
@@ -36,28 +36,31 @@ const mockChat: TChat = {
   },
 };
 
-const mockMessages: TMessage[] = [
-  {
-    id: '1',
-    text: 'Hello, how can I assist you today?',
-    sentAt: new Date().toISOString(),
-    sender: Role.DOCTOR,
-    editedAt: new Date().toISOString(),
-    chatId: '1',
-    attachments: [],
-    appointment: null,
-  },
-  {
-    id: '2',
-    text: 'Hi, I need some help with my results.',
-    sentAt: new Date().toISOString(),
-    sender: Role.PATIENT,
-    editedAt: new Date().toISOString(),
-    chatId: '1',
-    attachments: [],
-    appointment: null,
-  },
-];
+const mockMessages: TMessages = {
+  messages: [
+    {
+      id: '1',
+      text: 'Hello, how can I assist you today?',
+      sentAt: new Date().toISOString(),
+      sender: Role.DOCTOR,
+      editedAt: new Date().toISOString(),
+      chatId: '1',
+      attachments: [],
+      appointment: null,
+    },
+    {
+      id: '2',
+      text: 'Hi, I need some help with my results.',
+      sentAt: new Date().toISOString(),
+      sender: Role.PATIENT,
+      editedAt: new Date().toISOString(),
+      chatId: '1',
+      attachments: [],
+      appointment: null,
+    },
+  ],
+  totalMessages: 2,
+};
 
 const meta = {
   title: 'Pages/ChatPage/ChatComponents/ChatBody/ChatBody',
@@ -92,7 +95,10 @@ export const Default: Story = {
 export const WihoutMessages: Story = {
   args: {
     chat: mockChat,
-    chatMessages: [],
+    chatMessages: {
+      messages: [],
+      totalMessages: 0,
+    },
     role: Role.PATIENT,
   },
 };
