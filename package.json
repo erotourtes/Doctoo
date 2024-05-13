@@ -29,8 +29,8 @@
     "lint": "pnpm -r lint",
     "build": "pnpm -r build",
     "prepare": "husky",
-    "docker up": "docker compose -f docker-compose.dev.yaml --env-file=.env.dev up -d",
-    "docker down": "docker compose -f docker-compose.dev.yaml --env-file=.env.dev down"
+    "docker:up": "docker compose -f docker-compose.dev.yaml --env-file=.env.dev up -d",
+    "docker:down": "docker compose -f docker-compose.dev.yaml --env-file=.env.dev down"
   },
   "engines": {
     "node": ">=18"
