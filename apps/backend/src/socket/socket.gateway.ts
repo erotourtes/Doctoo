@@ -16,6 +16,7 @@ import { AuthService } from '../auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from '../auth/strategies/jwt';
 import { AuthRequestHelper } from 'src/auth/utils/cookie-helper.service';
+import { ResponseUserDto } from '../user/dto/response.dto';
 
 export type SocketPayload = { userId?: string; message: any };
 
@@ -162,7 +163,7 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   //************************************** */
 
   // get user from jwt token in cookie
-  async getUserByClient(client: Socket) {
+  async getUserByClient(client: Socket): Promise<ResponseUserDto | null> {
     const headers = client.handshake.headers;
 
     let token: string | undefined = undefined;
@@ -176,24 +177,15 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
       });
     }
 
-    if (!token) {
-      return undefined;
-    }
+    if (!token) return null;
 
     const isCloseToExpire = this.authService.jwtCloseToExpire(token);
-    if (!isCloseToExpire) {
-      return undefined;
-    }
+    if (!isCloseToExpire) return null;
 
     const payload = this.jwtService.decode<JwtPayload & { exp: number }>(token);
-    if (!payload || !payload.sub || !payload.exp) {
-      return undefined;
-    }
+    if (!payload || !payload.sub || !payload.exp) return null;
 
-    const user = await this.userService.getUser(payload.sub);
-    if (!user) {
-      return undefined;
-    }
+    const user: ResponseUserDto | null = await this.userService.getUser(payload.sub).catch(() => null);
     return user;
   }
 

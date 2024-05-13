@@ -1,6 +1,7 @@
 import type { TPatient } from '@/dataTypes/Patient';
 import AppointmentCard from '../AppointmentCard/AppointmentCard';
 import { AppointmentStatus, type IAppointment } from '@/dataTypes/Appointment';
+import { Role } from '../../../../dataTypes/User';
 
 type AppointmentCardProps = {
   appointments: IAppointment[];
@@ -24,9 +25,8 @@ export default function CurrentAppointments({ appointments, patients }: Appointm
                 appointment={currentAppointment}
                 key={currentAppointment.id}
                 withQuickNotes={true}
-                fullName={`${appointmentPatient!.firstName}  ${appointmentPatient!.lastName}`}
+                user={{ data: appointmentPatient!, role: Role.PATIENT }}
                 about={currentAppointment.notes}
-                avatarKey={appointmentPatient!.avatarKey}
               />
             );
           })

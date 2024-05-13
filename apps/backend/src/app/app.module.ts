@@ -24,6 +24,7 @@ import { ReviewModule } from '../review/review.module';
 import { SpecializationModule } from '../specialization/specialization.module';
 import { UserModule } from '../user/user.module';
 import { FhirModule } from '../fhir/fhir.module';
+import { VideoSignalingModule } from '../video-signaling/video-signaling.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { FhirModule } from '../fhir/fhir.module';
     AppLoggerModule,
     NotificationModule,
     FhirModule,
+    VideoSignalingModule,
   ],
   providers: [MinioService],
 })

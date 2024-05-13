@@ -19,9 +19,11 @@ import Settings from './settings/settingsPage/settingsPage';
 import { useAppSelector } from '../app/hooks';
 import PatientDashboard from './dashboard/components/PatientDashboard/PatientDashboard';
 import DoctorDashboard from './dashboard/components/DoctorDashboard/DoctorDashboard';
-import { useMemo } from 'react';
+import { type FC, type PropsWithChildren, useMemo } from 'react';
 import ChatPage from './Chat/ChatPage';
 import { FindDoctorsPage } from './FindDoctors/FindDoctorsPage';
+import { DoctorVideoChatPage, PatientVideoChatPage } from './VideoChat/VideoChat';
+import VideoChatEnd from './VideoChat/VideoChatEnd';
 import LaunchPage from './LaunchPhir/launch';
 import NotFoundPage from './NotFound/NotFoundPage';
 
@@ -38,6 +40,10 @@ const PatientPages = () => {
         <Route path='/reviews' Component={ReviewsPage} />
         <Route path='/appointments' Component={AppointmentsPage} />
         <Route path='/logout' Component={LogoutPage} />
+
+        <Route path='/video-call/:conferenceId' Component={PatientVideoChatPage} />
+        <Route path='/video-call/ended/:conferenceId' Component={VideoChatEnd} />
+
         <Route path='/launch' Component={LaunchPage} />
         <Route path='/chats/my' Component={ChatPage} />
         <Route path='/chats/assistant' Component={ChatPage} />
@@ -64,10 +70,19 @@ const DoctorPages = () => {
         <Route path='/logout' Component={LogoutPage} />
         <Route path='/chats/my' Component={ChatPage} />
         <Route path='/chats/assistant' Component={ChatPage} />
+        <Route path='/video-call/:conferenceId' Component={DoctorVideoChatPage} />
 
         <Route path='*' element={<Navigate to={'/404'} />} />
       </Route>
     </Routes>
+  );
+};
+
+const MainContentWrapper: FC<PropsWithChildren> = ({ children }) => {
+  return (
+    <main className='main-wrapper flex h-full w-full flex-col gap-6 overflow-auto bg-background p-4 sm:p-8'>
+      {children}
+    </main>
   );
 };
 
@@ -84,14 +99,12 @@ const PageContainer = () => {
   }, [role]);
 
   return (
-    <main className='main-wrapper flex h-full w-full flex-col gap-6 overflow-auto bg-background p-4 sm:p-8'>
-      <Routes>
-        <Route path='/' Component={ProtectRoute}>
-          <Route path='/' element={<Navigate to={'/dashboard'} />} />
-          <Route path='*' Component={Page} />
-        </Route>
-      </Routes>
-    </main>
+    <Routes>
+      <Route path='/' Component={ProtectRoute}>
+        <Route path='/' element={<Navigate to={'/dashboard'} />} />
+        <Route path='*' Component={Page} />
+      </Route>
+    </Routes>
   );
 };
 
@@ -99,13 +112,19 @@ const Navigation = () => {
   const location = useLocation();
 
   const shouldDisplaySidemenu = () => {
-    const topLevelPaths = ['/payment'];
+    const topLevelPaths = ['/payment', '/video-call'];
     const currentTopLevelPath = location.pathname.split('/')[1];
     return !topLevelPaths.includes('/' + currentTopLevelPath);
   };
 
   const shouldDispaySmallSideMenu = () => {
     const topLevelPaths = ['/calendar'];
+    const currentTopLevelPath = location.pathname.split('/')[1];
+    return topLevelPaths.includes('/' + currentTopLevelPath);
+  };
+
+  const shouldNotWrapInMainContent = () => {
+    const topLevelPaths = ['/video-call'];
     const currentTopLevelPath = location.pathname.split('/')[1];
     return topLevelPaths.includes('/' + currentTopLevelPath);
   };
@@ -121,7 +140,13 @@ const Navigation = () => {
             ) : (
               <Header />
             )}
-            <PageContainer />
+            {shouldNotWrapInMainContent() ? (
+              <PageContainer />
+            ) : (
+              <MainContentWrapper>
+                <PageContainer />
+              </MainContentWrapper>
+            )}
           </div>
         }
       />

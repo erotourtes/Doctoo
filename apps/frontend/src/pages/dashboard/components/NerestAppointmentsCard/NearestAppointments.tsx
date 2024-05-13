@@ -2,6 +2,7 @@ import type { IAppointment } from '@/dataTypes/Appointment';
 import AppointmentCard from '../AppointmentCard/AppointmentCard';
 import { Button } from '@/components/UI/Button/Button';
 import { useNavigate } from 'react-router';
+import { Role } from '../../../../dataTypes/User';
 
 type AppointmentCardProps = {
   appointments: IAppointment[];
@@ -19,8 +20,7 @@ export default function NearestAppointmentsComponent({ appointments }: Appointme
             .map(currentAppointment => (
               <AppointmentCard
                 appointment={currentAppointment}
-                avatarKey={currentAppointment.doctor!.avatarKey}
-                fullName={`Dr. ${currentAppointment.doctor?.firstName + ' ' + currentAppointment.doctor?.lastName}`}
+                user={{ data: currentAppointment.doctor!, role: Role.DOCTOR }}
                 about={currentAppointment.doctor!.specializations.map(specialization => specialization.name).join(', ')}
                 key={currentAppointment.id}
                 withQuickNotes={false}
