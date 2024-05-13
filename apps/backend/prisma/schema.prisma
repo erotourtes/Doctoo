@@ -50,6 +50,12 @@ enum NotificationAction {
   PAYMENT_SUCCESSFUL
 }
 
+enum Role {
+  DOCTOR
+  PATIENT
+  ADMIN
+}
+
 model User {
   id            String   @id @default(uuid())
   firstName     String   @map("first_name")
@@ -108,11 +114,6 @@ model Notification {
   fileKey     String?            @map("file_key")
 
   @@map("notifications")
-}
-
-enum Role {
-  DOCTOR
-  PATIENT
 }
 
 model Doctor {

@@ -1,16 +1,14 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { AxiosResponse } from 'axios';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { CreateFhirDto } from './dto/create-fhir.dto';
-import { map } from 'rxjs/operators';
-import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
 @Injectable()
 export class FhirService {
   constructor(private httpService: HttpService) {}
 
-  fetchPatientData(patientId: string, body: CreateFhirDto): Observable<AxiosResponse<any>> {
+  fetchPatient(patientId: string, body: CreateFhirDto): Observable<AxiosResponse<any>> {
     const patientLionics = [encodeURIComponent('http://loinc.org|2106-3')];
     const url = `${body.serverUrl}/Patient?patient=${patientId}&limit=50&code=${patientLionics}`;
 
@@ -38,7 +36,7 @@ export class FhirService {
     }
   }
 
-  fetchObservationData(patientId, body: CreateFhirDto): Observable<any> {
+  fetchObservation(patientId, body: CreateFhirDto): Observable<any> {
     const queryParams = new URLSearchParams({
       patient: patientId,
       subject: patientId,

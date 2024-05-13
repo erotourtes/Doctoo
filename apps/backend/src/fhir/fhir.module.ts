@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common';
-import { FhirService } from './fhir.service';
-import { FhirController } from './fhir.controller';
 import { HttpModule } from '@nestjs/axios';
+import { Module } from '@nestjs/common';
+import { FhirController } from './fhir.controller';
+import { FhirService } from './fhir.service';
 
 @Module({
   controllers: [FhirController],
