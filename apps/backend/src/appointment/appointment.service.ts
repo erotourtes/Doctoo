@@ -1,26 +1,47 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { ClientProxy } from '@nestjs/microservices';
+import { Role } from '@prisma/client';
 import { plainToInstance } from 'class-transformer';
+import { TimeoutError, lastValueFrom, timeout } from 'rxjs';
+import { ChatAppointmentUpdatedEvent } from 'src/chat/events/chat-appointment-updated.event copy';
+import { ChatAppointmentCreatedEvent } from '../chat/events/chat-appointment-created.event';
 import { DoctorService } from '../doctor/doctor.service';
 import { PatientService } from '../patient/patient.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { calculateAppointmentPrice } from '../utils/calculateAppointmentPrice';
+import { emitEventBasedOnAppointmentStatus } from '../utils/emitEventBasedOnAppointmentStatus';
+import { AppointmentNotesReponseDto } from './dto/appointment-notes-response.dto';
 import { CreateAppointmentDto } from './dto/create.dto';
 import { PatchAppointmentDto } from './dto/patch.dto';
 import { ResponseAppointmentDto } from './dto/response.dto';
-import { ChatAppointmentCreatedEvent } from '../chat/events/chat-appointment-created.event';
-import { calculateAppointmentPrice } from '../utils/calculateAppointmentPrice';
-import { emitEventBasedOnAppointmentStatus } from '../utils/emitEventBasedOnAppointmentStatus';
-import { ChatAppointmentUpdatedEvent } from 'src/chat/events/chat-appointment-updated.event copy';
-import { Role } from '@prisma/client';
+import { UpdateAppointmentNotesDto } from './dto/update-appointment-notes.dto';
 
 @Injectable()
 export class AppointmentService {
+  private logger: Logger;
   constructor(
     private readonly prismaService: PrismaService,
     private readonly doctorService: DoctorService,
     private readonly patientService: PatientService,
     private readonly eventEmitter: EventEmitter2,
-  ) {}
+    @Inject('SUMMARIZER_SERVICE') private readonly summarizerClient: ClientProxy,
+  ) {
+    this.logger = new Logger(AppointmentService.name);
+  }
+
+  onModuleInit() {
+    this.summarizerClient.connect();
+  }
 
   async isAppointmentExists(id: string): Promise<boolean> {
     const appointment = await this.prismaService.appointment.findUnique({ where: { id } });
@@ -195,6 +216,24 @@ export class AppointmentService {
     emitEventBasedOnAppointmentStatus(this.eventEmitter, appointment);
 
     return plainToInstance(ResponseAppointmentDto, appointment);
+  }
+
+  async updateNotes(actionDoctorId: string, appointmentId: string, dto: UpdateAppointmentNotesDto) {
+    try {
+      const appointment = await this.getAppointment(appointmentId);
+      if (appointment.doctorId !== actionDoctorId) throw new ForbiddenException();
+      const summary = await lastValueFrom(
+        this.summarizerClient.send({ cmd: 'GenerateSummary' }, { text: dto.notes }).pipe(timeout(13000)),
+      );
+      await this.prismaService.appointment.update({ where: { id: appointmentId }, data: { notesSummary: summary } });
+      return plainToInstance(AppointmentNotesReponseDto, { notes: dto.notes, summary });
+    } catch (err) {
+      if (err instanceof TimeoutError) {
+        this.logger.error('Summarizer service invocation timed out');
+        throw new HttpException({ message: 'Timed out' }, HttpStatus.GATEWAY_TIMEOUT);
+      }
+      throw new InternalServerErrorException();
+    }
   }
 
   async deleteAppointment(id: string): Promise<void> {

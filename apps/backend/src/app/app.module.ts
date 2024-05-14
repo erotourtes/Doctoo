@@ -25,10 +25,11 @@ import { SpecializationModule } from '../specialization/specialization.module';
 import { UserModule } from '../user/user.module';
 import { FhirModule } from '../fhir/fhir.module';
 import { VideoSignalingModule } from '../video-signaling/video-signaling.module';
+import rabbitmq from '../config/rabbitmq';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, load: [auth, config, mail] }),
+    ConfigModule.forRoot({ isGlobal: true, load: [auth, config, mail, rabbitmq] }),
     EventEmitterModule.forRoot(),
     AuthModule,
     MailModule,

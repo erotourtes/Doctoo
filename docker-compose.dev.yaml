@@ -42,5 +42,18 @@ services:
       - 1025:1025
       - 8025:8025
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - ${RMQ_PORT}:${RMQ_PORT}
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RMQ_PASSWORD}
+      RABBITMQ_NODE_PORT: ${RMQ_PORT}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
 volumes:
   postgres_db:
+  rabbitmq_data:

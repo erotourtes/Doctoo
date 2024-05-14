@@ -316,6 +316,7 @@ model Appointment {
   createdAt         DateTime          @default(now()) @map("created_at") @db.Timestamptz()
   status            AppointmentStatus
   notes             String?
+  notesSummary      Json?
   type              AppointmentType   @default(CONSULTATION)
   videoRecordKey    String?           @map("video_record_key")
   paymentInvoiceKey String?           @map("payment_invoice_key")

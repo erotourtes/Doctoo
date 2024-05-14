@@ -24,7 +24,14 @@ describe('AppointmentService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [EventEmitterModule.forRoot()],
-      providers: [AppointmentService, PrismaService, UserService, DoctorService, PatientModule],
+      providers: [
+        AppointmentService,
+        PrismaService,
+        UserService,
+        DoctorService,
+        PatientModule,
+        { provide: 'SUMMARIZER_SERVICE', useValue: { connect: jest.fn() } },
+      ],
     })
       .useMocker(pipe(mockConfigs, mockUndefined))
       .compile();

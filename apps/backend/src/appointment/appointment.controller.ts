@@ -25,6 +25,8 @@ import { ResponseAppointmentDto } from './dto/response.dto';
 import { DoctorService } from '../doctor/doctor.service';
 import { RolesGuard } from '../auth/gaurds/role.guard';
 import { Role } from '../auth/decorators/roles.decorator';
+import { UpdateAppointmentNotesDto } from './dto/update-appointment-notes.dto';
+import { AppointmentNotesReponseDto } from './dto/appointment-notes-response.dto';
 
 @ApiTags('Appointment Endpoints')
 @Controller('appointment')
@@ -147,6 +149,20 @@ export class AppointmentController {
   @ApiBody({ type: PatchAppointmentDto })
   patchAppointment(@Param('id') id: string, @Body() body: PatchAppointmentDto) {
     return this.appointmentService.patchAppointment(id, body);
+  }
+
+  @UseGuards(JWTGuard, RolesGuard)
+  @Role('DOCTOR')
+  @Patch(':id/notes')
+  @ApiOperation({ summary: "Update the appointment's notes " })
+  @ApiOkResponse({ type: AppointmentNotesReponseDto, description: RESPONSE_STATUS.SUCCESS })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique appointment id.' })
+  @ApiBody({ type: UpdateAppointmentNotesDto })
+  async updateNotes(@Param('id') id: string, @Body() body: UpdateAppointmentNotesDto, @UserDec() userInfo) {
+    const loginedDoctor = await this.doctorService.getDoctorByUserId(userInfo.id);
+    return this.appointmentService.updateNotes(loginedDoctor.id, id, body);
   }
 
   @Delete(':id')

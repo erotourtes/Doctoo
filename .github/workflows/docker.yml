@@ -10,7 +10,7 @@ jobs:
   ci-job:
     strategy:
       matrix:
-        service: [backend, frontend]
+        service: [backend, frontend, summarizer]
 
     runs-on: self-hosted-deploy
     name: CI Job
@@ -153,6 +153,14 @@ jobs:
           REDIS_PORT=${{ secrets.REDIS_PORT }}
           REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
           CACHE_DAYS_TO_LIVE=${{ secrets.CACHE_DAYS_TO_LIVE }}
+          RMQ_HOST=${{ secrets.RMQ_HOST}}
+          RMQ_PORT=${{ secrets.RMQ_PORT }}
+          RMQ_USERNAME=${{ secrets.RMQ_USERNAME }}
+          RMQ_PASSWORD=${{ secrets.RMQ_PASSWORD }}
+
+          # SUMMARIZER SERVICE
+          HF_TOKEN=${{ secrets.HF_TOKEN}}
+          HF_MODEL_NAME=${{ secrets.HF_MODEL_NAME }}
           EOF
 
       - name: Run new Docker containers

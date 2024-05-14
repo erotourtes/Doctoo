@@ -14,7 +14,13 @@ describe('AppointmentController', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [EventEmitterModule.forRoot()],
       controllers: [AppointmentController],
-      providers: [AppointmentService, PrismaService, PatientService, DoctorService],
+      providers: [
+        AppointmentService,
+        PrismaService,
+        PatientService,
+        DoctorService,
+        { provide: 'SUMMARIZER_SERVICE', useValue: { connect: jest.fn() } },
+      ],
     })
       .useMocker(pipe(mockConfigs, mockUndefined))
       .compile();

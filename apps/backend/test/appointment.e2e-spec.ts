@@ -23,6 +23,8 @@ describe('AppointmentController (e2e)', () => {
       imports: [AppointmentModule, EventEmitterModule.forRoot()],
       providers: [PrismaService],
     })
+      .overrideProvider('SUMMARIZER_SERVICE')
+      .useValue({ connect: jest.fn() })
       .useMocker(pipe(mockConfigs))
       .compile();
 

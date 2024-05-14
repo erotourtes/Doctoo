@@ -228,6 +228,10 @@ export interface paths {
     /** Update an appointment */
     patch: operations['AppointmentController_patchAppointment'];
   };
+  '/appointment/{id}/notes': {
+    /** Update the appointment's notes */
+    patch: operations['AppointmentController_updateNotes'];
+  };
   '/declaration': {
     /** Get declarations */
     get: operations['DeclarationController_getDeclarations'];
@@ -1598,6 +1602,40 @@ export interface components {
       startedAt?: string;
       /** @description The date and time the appointment ended */
       endedAt?: string;
+    };
+    UpdateAppointmentNotesDto: {
+      /** @description Clinical notes about the appointment. */
+      notes: string;
+    };
+    Position: {
+      /** @description Starting position in the note's text */
+      start: number;
+      /** @description Ending position in the note's text */
+      end: number;
+    };
+    Complaint: {
+      /** @description Name of the complaint */
+      name: string;
+      /** @description Position of the complaint in the note's text */
+      position?: components['schemas']['Position'];
+    };
+    BodyPart: {
+      /** @description Name of the body part */
+      name: string;
+      /** @description Position of the body part in the note's text */
+      position?: components['schemas']['Position'];
+    };
+    AppointmentNotesSummaryDto: {
+      /** @description List of complaints of the patient. */
+      complaints: components['schemas']['Complaint'][];
+      /** @description List of problematic body parts of the patient. */
+      problematicBodyParts: components['schemas']['BodyPart'][];
+    };
+    AppointmentNotesReponseDto: {
+      /** @description Clinical notes about the appointment. */
+      notes: string;
+      /** @description Generated summary of the clinical notes about the appointment */
+      summary: components['schemas']['AppointmentNotesSummaryDto'];
     };
     CreateDeclarationDto: {
       /**
@@ -4156,6 +4194,43 @@ export interface operations {
       200: {
         content: {
           'application/json': components['schemas']['ResponseAppointmentDto'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /** Update the appointment's notes */
+  AppointmentController_updateNotes: {
+    parameters: {
+      path: {
+        /**
+         * @description Unique appointment id.
+         * @example 123e4567-e89b-12d3-a456-426614174000
+         */
+        id: string;
+      };
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateAppointmentNotesDto'];
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          'application/json': components['schemas']['AppointmentNotesReponseDto'];
         };
       };
       /** @description Response if an error occurs while processing a request. */

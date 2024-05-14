@@ -79,6 +79,11 @@ services:
       REDIS_PORT: ${REDIS_PORT}
       REDIS_PASSWORD: ${REDIS_PASSWORD}
       CACHE_DAYS_TO_LIVE: ${CACHE_DAYS_TO_LIVE}
+      RMQ_HOST: ${RMQ_HOST}
+      RMQ_PORT: ${RMQ_PORT}
+      RMQ_USERNAME: ${RMQ_USERNAME}
+      RMQ_PASSWORD: ${RMQ_PASSWORD}
+      SUMMARY_QUEUE_NAME: ${SUMMARY_QUEUE_NAME}
     depends_on:
       - postgres
     networks:
@@ -87,6 +92,22 @@ services:
     labels:
       caddy: https://api.doctoo.org
       caddy.reverse_proxy: '{{upstreams $BACKEND_PORT}}'
+
+  summarizer:
+    restart: always
+    image: registry.doctoo.org/radency/doctoo-summarizer:latest
+    environment:
+      HF_TOKEN: ${HF_TOKEN}
+      HF_MODEL_NAME: ${HF_MODEL_NAME}
+      RMQ_HOST: ${RMQ_HOST}
+      RMQ_PORT: ${RMQ_PORT}
+      RMQ_USERNAME: ${RMQ_USERNAME}
+      RMQ_PASSWORD: ${RMQ_PASSWORD}
+      SUMMARY_QUEUE_NAME: ${SUMMARY_QUEUE_NAME}
+    depends_on:
+      - rabbitmq
+    networks:
+      - doctoo
 
   frontend:
     restart: always
@@ -100,8 +121,20 @@ services:
       caddy: https://doctoo.org
       caddy.reverse_proxy: '{{upstreams 8080}}'
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    volumes:
+      - rabbitmq_prod_data:/var/lib/rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RMQ_PASSWORD}
+      RABBITMQ_NODE_PORT: ${RMQ_PORT}
+    networks:
+      - doctoo
+
 volumes:
   postgres_prod_db:
+  rabbitmq_prod_data:
 
 networks:
   doctoo:

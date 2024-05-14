@@ -34,7 +34,8 @@ export default function AddDocumentPopup({ isOpen, onClose }: AddDocumentPopupPr
   const dispatch = useAppDispatch();
 
   const patient = useAppSelector((state: RootState) => state.patient.data);
-  const photoURL = patient.identityCardKey !== '' ? `${import.meta.env.VITE_S3_BASE_URL}/${patient.identityCardKey}` : null;
+  const photoURL =
+    patient.identityCardKey !== '' ? `${import.meta.env.VITE_S3_BASE_URL}/${patient.identityCardKey}` : null;
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
