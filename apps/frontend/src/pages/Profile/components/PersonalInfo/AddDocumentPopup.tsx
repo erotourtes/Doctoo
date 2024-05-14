@@ -8,7 +8,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import Joi from 'joi';
 import { useRef, useState } from 'react';
 import { type FieldValues, FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
-import { PatientProfilePhoto } from '../../../../components/ProfilePhoto/PatientProfilePhoto';
+import { PatientIdentityCardPhoto } from '../../../../components/IdentityCardPhoto/PatientIdentityCardPhoto';
 
 type AddDocumentPopupProps = {
   isOpen: boolean;
@@ -34,7 +34,7 @@ export default function AddDocumentPopup({ isOpen, onClose }: AddDocumentPopupPr
   const dispatch = useAppDispatch();
 
   const patient = useAppSelector((state: RootState) => state.patient.data);
-  const photoURL = patient.identityCardKey !== '' ? `${import.meta.env.VITE_S3_BASE_URL}/${patient.avatarKey}` : null;
+  const photoURL = patient.identityCardKey !== '' ? `${import.meta.env.VITE_S3_BASE_URL}/${patient.identityCardKey}` : null;
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -63,10 +63,10 @@ export default function AddDocumentPopup({ isOpen, onClose }: AddDocumentPopupPr
   async function onSubmit(data: IFormData): Promise<void> {
     let identityCardKey: string = '';
     if (file) {
-      const validImageTypes = ['image/jpeg', 'image/png'];
+      const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
       if (!validImageTypes.includes(file.type)) {
         setFileError('Only JPEG and PNG files are allowed');
-        return; // Exit the function if the file is not a photo
+        return;
       }
 
       const formData = new FormData();
@@ -146,7 +146,7 @@ export default function AddDocumentPopup({ isOpen, onClose }: AddDocumentPopupPr
         <form onSubmit={handleSubmit(onSubmit as SubmitHandler<FieldValues>)} className='flex flex-col gap-8'>
           {!isNext && (
             <div>
-              {patient.identityCardKey !== '' && <PatientProfilePhoto photoURL={photoURL} />}
+              {patient.identityCardKey !== '' && <PatientIdentityCardPhoto photoURL={photoURL} />}
               <Select id='identityCardType' options={options} />
             </div>
           )}

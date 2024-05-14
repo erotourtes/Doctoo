@@ -126,6 +126,11 @@ export class MinioService {
     if (!file) throw new BadRequestException('file must be provided.');
     const type = Object.values(identityCardType).join('');
     let text = '';
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+
+    if (!allowedTypes.includes(file.mimetype)) {
+      throw new BadRequestException('Only JPEG and PNG files are allowed.');
+    }
     await Tesseract.recognize(file.buffer, 'ukr+eng', {})
       .then(result => {
         console.log('OCR Result:', result.data.text);
@@ -148,11 +153,6 @@ export class MinioService {
       if (!(await this.isValidForeignPassport(text))) {
         throw new BadRequestException('Invalid Foreign passport.');
       }
-    }
-    const allowedTypes = ['image/jpeg', 'image/png'];
-
-    if (!allowedTypes.includes(file.mimetype)) {
-      throw new BadRequestException('Only JPEG and PNG files are allowed.');
     }
 
     const fileType = file.originalname.split('.').pop();
