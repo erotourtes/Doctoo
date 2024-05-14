@@ -83,14 +83,13 @@ services:
       RMQ_PORT: ${RMQ_PORT}
       RMQ_USERNAME: ${RMQ_USERNAME}
       RMQ_PASSWORD: ${RMQ_PASSWORD}
-      SUMMARY_QUEUE_NAME: ${SUMMARY_QUEUE_NAME}
     depends_on:
       - postgres
     networks:
       - caddy
       - doctoo
     labels:
-      caddy: https://api.doctoo.org
+      caddy: api.doctoo.org
       caddy.reverse_proxy: '{{upstreams $BACKEND_PORT}}'
 
   summarizer:
@@ -103,7 +102,6 @@ services:
       RMQ_PORT: ${RMQ_PORT}
       RMQ_USERNAME: ${RMQ_USERNAME}
       RMQ_PASSWORD: ${RMQ_PASSWORD}
-      SUMMARY_QUEUE_NAME: ${SUMMARY_QUEUE_NAME}
     depends_on:
       - rabbitmq
     networks:
@@ -118,7 +116,7 @@ services:
       - doctoo
       - caddy
     labels:
-      caddy: https://doctoo.org
+      caddy: doctoo.org
       caddy.reverse_proxy: '{{upstreams 8080}}'
 
   rabbitmq:
@@ -131,6 +129,10 @@ services:
       RABBITMQ_NODE_PORT: ${RMQ_PORT}
     networks:
       - doctoo
+      - caddy
+    labels:
+      caddy: rabbitmq.doctoo.org
+      caddy.reverse_proxy: '{{upstreams 15672}}'
 
 volumes:
   postgres_prod_db:
