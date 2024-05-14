@@ -1,5 +1,5 @@
-import type { IReview } from '@/dataTypes/Review';
 import { Icon } from '@/components/UI';
+import type { IReview } from '@/dataTypes/Review';
 
 type ReviewsBodyProps = { reviews: IReview[] };
 
@@ -22,9 +22,7 @@ export default function ReviewsBody({ reviews }: ReviewsBodyProps) {
             </div>
 
             <blockquote className='border-l-4 border-grey-1 border-opacity-50 px-2'>
-              <p className='text-gray-900 text-base font-medium italic leading-relaxed dark:text-white'>
-                {review.text}
-              </p>
+              <p className='text-gray-900 text-base font-medium italic leading-relaxed'>{review.text}</p>
             </blockquote>
 
             <span className='font-semibold italic'>{`${review.patient?.user.firstName} ${review.patient?.user.lastName}`}</span>

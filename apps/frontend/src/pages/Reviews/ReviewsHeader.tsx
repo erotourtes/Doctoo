@@ -12,7 +12,13 @@ export default function ReviewsHeader({ doctor, openSchedule }: ReviewsHeader) {
 
   return (
     <div className='flex w-3/5 items-center gap-x-6'>
-      <img width={112} height={112} src={avatarKey} alt={fullName} className='rounded-lg' />
+      <img
+        width={112}
+        height={112}
+        src={`${import.meta.env.VITE_S3_BASE_URL}/${avatarKey}`}
+        alt={fullName}
+        className='rounded-lg'
+      />
 
       <div className='flex flex-1 flex-col gap-y-2'>
         <div className='flex justify-between'>
