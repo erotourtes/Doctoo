@@ -1,13 +1,14 @@
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { patchPatientData, uploadIdentityCard } from '@/app/patient/PatientThunks';
 import type { RootState } from '@/app/store';
-import { Button, Icon, PopupDoctoo } from '@/components/UI';
+import { Button, Icon, PopupDoctoo, Spinner } from '@/components/UI';
 import Select from '@/components/UI/Select/Select';
 import type { TPatient } from '@/dataTypes/Patient';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Joi from 'joi';
 import { useRef, useState } from 'react';
 import { type FieldValues, FormProvider, type SubmitHandler, useForm } from 'react-hook-form';
+import { PatientProfilePhoto } from '../../../../components/ProfilePhoto/PatientProfilePhoto';
 
 type AddDocumentPopupProps = {
   isOpen: boolean;
@@ -33,6 +34,7 @@ export default function AddDocumentPopup({ isOpen, onClose }: AddDocumentPopupPr
   const dispatch = useAppDispatch();
 
   const patient = useAppSelector((state: RootState) => state.patient.data);
+  const photoURL = patient.identityCardKey !== '' ? `${import.meta.env.VITE_S3_BASE_URL}/${patient.avatarKey}` : null;
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -54,23 +56,42 @@ export default function AddDocumentPopup({ isOpen, onClose }: AddDocumentPopupPr
 
   const [isNext, setIsNext] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const { handleSubmit } = methods;
 
   async function onSubmit(data: IFormData): Promise<void> {
     let identityCardKey: string = '';
     if (file) {
+      const validImageTypes = ['image/jpeg', 'image/png'];
+      if (!validImageTypes.includes(file.type)) {
+        setFileError('Only JPEG and PNG files are allowed');
+        return; // Exit the function if the file is not a photo
+      }
+
       const formData = new FormData();
       formData.append('file', file!);
+      try {
+        setIsLoading(true);
 
-      const result = await dispatch(uploadIdentityCard(formData));
-      const response = result.payload;
+        const result = await dispatch(
+          uploadIdentityCard({ formData: formData, identityCardType: data.identityCardType }),
+        );
 
-      identityCardKey = response.name;
+        const response = result.payload;
+
+        identityCardKey = response.name;
+        setIsLoading(false);
+      } catch (e) {
+        setFileError(`invalid: ${data.identityCardType}`);
+        setIsLoading(false);
+
+        return;
+      }
+      setIsLoading(false);
     }
 
     const identityCardData: Partial<TPatient> = { identityCardKey, ...data };
-
-    console.log(identityCardData);
 
     await dispatch(patchPatientData({ body: identityCardData, id: patient.id }));
 
@@ -116,11 +137,20 @@ export default function AddDocumentPopup({ isOpen, onClose }: AddDocumentPopupPr
       modalFullClassName='max-w-[508px]'
       modalBodyClassName=' relative z-20 flex h-full max-w-[412px] flex-col gap-7 rounded-xl bg-white'
     >
-      <p className='text-xl font-medium text-black sm:text-2xl'>Add a new address</p>
+      <p className='text-xl font-medium text-black sm:text-2xl'>
+        {' '}
+        {patient.identityCardKey !== '' ? ' Change document ' : 'Add a new document'}
+      </p>
 
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit as SubmitHandler<FieldValues>)} className='flex flex-col gap-8'>
-          {!isNext && <Select id='identityCardType' options={options} />}
+          {!isNext && (
+            <div>
+              {patient.identityCardKey !== '' && <PatientProfilePhoto photoURL={photoURL} />}
+              <Select id='identityCardType' options={options} />
+            </div>
+          )}
+
           {isNext && (
             <>
               {!file && (
@@ -146,7 +176,7 @@ export default function AddDocumentPopup({ isOpen, onClose }: AddDocumentPopupPr
                 <div className='flex h-fit w-full flex-col items-center justify-center gap-4'>
                   <img src={URL.createObjectURL(file)} alt='Preview' className='max-h-64 max-w-xs' />
                   {fileError && <p className='text-sm text-error'>{fileError}</p>}
-                  <button className='flex gap-3 text-main' onClick={handleButtonClick}>
+                  <button type='button' className='flex gap-3 text-main' onClick={handleButtonClick}>
                     <Icon variant='change' />
                     <span>Change photo</span>
                   </button>
@@ -179,8 +209,8 @@ export default function AddDocumentPopup({ isOpen, onClose }: AddDocumentPopupPr
               </Button>
             )}
             {isNext && (
-              <Button btnType='submit' className='w-1/2' type='primary'>
-                Save
+              <Button btnType='submit' className='flex w-1/2 items-center justify-center gap-4' type='primary'>
+                {isLoading && <Spinner size={30} color='white' />} Save
               </Button>
             )}
           </div>

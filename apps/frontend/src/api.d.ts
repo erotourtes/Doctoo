@@ -184,6 +184,10 @@ export interface paths {
     /** Upload file */
     post: operations['FileController_uploadFile'];
   };
+  '/file/uploadIdentityCard': {
+    /** uploadIdentityCard file */
+    post: operations['FileController_uploadIdentityCard'];
+  };
   '/file/{name}': {
     /** Get file */
     get: operations['FileController_getFileByName'];
@@ -343,9 +347,17 @@ export interface paths {
     get: operations['NotificationController_getNotificationsForPatient'];
   };
   '/fhir/patient/{patientId}': {
+    /**
+     * Fetch Patient Data
+     * @description Fetches patient data by patient ID.
+     */
     post: operations['FhirController_fetchPatient'];
   };
   '/fhir/observation/{patientId}': {
+    /**
+     * Fetch Observation Data
+     * @description Fetches observation data for a given patient ID.
+     */
     post: operations['FhirController_fetchObservation'];
   };
 }
@@ -3700,6 +3712,50 @@ export interface operations {
       };
     };
   };
+  /** uploadIdentityCard file */
+  FileController_uploadIdentityCard: {
+    parameters: {
+      header?: {
+        /** @description JWT token */
+        Cookie?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        'multipart/form-data': {
+          /** Format: binary */
+          file: string;
+          identityCardType: string;
+        };
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseFileDto'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      401: {
+        content: {
+          'application/json': components['schemas']['UnauthorizedResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
   /** Get file */
   FileController_getFileByName: {
     parameters: {
@@ -5051,12 +5107,18 @@ export interface operations {
       };
     };
   };
+  /**
+   * Fetch Patient Data
+   * @description Fetches patient data by patient ID.
+   */
   FhirController_fetchPatient: {
     parameters: {
       path: {
+        /** @description Unique identifier of the patient */
         patientId: string;
       };
     };
+    /** @description Payload to specify fetching details or requirements */
     requestBody: {
       content: {
         'application/json': components['schemas']['CreateFhirDto'];
@@ -5068,12 +5130,18 @@ export interface operations {
       };
     };
   };
+  /**
+   * Fetch Observation Data
+   * @description Fetches observation data for a given patient ID.
+   */
   FhirController_fetchObservation: {
     parameters: {
       path: {
+        /** @description Unique identifier of the patient */
         patientId: string;
       };
     };
+    /** @description Payload to specify observation details or requirements */
     requestBody: {
       content: {
         'application/json': components['schemas']['CreateFhirDto'];

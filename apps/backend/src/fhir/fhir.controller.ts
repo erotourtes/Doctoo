@@ -14,6 +14,7 @@ import { FhirService } from './fhir.service';
 
 @ApiTags('Fhir Endpoints')
 @Controller('fhir')
+@ApiTags('FHIR') // Group all routes under the 'FHIR' tag in Swagger UI
 export class FhirController {
   constructor(private readonly fhirService: FhirService) {}
 

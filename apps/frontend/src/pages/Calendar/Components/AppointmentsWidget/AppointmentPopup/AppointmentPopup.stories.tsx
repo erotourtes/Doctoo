@@ -62,6 +62,6 @@ export const Default: Story = {
       startedAt: Date(),
       endedAt: Date(),
     },
-    closeModal: () => console.log('Modal closed'),
+    closeModal: () => {},
   },
 };

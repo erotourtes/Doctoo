@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Param, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBadRequestResponse,
@@ -38,7 +38,31 @@ export class FileController {
   @ApiBody({ schema: { properties: { file: { type: 'string', format: 'binary' } } } })
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
     const response = await this.minioService.upload(file);
+    return response;
+  }
 
+  @UseGuards(JWTGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  @Post('uploadIdentityCard')
+  @ApiOperation({ summary: 'uploadIdentityCard file' })
+  @ApiHeader({ name: 'Cookie', example: 'jwt=eyJhbGci...', description: 'JWT token' })
+  @ApiConsumes('multipart/form-data')
+  @ApiOkResponse({ type: ResponseFileDto, description: RESPONSE_STATUS.SUCCESS })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiBody({
+    schema: {
+      type: 'object', // Ensure to define it as an object
+      properties: {
+        file: { type: 'string', format: 'binary' },
+        identityCardType: { type: 'string' }, // Adding the new property
+      },
+      required: ['file', 'identityCardType'], // Optional: Specify required fields
+    },
+  })
+  async uploadIdentityCard(@UploadedFile() file: Express.Multer.File, @Body() identityCardType: string) {
+    const response = await this.minioService.uploadIdentityCard(file, identityCardType);
     return response;
   }
 
@@ -50,7 +74,6 @@ export class FileController {
   @ApiParam({ name: 'name', example: '123e4567-e89b-12d3-a456-426614174000.png', description: 'Unique file name.' })
   async getFileByName(@Param('name') name: string) {
     const response = await this.minioService.getFileByName(name);
-
     return response;
   }
 

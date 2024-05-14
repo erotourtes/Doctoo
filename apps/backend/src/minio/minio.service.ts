@@ -4,6 +4,7 @@ import { plainToInstance } from 'class-transformer';
 import { randomUUID } from 'crypto';
 import { Client } from 'minio';
 import { ResponseFileDto } from '../file/dto/response.dto';
+import { Tesseract } from 'tesseract.ts';
 
 @Injectable()
 export class MinioService {
@@ -17,6 +18,47 @@ export class MinioService {
     });
 
     this.bucketName = this.configService.get('MINIO_BUCKET_NAME');
+  }
+
+  private async isValidForeignPassport(text: string): Promise<boolean> {
+    const namePattern = /Ім'я\/ Given Names\s+\S+.*?/;
+    const hasName = namePattern.test(text);
+
+    const passportNumberPattern = /(?:УКРАЇНА|YKPAIHA)\/UKRAINE\s+\S+.*?/;
+    const hasPassportNumber = passportNumberPattern.test(text);
+    const datePattern = /Дата видачі\/ Date of issue\s+(?:[^\n]*?\/[^\n]*)/;
+    const hasValidDate = datePattern.test(text);
+
+    return hasName && hasPassportNumber && hasValidDate;
+  }
+
+  private async isValidDrivingLicence(text: string): Promise<boolean> {
+    const pattern = /(?:UKRAINE DRIVING LICENCE|UKRAINE PERMIS DE CONDUIRE|DRIVING LICENCE\sUKRAINE)/i;
+    const hasLicenseText = pattern.test(text);
+
+    const datePattern = /\b\d{2}\.\d{2}\.\d{4}\b/;
+    const hasValidDate = datePattern.test(text);
+
+    const namePattern = /[A-ZА-ЯЁ]{2,}\s[A-ZА-ЯЁ]{2,}/;
+    const hasName = namePattern.test(text);
+
+    const licenseNumberPattern = /\b\d{6}\b/;
+    const hasLicenseNumber = licenseNumberPattern.test(text);
+
+    return hasLicenseText && hasValidDate && hasName && hasLicenseNumber;
+  }
+
+  private async isValidPassport(text) {
+    const datePattern = /(\b\d{2}\s\d{2}\s\d{4}\b|\b\d{2}[-]\d{2}[-]\d{4}\b)/;
+    const hasValidDate = datePattern.test(text);
+
+    const namePattern = /[A-ZА-ЯЁ]{2,}\s[A-ZА-ЯЁ]{2,}/i;
+    const hasName = namePattern.test(text);
+
+    const passportNumberPattern = /\b\d{6,9}\b/;
+    const hasPassportNumber = passportNumberPattern.test(text);
+
+    return hasValidDate && hasName && hasPassportNumber;
   }
 
   private async isFileExists(name: string): Promise<boolean> {
@@ -68,6 +110,49 @@ export class MinioService {
 
     if (!allowedTypes.some(format => file.mimetype.startsWith(format))) {
       throw new BadRequestException('Supports only images, videos and documents files.');
+    }
+
+    const fileType = file.originalname.split('.').pop();
+    const fileName = `${randomUUID()}.${fileType}`;
+
+    await this.minioClient.putObject(this.bucketName, fileName, file.buffer);
+
+    const url = await this.getFileByName(fileName);
+
+    return plainToInstance(ResponseFileDto, { name: fileName, ...url });
+  }
+
+  async uploadIdentityCard(file: Express.Multer.File, identityCardType: string): Promise<ResponseFileDto> {
+    if (!file) throw new BadRequestException('file must be provided.');
+    const type = Object.values(identityCardType).join('');
+    let text = '';
+    await Tesseract.recognize(file.buffer, 'ukr+eng', {})
+      .then(result => {
+        console.log('OCR Result:', result.data.text);
+        text = result.data.text;
+      })
+      .catch(err => {
+        console.error('Error during OCR processing:', err);
+        throw new BadRequestException('Failed to process image with OCR.');
+      });
+
+    if (type === 'ID card') {
+      if (!(await this.isValidPassport(text))) {
+        throw new BadRequestException('Invalid passport.');
+      }
+    } else if (type === 'Driver license') {
+      if (!(await this.isValidDrivingLicence(text))) {
+        throw new BadRequestException('Invalid driving licence.');
+      }
+    } else if (type === 'International passport') {
+      if (!(await this.isValidForeignPassport(text))) {
+        throw new BadRequestException('Invalid Foreign passport.');
+      }
+    }
+    const allowedTypes = ['image/jpeg', 'image/png'];
+
+    if (!allowedTypes.includes(file.mimetype)) {
+      throw new BadRequestException('Only JPEG and PNG files are allowed.');
     }
 
     const fileType = file.originalname.split('.').pop();

@@ -162,19 +162,25 @@ export const deleteProfilePatientPhoto = createAsyncThunk(
   },
 );
 
-export const uploadIdentityCard = createAsyncThunk('patient/uploadIdentityCard', async (formData: FormData) => {
-  try {
-    const response = await instance.post('/file/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return response.data;
-  } catch (e) {
-    const error = e as Error;
-    throw error;
-  }
-});
+export const uploadIdentityCard = createAsyncThunk(
+  'patient/uploadIdentityCard',
+  async ({ formData, identityCardType }: { formData: FormData; identityCardType: string }) => {
+    try {
+      // Append the identityCardType to the formData object
+      formData.append('identityCardType', identityCardType);
+
+      const response = await instance.post(`/file/uploadIdentityCard`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (e) {
+      const error = e as Error;
+      throw error;
+    }
+  },
+);
 
 type ChangePasswordType = paths['/auth/password/change']['post']['requestBody']['content']['application/json'];
 type ErrorResponseType = components['schemas']['ClassicNestResponse'];
