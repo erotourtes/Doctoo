@@ -32,7 +32,7 @@ export const useVideoCall = ({ conferenceId, conf = defConfig, withAudioOn, with
   const remoteStreamRef = useRef<MediaStream | null>(null);
 
   const peerRef = useRef<RTCPeerConnection | null>(null);
-  const signalingChannelRef = useRef<VideoSignalingChannel>(new VideoSignalingChannel());
+  const signalingChannelRef = useRef<VideoSignalingChannel>();
 
   const [joinedMemebers, setJoinedMembers] = useState<UserCombined[]>([]);
 
@@ -41,6 +41,9 @@ export const useVideoCall = ({ conferenceId, conf = defConfig, withAudioOn, with
 
   const iceCandidates = useRef<RTCIceCandidateInit[]>([]);
   const [error, setError] = useState<string | null | undefined>(null);
+
+  const [isRemoteVideoOn, setIsRemoteVideoOn] = useState(true);
+  const [isScreenSharing, setIsScreenSharing] = useState(false);
 
   const requestLocalStream = async () => {
     const stream = await navigator.mediaDevices
@@ -66,6 +69,7 @@ export const useVideoCall = ({ conferenceId, conf = defConfig, withAudioOn, with
   };
 
   const init = async () => {
+    signalingChannelRef.current = new VideoSignalingChannel();
     const joinResponse = await signalingChannelRef.current.join({ conferenceId });
     setJoinedMembers(joinResponse.members.filter(u => u.data.userId !== userId));
     setError(joinResponse.error);
@@ -77,6 +81,7 @@ export const useVideoCall = ({ conferenceId, conf = defConfig, withAudioOn, with
         if (user) return prev;
         return [...prev, joinedUser];
       });
+      signalingChannelRef.current!.sendVideoState({ conferenceId, isVideoOn });
     });
 
     signalingChannelRef.current.onMemberLeft(leftUserId => {
@@ -98,6 +103,10 @@ export const useVideoCall = ({ conferenceId, conf = defConfig, withAudioOn, with
     signalingChannelRef.current.onRemoteOfferAnswer(async answer => {
       await peerRef.current!.setRemoteDescription(answer);
       addIceCandidatesFromQueue();
+    });
+
+    signalingChannelRef.current.onVideoState(({ isVideoOn }) => {
+      setIsRemoteVideoOn(isVideoOn);
     });
 
     await requestLocalStream();
@@ -136,17 +145,17 @@ export const useVideoCall = ({ conferenceId, conf = defConfig, withAudioOn, with
     peerConnectionn.onicecandidate = event => {
       const { candidate } = event;
       if (!candidate) return;
-      signalingChannelRef.current.sendICECandidate({ candidate, conferenceId, memberId });
+      signalingChannelRef.current!.sendICECandidate({ candidate, conferenceId, memberId });
     };
   };
 
   const createOffer = async (memberId: string) => {
     await createPeerConnection(memberId);
 
-    const offer = await peerRef.current!.createOffer();
+    const offer = await peerRef.current!.createOffer({ offerToReceiveAudio: true, offerToReceiveVideo: true });
     await peerRef.current!.setLocalDescription(offer);
 
-    signalingChannelRef.current.sendOffer({ offer, memberId, conferenceId });
+    signalingChannelRef.current!.sendOffer({ offer, memberId, conferenceId });
   };
 
   const createAnswer = async (memberId: string, offer: RTCSessionDescriptionInit) => {
@@ -159,11 +168,12 @@ export const useVideoCall = ({ conferenceId, conf = defConfig, withAudioOn, with
 
     addIceCandidatesFromQueue();
 
-    signalingChannelRef.current.sendAnswer({ answer, conferenceId, memberId });
+    signalingChannelRef.current!.sendAnswer({ answer, conferenceId, memberId });
   };
 
   const leaveCall = () => {
-    signalingChannelRef.current.leave({ conferenceId });
+    signalingChannelRef.current!.leave({ conferenceId });
+    signalingChannelRef.current!.close();
     localStreamRef.current?.getTracks().forEach(track => track.stop());
     remoteStreamRef.current?.getTracks().forEach(track => track.stop());
     peerRef.current?.close();
@@ -175,10 +185,12 @@ export const useVideoCall = ({ conferenceId, conf = defConfig, withAudioOn, with
   };
 
   const toggleVideo = () => {
-    localStreamRef.current?.getVideoTracks().forEach(track => {
-      track.enabled = !track.enabled;
-      setIsVideoOn(track.enabled);
-    });
+    if (isScreenSharing) return;
+    const videoTrack = localStreamRef.current?.getVideoTracks()[0];
+    if (!videoTrack) return;
+    videoTrack.enabled = !videoTrack.enabled;
+    signalingChannelRef.current!.sendVideoState({ conferenceId, isVideoOn: videoTrack.enabled });
+    setIsVideoOn(videoTrack.enabled);
   };
 
   const toggleAudio = () => {
@@ -186,6 +198,33 @@ export const useVideoCall = ({ conferenceId, conf = defConfig, withAudioOn, with
       track.enabled = !track.enabled;
       setIsAudioOn(track.enabled);
     });
+  };
+
+  const shareScreen = async () => {
+    if (!localStreamRef.current || isScreenSharing) return;
+    const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+    const screenTrack = screenStream.getVideoTracks()[0];
+    const localTrack = localStreamRef.current.getVideoTracks()[0];
+
+    peerRef.current?.getSenders().forEach(sender => {
+      if (sender.track?.kind === 'video') sender.replaceTrack(screenTrack);
+    });
+    signalingChannelRef.current!.sendVideoState({ conferenceId, isVideoOn: true });
+    localStreamRef.current.removeTrack(localTrack);
+    localStreamRef.current.addTrack(screenTrack);
+
+    screenTrack.onended = () => {
+      peerRef.current?.getSenders().forEach(sender => {
+        if (sender.track?.kind === 'video') sender.replaceTrack(localTrack);
+      });
+      localStreamRef.current?.removeTrack(screenTrack);
+      localStreamRef.current?.addTrack(localTrack);
+      screenTrack.onended = null;
+      setIsScreenSharing(false);
+      signalingChannelRef.current!.sendVideoState({ conferenceId, isVideoOn: isVideoOn });
+    };
+
+    setIsScreenSharing(true);
   };
 
   useEffect(() => {
@@ -208,8 +247,11 @@ export const useVideoCall = ({ conferenceId, conf = defConfig, withAudioOn, with
     joinedMemebers,
     toggleVideo,
     toggleAudio,
+    shareScreen,
+    isScreenSharing,
     isAudioOn,
     isVideoOn,
+    isRemoteVideoOn,
     error,
   };
 };

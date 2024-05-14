@@ -86,6 +86,19 @@ export class VideoSignalingGateway extends SocketGateway {
     });
   }
 
+  @SubscribeMessage('video_state')
+  async onVideoStateChange(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() payload: { conferenceId: string; isVideoOn: boolean },
+  ) {
+    const user = await this.getUserIfJoined(socket, payload.conferenceId);
+    const anotherUser = await this.getAnotherUser(payload.conferenceId, user);
+
+    this.sendMessageSpecificUser(anotherUser.data.userId, 'video_state', {
+      isVideoOn: payload.isVideoOn,
+    });
+  }
+
   @SubscribeMessage('new_answer')
   async onAnswer(
     @ConnectedSocket() socket: Socket,

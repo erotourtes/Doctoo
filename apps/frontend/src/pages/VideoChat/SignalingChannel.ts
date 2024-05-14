@@ -47,6 +47,17 @@ export class VideoSignalingChannel {
     });
   }
 
+  sendVideoState(payload: { conferenceId: string; isVideoOn: boolean }) {
+    this.sendSignal('video_state', payload);
+  }
+
+  onVideoState(callback: (payload: { isVideoOn: boolean }) => void) {
+    this.socket.on('video_state', (payload: { isVideoOn: boolean }) => {
+      console.log('video_state', payload);
+      callback(payload);
+    });
+  }
+
   onMemberLeft(callback: (userId: string) => void) {
     this.socket.on('member_left', (payload: { userId: string }) => {
       console.log('member_left', payload);
@@ -73,6 +84,11 @@ export class VideoSignalingChannel {
       console.log('new_ice_candidate', payload);
       callback(payload.candidate);
     });
+  }
+
+  close() {
+    this.socket.removeAllListeners();
+    this.socket.close();
   }
 
   private sendSignal<T>(event: string, payload: T) {

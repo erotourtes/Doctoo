@@ -5,6 +5,7 @@ import { useVideoCall } from './useVideoCall';
 import { cn } from '../../utils/cn';
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router';
 import { type IDoctor } from '../../dataTypes/Doctor';
+import ImgAvatarKey from '../../components/UI/ImgAvatarKey/ImgAvatarKey';
 
 export const PatientVideoChatPage = () => {
   const patient = useAppSelector(state => state.patient.data);
@@ -28,6 +29,7 @@ export const PatientVideoChatPage = () => {
     <VideoChat
       conferenceId={conferenceId}
       userId={patient.id}
+      avatarKey={patient.avatarKey}
       onCallEnd={handleCallEnd}
       memberPrefix='Dr.'
       myDisplayName={`${patient.firstName} ${patient.lastName} (You)`}
@@ -58,6 +60,7 @@ export const DoctorVideoChatPage = () => {
     <VideoChat
       conferenceId={conferenceId}
       userId={doctor.id}
+      avatarKey={doctor.avatarKey}
       onCallEnd={handleCallEnd}
       myDisplayName={`${doctor.firstName} ${doctor.lastName} (You)`}
       withAudioOn={settings.withAudioOn}
@@ -71,6 +74,7 @@ interface VideoChatProps {
   myDisplayName: string;
   conferenceId: string;
   userId: string;
+  avatarKey: string;
   memberPrefix?: string;
   withVideoOn?: boolean;
   withAudioOn?: boolean;
@@ -82,11 +86,24 @@ const VideoChat: FC<VideoChatProps> = ({
   conferenceId,
   userId,
   memberPrefix = '',
+  avatarKey,
   withAudioOn = false,
   withVideoOn = false,
 }) => {
-  const { error, localRef, remoteRef, leaveCall, joinedMemebers, toggleVideo, toggleAudio, isAudioOn, isVideoOn } =
-    useVideoCall({ conferenceId, userId, withAudioOn, withVideoOn });
+  const {
+    error,
+    isRemoteVideoOn,
+    localRef,
+    remoteRef,
+    leaveCall,
+    joinedMemebers,
+    toggleVideo,
+    toggleAudio,
+    shareScreen,
+    isScreenSharing,
+    isAudioOn,
+    isVideoOn,
+  } = useVideoCall({ conferenceId, userId, withAudioOn, withVideoOn });
   const [showSubtitles, setShowSubtitles] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
@@ -104,6 +121,10 @@ const VideoChat: FC<VideoChatProps> = ({
 
   const handleToggleMute = () => {
     toggleAudio();
+  };
+
+  const handleScreenShare = () => {
+    shareScreen();
   };
 
   const handleChatClick = () => {
@@ -152,8 +173,17 @@ const VideoChat: FC<VideoChatProps> = ({
               name={`${memberPrefix} ${joinedMember?.data?.firstName} ${joinedMember?.data?.lastName}`}
               showSubtitles={showSubtitles}
               isHidden={!joinedMember}
+              isVideoOn={isRemoteVideoOn}
+              avatarKey={joinedMember?.data?.avatarKey}
             />
-            <VideoComponent muted ref={localRef} isSpeaking={isIAmSpeaking} name={myDisplayName} />
+            <VideoComponent
+              muted
+              ref={localRef}
+              isSpeaking={isIAmSpeaking}
+              name={myDisplayName}
+              avatarKey={avatarKey}
+              isVideoOn={isVideoOn || isScreenSharing}
+            />
           </div>
         </div>
 
@@ -173,7 +203,7 @@ const VideoChat: FC<VideoChatProps> = ({
 
           <div className='flex flex-wrap items-center justify-center gap-4 align-middle'>
             <VideoButton selected={showChat} onClick={handleChatClick} variant={'chats'} label={'Chat'} />
-            <VideoButton variant={'share-screen'} label={'Share screen'} />
+            <VideoButton onClick={handleScreenShare} variant={'share-screen'} label={'Share screen'} />
             <VideoButton selected={recording} onClick={handleRecording} variant={'record'} label={'Record'} />
             <VideoButton
               selected={showSubtitles}
@@ -253,12 +283,14 @@ type VideoComponentProps = {
   name: string;
   showSubtitles?: boolean;
   isHidden?: boolean;
+  isVideoOn?: boolean;
+  avatarKey: string;
   muted?: boolean;
 };
 
 // eslint-disable-next-line react/display-name
 const VideoComponent = forwardRef<HTMLVideoElement, VideoComponentProps>(
-  ({ isSpeaking, name, showSubtitles = false, isHidden = false, muted = false }, ref) => {
+  ({ isSpeaking, name, showSubtitles = false, isHidden = false, muted = false, isVideoOn = true, avatarKey }, ref) => {
     return (
       <div className={cn('flex flex-1 items-center justify-center', isHidden ? 'hidden' : 'block')}>
         <div className='relative w-4/5 md:w-full'>
@@ -279,8 +311,18 @@ const VideoComponent = forwardRef<HTMLVideoElement, VideoComponentProps>(
             className={cn(
               'aspect-video w-full rounded-xl border-4 bg-black  object-cover',
               isSpeaking ? 'border-main' : 'border-transparent',
+              isVideoOn ? 'block' : 'hidden',
             )}
           />
+          <div
+            className={cn(
+              'aspect-video w-full rounded-xl border-4 bg-black object-cover',
+              isSpeaking ? 'border-main' : 'border-transparent',
+              !isVideoOn ? 'flex items-center justify-center ' : 'hidden',
+            )}
+          >
+            <ImgAvatarKey avatarKey={avatarKey} className={cn('text-grey-4')} hasBackground />
+          </div>
         </div>
       </div>
     );
