@@ -45,7 +45,7 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     ports:
-      - ${RMQ_PORT}:${RMQ_PORT}
+      - ${RMQ_PORT}:5672
       - 15672:15672
     environment:
       RABBITMQ_DEFAULT_USER: ${RMQ_USERNAME}
