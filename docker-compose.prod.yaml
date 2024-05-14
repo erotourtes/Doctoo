@@ -119,10 +119,20 @@ services:
       caddy: doctoo.org
       caddy.reverse_proxy: '{{upstreams 8080}}'
 
+  redis:
+    restart: always
+    image: redis:alpine
+    command: redis-server --requirepass "$REDIS_PASSWORD"
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    networks:
+      - doctoo
+      - caddy
+    volumes:
+      - redis_prod_data:/data
+
   rabbitmq:
     image: rabbitmq:3-management
-    volumes:
-      - rabbitmq_prod_data:/var/lib/rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: ${RMQ_USERNAME}
       RABBITMQ_DEFAULT_PASS: ${RMQ_PASSWORD}
@@ -130,6 +140,8 @@ services:
     networks:
       - doctoo
       - caddy
+    volumes:
+      - rabbitmq_prod_data:/var/lib/rabbitmq
     labels:
       caddy: rabbitmq.doctoo.org
       caddy.reverse_proxy: '{{upstreams 15672}}'
@@ -137,6 +149,7 @@ services:
 volumes:
   postgres_prod_db:
   rabbitmq_prod_data:
+  redis_prod_data:
 
 networks:
   doctoo:
