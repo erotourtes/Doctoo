@@ -3,6 +3,7 @@ import type { IconProps } from './types';
 
 // Account & Authentication Icons
 import AccountIcon from '@assets/icons/account.svg?react';
+import UsersIcon from '@assets/icons/users.svg?react';
 import LogoutIcon from '@assets/icons/logout.svg?react';
 
 // Appointment & Schedule Icons
@@ -95,6 +96,7 @@ function ClockIcon() {
 const IconVariants = {
   logo: Logo,
   account: AccountIcon,
+  users: UsersIcon,
   logout: LogoutIcon,
   appointments: AppointmentsIcon,
   date: DateIcon,

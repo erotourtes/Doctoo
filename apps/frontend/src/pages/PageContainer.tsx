@@ -63,7 +63,6 @@ const DoctorPages = () => {
         <Route path='/dashboard' Component={DoctorDashboard} />
         <Route path='/settings' Component={Settings} />
         <Route path='/payment' Component={PaymentPage} />
-        <Route path='/my-doctors' Component={MyDoctorsPage} />
         <Route path='/calendar' Component={CalendarPage} />
         <Route path='/reviews' Component={ReviewsPage} />
         <Route path='/appointments' Component={AppointmentsPage} />
@@ -110,6 +109,7 @@ const PageContainer = () => {
 
 const Navigation = () => {
   const location = useLocation();
+  const role = useAppSelector(state => state.user.data.role);
 
   const shouldDisplaySidemenu = () => {
     const topLevelPaths = ['/payment', '/video-call'];
@@ -136,7 +136,7 @@ const Navigation = () => {
         element={
           <div className={`flex ${!shouldDisplaySidemenu() ? 'flex-col' : ''} h-screen w-screen overflow-hidden`}>
             {shouldDisplaySidemenu() ? (
-              <Sidemenu variant={shouldDispaySmallSideMenu() ? 'small' : 'large'} />
+              <Sidemenu role={role} variant={shouldDispaySmallSideMenu() ? 'small' : 'large'} />
             ) : (
               <Header />
             )}

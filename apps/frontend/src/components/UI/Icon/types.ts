@@ -3,6 +3,7 @@ import type React from 'react';
 export type IconVariant =
   | 'logo'
   | 'account'
+  | 'users'
   | 'logout'
   | 'appointments'
   | 'date'
