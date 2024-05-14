@@ -1,17 +1,21 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { AxiosError } from 'axios';
-import type { AppointmentStatus, IAppointment, ICreateAppointment } from '../../dataTypes/Appointment';
+import type { AppointmentStatus, IAppointment, ICreateAppointment, TAppointment } from '../../dataTypes/Appointment';
 import api from '../api';
 import {
   deleteAppointment,
   setAppointment,
   setAppointments,
   setChangeAppointmentStatus,
+  setCurrentAppointments,
   setNewAppointment,
   setResheduleAppointment,
+  setTodayAppointments,
+  setWeekAppointments,
 } from './AppointmentSlice';
 import dayjs from 'dayjs';
 import handleError from '@/api/handleError.api';
+import { instance } from '@/api/axios.api';
 
 export const getAppointmentsByPatientId = createAsyncThunk('appointment', async (patient_id: string, { dispatch }) => {
   try {
@@ -40,6 +44,70 @@ export const getMyAppointments = createAsyncThunk('appointment', async (_, { dis
     handleError(e as Error | AxiosError);
   }
 });
+
+export const getMyCurrentAppointments = createAsyncThunk(
+  'appointment',
+  async ({ startDate, endDate }: { startDate: Date; endDate: Date }, { dispatch }) => {
+    try {
+      const response = await getAppointmentRange({ startDate, endDate });
+      if (response.status === 200) {
+        const res: TAppointment[] = response.data;
+        dispatch(setCurrentAppointments(res));
+      }
+    } catch (e) {
+      handleError(e as Error | AxiosError);
+    }
+  },
+);
+
+export const getMyTodayAppointments = createAsyncThunk('appointment', async (_, { dispatch }) => {
+  try {
+    const currentDate = new Date();
+    const startDate = new Date(currentDate.setHours(0, 0, 0, 0));
+    const endDate = new Date(currentDate.setHours(23, 59, 59, 999));
+    const response = await getAppointmentRange({ startDate, endDate });
+    if (response.status === 200) {
+      const res: TAppointment[] = response.data;
+      dispatch(setTodayAppointments(res));
+    }
+  } catch (e) {
+    handleError(e as Error | AxiosError);
+  }
+});
+
+export const getMyWeekAppointments = createAsyncThunk(
+  'appointment',
+  async ({ startDate, endDate }: { startDate: Date; endDate: Date }, { dispatch }) => {
+    try {
+      const response = await getAppointmentRange({ startDate, endDate });
+      if (response.status === 200) {
+        const res: TAppointment[] = response.data;
+        dispatch(setWeekAppointments(res));
+      }
+    } catch (e) {
+      handleError(e as Error | AxiosError);
+    }
+  },
+);
+
+async function getAppointmentRange({ startDate, endDate }: { startDate: Date; endDate: Date }) {
+  const queryParams = new URLSearchParams();
+  if (startDate) {
+    queryParams.append('startDate', encodeURIComponent(startDate.toISOString()));
+  }
+  if (endDate) {
+    queryParams.append('endDate', encodeURIComponent(endDate.toISOString()));
+  }
+
+  const response = await instance.get(`/appointment/my/range`, {
+    params: {
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+    },
+  });
+
+  return response;
+}
 
 export const getAppointment = createAsyncThunk('appointment', async (appointment_id: string, { dispatch }) => {
   try {

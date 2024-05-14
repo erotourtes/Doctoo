@@ -35,14 +35,12 @@ export default function AppointmentCard({ appointment, user, withQuickNotes = fa
         <div className='flex w-full flex-row items-center justify-center xl:justify-start'>
           {dayjs(appointmentDate).diff(dayjs.utc(), 'minutes', true) > 5 ? (
             <div className='flex items-center'>
-              <p className='border-r border-main-medium pr-4 font-semibold'>
-                {dayjs(appointmentDate).utc().format('MMM D')}
-              </p>
+              <p className='border-r border-main-medium pr-4 font-semibold'>{dayjs(appointmentDate).format('MMM D')}</p>
               <Icon variant='timer' className='ml-[8px] mr-[8px] size-6 shrink-0 text-grey-3' />
-              <p>{dayjs(appointmentDate).utc().format('h:mm A')}</p>
+              <p>{dayjs(appointmentDate).format('h:mm A')}</p>
             </div>
           ) : (
-            <div className='flex w-full flex-col items-center justify-center gap-4 sm:flex-row xl:justify-between'>
+            <div className='flex w-full flex-col items-center justify-between gap-4 sm:flex-row xl:justify-between'>
               <div className='flex items-center justify-center gap-2'>
                 <Icon variant='timer' className={`h-6 w-6 shrink-0 ${isLate ? 'text-error' : 'text-[#FFC249]'}`} />
                 <p

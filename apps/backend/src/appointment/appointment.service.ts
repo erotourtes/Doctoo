@@ -11,6 +11,7 @@ import { ChatAppointmentCreatedEvent } from '../chat/events/chat-appointment-cre
 import { calculateAppointmentPrice } from '../utils/calculateAppointmentPrice';
 import { emitEventBasedOnAppointmentStatus } from '../utils/emitEventBasedOnAppointmentStatus';
 import { ChatAppointmentUpdatedEvent } from 'src/chat/events/chat-appointment-updated.event copy';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class AppointmentService {
@@ -54,6 +55,55 @@ export class AppointmentService {
     const appointments = await this.prismaService.appointment.findMany();
 
     return plainToInstance(ResponseAppointmentDto, appointments);
+  }
+
+  async getAppointmentsByUserId(
+    userId: string,
+    role: Role,
+    startDate?: Date,
+    endDate?: Date,
+  ): Promise<ResponseAppointmentDto[]> {
+    const whereClause: any = {
+      [role.toLocaleLowerCase()]: { userId },
+    };
+
+    if (startDate && endDate) {
+      whereClause.startedAt = { gte: startDate, lte: endDate };
+    } else if (startDate) {
+      whereClause.startedAt = { gte: startDate };
+    } else if (endDate) {
+      whereClause.startedAt = { lte: endDate };
+    }
+
+    try {
+      const appointments = await this.prismaService.appointment.findMany({
+        where: whereClause,
+        include: {
+          doctor: {
+            include: {
+              user: {
+                select: { firstName: true, lastName: true, avatarKey: true, phone: true, email: true },
+              },
+              hospitals: { select: { hospital: { select: { id: true, name: true } } } },
+              specializations: { select: { specialization: true } },
+              _count: { select: { reviews: true } },
+            },
+          },
+          patient: {
+            include: {
+              user: {
+                select: { firstName: true, lastName: true, avatarKey: true, phone: true, email: true },
+              },
+            },
+          },
+        },
+      });
+      return plainToInstance(ResponseAppointmentDto, appointments);
+    } catch (error) {
+      console.log(error);
+
+      return [];
+    }
   }
 
   async getAppointmentsByPatientId(id: string): Promise<ResponseAppointmentDto[]> {

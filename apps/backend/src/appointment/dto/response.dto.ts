@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { AppointmentStatus } from '@prisma/client';
+import { AppointmentStatus, AppointmentType } from '@prisma/client';
 import { Expose, Transform, plainToInstance } from 'class-transformer';
 import { ResponseDoctorDto } from 'src/doctor/dto/response.dto';
 import { ResponsePatientDto } from 'src/patient/dto/response.dto';
@@ -41,16 +41,24 @@ export class ResponseAppointmentDto {
   })
   videoRecordKey: string;
 
+  @ApiProperty({
+    example: 'CONSULTATION',
+    description: 'The type of appoinmnent.',
+  })
+  type: AppointmentType;
+
   @ApiProperty({ example: '2024-04-30T15:06:19.140Z', description: 'The time when the appointment should start.' })
   readonly startedAt: string;
 
   @ApiProperty({ example: '2024-04-30T15:06:19.140Z', description: 'The time when the appointment should end.' })
   readonly endedAt: string;
 
+  @ApiProperty({ example: ResponseDoctorDto, description: 'The doctor data', required: false })
   @Expose()
   @Transform(({ value }) => plainToInstance(ResponseDoctorDto, value))
   doctor?: ResponseDoctorDto;
 
+  @ApiProperty({ example: ResponsePatientDto, description: 'The patient data', required: false })
   @Expose()
   @Transform(({ value }) => plainToInstance(ResponsePatientDto, value))
   patient?: ResponsePatientDto;

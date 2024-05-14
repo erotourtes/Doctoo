@@ -61,6 +61,14 @@ const mockStore = configureStore({
     appointment: {
       appointments: mockAppointments,
       appointment: null,
+
+      currentAppointments: [],
+      doctorSchedules: {
+        starts_work_hour_utc: 8,
+        ends_work_hour_utc: 18,
+      },
+      todayAppointments: [],
+      weekAppointments: [],
     },
   },
 });

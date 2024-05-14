@@ -1,5 +1,5 @@
 import type { RootState } from '@/app/store';
-import type { AppointmentStatus, IAppointment } from '@/dataTypes/Appointment';
+import type { AppointmentStatus, IAppointment, TAppointment } from '@/dataTypes/Appointment';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '../createAppSlice';
 import dayjs from 'dayjs';
@@ -7,11 +7,26 @@ import dayjs from 'dayjs';
 type AppointmentData = {
   appointments: IAppointment[];
   appointment: IAppointment | null;
+  currentAppointments: TAppointment[];
+  todayAppointments: TAppointment[];
+  weekAppointments: TAppointment[];
+  doctorSchedules: {
+    starts_work_hour_utc: number;
+    ends_work_hour_utc: number;
+  };
 };
 
 const initialState: AppointmentData = {
   appointments: [],
   appointment: null,
+
+  currentAppointments: [],
+  todayAppointments: [],
+  weekAppointments: [],
+  doctorSchedules: {
+    starts_work_hour_utc: 8,
+    ends_work_hour_utc: 15,
+  },
 };
 
 export const appointmentSlice = createAppSlice({
@@ -20,6 +35,18 @@ export const appointmentSlice = createAppSlice({
   reducers: {
     setAppointments: (state, action: PayloadAction<IAppointment[]>) => {
       state.appointments = action.payload;
+    },
+
+    setCurrentAppointments: (state, action: PayloadAction<TAppointment[]>) => {
+      state.currentAppointments = action.payload;
+    },
+
+    setTodayAppointments: (state, action: PayloadAction<TAppointment[]>) => {
+      state.todayAppointments = action.payload;
+    },
+
+    setWeekAppointments: (state, action: PayloadAction<TAppointment[]>) => {
+      state.weekAppointments = action.payload;
     },
 
     setNewAppointment: (state, action: PayloadAction<IAppointment>) => {
@@ -59,6 +86,9 @@ export const {
   setChangeAppointmentStatus,
   setResheduleAppointment,
   setAppointment,
+  setCurrentAppointments,
+  setTodayAppointments,
+  setWeekAppointments,
 } = appointmentSlice.actions;
 
 export const appointmentData = (state: RootState) => state.appointment.appointments;

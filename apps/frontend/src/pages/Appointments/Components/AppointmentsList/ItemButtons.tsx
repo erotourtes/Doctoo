@@ -12,9 +12,15 @@ type AppointmentButtonsProps = {
   appointment: IAppointment;
   componentName: 'popup' | 'listItem';
   openBookModal?: () => void;
+  isDoctor?: boolean;
 };
 
-export default function AppointmentButtons({ componentName, appointment, openBookModal }: AppointmentButtonsProps) {
+export default function AppointmentButtons({
+  componentName,
+  appointment,
+  openBookModal,
+  isDoctor = false,
+}: AppointmentButtonsProps) {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { status, id, doctor, startedAt } = appointment;
@@ -146,7 +152,7 @@ export default function AppointmentButtons({ componentName, appointment, openBoo
         <div className={`flex ${componentName === 'popup' ? 'flex gap-x-4' : 'flex-col'} gap-y-2`}>
           {!approve && <CancelButton text='Cancel' />}
           {approve && (componentName === 'popup' ? <CancelInPopup /> : <CancelInList />)}
-          <PayButton />
+          {!isDoctor && <PayButton />}
         </div>
       );
 

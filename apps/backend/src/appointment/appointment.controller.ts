@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -7,6 +7,7 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -55,6 +56,33 @@ export class AppointmentController {
   async getMyAppointments(@UserDec() userInfo) {
     const result = await this.patientService.getPatientByUserId(userInfo.id);
     return this.appointmentService.getAppointmentsByPatientId(result.id);
+  }
+
+  @UseGuards(JWTGuard)
+  @Get('my/range')
+  @ApiOperation({ summary: 'Get my appointment in range' })
+  @ApiHeader({ name: 'Cookie', example: 'jwt=eyJhbGci...', description: 'JWT token' })
+  @ApiOkResponse({ type: ResponseAppointmentDto, isArray: true, description: RESPONSE_STATUS.SUCCESS })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiBadRequestResponse({ type: BadRequestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiInternalServerErrorResponse({ type: ClassicNestResponse, description: RESPONSE_STATUS.ERROR })
+  @ApiQuery({
+    name: 'startDate',
+    type: String,
+    required: false,
+    example: '2023-03-01T00:00:00.000Z',
+    description: 'Start date for appointment filtering',
+  })
+  @ApiQuery({
+    name: 'endDate',
+    type: String,
+    required: false,
+    example: '2023-03-31T23:59:59.999Z',
+    description: 'End date for appointment filtering',
+  })
+  async getMyRangeAppointments(@UserDec() userInfo, @Query() query) {
+    const { startDate, endDate } = query;
+    return this.appointmentService.getAppointmentsByUserId(userInfo.id, userInfo.role, startDate, endDate);
   }
 
   @Get()

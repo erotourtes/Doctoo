@@ -204,6 +204,10 @@ export interface paths {
     /** Get my appointment */
     get: operations['AppointmentController_getMyAppointments'];
   };
+  '/appointment/my/range': {
+    /** Get my current appointment */
+    get: operations['AppointmentController_getMyRangeAppointments'];
+  };
   '/appointment/doctor/all': {
     /** Get all doctors appointments */
     get: operations['AppointmentController_getAllDoctorsAppointments'];
@@ -1534,6 +1538,11 @@ export interface components {
        */
       videoRecordKey: string;
       /**
+       * @description The type of appoinmnent.
+       * @example CONSULTATION
+       */
+      type: string;
+      /**
        * @description The time when the appointment should start.
        * @example 2024-04-30T15:06:19.140Z
        */
@@ -1543,6 +1552,10 @@ export interface components {
        * @example 2024-04-30T15:06:19.140Z
        */
       endedAt: string;
+      /** @description The doctor data */
+      doctor?: components['schemas']['ResponseDoctorDto'];
+      /** @description The patient data */
+      patient?: components['schemas']['ResponsePatientDto'];
     };
     PatchAppointmentDto: {
       /**
@@ -3882,6 +3895,53 @@ export interface operations {
   /** Get my appointment */
   AppointmentController_getMyAppointments: {
     parameters: {
+      header?: {
+        /** @description JWT token */
+        Cookie?: string;
+      };
+    };
+    responses: {
+      /** @description Response when the request is successfully processed. */
+      200: {
+        content: {
+          'application/json': components['schemas']['ResponseAppointmentDto'][];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      401: {
+        content: {
+          'application/json': components['schemas']['UnauthorizedResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
+      };
+    };
+  };
+  /** Get my current appointment */
+  AppointmentController_getMyRangeAppointments: {
+    parameters: {
+      query?: {
+        /**
+         * @description End date for appointment filtering
+         * @example 2023-03-31T23:59:59.999Z
+         */
+        endDate?: string;
+        /**
+         * @description Start date for appointment filtering
+         * @example 2023-03-01T00:00:00.000Z
+         */
+        startDate?: string;
+      };
       header?: {
         /** @description JWT token */
         Cookie?: string;

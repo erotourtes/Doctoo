@@ -1,3 +1,4 @@
+import type { paths } from '@/api';
 import type { IDoctor } from './Doctor';
 import type { TPatient } from './Patient';
 
@@ -23,6 +24,9 @@ export interface IAppointment {
   doctor?: IDoctor;
   patient?: TPatient;
 }
+
+type TAppointments = paths['/appointment/my/range']['get']['responses']['200']['content']['application/json'];
+export type TAppointment = TAppointments[0];
 
 export interface IPlannedAppointment {
   id: string;

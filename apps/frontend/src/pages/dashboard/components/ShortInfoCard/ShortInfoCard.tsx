@@ -58,7 +58,7 @@ export default function ShortInfoCard({
               onMouseEnter={checkOverflow}
               onMouseLeave={() => setShowTooltip(false)}
             >
-              {about ? about.substring(0, 20) + '...' : ''}
+              <span className='truncate'>{about}</span>
               {eventTime ? (
                 <p className='ml-auto mr-0 text-sm font-medium leading-5 text-grey-1'>{eventTime}</p>
               ) : (

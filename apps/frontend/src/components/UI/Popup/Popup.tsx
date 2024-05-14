@@ -2,12 +2,12 @@ import Icon from '../Icon/Icon';
 import { useEffect } from 'react';
 import Popup from 'reactjs-popup';
 
-type AppointmentPopupProps = {
+export type PopupDoctooProps = {
   popupIsOpen: boolean;
   closePopup: () => void;
   backdropClassName?: string;
   modalFullClassName?: string;
-  modalBodyClassName: string;
+  modalBodyClassName?: string;
   modalCloseClassName?: string;
   children: React.ReactNode;
 };
@@ -20,7 +20,7 @@ export default function PopupDoctoo({
   backdropClassName,
   modalFullClassName,
   modalCloseClassName,
-}: AppointmentPopupProps) {
+}: PopupDoctooProps) {
   useEffect(() => {
     if (popupIsOpen) {
       document.body.classList.add('overflow-hidden');
