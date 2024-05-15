@@ -1,6 +1,6 @@
-import Icon from '@/components/UI/Icon/Icon';
+import { Icon } from '@UI/index';
 import dayjs from 'dayjs';
-import AppointmentBadges from '../AppointmentsList/ItemBadges';
+import AppointmentBadges from '@/pages/Appointments/Components/AppointmentsList/ItemBadges';
 import type { AppointmentStatus } from '@/dataTypes/Appointment';
 import useWindowWide from '@/hooks/useWindowWide';
 

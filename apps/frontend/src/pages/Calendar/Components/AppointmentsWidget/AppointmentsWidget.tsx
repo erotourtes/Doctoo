@@ -1,34 +1,15 @@
 import dayjs from 'dayjs';
 import AppointmentsListItem from './AppointmentsListItem';
-import { useEffect, useState } from 'react';
 import type { IAppointment } from '@/dataTypes/Appointment';
-import AppointmentPopup from './AppointmentPopup/AppointmentPopup';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { fetchReviewsByDoctor } from '@/app/review/ReviewThunks';
+import { useAppointmentPopup } from '@/hooks/popups/useAppointmentPopup';
 
 type AppointmentsWidgetProps = { appointmentsForDay: IAppointment[]; selectedDate: Date };
 
 export default function AppointmentsWidget({ appointmentsForDay, selectedDate }: AppointmentsWidgetProps) {
-  const dispatch = useAppDispatch();
-  const [appointmentModal, setAppointmentModal] = useState(false);
-  const [selectedAppointment, setSelectedAppointment] = useState<IAppointment>();
+  const { openPopup } = useAppointmentPopup();
 
-  const reviews = useAppSelector(state => state.review.reviews);
-
-  useEffect(() => {
-    if (reviews) {
-      setAppointmentModal(true);
-    }
-  }, [reviews, selectedAppointment]);
-
-  function closeModal() {
-    setAppointmentModal(false);
-    setSelectedAppointment(undefined);
-  }
-
-  function openAppointmentModal(appointment: IAppointment, doctorId: string) {
-    setSelectedAppointment(appointment);
-    dispatch(fetchReviewsByDoctor({ doctorId, includeNames: 'true', skip: '0', take: '2' }));
+  function openAppointmentModal(appointment: IAppointment) {
+    openPopup(appointment);
   }
 
   return (
@@ -45,11 +26,11 @@ export default function AppointmentsWidget({ appointmentsForDay, selectedDate }:
         {appointmentsForDay.length > 0 ? (
           <ul className='flex w-full flex-col gap-y-3'>
             {appointmentsForDay.map((appointment, idx) => {
-              const { startedAt, doctor, doctorId } = appointment;
+              const { startedAt, doctor } = appointment;
 
               return (
                 <li
-                  onClick={() => openAppointmentModal(appointment, doctorId)}
+                  onClick={() => openAppointmentModal(appointment)}
                   className='flex cursor-pointer flex-col items-center gap-2 gap-x-2 rounded-xl bg-background p-4 hover:bg-grey-5 sm:flex-row sm:py-2'
                   key={`appointment-widget-${idx}`}
                 >
@@ -64,15 +45,6 @@ export default function AppointmentsWidget({ appointmentsForDay, selectedDate }:
           </p>
         )}
       </article>
-
-      {appointmentModal && selectedAppointment && (
-        <AppointmentPopup
-          appointmentModal={appointmentModal}
-          closeModal={closeModal}
-          selectedAppointment={selectedAppointment}
-          reviews={reviews}
-        />
-      )}
     </>
   );
 }

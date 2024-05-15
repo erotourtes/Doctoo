@@ -10,16 +10,18 @@ import { useState } from 'react';
 import type { IDoctor } from '@/dataTypes/Doctor';
 import type { IReview } from '@/dataTypes/Review';
 
+export type ScheduleInfoProps = {
+  patientId: string;
+  appointmentId?: string;
+  doctorId: string | null;
+  doctor: IDoctor | null;
+  reviews: IReview[];
+};
+
 export type ScheduleProps = {
   closePopup: () => void;
   scheduleIsOpen: boolean;
-  scheduleInfo: {
-    patientId: string;
-    appointmentId?: string;
-    doctorId: string | null;
-    doctor: IDoctor | null;
-    reviews: IReview[];
-  };
+  scheduleInfo: ScheduleInfoProps;
   currentDay?: Dayjs;
   rescheduling?: boolean;
 };

@@ -1,14 +1,11 @@
-import AppointmentsListItem from './AppointmentsListItem';
-import PopupDoctoo from '@/components/UI/Popup/Popup';
+import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
-import AppointmentsPopup from '../AppointmentsPopup/AppointmentsPopup';
+import { useAppDispatch } from '@/app/hooks';
+import { getMyAppointments } from '@/app/appointment/AppointmentThunks';
 import type { IAppointment } from '@/dataTypes/Appointment';
 import type { FilterState } from '../../filterReducer';
-import dayjs from 'dayjs';
 import { filterConfig } from '../AppointmentsFilters/AppointmentsFilters';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { getMyAppointments } from '@/app/appointment/AppointmentThunks';
-import { fetchReviewsByDoctor } from '@/app/review/ReviewThunks';
+import AppointmentsListItem from './AppointmentsListItem';
 
 type AppointmentsListProps = {
   filters: FilterState;
@@ -48,9 +45,7 @@ function sortAppointments(a: IAppointment, b: IAppointment, filters: FilterState
 
 export default function AppointmentsList({ filters, appointments }: AppointmentsListProps) {
   const dispatch = useAppDispatch();
-  const reviews = useAppSelector(state => state.review.reviews);
 
-  const [modal, setModal] = useState(false);
   const [appointment, setAppointment] = useState<IAppointment>();
   const [filteredAppointments, setFilteredAppointments] = useState<IAppointment[]>([]);
   const [hasFetchedAppointments, setHasFetchedAppointments] = useState(false);
@@ -73,34 +68,15 @@ export default function AppointmentsList({ filters, appointments }: Appointments
     }
   }, [appointments, filters, hasFetchedAppointments]);
 
-  function closeModal(): void {
-    setModal(false);
-  }
-
-  function openModal(appointment: IAppointment): void {
-    setModal(true);
-    setAppointment(appointment);
-    dispatch(fetchReviewsByDoctor({ doctorId: appointment.doctorId, includeNames: 'true', skip: '0', take: '2' }));
-  }
-
   return (
     <>
       <div className='no-scrollbar flex flex-1 flex-col gap-y-4 overflow-y-scroll p-1'>
         {filteredAppointments.map(appointment => (
           <li key={appointment.id} className='list-none'>
-            <AppointmentsListItem appointment={appointment} openModal={openModal} />
+            <AppointmentsListItem appointment={appointment} />
           </li>
         ))}
       </div>
-
-      <PopupDoctoo
-        popupIsOpen={modal}
-        closePopup={closeModal}
-        modalBodyClassName={''}
-        modalFullClassName='max-w-[700px]'
-      >
-        {appointment && <AppointmentsPopup appointment={appointment} reviews={reviews} />}
-      </PopupDoctoo>
     </>
   );
 }

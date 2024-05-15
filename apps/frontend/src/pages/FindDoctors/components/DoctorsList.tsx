@@ -1,35 +1,52 @@
 import { useEffect, useState } from 'react';
-import { DoctorCard } from '../../../components/UI';
-import Schedule from '../../../components/UI/Schedule/Schedule';
-import type { ScheduleProps } from '../../../components/UI/Schedule/Schedule';
-import type { IDoctor } from '../../../dataTypes/Doctor';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { fetchReviewsByDoctor } from '@/app/review/ReviewThunks';
+import { DoctorCard } from '@UI/index';
+import type { IDoctor } from '@/dataTypes/Doctor';
 import { NoResults } from './NoResults';
-import { fetchReviewsByDoctor } from '../../../app/review/ReviewThunks';
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { generateDoctorTags } from '../../../utils/generateDoctorTags';
+import { generateDoctorTags } from '@/utils/generateDoctorTags';
+import type { OpenSchedulePopupProps } from '@/hooks/popups/useSchedulePopup';
+import { useSchedulePopup } from '@/hooks/popups/useSchedulePopup';
 
 type DoctorsListProps = {
   doctors: IDoctor[];
 };
 
 export const DoctorsList = ({ doctors }: DoctorsListProps) => {
+  const { openPopup, setScheduleInfo } = useSchedulePopup();
+
   const patient = useAppSelector(state => state.patient.data);
   const dispatch = useAppDispatch();
-  const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
-  const [scheduleModalData, setScheduleModalData] = useState<ScheduleProps['scheduleInfo']>({
-    doctor: null,
-    doctorId: null,
-    patientId: patient.id,
-    reviews: [],
-  });
+  const [selectedDoctorId, setSelectedDoctorId] = useState('');
   const reviews = useAppSelector(state => state.review.reviews);
 
   useEffect(() => {
-    dispatch(
-      fetchReviewsByDoctor({ doctorId: scheduleModalData.doctorId!, take: '2', skip: '0', includeNames: 'true' }),
-    );
-    setScheduleModalData(prev => ({ ...prev, reviews }));
-  }, [scheduleModalData.doctorId]);
+    if (!selectedDoctorId) return;
+    dispatch(fetchReviewsByDoctor({ doctorId: selectedDoctorId, take: '2', skip: '0', includeNames: 'true' }));
+  }, [selectedDoctorId]);
+
+  useEffect(() => {
+    setScheduleInfo((prevInfo: OpenSchedulePopupProps) => ({
+      ...prevInfo,
+      scheduleInfo: {
+        ...prevInfo.scheduleInfo,
+        reviews: reviews,
+      },
+    }));
+  }, [reviews]);
+
+  const openSchedulePopup = (doctor: IDoctor) => {
+    setSelectedDoctorId(doctor.id);
+    openPopup({
+      scheduleInfo: {
+        patientId: patient.id,
+        doctorId: doctor.id,
+        doctor,
+        reviews,
+      },
+    });
+  };
+
   return (
     <div className='mt-2 w-full xl:mt-4'>
       {doctors.length ? (
@@ -58,22 +75,12 @@ export const DoctorsList = ({ doctors }: DoctorsListProps) => {
               <DoctorCard.TimeSlots
                 wrapperClassName='lg:col-span-full lg:col-start-1 lg:mt-1 lg:row-start-6 xl:col-start-3 xl:row-span-3 xl:row-start-2 xl:mt-0'
                 slotButtonClassName='lg:w-full xl:w-28'
-                timestamps={doctor.schedule!.timeslots?.map(slot => new Date(slot.timestamp)) || []}
+                timestamps={doctor.schedule?.timeslots?.map(slot => new Date(slot.timestamp)) || []}
                 onClickMore={() => {
-                  setScheduleModalData(prev => ({
-                    ...prev,
-                    doctor,
-                    doctorId: doctor.id,
-                  }));
-                  setScheduleModalOpen(true);
+                  openSchedulePopup(doctor);
                 }}
                 onClickSlot={() => {
-                  setScheduleModalData(prev => ({
-                    ...prev,
-                    doctor,
-                    doctorId: doctor.id,
-                  }));
-                  setScheduleModalOpen(true);
+                  openSchedulePopup(doctor);
                 }}
               />
             </DoctorCard>
@@ -82,12 +89,6 @@ export const DoctorsList = ({ doctors }: DoctorsListProps) => {
       ) : (
         <NoResults />
       )}
-      <Schedule
-        scheduleIsOpen={scheduleModalOpen}
-        closePopup={() => setScheduleModalOpen(false)}
-        rescheduling={false}
-        scheduleInfo={scheduleModalData}
-      />
     </div>
   );
 };

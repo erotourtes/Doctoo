@@ -12,6 +12,7 @@ type AppointmentButtonsProps = {
   appointment: IAppointment;
   componentName: 'popup' | 'listItem';
   openBookModal?: () => void;
+  closePopup?: () => void;
   isDoctor?: boolean;
 };
 
@@ -19,6 +20,7 @@ export default function AppointmentButtons({
   componentName,
   appointment,
   openBookModal,
+  closePopup,
   isDoctor = false,
 }: AppointmentButtonsProps) {
   const navigate = useNavigate();
@@ -40,6 +42,7 @@ export default function AppointmentButtons({
   function navigateToPayment() {
     navigate('/payment');
     dispatch(setPaymentData({ data }));
+    if (componentName === 'popup' && closePopup) closePopup();
   }
 
   function enableApproveButton(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -52,11 +55,13 @@ export default function AppointmentButtons({
   }
 
   function handleCancelAppointment() {
+    if (componentName === 'popup' && closePopup) closePopup();
     setApprove(false);
     dispatch(changeAppointmentStatus({ id: id, status: AppointmentStatus.CANCELED }));
   }
 
   function handleBookAgain(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    if (componentName === 'popup' && closePopup) closePopup();
     if (!openBookModal) return;
     event.stopPropagation();
     openBookModal();
@@ -64,7 +69,7 @@ export default function AppointmentButtons({
 
   function BookAgainButton() {
     return (
-      <Button type='secondary' btnType='button' onClick={handleBookAgain}>
+      <Button type={componentName === 'listItem' ? 'secondary' : 'primary'} btnType='button' onClick={handleBookAgain}>
         Book again
       </Button>
     );
@@ -138,9 +143,14 @@ export default function AppointmentButtons({
     case AppointmentStatus.PLANNED:
       return (
         <div className='flex flex-col gap-y-2'>
-          {!approve && componentName === 'popup' && <CancelButton text='Cancel appointment' />}
+          {componentName === 'popup' && (
+            <div className='flex gap-2'>
+              {!approve && <CancelButton text='Cancel appointment' />}
+              {componentName === 'popup' ? <BookAgainButton /> : null}
+            </div>
+          )}
           {componentName === 'listItem' && <CancelButton text='Cancel' />}
-          {componentName === 'popup' ? <CancelInPopup /> : <CancelInList />}
+          {componentName === 'popup' ? <div className='flex items-center gap-y-2'></div> : <CancelInList />}
         </div>
       );
 

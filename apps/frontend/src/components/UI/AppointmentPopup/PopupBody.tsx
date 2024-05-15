@@ -1,8 +1,7 @@
-import { Badge } from '@/components/UI';
-import Icon from '@/components/UI/Icon/Icon';
-import StarsRating from '@/components/UI/StarsRating/StarsRating';
+import { Badge, Icon, ImgAvatarKey, StarsRating } from '@UI/index';
 import type { IDoctor } from '@/dataTypes/Doctor';
 import useWindowWide from '@/hooks/useWindowWide';
+
 type PopupBodyProps = {
   openReschedule: () => void;
   doctorId: string;
@@ -39,11 +38,7 @@ export default function PopupBody({ openReschedule, doctorId, status, doctor }: 
       {!mobileWidth && <AppointmentWith />}
 
       <div className='flex h-32 justify-start gap-x-6'>
-        <img
-          src={`${import.meta.env.VITE_S3_BASE_URL}/${avatarKey}`}
-          alt={fullName}
-          className='max-h-28 max-w-28 rounded-lg'
-        />
+        <ImgAvatarKey avatarKey={avatarKey} className='max-h-28 max-w-28 shrink-0 rounded-lg' />
 
         <div className='flex w-full flex-col'>
           {mobileWidth && <AppointmentWith />}

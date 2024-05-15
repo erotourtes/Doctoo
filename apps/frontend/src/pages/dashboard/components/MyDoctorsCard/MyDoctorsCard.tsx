@@ -1,10 +1,10 @@
-import { useNavigate } from 'react-router-dom';
-import type { IDoctor } from '@/dataTypes/Doctor';
-import Icon from '@/components/UI/Icon/Icon';
-import ShortInfoCard from '../ShortInfoCard/ShortInfoCard';
-import Schedule from '@/components/UI/Schedule/Schedule';
 import { useEffect, useState } from 'react';
 import { useAppSelector } from '@/app/hooks';
+import { useNavigate } from 'react-router-dom';
+import { Icon } from '@UI/index';
+import ShortInfoCard from '../ShortInfoCard/ShortInfoCard';
+import { useSchedulePopup } from '@/hooks/popups/useSchedulePopup';
+import type { IDoctor } from '@/dataTypes/Doctor';
 
 type AppointmentCardProps = {
   doctors: IDoctor[] | undefined;
@@ -12,20 +12,25 @@ type AppointmentCardProps = {
 
 export default function MyDoctorsCard({ doctors }: AppointmentCardProps) {
   const navigate = useNavigate();
-  const [scheduleOpened, setScheduleOpened] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState<IDoctor | undefined>(undefined);
   const patient = useAppSelector(state => state.patient.data);
+
+  const { openPopup } = useSchedulePopup();
+
   useEffect(() => {
     if (!selectedDoctor) return;
     openSchedule();
   }, [selectedDoctor]);
 
   function openSchedule() {
-    setScheduleOpened(true);
-  }
-
-  function closeSchedule() {
-    setScheduleOpened(false);
+    openPopup({
+      scheduleInfo: {
+        patientId: patient.id,
+        doctorId: selectedDoctor!.id,
+        doctor: selectedDoctor!,
+        reviews: [],
+      },
+    });
   }
 
   function handleSelectDoctor(doctorId: string) {
@@ -69,19 +74,6 @@ export default function MyDoctorsCard({ doctors }: AppointmentCardProps) {
           </div>
         ) : (
           <p className='text-center font-normal leading-6 lg:px-4'>Your doctors will be displayed here</p>
-        )}
-
-        {selectedDoctor && (
-          <Schedule
-            closePopup={closeSchedule}
-            scheduleIsOpen={scheduleOpened}
-            scheduleInfo={{
-              patientId: patient.id,
-              doctorId: selectedDoctor!.id,
-              doctor: selectedDoctor!,
-              reviews: [],
-            }}
-          />
         )}
       </aside>
     </>

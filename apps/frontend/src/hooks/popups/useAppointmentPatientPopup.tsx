@@ -1,5 +1,5 @@
 import type { TAppointment } from '@/dataTypes/Appointment';
-import AppointmentPatientPopup from '@/pages/dashboard/components/DoctorDashboard/AppointmentPatientPopup';
+import AppointmentPatientPopup from '@UI/AppointmentPopup/AppointmentPatientPopup';
 import React, { useContext, useState } from 'react';
 
 type AppointmentPatientPopupContextType = {

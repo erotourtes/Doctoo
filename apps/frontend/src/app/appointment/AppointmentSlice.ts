@@ -7,11 +7,11 @@ import { updateAppointmentNotes } from './AppointmentThunks';
 
 type AppointmentData = {
   appointments: IAppointment[];
-  appointment: IAppointment | null;
-  currentAppointments: TAppointment[];
-  todayAppointments: TAppointment[];
-  weekAppointments: TAppointment[];
-  doctorSchedules: {
+  appointment?: IAppointment | null;
+  currentAppointments?: TAppointment[];
+  todayAppointments?: TAppointment[];
+  weekAppointments?: TAppointment[];
+  doctorSchedules?: {
     starts_work_hour_utc: number;
     ends_work_hour_utc: number;
   };

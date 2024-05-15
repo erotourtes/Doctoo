@@ -6,13 +6,12 @@ import ChatHeader from './ChatHeader';
 import type { Role } from '@/dataTypes/User';
 import { Icon } from '@/components/UI';
 import InputChat from '../InputChat/InputChat';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { useAppDispatch } from '@/app/hooks';
 import { getChatMessages, sendMessage } from '@/app/chat/ChatThunks';
 import type { TChat, TChatMessagesSearchResult, TMessage, TMessages } from '@/dataTypes/Chat';
 import AppointmentMessage from './AppointmentMessage';
 import { useEffect, useRef, useState } from 'react';
 import { getAppointment } from '@/app/appointment/AppointmentThunks';
-import ChatAppointmentPopup from '../Popups/ChatAppointmentPopup';
 import useInfiniteScroll from '@/hooks/useInfiniteScroll';
 
 type ChatBodyProps = {
@@ -38,8 +37,6 @@ const ChatBody = ({
 }: ChatBodyProps) => {
   const dispatch = useAppDispatch();
   const [openedAppointmentId, setOpenedAppointmentId] = useState<string | null>(null);
-  const [openedAppointmentDetails, setOpenedAppointmentDetails] = useState(false);
-  const openedAppointment = useAppSelector(state => state.appointment.appointment);
   const scrolledRef = useRef<HTMLDivElement>(null);
   const bodyMessagesRef = useRef<HTMLDivElement>(null);
 
@@ -63,12 +60,6 @@ const ChatBody = ({
       scrolledRef.current.scrollIntoView({ block: 'center', inline: 'nearest' });
     }
   }, [scrolledRef.current, chatMessages]);
-
-  useEffect(() => {
-    if (openedAppointmentId) {
-      dispatch(getAppointment(openedAppointmentId));
-    }
-  }, [openedAppointmentId]);
 
   useEffect(() => {
     if (chatMessages.messages.length) {
@@ -158,10 +149,7 @@ const ChatBody = ({
                     <AppointmentMessage
                       appointment={message.appointment}
                       className='self-center pb-4'
-                      onClickViewDetails={a => {
-                        setOpenedAppointmentId(a);
-                        setOpenedAppointmentDetails(true);
-                      }}
+                      onClickViewDetails={appointmentId => setOpenedAppointmentId(appointmentId)}
                     />
                   )}
                   {isDateDifferent && (
@@ -186,12 +174,6 @@ const ChatBody = ({
           />
         </div>
       </div>
-
-      <ChatAppointmentPopup
-        isOpen={openedAppointmentDetails}
-        onClose={() => setOpenedAppointmentDetails(false)}
-        appointment={openedAppointment}
-      />
     </div>
   );
 };

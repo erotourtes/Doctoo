@@ -26,6 +26,8 @@ import { DoctorVideoChatPage, PatientVideoChatPage } from './VideoChat/VideoChat
 import VideoChatEnd from './VideoChat/VideoChatEnd';
 import LaunchPage from './LaunchPhir/launch';
 import NotFoundPage from './NotFound/NotFoundPage';
+import { SchedulePopupProvider } from '@/hooks/popups/useSchedulePopup';
+import { AppointmentPopupProvider } from '@/hooks/popups/useAppointmentPopup';
 
 const PatientPages = () => {
   return (
@@ -130,36 +132,40 @@ const Navigation = () => {
   };
 
   return (
-    <Routes>
-      <Route
-        path='*'
-        element={
-          <div className={`flex ${!shouldDisplaySidemenu() ? 'flex-col' : ''} h-screen w-screen overflow-hidden`}>
-            {shouldDisplaySidemenu() ? (
-              <Sidemenu role={role} variant={shouldDispaySmallSideMenu() ? 'small' : 'large'} />
-            ) : (
-              <Header />
-            )}
-            {shouldNotWrapInMainContent() ? (
-              <PageContainer />
-            ) : (
-              <MainContentWrapper>
-                <PageContainer />
-              </MainContentWrapper>
-            )}
-          </div>
-        }
-      />
+    <SchedulePopupProvider>
+      <AppointmentPopupProvider>
+        <Routes>
+          <Route
+            path='*'
+            element={
+              <div className={`flex ${!shouldDisplaySidemenu() ? 'flex-col' : ''} h-screen w-screen overflow-hidden`}>
+                {shouldDisplaySidemenu() ? (
+                  <Sidemenu role={role} variant={shouldDispaySmallSideMenu() ? 'small' : 'large'} />
+                ) : (
+                  <Header />
+                )}
+                {shouldNotWrapInMainContent() ? (
+                  <PageContainer />
+                ) : (
+                  <MainContentWrapper>
+                    <PageContainer />
+                  </MainContentWrapper>
+                )}
+              </div>
+            }
+          />
 
-      <Route path='/signup' Component={SignUpPage} />
-      <Route path='/signup/patient' Component={SignUpPatientPage} />
-      <Route path='/login/authenticate' Component={LoginPageAuthenticate} />
-      <Route path='/login' Component={LoginPage} />
-      <Route path='/login/doctor' Component={DoctorLoginPage} />
-      <Route path='/change-email' Component={EmailChangePage} />
+          <Route path='/signup' Component={SignUpPage} />
+          <Route path='/signup/patient' Component={SignUpPatientPage} />
+          <Route path='/login/authenticate' Component={LoginPageAuthenticate} />
+          <Route path='/login' Component={LoginPage} />
+          <Route path='/login/doctor' Component={DoctorLoginPage} />
+          <Route path='/change-email' Component={EmailChangePage} />
 
-      <Route path='/404' Component={NotFoundPage} />
-    </Routes>
+          <Route path='/404' Component={NotFoundPage} />
+        </Routes>
+      </AppointmentPopupProvider>
+    </SchedulePopupProvider>
   );
 };
 

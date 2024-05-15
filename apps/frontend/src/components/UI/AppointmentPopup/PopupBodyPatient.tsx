@@ -1,6 +1,7 @@
-import ImgAvatarKey from '@/components/UI/ImgAvatarKey/ImgAvatarKey';
+import { ImgAvatarKey } from '@UI/index';
 import type { TPatient } from '@/dataTypes/Patient';
 import useWindowWide from '@/hooks/useWindowWide';
+
 type PopupBodyPatientProps = {
   patient: TPatient;
   typeAppointment: string;

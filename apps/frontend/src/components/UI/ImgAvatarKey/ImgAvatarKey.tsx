@@ -6,7 +6,8 @@ const ImgAvatarKey: FC<{
   avatarKey?: string | null;
   hasBackground?: boolean;
   className?: string;
-}> = ({ avatarKey, className, hasBackground = false }) => {
+  alt?: string;
+}> = ({ avatarKey, className, hasBackground = false, alt }) => {
   const [error, setError] = useState(false);
   const url = avatarKey !== '' ? `${import.meta.env.VITE_S3_BASE_URL}/${avatarKey}` : null;
 
@@ -18,7 +19,7 @@ const ImgAvatarKey: FC<{
           currentTarget.onerror = null;
           setError(true);
         }}
-        alt='avatar'
+        alt={alt || 'avatar'}
         className={cn('h-full w-full object-contain', className)}
       />
     );

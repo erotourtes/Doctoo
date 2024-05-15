@@ -1,3 +1,4 @@
+import { ImgAvatarKey } from '@UI/index';
 import type { IDoctor } from '@/dataTypes/Doctor';
 import dayjs from 'dayjs';
 
@@ -14,13 +15,7 @@ export default function AppointmentsListItem({ doctor, date }: AppointmentsListI
 
   return (
     <>
-      <img
-        src={`${import.meta.env.VITE_S3_BASE_URL}/${avatarKey}`}
-        alt={name}
-        width='48px'
-        height='48px'
-        className='rounded-lg'
-      />
+      <ImgAvatarKey avatarKey={avatarKey} className='max-h-12 max-w-12 shrink-0 rounded-lg' />
 
       <div className='flex flex-col items-center gap-y-1 sm:items-start'>
         <span className='text-base font-semibold text-black'>{name}</span>

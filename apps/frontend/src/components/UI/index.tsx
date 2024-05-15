@@ -19,6 +19,10 @@ import RadioButtonGroup from './RadioButton/RadioButtonGroup';
 import Spinner from './Spinner/Spinner';
 import Tag from './Tag/Tag';
 import { Toggle } from './Toggle';
+import PopupBodyPatient from './AppointmentPopup/PopupBodyPatient';
+import PopupHeader from './AppointmentPopup/PopupHeader';
+import ImgAvatarKey from './ImgAvatarKey/ImgAvatarKey';
+import StarsRating from './StarsRating/StarsRating';
 
 export {
   Badge,
@@ -42,4 +46,8 @@ export {
   Spinner,
   Tag,
   Toggle,
+  PopupBodyPatient,
+  PopupHeader,
+  ImgAvatarKey,
+  StarsRating,
 };

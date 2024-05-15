@@ -1,11 +1,9 @@
-import { PopupDoctoo } from '@/components/UI';
-import type { PopupDoctooProps } from '@/components/UI/Popup/Popup';
+import { PopupBodyPatient, PopupDoctoo, PopupHeader } from '@UI/index';
+import type { PopupDoctooProps } from '@UI/Popup/Popup';
 import type { AppointmentStatus, TAppointment } from '@/dataTypes/Appointment';
 import useWindowWide from '@/hooks/useWindowWide';
 import AppointmentButtons from '@/pages/Appointments/Components/AppointmentsList/ItemButtons';
 import AppointmentLinks from '@/pages/Appointments/Components/AppointmentsList/ItemLinks';
-import PopupBodyPatient from '@/pages/Appointments/Components/AppointmentsPopup/PopupBodyPatient';
-import PopupHeader from '@/pages/Appointments/Components/AppointmentsPopup/PopupHeader';
 
 type AppointmentPatientPopupProps = { appointment: TAppointment | null } & Omit<PopupDoctooProps, 'children'>;
 

@@ -2,7 +2,7 @@ import { getMyWeekAppointments } from '@/app/appointment/AppointmentThunks';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { Icon } from '@/components/UI';
 import type { TAppointment } from '@/dataTypes/Appointment';
-import { useAppointmentPatientPopup } from '@/hooks/useAppointmentPatientPopup';
+import { useAppointmentPatientPopup } from '@/hooks/popups/useAppointmentPatientPopup';
 import { cn } from '@/utils/cn';
 import DayJS from 'dayjs';
 import type { CSSProperties, ReactNode } from 'react';
@@ -19,6 +19,8 @@ const DoctorDashboardCalendar = () => {
 
   const weekAppointments = useAppSelector(state => state.appointment.weekAppointments);
   const doctorSchedules = useAppSelector(state => state.appointment.doctorSchedules);
+
+  if (!doctorSchedules) return null;
 
   useEffect(() => {
     const sundayDate = weekDates[weekDates.length - 1];
@@ -92,7 +94,7 @@ const DoctorDashboardCalendar = () => {
               key={time}
               time={time}
               weekDates={weekDates}
-              hourAppointments={weekAppointments.filter(a => {
+              hourAppointments={weekAppointments!.filter(a => {
                 console.log(DayJS(a.startedAt).utc().format('h:mm A'));
                 return DayJS(a.startedAt).utc().format('h:mm A') === time;
               })}

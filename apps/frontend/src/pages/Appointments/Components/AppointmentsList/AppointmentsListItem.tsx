@@ -1,39 +1,60 @@
+import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchReviewsByDoctor } from '@/app/review/ReviewThunks';
-import Icon from '@/components/UI/Icon/Icon';
-import Schedule from '@/components/UI/Schedule/Schedule';
+import type { OpenSchedulePopupProps } from '@/hooks/popups/useSchedulePopup';
+import { useSchedulePopup } from '@/hooks/popups/useSchedulePopup';
 import type { IAppointment } from '@/dataTypes/Appointment';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { useState } from 'react';
+import { Icon } from '@UI/index';
+import AppointmentLinks from './ItemLinks';
 import AppointmentBadges from './ItemBadges';
 import AppointmentButtons from './ItemButtons';
-import AppointmentLinks from './ItemLinks';
+import { useAppointmentPopup } from '@/hooks/popups/useAppointmentPopup';
 
 dayjs.extend(utc);
 
-type AppointmentsListItemProps = { appointment: IAppointment; openModal: (appointment: IAppointment) => void };
+type AppointmentsListItemProps = { appointment: IAppointment };
 
-export default function AppointmentsListItem({ appointment, openModal }: AppointmentsListItemProps) {
+export default function AppointmentsListItem({ appointment }: AppointmentsListItemProps) {
   const dispatch = useAppDispatch();
   const reviews = useAppSelector(state => state.review.reviews);
 
-  const [bookModalIsOpen, setBookModal] = useState(false);
-
-  function closeBookModal() {
-    setBookModal(false);
-  }
-
-  function openBookModal() {
-    dispatch(fetchReviewsByDoctor({ doctorId: appointment.doctorId, includeNames: 'true', skip: '0', take: '2' }));
-    setBookModal(true);
-  }
-
-  const { patientId, doctorId, doctor, videoRecordKey, notes, status, paymentReceiptKey, id, startedAt } = appointment;
+  const { patientId, doctorId, doctor, videoRecordKey, notes, status, paymentReceiptKey, startedAt } = appointment;
   const { firstName, lastName, specializations } = doctor!;
   const fullName = `Dr. ${firstName} ${lastName}`;
 
   const firstSpecializationName = specializations.length > 0 ? specializations[0].name : 'Doctor';
+
+  const { openPopup, setScheduleInfo } = useSchedulePopup();
+
+  useEffect(() => {
+    setScheduleInfo((prevInfo: OpenSchedulePopupProps) => ({
+      ...prevInfo,
+      scheduleInfo: {
+        ...prevInfo.scheduleInfo,
+        reviews: reviews,
+      },
+    }));
+  }, [reviews]);
+
+  function openBookModal() {
+    dispatch(fetchReviewsByDoctor({ doctorId: appointment.doctorId, includeNames: 'true', skip: '0', take: '2' }));
+    openPopup({
+      scheduleInfo: {
+        patientId: patientId,
+        doctorId: doctorId,
+        doctor: doctor!,
+        reviews: reviews,
+      },
+    });
+  }
+
+  const { openPopup: openAppointmentPopup, closePopup: closeAppointmentPopup } = useAppointmentPopup();
+
+  function openModal(appointment: IAppointment): void {
+    openAppointmentPopup(appointment);
+  }
 
   return (
     <>
@@ -57,9 +78,14 @@ export default function AppointmentsListItem({ appointment, openModal }: Appoint
             </div>
           </div>
 
-          <div className='flex flex-col justify-between'>
+          <div className='flex flex-col justify-between' onClick={e => e.stopPropagation()}>
             <div className='flex w-[140px] flex-col gap-x-2 gap-y-4 self-end'>
-              <AppointmentButtons componentName='listItem' appointment={appointment} openBookModal={openBookModal} />
+              <AppointmentButtons
+                componentName='listItem'
+                appointment={appointment}
+                openBookModal={openBookModal}
+                closePopup={closeAppointmentPopup}
+              />
             </div>
           </div>
         </div>
@@ -70,18 +96,6 @@ export default function AppointmentsListItem({ appointment, openModal }: Appoint
             <AppointmentLinks videoRecordKey={videoRecordKey} notes={notes} />
           </div>
         </div>
-
-        <Schedule
-          closePopup={closeBookModal}
-          scheduleIsOpen={bookModalIsOpen}
-          scheduleInfo={{
-            patientId: patientId,
-            doctorId: doctorId,
-            appointmentId: id,
-            doctor: doctor!,
-            reviews: reviews,
-          }}
-        />
       </div>
     </>
   );

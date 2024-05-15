@@ -37,7 +37,7 @@ export const ConferenceButtons = <T,>({ options, children, onClick, classNames =
       <div>
         <button
           type='button'
-          className={`flex h-[86px] w-fit items-center rounded-[12px] rounded-md pl-4 pr-2 hover:bg-[#454f50] hover:text-white ${classNames}`}
+          className={`flex h-[86px] w-fit items-center rounded-md pl-4 pr-2 hover:bg-[#454f50] hover:text-white ${classNames}`}
           id='options-menu'
           aria-haspopup='true'
           aria-expanded='true'
@@ -51,12 +51,12 @@ export const ConferenceButtons = <T,>({ options, children, onClick, classNames =
       </div>
 
       {isOpen && (
-        <div className='absolute bottom-full right-0 mb-[2px] mt-2 w-56 w-fit min-w-[120px] origin-top-right rounded-[12px] rounded-md bg-[#454f50] text-white shadow-lg'>
+        <div className='absolute bottom-full right-0 mb-[2px] mt-2 w-fit min-w-[120px] origin-top-right rounded-md bg-[#454f50] text-white shadow-lg'>
           <div className='px-1 py-1' role='menu' aria-orientation='vertical' aria-labelledby='options-menu'>
             {options.map((o: Option<T>) => (
               <button
                 key={o.id}
-                className='text-gray-700 block flex w-full rounded-[12px] px-4  py-2 text-sm text-xs hover:bg-[#202323]'
+                className='text-gray-700 flex w-full rounded-[12px] px-4  py-2 text-xs hover:bg-[#202323]'
                 role='menuitem'
                 onClick={() => handleClick(o.value)}
               >

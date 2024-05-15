@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { getMyCurrentAppointments, getMyTodayAppointments } from '@/app/appointment/AppointmentThunks';
 import DoctorDashboardCalendar from './DoctorDashboardCalendar';
 import TodayAppointments from '../TodayAppointments/TodayAppointments';
-import AppointmentPatientPopupProvider from '@/hooks/useAppointmentPatientPopup';
+import AppointmentPatientPopupProvider from '@/hooks/popups/useAppointmentPatientPopup';
 
 const DoctorDashboard = () => {
   const [search, setSearch] = useState('');
@@ -45,10 +45,10 @@ const DoctorDashboard = () => {
         </PageHeader>
         <div className='flex w-full gap-6'>
           <div className='flex flex-1 flex-col gap-8'>
-            <CurrentAppointments appointments={currentAppointments} />
+            <CurrentAppointments appointments={currentAppointments!} />
             <DoctorDashboardCalendar />
           </div>
-          <TodayAppointments appointments={todayAppointments} />
+          <TodayAppointments appointments={todayAppointments!} />
         </div>
       </AppointmentPatientPopupProvider>
     </div>

@@ -1,16 +1,16 @@
-import { getFamilyDoctor } from '@/app/doctor/DoctorThunks';
+import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { getFamilyDoctor } from '@/app/doctor/DoctorThunks';
 import { fetchReviewsByDoctor } from '@/app/review/ReviewThunks';
-import { Button } from '@/components/UI';
-import Schedule from '@/components/UI/Schedule/Schedule';
-import { useEffect, useState } from 'react';
+import { useSchedulePopup } from '@/hooks/popups/useSchedulePopup';
+import { Button } from '@UI/index';
 
 const BookAppointmentBtn = () => {
   const dispatch = useAppDispatch();
   const doctorUser = useAppSelector(state => state.doctor.familyDoctor);
   const reviews = useAppSelector(state => state.review.reviews);
   const openedChat = useAppSelector(state => state.chat.openedChat);
-  const [schedulePopupIsOpen, setSchedulePopupIsOpen] = useState(false);
+  const { openPopup } = useSchedulePopup();
 
   useEffect(() => {
     if (openedChat) {
@@ -19,12 +19,16 @@ const BookAppointmentBtn = () => {
     }
   }, [openedChat]);
 
-  function closeSchedulePopup() {
-    setSchedulePopupIsOpen(false);
-  }
-
   function openSchedulePopup() {
-    setSchedulePopupIsOpen(true);
+    if (!openedChat) return;
+    openPopup({
+      scheduleInfo: {
+        patientId: openedChat.patientId,
+        doctorId: openedChat.doctorId,
+        doctor: doctorUser,
+        reviews: reviews,
+      },
+    });
   }
 
   return (
@@ -32,18 +36,6 @@ const BookAppointmentBtn = () => {
       <Button btnType='button' type='primary' className='w-full' onClick={openSchedulePopup}>
         Book appointment
       </Button>
-      {openedChat && doctorUser && (
-        <Schedule
-          closePopup={closeSchedulePopup}
-          scheduleIsOpen={schedulePopupIsOpen}
-          scheduleInfo={{
-            patientId: openedChat.patientId,
-            doctorId: openedChat.doctorId,
-            doctor: doctorUser,
-            reviews: reviews,
-          }}
-        />
-      )}
     </div>
   );
 };

@@ -69,7 +69,6 @@ const mockStore = configureStore({
       },
       todayAppointments: [],
       weekAppointments: [],
-
       error: null,
       isLoading: false,
     },

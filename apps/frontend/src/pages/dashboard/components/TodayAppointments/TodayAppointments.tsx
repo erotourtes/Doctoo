@@ -2,7 +2,7 @@ import type { TAppointment } from '@/dataTypes/Appointment';
 import dayjs from 'dayjs';
 import ShortInfoCard from '../ShortInfoCard/ShortInfoCard';
 import { cn } from '@/utils/cn';
-import { useAppointmentPatientPopup } from '@/hooks/useAppointmentPatientPopup';
+import { useAppointmentPatientPopup } from '@/hooks/popups/useAppointmentPatientPopup';
 
 type AppointmentCardProps = {
   appointments: TAppointment[];

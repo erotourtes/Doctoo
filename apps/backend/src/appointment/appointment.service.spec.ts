@@ -162,7 +162,7 @@ describe('AppointmentService', () => {
           rating: 0,
           hospitals: [],
           specializations: [],
-          reviewsCount: undefined,
+          reviewsCount: 0,
           firstName: 'First Name',
           lastName: 'Last Name',
           avatarKey: 'test',

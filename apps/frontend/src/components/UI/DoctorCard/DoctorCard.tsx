@@ -1,13 +1,11 @@
-import Icon from '@UI/Icon/Icon';
 import dayjs from 'dayjs';
 import type React from 'react';
-import { addDoctorToFavorites, removeDoctorFromFavorites } from '../../../app/doctor/DoctorThunks';
-import { useAppDispatch } from '../../../app/hooks';
-import type { Specialization } from '../../../dataTypes/Doctor';
-import { cn } from '../../../utils/cn';
-import { Button } from '../Button/Button';
-import Tag from '../Tag/Tag';
 import { Link } from 'react-router-dom';
+import { addDoctorToFavorites, removeDoctorFromFavorites } from '@/app/doctor/DoctorThunks';
+import { useAppDispatch } from '@/app/hooks';
+import type { Specialization } from '@/dataTypes/Doctor';
+import { Button, Icon, ImgAvatarKey, Tag } from '@UI/index';
+import { cn } from '@/utils/cn';
 
 const DoctorCard = ({ children, className }: { children: React.ReactNode; className?: string }) => {
   return (
@@ -40,8 +38,8 @@ type ImageProps = {
 
 function Image({ url, className, alt }: ImageProps) {
   return (
-    <img
-      src={url !== '' ? `${import.meta.env.VITE_S3_BASE_URL}/${url}` : ''}
+    <ImgAvatarKey
+      avatarKey={url}
       className={cn('col-span-1 row-span-4 aspect-square h-[112px] rounded-lg object-cover', className)}
       alt={alt || "Doctor's image"}
     />
