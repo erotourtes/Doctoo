@@ -19,11 +19,16 @@ import { ClassicNestResponse } from '../utils/ClassicNestResponse';
 import { UnauthorizedResponse } from '../utils/UnauthorizedResponse';
 import { RESPONSE_STATUS } from '../utils/constants';
 import { ResponseFileDto } from './dto/response.dto';
+import { UserDec } from '../user/user.decorator';
+import { PatientService } from '../patient/patient.service';
 
 @ApiTags('File Endpoints')
 @Controller('file')
 export class FileController {
-  constructor(private readonly minioService: MinioService) {}
+  constructor(
+    private readonly minioService: MinioService,
+    private readonly patientService: PatientService,
+  ) {}
 
   @UseGuards(JWTGuard)
   @UseInterceptors(FileInterceptor('file'))
@@ -61,8 +66,13 @@ export class FileController {
       required: ['file', 'identityCardType'], // Optional: Specify required fields
     },
   })
-  async uploadIdentityCard(@UploadedFile() file: Express.Multer.File, @Body() identityCardType: string) {
-    const response = await this.minioService.uploadIdentityCard(file, identityCardType);
+  async uploadIdentityCard(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() identityCardType: string,
+    @UserDec() userInfo,
+  ) {
+    const patient = await this.patientService.getPatientByUserId(userInfo.id);
+    const response = await this.minioService.uploadIdentityCard(file, identityCardType, patient);
     return response;
   }
 

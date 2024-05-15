@@ -21,15 +21,16 @@ export class MinioService {
   }
 
   private async isValidForeignPassport(text: string): Promise<boolean> {
-    const namePattern = /Ім'я\/ Given Names\s+\S+.*?/;
+    const namePattern = /(?:Given\s*Names|Ім'я)[\s\S]*?\b([A-ZА-Я][a-zа-я]+)\b/;
     const hasName = namePattern.test(text);
 
-    const passportNumberPattern = /(?:УКРАЇНА|YKPAIHA)\/UKRAINE\s+\S+.*?/;
+    const passportNumberPattern = /(?:УКРАЇНА|YKPAIHA|UKRAINE|ukraine)[\s\S]*?\d+/;
     const hasPassportNumber = passportNumberPattern.test(text);
-    const datePattern = /Дата видачі\/ Date of issue\s+(?:[^\n]*?\/[^\n]*)/;
+
+    const datePattern = /Дата\s*видачі|Date\s*of\s*issue[\s\S]*?\d{1,2}\s+\S{3,}\s+\d{2,4}/;
     const hasValidDate = datePattern.test(text);
 
-    return hasName && hasPassportNumber && hasValidDate;
+    return hasName || hasPassportNumber || hasValidDate;
   }
 
   private async isValidDrivingLicence(text: string): Promise<boolean> {
@@ -121,8 +122,97 @@ export class MinioService {
 
     return plainToInstance(ResponseFileDto, { name: fileName, ...url });
   }
+  private async isValidDocument(text: string, patient) {
+    const name = patient.firstName;
+    const surname = patient.lastName;
 
-  async uploadIdentityCard(file: Express.Multer.File, identityCardType: string): Promise<ResponseFileDto> {
+    const nameFirstHalf = name.substr(0, Math.ceil(name.length / 2));
+    const nameSecondHalf = name.substr(Math.ceil(name.length / 2));
+    const surnameFirstHalf = surname.substr(0, Math.ceil(surname.length / 2));
+    const surnameSecondHalf = surname.substr(Math.ceil(surname.length / 2));
+
+    const nameFirstHalfRegex = new RegExp(await this.createOcrRegex(nameFirstHalf), 'i');
+    const nameSecondHalfRegex = new RegExp(await this.createOcrRegex(nameSecondHalf), 'i');
+    const surnameFirstHalfRegex = new RegExp(await this.createOcrRegex(surnameFirstHalf), 'i');
+    const surnameSecondHalfRegex = new RegExp(await this.createOcrRegex(surnameSecondHalf), 'i');
+
+    const hasNameFirstHalf = nameFirstHalfRegex.test(text);
+    const hasNameSecondHalf = nameSecondHalfRegex.test(text);
+    const hasSurnameFirstHalf = surnameFirstHalfRegex.test(text);
+    const hasSurnameSecondHalf = surnameSecondHalfRegex.test(text);
+
+    if (hasNameFirstHalf || hasNameSecondHalf || hasSurnameFirstHalf || hasSurnameSecondHalf) {
+      return true;
+    } else {
+      throw new BadRequestException('Invalid document.');
+    }
+  }
+
+  private async createOcrRegex(input) {
+    return input
+      .replace(/([A-Za-z])/g, match => {
+        switch (match.toLowerCase()) {
+          case 'a':
+            return '[AaАа]';
+          case 'b':
+            return '[BbБб]';
+          case 'c':
+            return '[CcСсCc]';
+          case 'd':
+            return '[DdДд]';
+          case 'e':
+            return '[EeЕе]';
+          case 'f':
+            return '[FfФф]';
+          case 'g':
+            return '[GgГг]';
+          case 'h':
+            return '[HhХх]';
+          case 'i':
+            return '[IiИиiі]';
+          case 'j':
+            return '[JjЙй]';
+          case 'k':
+            return '[KkКк]';
+          case 'l':
+            return '[LlЛл]';
+          case 'm':
+            return '[MmМм]';
+          case 'n':
+            return '[NnНн]';
+          case 'o':
+            return '[OoОо0]';
+          case 'p':
+            return '[PpПп]';
+          case 'q':
+            return '[QqКк]';
+          case 'r':
+            return '[RrРр]';
+          case 's':
+            return '[SsСс]';
+          case 't':
+            return '[TtТт]';
+          case 'u':
+            return '[UuУу]';
+          case 'v':
+            return '[VvВв]';
+          case 'w':
+            return '[WwВв]';
+          case 'x':
+            return '[XxКсХх]';
+          case 'y':
+            return '[YyУуЫы]';
+          case 'z':
+            return '[ZzЗз]';
+          default:
+            return match;
+        }
+      })
+      .replace(/\s+/g, '\\s*')
+      .replace(/[\-\'\`]/g, "[-'`]*");
+  }
+
+  async uploadIdentityCard(file: Express.Multer.File, identityCardType: string, patient): Promise<ResponseFileDto> {
     if (!file) throw new BadRequestException('file must be provided.');
     const type = Object.values(identityCardType).join('');
     let text = '';
@@ -131,6 +221,7 @@ export class MinioService {
     if (!allowedTypes.includes(file.mimetype)) {
       throw new BadRequestException('Only JPEG and PNG files are allowed.');
     }
+
     await Tesseract.recognize(file.buffer, 'ukr+eng', {})
       .then(result => {
         console.log('OCR Result:', result.data.text);
@@ -154,6 +245,7 @@ export class MinioService {
         throw new BadRequestException('Invalid Foreign passport.');
       }
     }
+    await this.isValidDocument(text, patient);
 
     const fileType = file.originalname.split('.').pop();
     const fileName = `${randomUUID()}.${fileType}`;
