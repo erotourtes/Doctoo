@@ -1,8 +1,8 @@
-import React from 'react';
-import DayJS from 'dayjs';
-import AttachedFile from '../AttachedFiles/AttachedFile';
-import { cn } from '@/utils/cn';
 import type { TAttachment } from '@/dataTypes/Chat';
+import { cn } from '@/utils/cn';
+import DayJS from 'dayjs';
+import React from 'react';
+import AttachedFile from '../AttachedFiles/AttachedFile';
 
 type MessageItemProps = {
   sender: 'me' | 'participant';
@@ -24,7 +24,7 @@ const MessageItem = React.forwardRef<HTMLDivElement, MessageItemProps>(
             sender !== 'participant' ? 'bg-main' : 'bg-white',
           )}
         >
-          <pre className='text w-full whitespace-normal font-sans text-base'>{text}</pre>
+          <pre className='text w-full whitespace-normal break-words font-sans text-base'>{text}</pre>
           {attaches && attaches.length > 0 && (
             <div className='grid gap-2'>
               {attaches.map((attach, index) => {
