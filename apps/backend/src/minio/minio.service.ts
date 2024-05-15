@@ -141,7 +141,11 @@ export class MinioService {
     const hasSurnameFirstHalf = surnameFirstHalfRegex.test(text);
     const hasSurnameSecondHalf = surnameSecondHalfRegex.test(text);
 
-    if (hasNameFirstHalf || hasNameSecondHalf || hasSurnameFirstHalf || hasSurnameSecondHalf) {
+    if (hasSurnameFirstHalf && hasSurnameSecondHalf) {
+      return true;
+    }
+
+    if ((hasNameFirstHalf || hasNameSecondHalf) && (hasSurnameFirstHalf || hasSurnameSecondHalf)) {
       return true;
     } else {
       throw new BadRequestException('Invalid document.');
@@ -157,7 +161,7 @@ export class MinioService {
           case 'b':
             return '[BbБб]';
           case 'c':
-            return '[CcСсCc]';
+            return '(?:[CcСсCc])?';
           case 'd':
             return '[DdДд]';
           case 'e':
@@ -169,7 +173,7 @@ export class MinioService {
           case 'h':
             return '[HhХх]';
           case 'i':
-            return '[IiИиiі]';
+            return '(?:[IiИиiі])?';
           case 'j':
             return '[JjЙй]';
           case 'k':
@@ -181,7 +185,7 @@ export class MinioService {
           case 'n':
             return '[NnНн]';
           case 'o':
-            return '[OoОо0]';
+            return '[OoОо0G]';
           case 'p':
             return '[PpПп]';
           case 'q':
