@@ -17,6 +17,9 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
 
   const patient = useAppSelector(state => state.patient.data);
 
+  const [conditionInput, setConditionInput] = useState('');
+  const [allergyInput, setAllergyInput] = useState('');
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -59,7 +62,9 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
                 />
               ))}
               <input
+                value={conditionInput}
                 onChange={e => {
+                  setConditionInput(e.target.value);
                   const value = e.target.value;
 
                   if (!value) return setSuggestedConditions([]);
@@ -111,7 +116,9 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
                 />
               ))}
               <input
+                value={allergyInput}
                 onChange={e => {
+                  setAllergyInput(e.target.value);
                   const value = e.target.value;
 
                   if (!value) return setSuggestedAllergies([]);
@@ -127,7 +134,7 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
                   });
                 }}
                 id='allergies'
-                className='w-full bg-transparent px-4 py-2 outline-none'
+                className='grow bg-transparent px-4 py-2 outline-none max-[400px]:w-full'
               />
             </div>
             {suggestedAllergies.map(allergy => (
@@ -162,10 +169,13 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
             onClick={() => {
               if (selectedConditions.length !== 0) {
                 dispatch(createPatientConditions({ id: patient.id, body: selectedConditions }));
+                setConditionInput('');
               }
               if (selectedAllergies.length !== 0) {
                 dispatch(createPatientAllergies({ body: selectedAllergies, id: patient.id }));
+                setAllergyInput('');
               }
+              onClose();
             }}
             className='w-full sm:w-1/2'
           >
