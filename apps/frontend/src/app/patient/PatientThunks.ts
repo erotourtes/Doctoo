@@ -29,6 +29,7 @@ export const patchPatientData = createAsyncThunk(
   'patient',
   async ({ id, body }: { id: string; body: Partial<Omit<TPatient, 'userId'>> }, { dispatch }) => {
     const { data, error, response } = await api.PATCH('/patient/{id}', { params: { path: { id } }, body });
+    const copy: Partial<TPatient> = Object.assign({}, data);
 
     if (error && response.status === 400) {
       alert((error as components['schemas']['BadRequestResponse']).errors.map(error => error.message).join(', '));
@@ -37,7 +38,9 @@ export const patchPatientData = createAsyncThunk(
     } else if (response.status !== 200) {
       alert(error?.message || 'Something went wrong');
     } else {
-      dispatch(updatePatientData({ ...data }));
+      delete copy.allergies;
+      delete copy.conditions;
+      dispatch(updatePatientData({ ...copy }));
     }
   },
 );

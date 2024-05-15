@@ -39,6 +39,7 @@ const PersonalInfoPopup = ({ isOpen, onClose }: PersonalInfoPopupProps) => {
     patient.avatarKey !== '' ? `${import.meta.env.VITE_S3_BASE_URL}/${patient.avatarKey}` : null,
   );
 
+
   const { openPopup, savedFile, setFile: setImageFile, setSavedFile } = useCropImagePopup();
   setImageFile(`${import.meta.env.VITE_S3_BASE_URL}/${patient.avatarKey}`); // to fix bug with background mask when cropping
 

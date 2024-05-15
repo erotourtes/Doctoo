@@ -14,6 +14,27 @@ type StatsCardProps = {
   options?: string[];
 };
 
+function refactorBloodType(str: string) {
+  switch (str) {
+    case 'AB_MINUS':
+      return 'AB-';
+    case 'AB_PLUS':
+      return 'AB+';
+    case 'A_MINUS':
+      return 'A-';
+    case 'A_PLUS':
+      return 'A+';
+    case 'B_MINUS':
+      return 'B-';
+    case 'B_PLUS':
+      return 'B+';
+    case 'O_MINUS':
+      return 'O-';
+    case 'O_PLUS':
+      return 'O+';
+  }
+}
+
 const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState(value);
@@ -63,6 +84,7 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
             {variant === 'select' && (
               <div>
                 <select
+                  defaultValue={value}
                   onChange={e => {
                     setInputValue(e.target.value);
                     setIsEditing(false);
@@ -83,28 +105,28 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
                         break;
                       case 'Blood type':
                         switch (inputValue.toLowerCase()) {
-                          case 'ab-':
+                          case 'ab_minus':
                             bloodType = 'AB_MINUS';
                             break;
-                          case 'ab+':
+                          case 'ab_plus':
                             bloodType = 'AB_PLUS';
                             break;
-                          case 'a-':
+                          case 'a_minus-':
                             bloodType = 'A_MINUS';
                             break;
-                          case 'a+':
+                          case 'a_plus':
                             bloodType = 'A_PLUS';
                             break;
-                          case 'b-':
+                          case 'b_minus':
                             bloodType = 'B_MINUS';
                             break;
-                          case 'b+':
+                          case 'b_plus':
                             bloodType = 'B_PLUS';
                             break;
-                          case 'o-':
+                          case 'o_minus':
                             bloodType = 'O_MINUS';
                             break;
-                          case 'o+':
+                          case 'o_plus':
                             bloodType = 'O_PLUS';
                             break;
                         }
@@ -115,9 +137,17 @@ const StatsCard = ({ title, iconVariant, value, variant, options }: StatsCardPro
                   className={`${isEditing ? 'pointer-events-auto' : 'pointer-events-none'} appearance-none outline-none`}
                 >
                   {options &&
+                    title === 'Gender' &&
                     options.map((option, index) => (
                       <option key={index} value={option}>
-                        {capitalizeString(option)}
+                        {capitalizeString(option.toLowerCase())}
+                      </option>
+                    ))}
+                  {options &&
+                    title === 'Blood type' &&
+                    options.map((option, index) => (
+                      <option key={index} value={option}>
+                        {refactorBloodType(option)}
                       </option>
                     ))}
                 </select>

@@ -5,7 +5,6 @@ import PersonalInfo from './components/PersonalInfo/PersonalInfo';
 import MedicalCondition from './components/MedicalCondition/MedicalCondition';
 import AddressInfo from './components/AddressInfo/AddressInfo';
 import PaymentMethods from './components/PaymentMethods/PaymentMethods';
-import { capitalizeString } from '@/utils/capitalizeString';
 import { useEffect } from 'react';
 import { getAllConditions } from '@/app/condition/ConditionThunks';
 import { getAllAllergies } from '@/app/allergy/AllergyThunks';
@@ -116,18 +115,18 @@ const ProfilePage = () => {
 
           <StatsCard
             variant='select'
-            options={['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']}
+            options={['A_PLUS', 'A_MINUS', 'B_PLUS', 'B_MINUS', 'AB_PLUS', 'AB_MINUS', 'O_PLUS', 'O_MINUS']}
             title='Blood type'
-            value={patient.bloodType.toString()}
+            value={patient.bloodType}
             iconVariant='blood-type'
           />
 
           <StatsCard
             variant='select'
             title='Gender'
-            value={capitalizeString(patient.gender)}
+            value={patient.gender}
             iconVariant='gender'
-            options={['male', 'female']}
+            options={['MALE', 'FEMALE']}
           />
         </div>
       </section>
