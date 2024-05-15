@@ -38,7 +38,7 @@ jobs:
       - name: Build & Push
         uses: docker/build-push-action@v4
         with:
-          file: ${{ steps.changes.outputs.path }}/Dockerfile
+          file: ./apps/${{ matrix.service }}/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/doctoo-${{ matrix.service }}:latest
           build-args: |
