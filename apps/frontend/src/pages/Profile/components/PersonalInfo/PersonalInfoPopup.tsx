@@ -6,9 +6,10 @@ import { Button } from '@/components/UI/Button/Button';
 import Input from '@/components/UI/Input/Input';
 import PopupDoctoo from '@/components/UI/Popup/Popup';
 import type { TUser } from '@/dataTypes/User';
+import { useCropImagePopup } from '@/hooks/popups/useCropImagePopup';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Joi from 'joi';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormProvider, useForm, type FieldValues, type SubmitHandler } from 'react-hook-form';
 
 type PersonalInfoPopupProps = {
@@ -38,12 +39,23 @@ const PersonalInfoPopup = ({ isOpen, onClose }: PersonalInfoPopupProps) => {
     patient.avatarKey !== '' ? `${import.meta.env.VITE_S3_BASE_URL}/${patient.avatarKey}` : null,
   );
 
+  const { openPopup, savedFile, setFile: setImageFile, setSavedFile } = useCropImagePopup();
+  setImageFile(`${import.meta.env.VITE_S3_BASE_URL}/${patient.avatarKey}`); // to fix bug with background mask when cropping
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setPhotoURL(URL.createObjectURL(file));
-    setFile(file);
+    openPopup(file);
+    e.target.value = '';
   };
+
+  useEffect(() => {
+    if (savedFile) {
+      setPhotoURL(URL.createObjectURL(savedFile));
+      setFile(savedFile);
+      setSavedFile(undefined);
+    }
+  }, [savedFile]);
 
   const handleDeletePhoto = () => {
     setPhotoURL(null);
