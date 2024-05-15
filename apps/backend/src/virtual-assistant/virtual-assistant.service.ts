@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { createReadStream } from 'fs';
 import { writeFile } from 'fs/promises';
 import OpenAI from 'openai';
@@ -8,7 +8,6 @@ import { plainToInstance } from 'class-transformer';
 import { ResponseAssistantChatMessageDto } from './dto/response.dto';
 import { OnEvent } from '@nestjs/event-emitter';
 import { PrismaService } from '../prisma/prisma.service';
-import { BadRequestResponse } from 'src/utils/BadRequestResponse';
 import { ResponsePromptDto } from './dto/responsePrompt.dto';
 import { SpecializationService } from 'src/specialization/specialization.service';
 import { DoctorService } from 'src/doctor/doctor.service';
@@ -205,7 +204,7 @@ export class VirtualAssistantService {
     const chatId = await this.isChatConversationExists(patient.id);
 
     if (chatId) {
-      throw new BadRequestResponse('Conversation already exists');
+      throw new BadRequestException('Conversation already exists');
     }
 
     const assistantChat = await this.prismaService.assistantChat.create({ data: { patientId: patient.id } });
