@@ -118,7 +118,7 @@ const Sidemenu: React.FunctionComponent<SidemenuProps> = ({ variant = 'large', r
             to={item.to}
             iconVariant={item.iconVariant}
             text={item.text}
-            variant={variant}
+            variant={variantSize}
             selected={getSelected(item.to)}
           />
         ))}
@@ -131,7 +131,7 @@ const Sidemenu: React.FunctionComponent<SidemenuProps> = ({ variant = 'large', r
             to={item.to}
             iconVariant={item.iconVariant}
             text={item.text}
-            variant={variant}
+            variant={variantSize}
             selected={getSelected(item.to)}
           />
         ))}

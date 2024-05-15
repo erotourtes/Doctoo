@@ -19,6 +19,7 @@ const NavButton: React.FunctionComponent<NavButtonProps> = ({
   variant = 'large',
   selected = false,
 }) => {
+  const isMobileOrTouch = window.matchMedia('(hover: none)').matches;
   return (
     <Link
       to={to}
@@ -42,15 +43,17 @@ const NavButton: React.FunctionComponent<NavButtonProps> = ({
           {text}
         </span>
       )}
-      <div className='absolute'>
-        <div className='relative -top-5 left-10 z-10'>
-          {variant === 'small' && (
-            <span className='z-100 invisible absolute left-full  ml-1 whitespace-nowrap rounded-xl bg-main-dark p-2 text-white transition-all group-hover:visible'>
-              {text}
-            </span>
-          )}
+      {!isMobileOrTouch && (
+        <div className='absolute'>
+          <div className='relative -top-5 left-10 z-10'>
+            {variant === 'small' && (
+              <span className='z-100 invisible absolute left-full  ml-1 whitespace-nowrap rounded-xl bg-main-dark p-2 text-white transition-all group-hover:visible'>
+                {text}
+              </span>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </Link>
   );
 };
