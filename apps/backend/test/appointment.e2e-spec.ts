@@ -10,6 +10,8 @@ import { userStub } from 'src/user/user.stub';
 import { appointmentStub } from 'src/appointment/appointment.stub';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { mockConfigs, pipe } from '../src/utils/test-injection-mock';
+import { UserModule } from '../src/user/user.module';
+import { ConfigModule } from '@nestjs/config';
 
 describe('AppointmentController (e2e)', () => {
   let app: INestApplication;
@@ -20,10 +22,12 @@ describe('AppointmentController (e2e)', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppointmentModule, EventEmitterModule.forRoot()],
+      imports: [UserModule, ConfigModule, AppointmentModule, EventEmitterModule.forRoot()],
       providers: [PrismaService],
     })
       .overrideProvider('SUMMARIZER_SERVICE')
+      .useValue({ connect: jest.fn() })
+      .overrideProvider('MAIL_SERVICE')
       .useValue({ connect: jest.fn() })
       .useMocker(pipe(mockConfigs))
       .compile();

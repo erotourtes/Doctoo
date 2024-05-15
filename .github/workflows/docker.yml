@@ -10,7 +10,7 @@ jobs:
   ci-job:
     strategy:
       matrix:
-        service: [backend, frontend, summarizer]
+        service: [backend, frontend, summarizer, mailer]
 
     runs-on: self-hosted-deploy
     name: CI Job
@@ -69,6 +69,8 @@ jobs:
             VITE_BACKEND_API_URL=${{ secrets.VITE_BACKEND_API_URL }}
             VITE_STRIPE_API_KEY=${{ secrets.VITE_STRIPE_API_KEY }}
             VITE_S3_BASE_URL=${{ secrets.VITE_S3_BASE_URL }}
+            VITE_FHIR_ISS_URL=${{ secrets.VITE_FHIR_ISS_URL }}
+            VITE_FHIR_CLIENT_ID=${{ secrets.VITE_FHIR_CLIENT_ID }}
 
   cd-job:
     runs-on: self-hosted-deploy
@@ -113,6 +115,12 @@ jobs:
           POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB=${{ secrets.POSTGRES_DB }}
 
+          # RABBITMQ
+          RMQ_HOST=${{ secrets.RMQ_HOST}}
+          RMQ_PORT=${{ secrets.RMQ_PORT }}
+          RMQ_USERNAME=${{ secrets.RMQ_USERNAME }}
+          RMQ_PASSWORD=${{ secrets.RMQ_PASSWORD }}
+
           # DATABASE BACKUP
           BACKUP_BUCKET_NAME=${{ secrets.BACKUP_BUCKET_NAME }}
           BACKUP_BUCKET_REGION=${{ secrets.BACKUP_BUCKET_REGION }}
@@ -121,12 +129,8 @@ jobs:
           ENCRYPTION_PASSWORD=${{ secrets.ENCRYPTION_PASSWORD }}
 
           # BACKEND
-          APP_NAME=${{ secrets.APP_NAME }}
           BACKEND_PORT=${{ secrets.BACKEND_PORT }}
-          BACKEND_URL=${{ secrets.BACKEND_URL }}
-          FRONTEND_URL=${{ secrets.FRONTEND_URL }}
           DATABASE_URL=postgres://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@postgres/${{ secrets.POSTGRES_DB }}?schema=public
-          NODE_ENV=${{ secrets.NODE_ENV }}
           JWT_SECRET=${{ secrets.JWT_SECRET }}
           JWT_EXPIRATION_DAYS=${{ secrets.JWT_EXPIRATION_DAYS }}
           JWT_EXPIRATION_TRESHOLD_SECONDS=${{ secrets.JWT_EXPIRATION_TRESHOLD_SECONDS }}
@@ -139,28 +143,30 @@ jobs:
           MINIO_SECRET_KEY=${{ secrets.MINIO_SECRET_KEY }}
           MINIO_USE_SSL=${{ secrets.MINIO_USE_SSL }}
           MINIO_BUCKET_NAME=${{ secrets.MINIO_BUCKET_NAME }}
-          MAIL_HOST=${{ secrets.MAIL_HOST }}
-          MAIL_USER=${{ secrets.MAIL_USER }}
-          MAIL_PASS=${{ secrets.MAIL_PASS }}
-          MAIL_FROM=${{ secrets.MAIL_FROM }}
-          MAIL_PORT=${{ secrets.MAIL_PORT }}
-          MAIL_SECURE=${{ secrets.MAIL_SECURE }}
-          FRONTEND_SIGNUP_PATH=${{ secrets.FRONTEND_SIGNUP_PATH }}
-          FRONTEND_CHANGE_EMAIL_PATH=${{ secrets.FRONTEND_CHANGE_EMAIL_PATH }}
           STRIPE_API_KEY=${{ secrets.STRIPE_API_KEY }}
           TZ=${{ secrets.TZ }}
           REDIS_HOST=${{ secrets.REDIS_HOST }}
           REDIS_PORT=${{ secrets.REDIS_PORT }}
           REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
           CACHE_DAYS_TO_LIVE=${{ secrets.CACHE_DAYS_TO_LIVE }}
-          RMQ_HOST=${{ secrets.RMQ_HOST}}
-          RMQ_PORT=${{ secrets.RMQ_PORT }}
-          RMQ_USERNAME=${{ secrets.RMQ_USERNAME }}
-          RMQ_PASSWORD=${{ secrets.RMQ_PASSWORD }}
 
           # SUMMARIZER SERVICE
           HF_TOKEN=${{ secrets.HF_TOKEN}}
           HF_MODEL_NAME=${{ secrets.HF_MODEL_NAME }}
+
+          # MAILER SERVICE
+          MAIL_HOST=${{ secrets.MAIL_HOST }}
+          MAIL_USER=${{ secrets.MAIL_USER }}
+          MAIL_PASS=${{ secrets.MAIL_PASS }}
+          MAIL_FROM=${{ secrets.MAIL_FROM }}
+          MAIL_PORT=${{ secrets.MAIL_PORT }}
+          MAIL_SECURE=${{ secrets.MAIL_SECURE }}
+          NODE_ENV=${{ secrets.NODE_ENV }}
+          BACKEND_URL=${{ secrets.BACKEND_URL }}
+          FRONTEND_URL=${{ secrets.FRONTEND_URL }}
+          APP_NAME=${{ secrets.APP_NAME }}
+          FRONTEND_SIGNUP_PATH=${{ secrets.FRONTEND_SIGNUP_PATH }}
+          FRONTEND_CHANGE_EMAIL_PATH=${{ secrets.FRONTEND_CHANGE_EMAIL_PATH }}
           EOF
 
       - name: Run new Docker containers

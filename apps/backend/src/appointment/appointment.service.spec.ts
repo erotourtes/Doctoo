@@ -31,6 +31,7 @@ describe('AppointmentService', () => {
         DoctorService,
         PatientModule,
         { provide: 'SUMMARIZER_SERVICE', useValue: { connect: jest.fn() } },
+        { provide: 'MAIL_SERVICE', useValue: { send: jest.fn(), emit: jest.fn() } },
       ],
     })
       .useMocker(pipe(mockConfigs, mockUndefined))

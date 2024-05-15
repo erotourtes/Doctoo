@@ -12,7 +12,11 @@ describe('UserController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
-      providers: [UserService, PrismaService],
+      providers: [
+        UserService,
+        PrismaService,
+        { provide: 'MAIL_SERVICE', useValue: { send: jest.fn(), emit: jest.fn() } },
+      ],
     })
       .useMocker(pipe(mockUndefined))
       .compile();

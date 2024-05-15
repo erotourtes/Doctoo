@@ -39,6 +39,8 @@ describe('UserController (e2e)', () => {
     })
       .overrideProvider(MinioService)
       .useValue({})
+      .overrideProvider('MAIL_SERVICE')
+      .useValue({ connect: jest.fn() })
       .useMocker(pipe(mockUndefined))
       .compile();
 

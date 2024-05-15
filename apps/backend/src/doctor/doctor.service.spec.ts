@@ -30,6 +30,7 @@ describe('DoctorService', () => {
         DoctorScheduleService,
         TimeSlotService,
         { provide: ReviewService, useValue: mockReviewService },
+        { provide: 'MAIL_SERVICE', useValue: { send: jest.fn(), emit: jest.fn() } },
       ],
     })
       .useMocker(pipe(mockConfigs, mockUndefined))

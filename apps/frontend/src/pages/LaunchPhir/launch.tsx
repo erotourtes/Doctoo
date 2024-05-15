@@ -12,11 +12,11 @@ const LaunchPage = () => {
         console.log('FHIR client loaded, authorizing with FHIR');
 
         FHIR.oauth2.authorize({
-          client_id: '6203c6e4-9e73-4af5-ab6b-a212614d2bd4',
+          client_id: import.meta.env.VITE_FHIR_CLIENT_ID,
           scope:
             'PATIENT.READ PATIENT.SEARCH, OBSERVATION.SEARCH, OBSERVATION.READ ALLERGYINTOLERANCE.SEARCH, CONDITION.SEARCH',
           redirect_uri: 'https://doctoo.org/profile',
-          iss: 'https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4',
+          iss: import.meta.env.VITE_FHIR_ISS_URL,
         });
       }
     };

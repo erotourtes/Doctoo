@@ -44,6 +44,8 @@ describe('DoctorController (e2e)', () => {
     })
       .overrideProvider(MinioService)
       .useValue({})
+      .overrideProvider('MAIL_SERVICE')
+      .useValue({ connect: jest.fn() })
       .compile();
 
     app = moduleFixture.createNestApplication();

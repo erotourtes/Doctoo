@@ -20,7 +20,14 @@ describe('FavoriteService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [EventEmitterModule.forRoot()],
-      providers: [FavoriteService, PrismaService, UserService, DoctorService, PatientService],
+      providers: [
+        FavoriteService,
+        PrismaService,
+        UserService,
+        DoctorService,
+        PatientService,
+        { provide: 'MAIL_SERVICE', useValue: { send: jest.fn(), emit: jest.fn() } },
+      ],
     })
       .useMocker(pipe(mockConfigs, mockUndefined))
       .compile();

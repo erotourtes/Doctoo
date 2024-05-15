@@ -1,8 +1,7 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import { plainToInstance } from 'class-transformer';
-import { MailService } from '../mail/mail.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create.dto';
 import { PatchUserDto } from './dto/patch.dto';
@@ -15,9 +14,13 @@ export type JwtEmailPayload = { sub?: string; newEmail?: string };
 export class UserService {
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly mailService: MailService,
     private readonly jwtService: JwtService,
+    @Inject('MAIL_SERVICE') private readonly mailClient: any,
   ) {}
+
+  onModuleInit() {
+    this.mailClient.connect();
+  }
 
   async isUserExists(id: string): Promise<boolean> {
     const user = await this.prismaService.user.findUnique({ where: { id } });
@@ -109,6 +112,10 @@ export class UserService {
   private async patchUserEmail(userId: string, userName: string, oldEmail: string, newEmail: string): Promise<void> {
     const payload: JwtEmailPayload = { sub: userId, newEmail };
     const token = await this.jwtService.signAsync(payload, { expiresIn: '1d' });
-    await this.mailService.sendEmailChangeMail(newEmail, oldEmail, userName, token);
+
+    this.mailClient.emit(
+      { cmd: 'SendEmailChangeMail' },
+      { to: newEmail, oldEmail: oldEmail, name: userName, token: token },
+    );
   }
 }

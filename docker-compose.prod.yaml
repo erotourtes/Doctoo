@@ -107,6 +107,31 @@ services:
     networks:
       - doctoo
 
+  mailer:
+    restart: always
+    image: registry.doctoo.org/radency/doctoo-mailer:latest
+    environment:
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_USER: ${MAIL_USER}
+      MAIL_PASS: ${MAIL_PASS}
+      MAIL_FROM: ${MAIL_FROM}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_SECURE: ${MAIL_SECURE}
+      RMQ_HOST: ${RMQ_HOST}
+      RMQ_PORT: ${RMQ_PORT}
+      RMQ_USERNAME: ${RMQ_USERNAME}
+      RMQ_PASSWORD: ${RMQ_PASSWORD}
+      APP_NAME: ${APP_NAME}
+      BACKEND_URL: ${BACKEND_URL}
+      FRONTEND_URL: ${FRONTEND_URL}
+      NODE_ENV: ${NODE_ENV}
+      FRONTEND_SIGNUP_PATH: ${FRONTEND_SIGNUP_PATH}
+      FRONTEND_CHANGE_EMAIL_PATH: ${FRONTEND_CHANGE_EMAIL_PATH}
+    depends_on:
+      - rabbitmq
+    networks:
+      - doctoo
+
   frontend:
     restart: always
     image: registry.doctoo.org/radency/doctoo-frontend:latest

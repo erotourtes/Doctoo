@@ -15,7 +15,6 @@ import { DoctorModule } from '../doctor/doctor.module';
 import { FavoriteModule } from '../favorite/favorite.module';
 import { FileModule } from '../file/file.module';
 import { HospitalModule } from '../hospital/hospital.module';
-import { MailModule } from '../mail/mail.module';
 import { MinioService } from '../minio/minio.service';
 import { NotificationModule } from '../notification/notification.module';
 import { PatientModule } from '../patient/patient.module';
@@ -32,7 +31,6 @@ import rabbitmq from '../config/rabbitmq';
     ConfigModule.forRoot({ isGlobal: true, load: [auth, config, mail, rabbitmq] }),
     EventEmitterModule.forRoot(),
     AuthModule,
-    MailModule,
     UserModule,
     FavoriteModule,
     DoctorModule,

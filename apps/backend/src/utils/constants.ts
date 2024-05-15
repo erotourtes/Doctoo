@@ -6,3 +6,5 @@ export const RESPONSE_STATUS = {
 };
 
 export const SUMMARY_QUEUE_NAME = 'summary-queue';
+
+export const MAILER_QUEUE_NAME = 'mailer-queue';

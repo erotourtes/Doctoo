@@ -5,7 +5,6 @@ import * as bcrypt from 'bcrypt';
 import { plainToClass, plainToInstance } from 'class-transformer';
 import auth from '../config/auth';
 import config from '../config/config';
-import { MailService } from '../mail/mail.service';
 import { MinioService } from '../minio/minio.service';
 import { CreatePatientDto } from '../patient/dto/create.dto';
 import { PatientService } from '../patient/patient.service';
@@ -23,9 +22,11 @@ describe('AuthService', () => {
   const userServiceMock: Partial<UserService> = {};
   const patientServiceMock: Partial<PatientService> = {};
   const authConfig: Partial<ConfigType<typeof auth>> = {};
-  const mailServiceMock: Partial<MailService> = {};
   const minioServiceMock: Partial<MinioService> = {};
-
+  const mockMailService = {
+    send: jest.fn(),
+    emit: jest.fn(),
+  };
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [JwtModule.register({ secret: 'secret' })],
@@ -35,8 +36,8 @@ describe('AuthService', () => {
         { provide: PatientService, useValue: patientServiceMock },
         { provide: config.KEY, useValue: config },
         { provide: auth.KEY, useValue: authConfig },
-        { provide: MailService, useValue: mailServiceMock },
         { provide: MinioService, useValue: minioServiceMock },
+        { provide: 'MAIL_SERVICE', useValue: mockMailService },
       ],
     })
       .useMocker(pipe(mockUndefined))
@@ -63,7 +64,6 @@ describe('AuthService', () => {
   it('Should signup user', async () => {
     userServiceMock.createUser = jest.fn().mockResolvedValue({ ...user, id: '1' });
     patientServiceMock.createPatient = jest.fn().mockResolvedValue({ ...patient, id: '2' });
-    mailServiceMock.sendPatientSignUpMail = jest.fn().mockReturnThis();
 
     const signedUp = await authService.signUpUser(user);
 
@@ -156,13 +156,12 @@ describe('AuthService', () => {
     userServiceMock.getUserByEmail = jest.fn().mockResolvedValue(newUser);
     patientServiceMock.getPatientByUserId = jest.fn().mockResolvedValue({ ...patient, twoFactorAuthToggle: true });
     userServiceMock.updateSecretCode = jest.fn().mockReturnThis();
-    mailServiceMock.sendMFACode = jest.fn().mockReturnThis();
 
     const result = await authService.validatePatientByEmail(user.email, user.password);
 
     expect(result.isMFAEnabled).toBeTruthy();
     expect(userServiceMock.updateSecretCode).toHaveBeenCalledWith(expect.any(String), expect.stringMatching(/.{7,}/));
-    expect(mailServiceMock.sendMFACode).toHaveBeenCalled();
+    expect(mockMailService.emit).toHaveBeenCalled();
   });
 
   it('Should not change password', async () => {

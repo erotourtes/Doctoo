@@ -7,7 +7,6 @@ import { plainToInstance } from 'class-transformer';
 import auth from '../config/auth';
 import { DoctorService } from '../doctor/doctor.service';
 import { ResponseDoctorDto } from '../doctor/dto/response.dto';
-import { MailService } from '../mail/mail.service';
 import { MinioService } from '../minio/minio.service';
 import { ResponsePatientDto } from '../patient/dto/response.dto';
 import { PatientService } from '../patient/patient.service';
@@ -30,13 +29,17 @@ import { JwtPayload } from './strategies/jwt';
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly mailService: MailService,
     private readonly minioService: MinioService,
     private readonly userService: UserService,
     private readonly patientService: PatientService,
     private readonly doctorService: DoctorService,
     @Inject(auth.KEY) private readonly authObject: ConfigType<typeof auth>,
+    @Inject('MAIL_SERVICE') private readonly mailClient: any,
   ) {}
+
+  onModuleInit() {
+    this.mailClient.connect();
+  }
 
   async signUpPatient(body: SignUpPatientDto, token: string): Promise<ResponsePatientDto> {
     let verified: JwtPayload;
@@ -92,7 +95,7 @@ export class AuthService {
       const { code, hashed } = await this.getMFACode();
 
       this.userService.updateSecretCode(user.id, hashed);
-      this.mailService.sendMFACode(user.email, user.firstName, code);
+      this.mailClient.emit({ cmd: 'SendMFACode' }, { to: user.email, name: user.firstName, code: code });
     }
 
     return { isMFAEnabled: patient.twoFactorAuthToggle, patient };
@@ -234,7 +237,10 @@ export class AuthService {
       });
 
       const token = await this.jwtService.signAsync({ sub: existingUser.id }, { expiresIn: '1d' });
-      await this.mailService.sendPatientSignUpMail(existingUser.email, existingUser.firstName, token);
+      this.mailClient.emit(
+        { cmd: 'SendPatientSignUpMail' },
+        { to: existingUser.email, name: existingUser.firstName, token: token },
+      );
 
       return plainToInstance(ResponseUserDto, existingUser);
     }
@@ -245,7 +251,8 @@ export class AuthService {
     await this.uploadAvatar(user.id, body.avatarImgUrl).catch(() => {});
 
     const token = await this.jwtService.signAsync({ sub: user.id }, { expiresIn: '1d' });
-    this.mailService.sendPatientSignUpMail(user.email, user.firstName, token);
+
+    this.mailClient.emit({ cmd: 'SendPatientSignUpMail' }, { to: user.email, name: user.firstName, token: token });
 
     return plainToInstance(ResponseUserDto, user);
   }

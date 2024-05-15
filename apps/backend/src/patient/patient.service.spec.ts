@@ -18,7 +18,13 @@ describe('PatientService', () => {
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AllergyModule],
-      providers: [PatientService, PrismaService, UserService, PatientService],
+      providers: [
+        PatientService,
+        PrismaService,
+        UserService,
+        PatientService,
+        { provide: 'MAIL_SERVICE', useValue: { send: jest.fn(), emit: jest.fn() } },
+      ],
     })
       .useMocker(pipe(mockConfigs, mockUndefined))
       .compile();

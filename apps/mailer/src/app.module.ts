@@ -1,16 +1,21 @@
-import { MailerModule } from '@nestjs-modules/mailer';
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigType } from '@nestjs/config';
+import rabbitmq from './config/rabbitmq';
+import mail from './config/mail';
+import config from './config/config';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
-import mail from '../config/mail';
-import { MailService } from './mail.service';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
-    ConfigModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [rabbitmq, mail, config], // Load all necessary configurations
+    }),
     MailerModule.forRootAsync({
-      imports: [ConfigModule],
       useFactory: async (mailConfig: ConfigType<typeof mail>) => ({
         transport: {
           host: mailConfig.MAIL_HOST,
@@ -36,7 +41,7 @@ import { MailService } from './mail.service';
       inject: [mail.KEY],
     }),
   ],
-  providers: [MailService],
-  exports: [MailService],
+  controllers: [AppController],
+  providers: [AppService],
 })
-export class MailModule {}
+export class AppModule {}

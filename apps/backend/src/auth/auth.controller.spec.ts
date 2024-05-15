@@ -10,11 +10,19 @@ describe('AuthController', () => {
   let controller: AuthController;
   let authRequestHelperMock: Partial<AuthRequestHelper> = {};
 
+  const mockMailService = {
+    send: jest.fn(),
+  };
+
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [JwtModule.register({ secret: 'secret' })],
       controllers: [AuthController],
-      providers: [AuthService, { provide: AuthRequestHelper, useValue: authRequestHelperMock }],
+      providers: [
+        AuthService,
+        { provide: AuthRequestHelper, useValue: authRequestHelperMock },
+        { provide: 'MAIL_SERVICE', useValue: mockMailService },
+      ],
     })
       .useMocker(pipe(mockUndefined, mockConfigs))
       .compile();

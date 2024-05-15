@@ -15,23 +15,21 @@ import { UserModule } from '../src/user/user.module';
 import { patientStub } from '../src/patient/patient.stub';
 import { MinioService } from '../src/minio/minio.service';
 import { doctorStub } from '../src/doctor/doctor.stub';
-import { MailService } from '../src/mail/mail.service';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
-  let mailService;
 
   const mockMailService = {
-    sendPatientSignUpMail: jest.fn(),
-    sendMFACode: jest.fn(),
-    sendEmailChangeMail: jest.fn(),
+    emit: jest.fn(),
+    connect: jest.fn(),
   };
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         UserModule,
+        ConfigModule,
         AuthModule,
         ConfigModule.forRoot({
           isGlobal: true,
@@ -46,7 +44,7 @@ describe('AuthController (e2e)', () => {
     })
       .overrideProvider(MinioService)
       .useValue({})
-      .overrideProvider(MailService)
+      .overrideProvider('MAIL_SERVICE')
       .useValue(mockMailService)
       .useMocker(pipe(mockUndefined))
       .compile();
@@ -72,8 +70,6 @@ describe('AuthController (e2e)', () => {
     await app.init();
 
     prisma = moduleFixture.get<PrismaService>(PrismaService);
-
-    mailService = moduleFixture.get<MailService>(MailService);
   });
 
   afterEach(async () => {
@@ -310,8 +306,8 @@ describe('AuthController (e2e)', () => {
       let token: string;
       /* eslint-disable @typescript-eslint/ban-ts-comment */
       // @ts-ignore
-      mailService.sendPatientSignUpMail = (email: string, firstName: string, verificationToken: string) =>
-        (token = verificationToken);
+      mockMailService.emit = (pattern: { cmd: string }, payload: { to: string; name: string; token: string }) =>
+        (token = payload.token);
 
       await request(app.getHttpServer())
         .post('/auth/signup')
@@ -426,8 +422,12 @@ describe('AuthController (e2e)', () => {
       let token: string;
       /* eslint-disable @typescript-eslint/ban-ts-comment */
       // @ts-ignore
-      mailService.sendEmailChangeMail = (to: string, oldEmail: string, name: string, emailChangeToken: string) =>
-        (token = emailChangeToken);
+      mockMailService.emit = (
+        /* eslint-disable @typescript-eslint/ban-ts-comment */
+        // @ts-ignore
+        pattern: { cmd: string },
+        payload: { to: string; oldEmail: string; name: string; token: string },
+      ) => (token = payload.token);
 
       const newEmail = 'brand.new@test.com';
       await request(app.getHttpServer()).patch(`/user/${user.id}`).send({

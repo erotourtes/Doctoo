@@ -16,6 +16,8 @@ describe('ReviewController', () => {
       controllers: [ReviewController],
       providers: [PrismaService, ReviewService],
     })
+      .overrideProvider('MAIL_SERVICE')
+      .useValue({ send: jest.fn(), emit: jest.fn() })
       .useMocker(pipe(mockConfigs, mockUndefined))
       .compile();
 

@@ -15,6 +15,7 @@ import { Doctor, Patient } from '@prisma/client';
 import { mockUndefined, pipe } from '../src/utils/test-injection-mock';
 import { DeclarationModule } from '../src/declaration/declaration.module';
 import { MinioService } from '../src/minio/minio.service';
+import { UserModule } from '../src/user/user.module';
 
 describe('DeclarationController (e2e)', () => {
   let app: INestApplication;
@@ -28,6 +29,7 @@ describe('DeclarationController (e2e)', () => {
       imports: [
         DeclarationModule,
         AuthModule,
+        UserModule,
         ConfigModule.forRoot({
           isGlobal: true,
           load: [
@@ -41,6 +43,8 @@ describe('DeclarationController (e2e)', () => {
     })
       .overrideProvider(MinioService)
       .useValue({})
+      .overrideProvider('MAIL_SERVICE')
+      .useValue({ connect: jest.fn() })
       .useMocker(pipe(mockUndefined))
       .compile();
 
