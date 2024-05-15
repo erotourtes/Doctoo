@@ -1,35 +1,15 @@
 import { Module } from '@nestjs/common';
-import { VirtualAssistantService } from './virtual-assistant.service';
+import { ConditionModule } from '../condition/condition.module';
+import { DoctorModule } from '../doctor/doctor.module';
+import { PatientModule } from '../patient/patient.module';
+import { PrismaService } from '../prisma/prisma.service';
+import { SpecializationModule } from '../specialization/specialization.module';
 import { VirtualAssistantController } from './virtual-assistant.controller';
-import { ConditionService } from 'src/condition/condition.service';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { DoctorService } from 'src/doctor/doctor.service';
-import { UserService } from 'src/user/user.service';
-import { HospitalService } from 'src/hospital/hospital.service';
-import { SpecializationService } from 'src/specialization/specialization.service';
-import { ReviewService } from 'src/review/review.service';
-import { JwtService } from '@nestjs/jwt';
-import { PatientService } from 'src/patient/patient.service';
-import { DoctorScheduleService } from 'src/doctor/doctor-schedule.service';
-import { TimeSlotService } from 'src/doctor/time-slot.service';
-import { AppointmentService } from 'src/appointment/appointment.service';
+import { VirtualAssistantService } from './virtual-assistant.service';
 
 @Module({
+  imports: [ConditionModule, SpecializationModule, PatientModule, DoctorModule],
   controllers: [VirtualAssistantController],
-  providers: [
-    VirtualAssistantService,
-    DoctorScheduleService,
-    ConditionService,
-    PrismaService,
-    DoctorService,
-    UserService,
-    HospitalService,
-    SpecializationService,
-    ReviewService,
-    JwtService,
-    PatientService,
-    TimeSlotService,
-    AppointmentService,
-  ],
+  providers: [PrismaService, VirtualAssistantService],
 })
 export class VirtualAssistantModule {}

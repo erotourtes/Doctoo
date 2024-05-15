@@ -59,7 +59,7 @@ export class ChatService {
         [participant]: {
           include: {
             user: true,
-            ...([participant === Role.DOCTOR.toLowerCase()]
+            ...(participant === Role.DOCTOR.toLowerCase()
               ? {
                   specializations: {
                     select: {

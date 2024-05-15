@@ -6,5 +6,6 @@ import { ConditionService } from './condition.service';
 @Module({
   controllers: [ConditionController],
   providers: [ConditionService, PrismaService],
+  exports: [ConditionService],
 })
 export class ConditionModule {}

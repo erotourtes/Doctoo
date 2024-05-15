@@ -38,12 +38,12 @@ export function VirtualAssistantChat() {
   }
 
   useEffect(() => {
-    dispatch(getAssistantMessages(id));
+    dispatch(getAssistantMessages());
   }, []);
 
   useEffect(() => {
     if (messages.length === 0 && firstFetch) {
-      dispatch(initializeMessages(id));
+      dispatch(initializeMessages());
       setFirstFetch(false);
     }
   }, [messages]);
