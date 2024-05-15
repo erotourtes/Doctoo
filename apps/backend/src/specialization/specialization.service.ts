@@ -4,10 +4,15 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateSpecializationDto } from './dto/create.dto';
 import { ResponseSpecializationDto } from './dto/response.dto';
 import { UpdateSpecializationDto } from './dto/update.dto';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { KnowledgeBaseUpdatedEvent } from 'src/virtual-assistant/events/knowledge-base-updated.event';
 
 @Injectable()
 export class SpecializationService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private eventEmitter: EventEmitter2,
+  ) {}
 
   async isSpecializationByIdExists(id: string): Promise<boolean> {
     const specialization = await this.prismaService.specialization.findUnique({ where: { id } });
@@ -31,6 +36,8 @@ export class SpecializationService {
     await this.isSpecializationByNameExists(body.name);
 
     const specialization = await this.prismaService.specialization.create({ data: body });
+
+    this.eventEmitter.emit('knowledge.base.update', new KnowledgeBaseUpdatedEvent(process.env.OPENAI_API_ASSISTANT_ID));
 
     return plainToInstance(ResponseSpecializationDto, specialization);
   }

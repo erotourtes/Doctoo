@@ -1,42 +1,45 @@
 import { Injectable } from '@nestjs/common';
-import { plainToInstance } from 'class-transformer';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { ResponseConditionDto } from '../patient/dto/responseCondition.dto';
 import { CreateConditionDto } from './dto/create.dto';
 import { UpdateConditionDto } from './dto/update.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { KnowledgeBaseUpdatedEvent } from '../virtual-assistant/events/knowledge-base-updated.event';
 
 @Injectable()
 export class ConditionService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private eventEmitter: EventEmitter2,
+  ) {}
 
-  async create(createConditionDto: CreateConditionDto): Promise<ResponseConditionDto> {
+  async createCondition(createConditionDto: CreateConditionDto) {
     const condition = await this.prismaService.condition.create({ data: createConditionDto });
 
-    return plainToInstance(ResponseConditionDto, condition);
+    this.eventEmitter.emit('knowledge.base.update', new KnowledgeBaseUpdatedEvent(process.env.OPENAI_API_ASSISTANT_ID));
+
+    return condition;
   }
 
-  async getConditions(): Promise<ResponseConditionDto[]> {
+  async findAllConditions() {
     const conditions = await this.prismaService.condition.findMany();
-
-    return plainToInstance(ResponseConditionDto, conditions);
+    return conditions;
   }
 
-  async getCondition(id: string): Promise<ResponseConditionDto> {
+  async findCondition(id: string) {
     const condition = await this.prismaService.condition.findUnique({ where: { id } });
-
-    return plainToInstance(ResponseConditionDto, condition);
+    return condition;
   }
 
-  async patch(id: string, body: UpdateConditionDto): Promise<ResponseConditionDto> {
+  async updateCondition(id: string, body: UpdateConditionDto) {
     const condition = await this.prismaService.condition.update({
       where: { id },
       data: body,
     });
-
-    return plainToInstance(ResponseConditionDto, condition);
+    return condition;
   }
 
-  async delete(id: string): Promise<void> {
-    await this.prismaService.condition.delete({ where: { id } });
+  async removeCondition(id: string) {
+    const condition = await this.prismaService.condition.delete({ where: { id } });
+    return condition;
   }
 }

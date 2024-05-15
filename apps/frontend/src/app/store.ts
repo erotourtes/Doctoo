@@ -12,6 +12,7 @@ import { userSlice } from './user/UserSlice';
 import { chatSlice } from './chat/ChatSlice';
 import { specializationSlice } from './specialization/SpecializationSlice';
 import { favoriteSlice } from './favorite/FavoriteSlice';
+import assistantSlice from './assistant/AssistantSlice';
 
 export const store = configureStore({
   reducer: {
@@ -28,6 +29,7 @@ export const store = configureStore({
     chat: chatSlice.reducer,
     specialization: specializationSlice.reducer,
     favorite: favoriteSlice.reducer,
+    assistant: assistantSlice,
   },
 });
 

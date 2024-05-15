@@ -6,6 +6,7 @@ import { PrismaService } from '../src/prisma/prisma.service';
 import { UpdateSpecializationDto } from '../src/specialization/dto/update.dto';
 import { SpecializationModule } from '../src/specialization/specialization.module';
 import { specializationStub } from '../src/specialization/specialization.stub';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 describe('SpecializationController (e2e)', () => {
   let app: INestApplication;
@@ -13,7 +14,7 @@ describe('SpecializationController (e2e)', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [SpecializationModule],
+      imports: [SpecializationModule, EventEmitterModule.forRoot()],
       providers: [PrismaService],
     }).compile();
 

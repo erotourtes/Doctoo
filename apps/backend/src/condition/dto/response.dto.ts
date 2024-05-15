@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
+import { IsString } from 'class-validator';
 
 export class ResponseCondtionDto {
-  @ApiProperty({ example: 'f95dad68-4d01-4e9e-b944-6a45ec494502', description: 'Unique condition id.' })
-  @IsNotEmptyString()
+  @ApiProperty({ example: '1', description: 'Condition id' })
+  @IsString()
   readonly id: string;
 
-  @ApiProperty({ example: 'Asthma', description: 'Unique condtion name.' })
-  @IsNotEmptyString()
+  @ApiProperty({ example: 'Asthma', description: 'Condition name' })
+  @IsString()
   readonly name: string;
 }

@@ -41,7 +41,7 @@ export class PatientService {
       include: {
         user: { select: { firstName: true, lastName: true, avatarKey: true } },
         allergies: { select: { allergy: { select: { id: true, name: true } } } },
-        conditions: {
+        PatientCondition: {
           select: {
             condition: {
               select: {
@@ -65,7 +65,7 @@ export class PatientService {
       include: {
         user: { select: { firstName: true, lastName: true, avatarKey: true } },
         allergies: { select: { allergy: { select: { id: true, name: true } } } },
-        conditions: {
+        PatientCondition: {
           select: {
             condition: {
               select: {

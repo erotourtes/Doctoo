@@ -216,7 +216,7 @@ model Patient {
   declaration                Declaration?
   appointments               Appointment[]
   chats                      Chat[]
-  conditions                 PatientCondition[]
+  virtualAssistantChats      AssistantChat[]
   allergies                  PatientAllergy[]
   vaccinations               PatientVaccination[]
   country                    String
@@ -231,6 +231,7 @@ model Patient {
   emailNotificationToggle    Boolean              @default(false) @map("email_notification_toggle")
   requestBillPaymentApproval Boolean              @default(false) @map("request_bill_payment_approval")
   twoFactorAuthToggle        Boolean              @default(false) @map("two_factor_auth_toggle")
+  PatientCondition           PatientCondition[]
 
   @@map("patients")
 }
@@ -344,6 +345,39 @@ model Chat {
 
   @@unique([patientId, doctorId])
   @@map("chats")
+}
+
+model AssistantChat {
+  id               String             @id @default(uuid())
+  Patient          Patient            @relation(fields: [patientId], references: [id])
+  patientId        String
+  AssistantMessage AssistantMessage[]
+
+  @@map("assistant_chats")
+}
+
+enum AssistantMessageRole {
+  USER
+  ASSISTANT
+}
+
+model Prompt {
+  id        String   @id @default(uuid())
+  text      String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("prompts")
+}
+
+model AssistantMessage {
+  id              String               @id @default(uuid())
+  sentAt          DateTime             @default(now()) @map("sent_at")
+  role            AssistantMessageRole @map("role")
+  content         String
+  assistantChatId String               @map("chat_id")
+  assistantChat   AssistantChat        @relation(fields: [assistantChatId], references: [id])
+
+  @@map("assistant_messages")
 }
 
 model ChatMessage {

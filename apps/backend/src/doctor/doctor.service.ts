@@ -8,7 +8,7 @@ import { CreateDoctorDto } from './dto/create.dto';
 import { GetDoctorsQuery } from './dto/get.query';
 import { PatchDoctorDto } from './dto/patch.dto';
 import { ResponseDoctorDto } from './dto/response.dto';
-import { OnEvent } from '@nestjs/event-emitter';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { ReviewUpdatedEvent } from '../review/events/review-updated.event';
 import { ReviewService } from '../review/review.service';
 import { ResponseDoctorListDto } from './dto/response-list.dto';
@@ -25,6 +25,7 @@ export class DoctorService {
     private readonly hospitalService: HospitalService,
     private readonly specializationService: SpecializationService,
     private readonly scheduleService: DoctorScheduleService,
+    private readonly eventEmitter: EventEmitter2,
     @Inject(forwardRef(() => ReviewService)) private readonly reviewService: ReviewService,
   ) {}
 
@@ -42,6 +43,19 @@ export class DoctorService {
     if (doctor) throw new NotFoundException({ message: 'Doctor with this Id already exists.' });
 
     return true;
+  }
+
+  async getAllDoctors(): Promise<ResponseDoctorDto[]> {
+    const doctors = await this.prismaService.doctor.findMany({
+      include: {
+        user: { select: { firstName: true, lastName: true, avatarKey: true } },
+        hospitals: { select: { hospital: true } },
+        specializations: { select: { specialization: true } },
+        _count: { select: { reviews: true } },
+      },
+    });
+
+    return plainToInstance(ResponseDoctorDto, doctors);
   }
 
   async getDoctorByUserId(id: string): Promise<ResponseDoctorDto> {
@@ -99,6 +113,28 @@ export class DoctorService {
     });
 
     return plainToInstance(ResponseDoctorDto, doctor);
+  }
+
+  async getDoctorsBySpecializationId(specializationId: string): Promise<ResponseDoctorDto[]> {
+    const doctors = await this.prismaService.doctorSpecialization.findMany({
+      where: { specializationId },
+      select: {
+        doctor: {
+          include: {
+            user: { select: { firstName: true, lastName: true, avatarKey: true } },
+            hospitals: { select: { hospital: true } },
+            specializations: { select: { specialization: true } },
+          },
+        },
+      },
+    });
+
+    if (!doctors.length) throw new NotFoundException({ message: 'Doctors with this specialization not found.' });
+
+    return plainToInstance(
+      ResponseDoctorDto,
+      doctors.map(d => d.doctor),
+    );
   }
 
   // TODO: refactor, extracting filter mapping logic into separate function/s

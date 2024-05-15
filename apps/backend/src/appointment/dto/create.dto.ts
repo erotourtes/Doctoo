@@ -18,7 +18,7 @@ export class CreateAppointmentDto {
   @IsNotEmptyString()
   @IsISO8601({ strict: true })
   @IsOptional()
-  createdAt: string;
+  createdAt?: string;
 
   @ApiProperty({
     enum: AppointmentStatus,
@@ -34,7 +34,7 @@ export class CreateAppointmentDto {
   })
   @IsOptional()
   @IsNotEmptyString()
-  notes: string;
+  readonly notes?: string;
 
   @ApiPropertyOptional({
     example: '123e4567-e89b-12d3-a456-426614174000',
@@ -43,7 +43,7 @@ export class CreateAppointmentDto {
   @IsOptional()
   @IsNotEmptyString()
   @IsUUID(4)
-  readonly paymentInvoiceKey: string;
+  readonly paymentInvoiceKey?: string;
 
   @ApiPropertyOptional({
     example: '123e4567-e89b-12d3-a456-426614174000',
@@ -52,7 +52,7 @@ export class CreateAppointmentDto {
   @IsOptional()
   @IsNotEmptyString()
   @IsUUID(4)
-  readonly paymentReceiptKey: string;
+  readonly paymentReceiptKey?: string;
 
   @ApiProperty({ description: 'The date and time the appointment started' })
   @IsISO8601({ strict: true })

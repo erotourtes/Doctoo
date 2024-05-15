@@ -3,10 +3,10 @@ import { ConfigModule } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { AllergyModule } from '../allergy/allergy.module';
 import { AppLoggerModule } from '../app-logger/logger.module';
+import { ConditionModule } from '../condition/condition.module';
 import { AppointmentModule } from '../appointment/appointment.module';
 import { AuthModule } from '../auth/auth.module';
 import { ChatModule } from '../chat/chat.module';
-import { ConditionModule } from '../condition/condition.module';
 import auth from '../config/auth';
 import config from '../config/config';
 import mail from '../config/mail';
@@ -23,6 +23,7 @@ import { ReviewModule } from '../review/review.module';
 import { SpecializationModule } from '../specialization/specialization.module';
 import { UserModule } from '../user/user.module';
 import { FhirModule } from '../fhir/fhir.module';
+import { VirtualAssistantModule } from 'src/virtual-assistant/virtual-assistant.module';
 import { VideoSignalingModule } from '../video-signaling/video-signaling.module';
 import rabbitmq from '../config/rabbitmq';
 
@@ -48,6 +49,7 @@ import rabbitmq from '../config/rabbitmq';
     AppLoggerModule,
     NotificationModule,
     FhirModule,
+    VirtualAssistantModule,
     VideoSignalingModule,
   ],
   providers: [MinioService],

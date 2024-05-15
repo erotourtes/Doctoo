@@ -4,6 +4,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateSpecializationDto } from './dto/create.dto';
 import { UpdateSpecializationDto } from './dto/update.dto';
 import { SpecializationService } from './specialization.service';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 describe('SpecializationService', () => {
   let specializationService: SpecializationService;
@@ -11,6 +12,7 @@ describe('SpecializationService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [EventEmitterModule.forRoot()],
       providers: [SpecializationService, PrismaService],
     }).compile();
 

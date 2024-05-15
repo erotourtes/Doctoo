@@ -5,6 +5,7 @@ import { ConditionModule } from '../src/condition/condition.module';
 import { CreateConditionDto } from '../src/condition/dto/create.dto';
 import { UpdateConditionDto } from '../src/condition/dto/update.dto';
 import { PrismaService } from '../src/prisma/prisma.service';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 describe('ConditionController (e2e)', () => {
   let app: INestApplication;
@@ -12,7 +13,7 @@ describe('ConditionController (e2e)', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [ConditionModule],
+      imports: [ConditionModule, EventEmitterModule.forRoot()],
       providers: [PrismaService],
     }).compile();
 
