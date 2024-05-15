@@ -205,7 +205,7 @@ export interface paths {
     get: operations['AppointmentController_getMyAppointments'];
   };
   '/appointment/my/range': {
-    /** Get my current appointment */
+    /** Get my appointment in range */
     get: operations['AppointmentController_getMyRangeAppointments'];
   };
   '/appointment/doctor/all': {
@@ -355,17 +355,11 @@ export interface paths {
     get: operations['NotificationController_getNotificationsForPatient'];
   };
   '/fhir/patient/{patientId}': {
-    /**
-     * Fetch Patient Data
-     * @description Fetches patient data by patient ID.
-     */
+    /** Fetch patient data from FHIR. */
     post: operations['FhirController_fetchPatient'];
   };
   '/fhir/observation/{patientId}': {
-    /**
-     * Fetch Observation Data
-     * @description Fetches observation data for a given patient ID.
-     */
+    /** Fetch observation data from FHIR. */
     post: operations['FhirController_fetchObservation'];
   };
 }
@@ -1974,7 +1968,18 @@ export interface components {
        */
       createdAt: string;
     };
-    CreateFhirDto: Record<string, never>;
+    CreateFhirDto: {
+      /**
+       * @description Full URL adress to FHIR server.
+       * @example https://test.fhir.org/r2
+       */
+      serverUrl: string;
+      /**
+       * @description Special access token.
+       * @example GXGvCIvbJcS2RgQHTIBGb4yzWD4vpreCZH3jybpxJvJDw7SFJCoDCjtVZ3e6UxUA
+       */
+      token: string;
+    };
   };
   responses: never;
   parameters: never;
@@ -3965,7 +3970,7 @@ export interface operations {
       };
     };
   };
-  /** Get my current appointment */
+  /** Get my appointment in range */
   AppointmentController_getMyRangeAppointments: {
     parameters: {
       query?: {
@@ -5242,49 +5247,65 @@ export interface operations {
       };
     };
   };
-  /**
-   * Fetch Patient Data
-   * @description Fetches patient data by patient ID.
-   */
+  /** Fetch patient data from FHIR. */
   FhirController_fetchPatient: {
     parameters: {
       path: {
-        /** @description Unique identifier of the patient */
+        /**
+         * @description Unique patient id.
+         * @example 9b500d16-b81f-4d4f-9dd0-6a8afec98a8a
+         */
         patientId: string;
       };
     };
-    /** @description Payload to specify fetching details or requirements */
     requestBody: {
       content: {
         'application/json': components['schemas']['CreateFhirDto'];
       };
     };
     responses: {
-      201: {
-        content: never;
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
       };
     };
   };
-  /**
-   * Fetch Observation Data
-   * @description Fetches observation data for a given patient ID.
-   */
+  /** Fetch observation data from FHIR. */
   FhirController_fetchObservation: {
     parameters: {
       path: {
-        /** @description Unique identifier of the patient */
+        /**
+         * @description Unique patient id.
+         * @example 9b500d16-b81f-4d4f-9dd0-6a8afec98a8a
+         */
         patientId: string;
       };
     };
-    /** @description Payload to specify observation details or requirements */
     requestBody: {
       content: {
         'application/json': components['schemas']['CreateFhirDto'];
       };
     };
     responses: {
-      201: {
-        content: never;
+      /** @description Response if an error occurs while processing a request. */
+      400: {
+        content: {
+          'application/json': components['schemas']['BadRequestResponse'];
+        };
+      };
+      /** @description Response if an error occurs while processing a request. */
+      500: {
+        content: {
+          'application/json': components['schemas']['ClassicNestResponse'];
+        };
       };
     };
   };

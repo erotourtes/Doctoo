@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import type { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 import type { AppointmentStatus, IAppointment, ICreateAppointment, TAppointment } from '../../dataTypes/Appointment';
 import api from '../api';
 import {
@@ -202,3 +202,21 @@ export const deleteAppointmentById = createAsyncThunk('appointment', async (appo
     handleError(e as Error | AxiosError);
   }
 });
+
+export const updateAppointmentNotes = createAsyncThunk(
+  'appointment/notes',
+  async ({ appointmentId, notes }: { appointmentId: string; notes: string }, { rejectWithValue }) => {
+    try {
+      const { data } = await instance.patch(`/appointment/${appointmentId}/notes`, {
+        notes,
+      });
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        { message: (error as AxiosError).response?.data, code: (error as AxiosError).response?.status } || {
+          message: 'Failed to fetch data',
+        },
+      );
+    }
+  },
+);

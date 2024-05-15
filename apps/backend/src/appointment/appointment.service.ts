@@ -218,13 +218,18 @@ export class AppointmentService {
     return plainToInstance(ResponseAppointmentDto, appointment);
   }
 
-  async updateNotes(actionDoctorId: string, appointmentId: string, dto: UpdateAppointmentNotesDto) {
+  async updateNotes(actionUserId: string, appointmentId: string, dto: UpdateAppointmentNotesDto) {
+    const appointment = await this.getAppointment(appointmentId);
+    const doctor = await this.doctorService.getDoctorByUserId(actionUserId).catch(() => null);
+    const patient = await this.patientService.getPatientByUserId(actionUserId).catch(() => null);
+    if (appointment.doctorId !== doctor?.id && appointment.patientId !== patient?.id) throw new ForbiddenException();
+
     try {
-      const appointment = await this.getAppointment(appointmentId);
-      if (appointment.doctorId !== actionDoctorId) throw new ForbiddenException();
-      const summary = await lastValueFrom(
-        this.summarizerClient.send({ cmd: 'GenerateSummary' }, { text: dto.notes }).pipe(timeout(13000)),
-      );
+      let summary = null;
+      if (dto.notes)
+        summary = await lastValueFrom(
+          this.summarizerClient.send({ cmd: 'GenerateSummary' }, { text: dto.notes }).pipe(timeout(13000)),
+        );
       await this.prismaService.appointment.update({ where: { id: appointmentId }, data: { notesSummary: summary } });
       return plainToInstance(AppointmentNotesReponseDto, { notes: dto.notes, summary });
     } catch (err) {

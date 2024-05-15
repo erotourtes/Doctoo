@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmptyString } from '../../validators/IsNotEmptyString';
+import { IsString } from 'class-validator';
 
 export class UpdateAppointmentNotesDto {
-  @IsNotEmptyString()
   @ApiProperty({ description: 'Clinical notes about the appointment.' })
+  @IsString()
   readonly notes: string;
 }

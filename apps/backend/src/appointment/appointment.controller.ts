@@ -151,8 +151,7 @@ export class AppointmentController {
     return this.appointmentService.patchAppointment(id, body);
   }
 
-  @UseGuards(JWTGuard, RolesGuard)
-  @Role('DOCTOR')
+  @UseGuards(JWTGuard)
   @Patch(':id/notes')
   @ApiOperation({ summary: "Update the appointment's notes " })
   @ApiOkResponse({ type: AppointmentNotesReponseDto, description: RESPONSE_STATUS.SUCCESS })
@@ -161,8 +160,7 @@ export class AppointmentController {
   @ApiParam({ name: 'id', example: '123e4567-e89b-12d3-a456-426614174000', description: 'Unique appointment id.' })
   @ApiBody({ type: UpdateAppointmentNotesDto })
   async updateNotes(@Param('id') id: string, @Body() body: UpdateAppointmentNotesDto, @UserDec() userInfo) {
-    const loginedDoctor = await this.doctorService.getDoctorByUserId(userInfo.id);
-    return this.appointmentService.updateNotes(loginedDoctor.id, id, body);
+    return this.appointmentService.updateNotes(userInfo.id, id, body);
   }
 
   @Delete(':id')

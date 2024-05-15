@@ -9,12 +9,33 @@ export enum AppointmentStatus {
   CANCELED = 'CANCELED',
 }
 
+export interface INotesSummaryItemPosition {
+  start: number;
+  end: number;
+}
+
+export interface IComplaint {
+  name: string;
+  position: INotesSummaryItemPosition;
+}
+
+export interface IBodyPart {
+  name: string;
+  position: INotesSummaryItemPosition;
+}
+
+export interface INotesSummary {
+  complaints: IComplaint[];
+  problematicBodyParts: IBodyPart[];
+}
+
 export interface IAppointment {
   id: string;
   doctorId: string;
   patientId: string;
   createdAt: string;
   notes: string;
+  notesSummary?: INotesSummary | null;
   status?: AppointmentStatus | any;
   videoRecordKey: string;
   paymentInvoiceKey?: string;

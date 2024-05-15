@@ -24,7 +24,7 @@ const CallPopup: FC<{
   const handleOnJoin = () => {
     close();
     navigate(`/video-call/${appointmentId}`, {
-      state: { doctor: user, settings: { withAudioOn: isAudioOn, withVideoOn: isVideoOn } },
+      state: { doctor: user, appointmentId, settings: { withAudioOn: isAudioOn, withVideoOn: isVideoOn } },
     });
   };
 

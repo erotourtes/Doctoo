@@ -3,6 +3,7 @@ import type { AppointmentStatus, IAppointment, TAppointment } from '@/dataTypes/
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAppSlice } from '../createAppSlice';
 import dayjs from 'dayjs';
+import { updateAppointmentNotes } from './AppointmentThunks';
 
 type AppointmentData = {
   appointments: IAppointment[];
@@ -14,6 +15,9 @@ type AppointmentData = {
     starts_work_hour_utc: number;
     ends_work_hour_utc: number;
   };
+
+  isLoading: boolean;
+  error: Error | null;
 };
 
 const initialState: AppointmentData = {
@@ -27,6 +31,8 @@ const initialState: AppointmentData = {
     starts_work_hour_utc: 8,
     ends_work_hour_utc: 15,
   },
+  isLoading: false,
+  error: null,
 };
 
 export const appointmentSlice = createAppSlice({
@@ -76,7 +82,25 @@ export const appointmentSlice = createAppSlice({
     deleteAppointment: (state, action: PayloadAction<string>) => {
       state.appointments = state.appointments.filter(appointment => appointment.id !== action.payload);
     },
+
+    resetError: state => {
+      state.error = null;
+    },
   },
+  extraReducers: builder =>
+    builder
+      .addCase(updateAppointmentNotes.pending, state => {
+        state.isLoading = true;
+      })
+      .addCase(updateAppointmentNotes.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.appointment!.notes = action.payload.notes;
+        state.appointment!.notesSummary = action.payload.summary;
+      })
+      .addCase(updateAppointmentNotes.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error as Error;
+      }),
 });
 
 export const {
@@ -89,6 +113,7 @@ export const {
   setCurrentAppointments,
   setTodayAppointments,
   setWeekAppointments,
+  resetError,
 } = appointmentSlice.actions;
 
 export const appointmentData = (state: RootState) => state.appointment.appointments;

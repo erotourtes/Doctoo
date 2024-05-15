@@ -6,6 +6,7 @@ import { cn } from '../../utils/cn';
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router';
 import { type IDoctor } from '../../dataTypes/Doctor';
 import ImgAvatarKey from '../../components/UI/ImgAvatarKey/ImgAvatarKey';
+import { ClinicalNotes } from '../../components/ClinicalNotes/ClinicalNotes';
 
 export const PatientVideoChatPage = () => {
   const patient = useAppSelector(state => state.patient.data);
@@ -35,6 +36,7 @@ export const PatientVideoChatPage = () => {
       myDisplayName={`${patient.firstName} ${patient.lastName} (You)`}
       withAudioOn={settings.withAudioOn}
       withVideoOn={settings.withVideoOn}
+      appointmentId={state?.appointmentId}
     />
   );
 };
@@ -65,6 +67,7 @@ export const DoctorVideoChatPage = () => {
       myDisplayName={`${doctor.firstName} ${doctor.lastName} (You)`}
       withAudioOn={settings.withAudioOn}
       withVideoOn={settings.withVideoOn}
+      appointmentId={state?.appointmentId}
     />
   );
 };
@@ -78,6 +81,7 @@ interface VideoChatProps {
   memberPrefix?: string;
   withVideoOn?: boolean;
   withAudioOn?: boolean;
+  appointmentId?: string;
 }
 
 const VideoChat: FC<VideoChatProps> = ({
@@ -89,6 +93,7 @@ const VideoChat: FC<VideoChatProps> = ({
   avatarKey,
   withAudioOn = false,
   withVideoOn = false,
+  appointmentId,
 }) => {
   const {
     error,
@@ -226,7 +231,12 @@ const VideoChat: FC<VideoChatProps> = ({
         </div>
       </div>
       {showChat && <div className='sticky top-0 w-[360px] min-w-[360px] bg-background'>Chat</div>}
-      {showNotes && <div className='sticky top-0 w-[360px] min-w-[360px] bg-background'>Notes</div>}
+      {showNotes && (
+        <ClinicalNotes
+          appointmentId={appointmentId!}
+          className='sticky top-0 w-full md:h-[92vh] md:w-[360px] md:min-w-[360px] md:overflow-y-scroll'
+        />
+      )}
 
       <PopupDoctoo
         popupIsOpen={isLeavePopupOpen}
