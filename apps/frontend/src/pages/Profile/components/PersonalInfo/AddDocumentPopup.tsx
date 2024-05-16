@@ -140,14 +140,14 @@ export default function AddDocumentPopup({ isOpen, onClose }: AddDocumentPopupPr
     >
       <p className='text-xl font-medium text-black sm:text-2xl'>
         {' '}
-        {patient.identityCardKey !== '' ? ' Change document ' : 'Add a new document'}
+        {patient.identityCardKey !== null ? ' Change document ' : 'Add a new document'}
       </p>
 
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit as SubmitHandler<FieldValues>)} className='flex flex-col gap-8'>
           {!isNext && (
             <div>
-              {patient.identityCardKey !== '' && <PatientIdentityCardPhoto photoURL={photoURL} />}
+              {patient.identityCardKey && <PatientIdentityCardPhoto photoURL={photoURL} />}
               <Select id='identityCardType' options={options} />
             </div>
           )}
