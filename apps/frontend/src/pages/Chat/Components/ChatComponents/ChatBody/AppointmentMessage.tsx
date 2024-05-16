@@ -1,7 +1,6 @@
-import { Button, Icon } from '@/components/UI';
+import { Icon } from '@/components/UI';
 import type { TMessageAppointment } from '@/dataTypes/Chat';
 import { cn } from '@/utils/cn';
-import { AppointmentStatus } from '@/dataTypes/Appointment';
 import { formatDateChat } from '@/utils/formatDateChat';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { useEffect } from 'react';
@@ -44,14 +43,12 @@ const AppointmentMessage = ({ appointment, className, onClickViewDetails = () =>
         </span>
       </div>
 
-      {appointment?.status === AppointmentStatus.COMPLETED && (
-        <Button type='secondary' className='bg-white'>
-          <div className='flex items-center gap-2'>
-            <Icon variant='download' />
-            <span>Download summary</span>
-          </div>
-        </Button>
-      )}
+      {/* <Button type='secondary' className='bg-white'>
+        <div className='flex items-center gap-2'>
+          <Icon variant='download' />
+          <span>Download summary</span>
+        </div>
+      </Button> */}
     </div>
   );
 };

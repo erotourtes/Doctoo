@@ -1,6 +1,6 @@
 import { cn } from '@/utils/cn';
 import type { ChangeEvent, KeyboardEvent } from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type ChatTextAreaProps = {
   value?: string;
@@ -15,27 +15,37 @@ const ChatTextArea = ({
   handleChange = () => {},
   handleEnterPress = () => {},
 }: ChatTextAreaProps) => {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [textAreaValue, setTextAreaValue] = useState('');
+  const [baseHeight, setBaseHeight] = useState(0);
 
   useEffect(() => {
     setTextAreaValue(value);
   }, [value]);
 
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      setBaseHeight(textarea.offsetHeight);
+    }
+  }, []);
+
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (textarea && baseHeight > 0) {
+      const heightTextArea = textarea?.scrollHeight;
+      if (textAreaValue === '') {
+        textarea.style.height = `${baseHeight}px`;
+      } else {
+        textarea.style.height = `${baseHeight}px`;
+        textarea.style.height = `${Math.min(heightTextArea, baseHeight * 6)}px`;
+      }
+    }
+  }, [textAreaValue, baseHeight]);
+
   const onChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setTextAreaValue(e.target.value);
     handleChange(e.target.value);
-    changeHeightTextArea(e.target);
-  };
-
-  const changeHeightTextArea = (textarea: HTMLTextAreaElement) => {
-    const heightTextArea = textarea.scrollHeight;
-    if (heightTextArea < 120) {
-      textarea.style.height = '';
-      textarea.style.height = textarea.scrollHeight + 2 + 'px';
-    }
-    if (textarea.value === '') {
-      textarea.style.height = '';
-    }
   };
 
   const handleKeyUp = (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -53,6 +63,7 @@ const ChatTextArea = ({
 
   return (
     <textarea
+      ref={textareaRef}
       value={textAreaValue}
       onChange={onChange}
       placeholder='Write a message...'

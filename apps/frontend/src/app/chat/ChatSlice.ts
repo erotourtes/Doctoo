@@ -65,16 +65,17 @@ export const chatSlice = createAppSlice({
     },
 
     openChat: (state, action: PayloadAction<TChat | TChatMessagesSearchResult>) => {
+      if (action.payload.id !== state.openedChat?.id) {
+        state.chatMessages = {
+          messages: [],
+          totalMessages: 0,
+        };
+        state.chatAttachedFiles = {
+          attachments: [],
+          totalAttachments: 0,
+        };
+      }
       state.openedChat = action.payload;
-      state.chatMessages = {
-        messages: [],
-        totalMessages: 0,
-      };
-      state.chatAttachedFiles = {
-        attachments: [],
-        totalAttachments: 0,
-      };
-
       state.isOpenedChat = true;
     },
 

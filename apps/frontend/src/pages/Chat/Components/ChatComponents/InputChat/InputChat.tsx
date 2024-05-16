@@ -28,20 +28,30 @@ const InputChat: React.FC<InputChatProps> = ({
 
   const handleSend = (value: string) => {
     if (value.trim() !== '') {
-      const formData = new FormData();
-      formData.append('text', value);
-      formData.append('sentAt', new Date().toISOString());
-      if (selectedFiles.length > 0) {
-        selectedFiles.forEach(file => {
-          formData.append('files', file);
-        });
+      const messages: string[] = [];
+      let remainingValue = value.trim();
+      while (remainingValue.length > 0) {
+        const message = remainingValue.substring(0, 600);
+        messages.push(message);
+        remainingValue = remainingValue.substring(600);
       }
 
-      const success = onSend(formData);
-      if (success) {
-        setLocalInputValue('');
-        setSelectedFiles([]);
-      }
+      messages.forEach((message, index) => {
+        const formData = new FormData();
+        formData.append('text', message);
+        formData.append('sentAt', new Date().toISOString());
+        if (index === 0 && selectedFiles.length > 0) {
+          selectedFiles.forEach(file => {
+            formData.append('files', file);
+          });
+        }
+
+        const success = onSend(formData);
+        if (success || index === messages.length - 1) {
+          setLocalInputValue('');
+          setSelectedFiles([]);
+        }
+      });
     }
   };
 

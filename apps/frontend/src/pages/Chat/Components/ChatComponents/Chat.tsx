@@ -60,7 +60,7 @@ const Chat = () => {
       <ChatList chats={chats} className={cn(!w1024 ? 'absolute inset-0 z-[1]' : '')} />
 
       <div className='relative flex w-full overflow-hidden'>
-        {!openedChat ? (
+        {!isOpenedChat ? (
           w1024 && (
             <div className='flex flex-1 flex-col items-center justify-center'>
               <div className='italic'>Select a chat to messaging</div>
@@ -69,7 +69,7 @@ const Chat = () => {
         ) : (
           <Fragment>
             <ChatBody
-              chat={openedChat}
+              chat={openedChat!}
               chatMessages={chatMessages}
               className={cn(
                 'border-l border-l-grey-5 max-lg:border-l-0',

@@ -20,6 +20,7 @@ const ChatList = ({ chats, className = '' }: ChatListProps) => {
   const [searchText, setSearchText] = useState('');
   const location = useLocation();
   const openedChat = useAppSelector(state => state.chat.openedChat);
+  const isOpenedChat = useAppSelector(state => state.chat.isOpenedChat);
   const scrolledRef = useRef<HTMLButtonElement>(null);
   const chatListRef = useRef<HTMLDivElement>(null);
 
@@ -60,7 +61,7 @@ const ChatList = ({ chats, className = '' }: ChatListProps) => {
       <React.Fragment key={'chat' + index}>
         <ChatItem
           chat={chatItem}
-          active={openedChat?.id === chatItem.id}
+          active={openedChat?.id === chatItem.id && isOpenedChat}
           ref={openedChat?.id === chatItem.id ? scrolledRef : null}
         />
         {index < chatItems.length - 1 ? <span className='block h-px bg-grey-5'></span> : null}

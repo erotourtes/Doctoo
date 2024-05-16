@@ -13,6 +13,24 @@ type MessageItemProps = {
 
 const MessageItem = React.forwardRef<HTMLDivElement, MessageItemProps>(
   ({ text, sender = 'participant', sentAt, attaches }, ref) => {
+    function splitLongWords(text: string, maxLength: number) {
+      const words = text.split(' ');
+      const newWords = [];
+
+      for (const word of words) {
+        if (word.length > maxLength) {
+          const chunks = word.match(new RegExp('.{1,' + maxLength + '}', 'g'));
+          newWords.push(...chunks!.map(chunk => chunk + '\n'));
+        } else {
+          newWords.push(word);
+        }
+      }
+
+      return newWords.join(' ');
+    }
+    const maxLength = 45;
+    const splitText = splitLongWords(text, maxLength);
+
     return (
       <div
         ref={ref}
@@ -24,7 +42,7 @@ const MessageItem = React.forwardRef<HTMLDivElement, MessageItemProps>(
             sender !== 'participant' ? 'bg-main' : 'bg-white',
           )}
         >
-          <pre className='text w-full whitespace-normal break-words font-sans text-base'>{text}</pre>
+          <pre className='text w-full whitespace-pre-wrap font-sans text-base'>{splitText}</pre>
           {attaches && attaches.length > 0 && (
             <div className='grid gap-2'>
               {attaches.map((attach, index) => {
@@ -47,7 +65,7 @@ const MessageItem = React.forwardRef<HTMLDivElement, MessageItemProps>(
             </div>
           )}
         </div>
-        <span className='text-xs text-grey-2'>{DayJS(sentAt).format('hh:mm a')}</span>
+        <span className='text-xs text-grey-2'>{DayJS.utc(sentAt).format('hh:mm a')}</span>
       </div>
     );
   },
