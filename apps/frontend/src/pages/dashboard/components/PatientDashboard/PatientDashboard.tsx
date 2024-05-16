@@ -43,7 +43,7 @@ const PatientDashboard = () => {
     .slice(0, 5);
 
   const findDoctor = () => {
-    navigate(`/doctors?search=${encodeURIComponent(search)}`);
+    navigate(`/doctors${search ? `?search=${encodeURIComponent(search)}` : ''}`);
   };
 
   return (

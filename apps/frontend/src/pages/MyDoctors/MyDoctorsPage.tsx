@@ -5,7 +5,6 @@ import { InputSearch } from '@/components/UI';
 import { Button } from '@/components/UI/Button/Button';
 import { Calendar } from '@/components/UI/Calendar/Calendar';
 import useWindowWide from '@/hooks/useWindowWide';
-import { fn } from '@storybook/test';
 import dayjs from 'dayjs';
 import { useEffect, useReducer, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -41,7 +40,7 @@ const MyDoctorsPage = () => {
   }
 
   const findDoctor = () => {
-    navigate(`/doctors?search=${encodeURIComponent(searchValue)}`);
+    navigate(`/doctors${searchValue ? `?search=${encodeURIComponent(searchValue)}` : ''}`);
   };
 
   return (
@@ -81,7 +80,7 @@ const MyDoctorsPage = () => {
                   Your doctors will be displayed here. Let’s find one and book <br /> appointment
                 </span>
                 <span>
-                  <Button type={'secondary'} onClick={fn()}>
+                  <Button type={'secondary'} onClick={() => navigate('/doctors')}>
                     Find
                   </Button>
                 </span>

@@ -24,10 +24,10 @@ export const FindDoctorsPage = () => {
   const { doctors, totalCount } = useAppSelector(state => state.doctor);
   const [filters, setFilters] = useState<DoctorFilters>({});
   const dispatch = useAppDispatch();
-  const [search, setSearch] = useState(searchParams.get('search'));
+  const [search, setSearch] = useState(searchParams.get('search') || null);
 
   useEffect(() => {
-    dispatch(getDoctorData({ search: search !== null ? search : undefined, page, ...filters }));
+    dispatch(getDoctorData({ search: search && search !== null ? search : undefined, page, ...filters }));
   }, [search, page, filters, appointments]);
 
   useEffect(() => {

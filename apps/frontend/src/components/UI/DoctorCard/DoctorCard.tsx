@@ -57,9 +57,9 @@ function ImageWithFavorite({ doctorId, url, isFavorite, alt }: ImageWithFavorite
   const dispatch = useAppDispatch();
   return (
     <div className='group relative col-span-1 row-span-4 aspect-square h-[112px]'>
-      <img
-        src={url !== '' ? `${import.meta.env.VITE_S3_BASE_URL}/${url}` : ''}
-        className='aspect-square rounded-lg object-cover'
+      <ImgAvatarKey
+        avatarKey={url}
+        className='col-span-1 row-span-4 aspect-square h-[112px] rounded-lg object-cover'
         alt={alt || "Doctor's image"}
       />
       <div className='absolute left-0 top-0 flex h-full w-full items-end justify-end rounded-lg bg-semi-transparent opacity-0 transition duration-300 group-hover:opacity-100'>
@@ -174,6 +174,7 @@ type TimeSlotsProps = {
 };
 
 function TimeSlots({ timestamps, onClickSlot, onClickMore, wrapperClassName, slotButtonClassName }: TimeSlotsProps) {
+  if (!timestamps?.length) return null;
   let countToShow = 0;
   if (timestamps.length <= 3) countToShow = timestamps.length;
   else if (timestamps.length === 4) countToShow = timestamps.length;
@@ -191,20 +192,22 @@ function TimeSlots({ timestamps, onClickSlot, onClickMore, wrapperClassName, slo
       <div
         className={`grid ${timestamps.length > 2 ? 'grid-rows-2' : 'grid-rows-1 md:grid-cols-1'} ${timestamps.length === 1 ? 'grid-cols-1' : 'grid-cols-2'} gap-2 whitespace-nowrap`}
       >
-        {timestamps.slice(0, countToShow).map((timestamp, i) => (
-          <Button
-            key={i}
-            type='secondary'
-            className={cn(
-              `min-w-fit px-0 sm:min-w-16 lg:w-28 ${i === 2 && timestamps.length === 3 ? 'lg:col-start-2' : ''}`,
-              slotButtonClassName,
-            )}
-            onClick={() => onClickSlot(i)}
-            disabled={false}
-          >
-            {timestampToHoursMinutes(timestamp)}
-          </Button>
-        ))}
+        {timestamps.length
+          ? timestamps.slice(0, countToShow).map((timestamp, i) => (
+              <Button
+                key={i}
+                type='secondary'
+                className={cn(
+                  `min-w-fit px-0 sm:min-w-16 lg:w-28 ${i === 2 && timestamps.length === 3 ? 'lg:col-start-2' : ''}`,
+                  slotButtonClassName,
+                )}
+                onClick={() => onClickSlot(i)}
+                disabled={false}
+              >
+                {timestampToHoursMinutes(timestamp)}
+              </Button>
+            ))
+          : null}
 
         {timestamps.length > 4 ? (
           <Button
