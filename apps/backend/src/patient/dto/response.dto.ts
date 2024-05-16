@@ -122,7 +122,9 @@ export class ResponsePatientDto {
 
   @Expose()
   @Transform(({ obj }) =>
-    obj.conditions ? obj.conditions.map(condition => condition.condition as Condition) : ([] as Condition[]),
+    obj.PatientCondition
+      ? obj.PatientCondition.map(condition => condition.condition as Condition)
+      : ([] as Condition[]),
   )
   @ApiProperty({
     type: ResponseConditionDto,

@@ -115,7 +115,7 @@ export class PatientService {
 
   async createPatientAllergies(id: string, body: CreatePatientAllergyDto): Promise<ResponsePatientAllergyDto> {
     const isAllergiesAdded = await this.prismaService.patientAllergy.findMany({
-      where: { id: { in: body.allergyIds } },
+      where: { allergyId: { in: body.allergyIds } },
     });
 
     if (isAllergiesAdded.length) {
@@ -132,7 +132,7 @@ export class PatientService {
 
   async createPatientConditions(id: string, body: CreatePatientConditionDto): Promise<ResponsePatientConditionsDto> {
     const isConditionsAdded = await this.prismaService.patientCondition.findMany({
-      where: { id: { in: body.conditionIds } },
+      where: { conditionId: { in: body.conditionIds } },
     });
 
     if (isConditionsAdded.length)
