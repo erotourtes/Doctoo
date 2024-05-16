@@ -236,7 +236,10 @@ export class AuthService {
         password: await this.hashPassword(body.password),
       });
 
-      const token = await this.jwtService.signAsync({ sub: existingUser.id }, { expiresIn: '1d' });
+      const token = await this.jwtService.signAsync(
+        { sub: existingUser.id },
+        { expiresIn: this.authObject.JWT_EXPIRATION_DAYS },
+      );
       this.mailClient.emit(
         { cmd: 'SendPatientSignUpMail' },
         { to: existingUser.email, name: existingUser.firstName, token: token },
