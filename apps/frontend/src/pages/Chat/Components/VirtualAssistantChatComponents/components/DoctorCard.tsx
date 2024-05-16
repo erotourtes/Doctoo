@@ -1,5 +1,5 @@
 import { useAppSelector } from '@/app/hooks';
-import { Button } from '@/components/UI';
+import { Button, ImgAvatarKey } from '@/components/UI';
 import Schedule from '@/components/UI/Schedule/Schedule';
 import type { IDoctor } from '@/dataTypes/Doctor';
 import { capitalizeString } from '@/utils/capitalizeString';
@@ -16,11 +16,7 @@ export default function DoctorCard({ doctor }: { doctor: IDoctor }) {
   return (
     <div className='flex h-fit w-full items-center justify-between rounded-lg bg-white p-5'>
       <div className='flex h-fit items-center justify-center gap-4'>
-        <img
-          src={`${import.meta.env.VITE_S3_BASE_URL}/${avatarKey}`}
-          alt='Doctor photo'
-          className='aspect-square w-12 shrink-0'
-        />
+        <ImgAvatarKey avatarKey={avatarKey} className='aspect-square w-12 shrink-0 rounded' />
         <div className='font-medium text-black'>
           {capitalizeString(firstName ?? '')} {capitalizeString(lastName ?? '')} (
           {capitalizeString(doctor.specializations[0].name)})

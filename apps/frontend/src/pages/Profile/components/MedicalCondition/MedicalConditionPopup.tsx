@@ -92,6 +92,7 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
                 onClick={() => {
                   setSelectedConditions(prev => [...prev, condition]);
                   setAllConditions(prev => prev.filter(c => c.id !== condition.id));
+                  setConditionInput('');
                   setSuggestedConditions([]);
                 }}
               />
@@ -146,6 +147,7 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
                 onClick={() => {
                   setSelectedAllergies(prev => [...prev, allergy]);
                   setAllAllergies(prev => prev.filter(c => c.id !== allergy.id));
+                  setAllergyInput('');
                   setSuggestedAllergies([]);
                 }}
               />
@@ -169,11 +171,9 @@ const MedicalConditionPopup = ({ isOpen, onClose }: MedicalConditionPopupProps) 
             onClick={() => {
               if (selectedConditions.length !== 0) {
                 dispatch(createPatientConditions({ id: patient.id, body: selectedConditions }));
-                setConditionInput('');
               }
               if (selectedAllergies.length !== 0) {
                 dispatch(createPatientAllergies({ body: selectedAllergies, id: patient.id }));
-                setAllergyInput('');
               }
               onClose();
             }}
