@@ -13,7 +13,7 @@ const VideoChatEnd = () => {
   const [selectedRating, setSelectedRating] = useState<number>(0);
   const dispatch = useAppDispatch();
   const { state } = useLocation();
-  const doctor = state?.doctor as IDoctor;
+  const doctor = state?.doctor?.data as IDoctor;
   const { conferenceId } = useParams();
   if (!doctor || !conferenceId) return <Navigate to='/dashboard' replace />;
 

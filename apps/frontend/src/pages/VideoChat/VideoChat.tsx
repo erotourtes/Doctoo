@@ -303,7 +303,7 @@ const VideoComponent = forwardRef<HTMLVideoElement, VideoComponentProps>(
   ({ isSpeaking, name, showSubtitles = false, isHidden = false, muted = false, isVideoOn = true, avatarKey }, ref) => {
     return (
       <div className={cn('flex flex-1 items-center justify-center', isHidden ? 'hidden' : 'block')}>
-        <div className='relative w-4/5 md:w-full'>
+        <div className='relative m-auto aspect-video max-h-[calc(100vh-250px)]'>
           <div className='absolute left-0 top-0 z-10 rounded-xl bg-main p-2'>
             <p className='text-white'>{name}</p>
           </div>
@@ -319,14 +319,14 @@ const VideoComponent = forwardRef<HTMLVideoElement, VideoComponentProps>(
             playsInline
             muted={muted}
             className={cn(
-              'aspect-video w-full rounded-xl border-4 bg-black  object-cover',
+              'aspect-video h-full w-full rounded-xl border-4 bg-black  object-cover',
               isSpeaking ? 'border-main' : 'border-transparent',
               isVideoOn ? 'block' : 'hidden',
             )}
           />
           <div
             className={cn(
-              'aspect-video w-full rounded-xl border-4 bg-black object-cover',
+              'aspect-video h-full w-full rounded-xl border-4 bg-black object-cover',
               isSpeaking ? 'border-main' : 'border-transparent',
               !isVideoOn ? 'flex items-center justify-center ' : 'hidden',
             )}

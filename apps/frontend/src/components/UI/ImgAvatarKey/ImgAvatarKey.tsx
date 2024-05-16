@@ -26,7 +26,7 @@ const ImgAvatarKey: FC<{
   if (hasBackground) {
     return (
       <div className={cn('aspect-square h-3/5 rounded-xl bg-black-2 p-5 text-grey-4')}>
-        <Icon variant='account' className={cn('aspect-square h-full w-full text-main', className)} />;
+        <Icon variant='account' className={cn('aspect-square h-full w-full text-main', className)} />
       </div>
     );
   }

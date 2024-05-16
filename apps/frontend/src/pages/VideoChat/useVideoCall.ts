@@ -4,12 +4,12 @@ import { type UserCombined, VideoSignalingChannel } from './SignalingChannel';
 const defConfig = {
   iceServers: [
     {
-      urls: [
-        'stun:stun.l.google.com',
-        'stun:stun1.l.google.com:19302',
-        'stun:stun2.l.google.com:19302',
-        'stun:stun3.l.google.com:19302',
-      ],
+      urls: ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'],
+    },
+    {
+      urls: ['turn:numb.viagenie.ca'],
+      credential: 'muazkh',
+      username: 'webrtc@live.com',
     },
   ],
   iceCandidatePoolSize: 10,
@@ -81,7 +81,11 @@ export const useVideoCall = ({ conferenceId, conf = defConfig, withAudioOn, with
         if (user) return prev;
         return [...prev, joinedUser];
       });
-      signalingChannelRef.current!.sendVideoState({ conferenceId, isVideoOn });
+
+      setIsVideoOn(prev => {
+        signalingChannelRef.current!.sendVideoState({ conferenceId, isVideoOn: prev });
+        return prev;
+      });
     });
 
     signalingChannelRef.current.onMemberLeft(leftUserId => {
