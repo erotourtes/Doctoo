@@ -12,7 +12,7 @@ export default function NearestAppointmentsComponent({ appointments }: Appointme
   const navigate = useNavigate();
   return (
     <>
-      <div className='h-min-[306px] flex w-full flex-col gap-7 rounded-xl bg-white px-2 sm:p-6'>
+      <div className='flex min-h-[306px] w-full flex-col gap-7 rounded-xl bg-white px-2 sm:p-6 lg:min-h-[350px] xl:min-h-[600px]'>
         <h3 className='text-lg'>Nearest appointments</h3>
         {appointments?.length > 0 ? (
           appointments

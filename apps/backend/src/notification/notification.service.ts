@@ -126,7 +126,7 @@ export class NotificationService {
         break;
       case 'payment':
         notification.action = {
-          in: ['INVOICE_RECEIVED', 'PAYMENT_SUCCESSFUL'],
+          in: ['NEW_APPOINTMENT', 'INVOICE_RECEIVED', 'PAYMENT_SUCCESSFUL'],
         };
         break;
       case 'message':

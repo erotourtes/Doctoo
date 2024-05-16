@@ -33,7 +33,7 @@
     "frontend:lint": "pnpm -F @internship-2024-doctoo/frontend lint",
     "format": "pnpm -r format",
     "lint": "pnpm -r lint",
-    "build": "pnpm -r build",
+    "build": "pnpm -r --workspace-concurrency=1 build",
     "prepare": "husky",
     "docker:up": "docker compose -f docker-compose.dev.yaml --env-file=.env.dev up -d",
     "docker:down": "docker compose -f docker-compose.dev.yaml --env-file=.env.dev down"

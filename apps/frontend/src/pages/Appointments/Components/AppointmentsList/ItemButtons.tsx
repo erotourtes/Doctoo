@@ -1,6 +1,5 @@
-import { changeAppointmentStatus } from '@/app/appointment/AppointmentThunks';
+import { changeAppointmentStatus, getAppointment } from '@/app/appointment/AppointmentThunks';
 import { useAppDispatch } from '@/app/hooks';
-import { setPaymentData } from '@/app/payment/paymentSlice';
 import { PopupDoctoo } from '@/components/UI';
 import { Button } from '@/components/UI/Button/Button';
 import type { IAppointment } from '@/dataTypes/Appointment';
@@ -25,24 +24,13 @@ export default function AppointmentButtons({
 }: AppointmentButtonsProps) {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { status, id, doctor, startedAt } = appointment;
-
-  const data = {
-    appointmentId: id,
-    status: 'planned',
-    date: startedAt,
-    doctorName: `Dr. ${doctor?.firstName} ${doctor?.lastName}`,
-    doctorSpecialization: doctor?.specializations || [],
-    appointmentDuration: 1,
-    pricePerHour: doctor?.payrate || 0,
-  };
+  const { status, id } = appointment;
 
   const [approve, setApprove] = useState(false);
 
-  function navigateToPayment() {
-    navigate('/payment');
-    dispatch(setPaymentData({ data }));
-    if (componentName === 'popup' && closePopup) closePopup();
+  async function navigateToPayment() {
+    navigate(`/payment/${id}`);
+    await dispatch(getAppointment(id));
   }
 
   function enableApproveButton(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {

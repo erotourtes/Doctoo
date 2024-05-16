@@ -26,6 +26,11 @@ const patientMenuItems: MenuItemsProps[] = [
     text: 'Dashboard',
   },
   {
+    to: 'notifications',
+    iconVariant: 'notifications',
+    text: 'Notifications',
+  },
+  {
     to: '/appointments',
     iconVariant: 'appointments',
     text: 'Appointments',

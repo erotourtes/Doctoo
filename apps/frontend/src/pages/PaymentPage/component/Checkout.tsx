@@ -1,15 +1,19 @@
 import dayjs from 'dayjs';
 import { useAppSelector } from '@/app/hooks';
-import Icon from '@/components/UI/Icon/Icon';
-import Tag from '@/components/UI/Tag/Tag';
+import { getHourDifference } from '@/utils/getHourDifference';
+import type { IAppointment } from '@/dataTypes/Appointment';
+import { AppointmentStatus } from '@/dataTypes/Appointment';
+import { Icon, Tag } from '@/components/UI';
 
 export const Checkout = () => {
-  const { date, status, doctorSpecialization, doctorName, appointmentDuration, pricePerHour } = useAppSelector(
-    state => state.payment.data,
-  );
+  const { status, doctor, startedAt, endedAt } = useAppSelector(state => state.appointment.appointment) as IAppointment;
 
-  const formattedDate = dayjs(date).format('MMM D, h:mm a');
-  const selectedSpecialization = doctorSpecialization[0].name || 'doctor';
+  const doctorName = `Dr. ${doctor?.firstName} ${doctor?.lastName}`;
+  const formattedDate = dayjs(startedAt).format('MMM D, h:mm a');
+  const doctorSpecializations = doctor?.specializations.map(item => item.name).join(', ');
+  const appointmentDuration = getHourDifference(startedAt, endedAt);
+  const pricePerHour = doctor?.payrate || 0;
+  const appointmentStatus = status === AppointmentStatus.PENDING_PAYMENT ? 'waiting for payment' : '';
 
   return (
     <>
@@ -18,8 +22,11 @@ export const Checkout = () => {
           <Icon variant='date' className='text-main' />
           <p className='text-lg font-semibold leading-6'>{formattedDate}</p>
         </div>
-        <p className='mb-2 font-medium'>{`${doctorName} (${selectedSpecialization})`}</p>
-        <Tag icon={false} text={status} />
+        <p className='mb-2 font-medium'>
+          {doctorName} <br />
+          <span className='lowercase'>({doctorSpecializations})</span>
+        </p>
+        <Tag icon={false} text={appointmentStatus} />
       </div>
 
       <div className='grid w-full gap-2'>

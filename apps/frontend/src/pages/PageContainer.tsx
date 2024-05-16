@@ -26,6 +26,7 @@ import { DoctorVideoChatPage, PatientVideoChatPage } from './VideoChat/VideoChat
 import VideoChatEnd from './VideoChat/VideoChatEnd';
 import LaunchPage from './LaunchPhir/launch';
 import NotFoundPage from './NotFound/NotFoundPage';
+import { AngularWrapper } from '@/angular-module/AngularWrapper';
 import { SchedulePopupProvider } from '@/hooks/popups/useSchedulePopup';
 import { AppointmentPopupProvider } from '@/hooks/popups/useAppointmentPopup';
 
@@ -36,11 +37,8 @@ const PatientPages = () => {
         <Route path='/profile' Component={ProfilePage} />
         <Route path='/dashboard' Component={PatientDashboard} />
         <Route path='/settings' Component={Settings} />
-        <Route path='/payment' Component={PaymentPage} />
+        <Route path='/payment/:appointmentId' Component={PaymentPage} />
         <Route path='/my-doctors' Component={MyDoctorsPage} />
-        <Route path='/calendar' Component={CalendarPage} />
-        <Route path='/reviews' Component={ReviewsPage} />
-        <Route path='/appointments' Component={AppointmentsPage} />
         <Route path='/logout' Component={LogoutPage} />
 
         <Route path='/video-call/:conferenceId' Component={PatientVideoChatPage} />
@@ -50,6 +48,15 @@ const PatientPages = () => {
         <Route path='/chats/my' Component={ChatPage} />
         <Route path='/chats/assistant' Component={ChatPage} />
         <Route path='/doctors' Component={FindDoctorsPage} />
+
+        <Route path='/calendar' Component={CalendarPage} />
+        <Route path='/reviews' Component={ReviewsPage} />
+        <Route path='/appointments' Component={AppointmentsPage} />
+
+        {/* <Route path='/calendar' element={<AngularWrapper path='calendar' />} />
+        <Route path='/appointments' element={<AngularWrapper path='appointments' />} />
+        <Route path='/reviews' element={<AngularWrapper path='reviews' />} /> */}
+        <Route path='/notifications' element={<AngularWrapper path='notifications' />} />
 
         <Route path='*' element={<Navigate to={'/404'} />} />
       </Route>
@@ -64,7 +71,7 @@ const DoctorPages = () => {
         <Route path='/profile' Component={ProfilePage} />
         <Route path='/dashboard' Component={DoctorDashboard} />
         <Route path='/settings' Component={Settings} />
-        <Route path='/payment' Component={PaymentPage} />
+        {/* <Route path='/payment' Component={PaymentPage} /> */}
         <Route path='/calendar' Component={CalendarPage} />
         <Route path='/reviews' Component={ReviewsPage} />
         <Route path='/appointments' Component={AppointmentsPage} />

@@ -44,3 +44,5 @@ dist
 .dynamodb/
 .tern-port
 storybook-static/
+apps/frontend/angular/
+apps/angular/.nx/

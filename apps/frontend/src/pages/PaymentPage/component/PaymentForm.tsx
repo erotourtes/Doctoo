@@ -10,6 +10,7 @@ import { Button, Icon, Checkbox, RadioButton } from '@/components/UI';
 import { NewPaymentCardForm } from './NewPaymentCardForm';
 import { Checkout } from './Checkout';
 import { PaymentPopup } from './PaymentPopup';
+import type { IAppointment } from '@/dataTypes/Appointment';
 
 const schema = Joi.object({
   cardholderName: Joi.string()
@@ -23,7 +24,7 @@ export const PaymentForm = () => {
   const elements = useElements();
 
   const dispatch = useAppDispatch();
-  const { appointmentId } = useAppSelector(state => state.payment.data);
+  const { id: appointmentId } = useAppSelector(state => state.appointment.appointment) as IAppointment;
 
   const [isSuccessfulPayment, setIsSuccessfulPayment] = useState<boolean>(false);
   const [paymentDetails, setPaymentDetails] = useState({ id: '', created: 0 });

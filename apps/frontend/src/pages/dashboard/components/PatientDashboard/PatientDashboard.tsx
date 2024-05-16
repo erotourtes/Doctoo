@@ -8,7 +8,6 @@ import { getMyAppointments } from '@/app/appointment/AppointmentThunks';
 import PageHeader from '@/pages/PageHeader';
 import MyDoctorsCard from '../MyDoctorsCard/MyDoctorsCard';
 import NearestAppointmentsComponent from '../NerestAppointmentsCard/NearestAppointments';
-import NotificationsComponent from '../NotificationsComponent/NotificationsComponent';
 import { getMyDoctorData } from '@/app/doctor/DoctorThunks';
 import useWindowWide from '@/hooks/useWindowWide';
 import { useNavigate } from 'react-router';
@@ -71,7 +70,7 @@ const PatientDashboard = () => {
       <div className='flex flex-col gap-6 lg:flex-row'>
         <section className='flex w-full flex-col gap-6 bg-background'>
           <NearestAppointmentsComponent appointments={nearestAppointments} />
-          <NotificationsComponent />
+          {/* <NotificationsComponent /> */}
         </section>
         <section className='flex flex-col gap-6'>
           <Calendar

@@ -4,6 +4,8 @@ import { useAppSelector } from '@/app/hooks';
 import { ReceiptPDF } from './ReceiptPDF';
 import { Button, Icon, PopupDoctoo, Spinner } from '@/components/UI';
 import { cn } from '@/utils/cn';
+import type { IAppointment } from '@/dataTypes/Appointment';
+import { getHourDifference } from '@/utils/getHourDifference';
 
 interface PaymentPopupProps {
   isOpenModal: boolean;
@@ -23,8 +25,10 @@ export const PaymentPopup = ({
   paymentDetails,
   isLoading,
 }: PaymentPopupProps) => {
-  const { doctorName, appointmentDuration, pricePerHour } = useAppSelector(state => state.payment.data);
   const navigate = useNavigate();
+  const { doctor, startedAt, endedAt } = useAppSelector(state => state.appointment.appointment) as IAppointment;
+  const doctorName = `Dr. ${doctor?.firstName} ${doctor?.lastName}`;
+  const appointmentDuration = getHourDifference(startedAt, endedAt);
 
   const navigateBack = () => {
     navigate('/dashboard');
@@ -58,7 +62,7 @@ export const PaymentPopup = ({
                     date={paymentDetails.created}
                     doctorName={doctorName}
                     appointmentDuration={appointmentDuration}
-                    pricePerHour={pricePerHour}
+                    pricePerHour={doctor?.payrate || 0}
                   />
                 }
                 fileName='document.pdf'

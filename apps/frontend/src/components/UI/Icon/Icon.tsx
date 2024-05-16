@@ -42,6 +42,7 @@ import ShevronMiniClosedIcon from '@assets/icons/shevron-mini-closed.svg?react';
 import ShevronMiniOpenIcon from '@assets/icons/shevron-mini-open.svg?react';
 
 // Notification Icons
+import NotificationsIcon from '@assets/icons/notifications.svg?react';
 import WarningIcon from '@assets/icons/warning.svg?react';
 import ValidIcon from '@assets/icons/valid.svg?react';
 
@@ -152,6 +153,7 @@ const IconVariants = {
   'location-target': LocationTargetIcon,
   'share-screen': ShareScreenIcon,
   age: ClockIcon,
+  notifications: NotificationsIcon,
 };
 
 const Icon: React.FunctionComponent<IconProps> = ({ variant, ...props }) => {

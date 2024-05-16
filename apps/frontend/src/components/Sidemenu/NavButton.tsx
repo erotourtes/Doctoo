@@ -36,6 +36,7 @@ const NavButton: React.FunctionComponent<NavButtonProps> = ({
           'size-6 transition-all',
           selected && 'text-main',
           !selected && 'text-white group-hover:text-white',
+          iconVariant === 'notifications' && 'h-[26px] w-[26px]',
         )}
       />
       {variant !== 'small' && (
