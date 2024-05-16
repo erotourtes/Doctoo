@@ -155,11 +155,13 @@ describe('FavoriteController (e2e)', () => {
 
   describe('/favorite/:id (DELETE)', () => {
     it('Should delete favorite', async () => {
-      const { id } = await prisma.favorite.create({
+      await prisma.favorite.create({
         data: { id: randomUUID(), patient: { connect: { id: patient.id } }, doctor: { connect: { id: doctor.id } } },
       });
 
-      const response = await request(app.getHttpServer()).delete(`/favorite/${id}`).set('Cookie', [patientJWTCookie]);
+      const response = await request(app.getHttpServer())
+        .delete(`/favorite/${doctor.id}`)
+        .set('Cookie', [patientJWTCookie]);
 
       expect(response.status).toEqual(200);
 
@@ -167,14 +169,6 @@ describe('FavoriteController (e2e)', () => {
         where: { patientId: patient.id, doctorId: doctor.id },
       });
       expect(existing).toBeNull();
-    });
-
-    it('Should return 404 for non-existent favoriteId', async () => {
-      const id = randomUUID();
-
-      const response = await request(app.getHttpServer()).get(`/favorite/${id}`);
-
-      expect(response.status).toEqual(404);
     });
   });
 

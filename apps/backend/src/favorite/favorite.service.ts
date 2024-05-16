@@ -53,7 +53,10 @@ export class FavoriteService {
     return plainToInstance(ResponseFavoriteDto, favorite);
   }
 
-  async deleteFavorite(id: string): Promise<void> {
-    await this.prismaService.favorite.delete({ where: { id: id } });
+  async deleteFavorite(actionPatientId: string, doctorId: string): Promise<void> {
+    await this.prismaService.favorite.delete({
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      where: { doctorId_patientId: { doctorId, patientId: actionPatientId } },
+    });
   }
 }

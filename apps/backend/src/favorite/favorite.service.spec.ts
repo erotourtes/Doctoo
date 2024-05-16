@@ -85,7 +85,7 @@ describe('FavoriteService', () => {
       },
     });
 
-    await service.deleteFavorite(favorite.id);
+    await service.deleteFavorite(patient.id, doctor.id);
 
     const expected = await prisma.favorite.findUnique({
       where: { id: favorite.id },
