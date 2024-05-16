@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useAppSelector } from '@/app/hooks';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@UI/index';
@@ -12,29 +11,23 @@ type AppointmentCardProps = {
 
 export default function MyDoctorsCard({ doctors }: AppointmentCardProps) {
   const navigate = useNavigate();
-  const [selectedDoctor, setSelectedDoctor] = useState<IDoctor | undefined>(undefined);
   const patient = useAppSelector(state => state.patient.data);
 
   const { openPopup } = useSchedulePopup();
 
-  useEffect(() => {
-    if (!selectedDoctor) return;
-    openSchedule();
-  }, [selectedDoctor]);
-
-  function openSchedule() {
+  function openSchedule(doctor: IDoctor) {
     openPopup({
       scheduleInfo: {
         patientId: patient.id,
-        doctorId: selectedDoctor!.id,
-        doctor: selectedDoctor!,
+        doctorId: doctor!.id,
+        doctor: doctor!,
         reviews: [],
       },
     });
   }
 
-  function handleSelectDoctor(doctorId: string) {
-    setSelectedDoctor(doctors!.find(d => d.id === doctorId));
+  function handleSelectDoctor(doctor: IDoctor) {
+    openSchedule(doctor);
   }
 
   return (
@@ -58,19 +51,19 @@ export default function MyDoctorsCard({ doctors }: AppointmentCardProps) {
         </div>
         {doctors && doctors?.length > 0 ? (
           <div className='flex flex-col'>
-            {doctors
-              ?.slice(0, 2)
-              .map((doctor: IDoctor, key: number) => (
-                <ShortInfoCard
-                  onClick={handleSelectDoctor}
-                  fullName={`Dr. ${doctor.firstName + ' ' + doctor.lastName}`}
-                  about={doctor.specializations.map(specialization => specialization.name).join(', ')}
-                  avatarKey={doctor.avatarKey}
-                  classNames='bg-background w-full rounded-xl mb-[14px] cursor-pointer hover:bg-[#cadbe6]'
-                  key={key}
-                  id={doctor.id}
-                />
-              ))}
+            {doctors?.slice(0, 2).map((doctor: IDoctor, key: number) => (
+              <ShortInfoCard
+                onClick={() => {
+                  handleSelectDoctor(doctor);
+                }}
+                fullName={`Dr. ${doctor.firstName + ' ' + doctor.lastName}`}
+                about={doctor.specializations.map(specialization => specialization.name).join(', ')}
+                avatarKey={doctor.avatarKey}
+                classNames='bg-background w-full rounded-xl mb-[14px] cursor-pointer hover:bg-[#cadbe6]'
+                key={key}
+                id={doctor.id}
+              />
+            ))}
           </div>
         ) : (
           <p className='text-center font-normal leading-6 lg:px-4'>Your doctors will be displayed here</p>
