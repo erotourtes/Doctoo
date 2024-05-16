@@ -232,7 +232,10 @@ export class AppointmentService {
         summary = await lastValueFrom(
           this.summarizerClient.send({ cmd: 'GenerateSummary' }, { text: dto.notes }).pipe(timeout(13000)),
         );
-      await this.prismaService.appointment.update({ where: { id: appointmentId }, data: { notesSummary: summary } });
+      await this.prismaService.appointment.update({
+        where: { id: appointmentId },
+        data: { notes: dto.notes, notesSummary: summary },
+      });
       return plainToInstance(AppointmentNotesReponseDto, { notes: dto.notes, summary });
     } catch (err) {
       if (err instanceof TimeoutError) {
