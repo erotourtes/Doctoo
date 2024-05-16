@@ -15,7 +15,9 @@ export const Summary = ({ summary }: SummaryProps) => {
           </p>
           <ul className='list-inside list-disc text-base font-normal leading-6 text-grey-1'>
             {summary.complaints.map((complaint, i) => (
-              <li key={i}>{complaint.name.toLowerCase()}</li>
+              <li key={i} className='list-inside list-disc'>
+                {complaint.name.toLowerCase()}
+              </li>
             ))}
           </ul>
         </div>
@@ -26,7 +28,9 @@ export const Summary = ({ summary }: SummaryProps) => {
           <p className='text-base font-normal leading-6 text-grey-1'>A list of body parts that may have problems:</p>
           <ul className='list-inside list-disc  text-base font-normal leading-6 text-grey-1'>
             {summary.problematicBodyParts.map((bodyPart, i) => (
-              <li key={i}>{bodyPart.name.toLocaleLowerCase()}</li>
+              <li key={i} className='list-inside list-disc'>
+                {bodyPart.name.toLocaleLowerCase()}
+              </li>
             ))}
           </ul>
         </div>
