@@ -11,6 +11,7 @@ const statusColors: StatusColors = {
   PLANNED: { badgeColor: 'bg-orange-light', labelColor: 'text-orange' },
   COMPLETED: { badgeColor: 'bg-main-light', labelColor: 'text-main' },
   CANCELED: { badgeColor: 'bg-error-light', labelColor: 'text-error' },
+  MISSED: { badgeColor: 'bg-error-light', labelColor: 'text-error' },
 };
 
 type AppointmentBadgesProps = { status: AppointmentStatus; paymentReceiptKey?: string };

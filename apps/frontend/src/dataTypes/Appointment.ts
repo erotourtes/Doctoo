@@ -1,13 +1,26 @@
+import { type components } from '../api';
 import type { paths } from '@/api';
 import type { IDoctor } from './Doctor';
 import type { TPatient } from './Patient';
+
+type AppointmentStatusT = components['schemas']['ResponseAppointmentDto']['status'];
 
 export enum AppointmentStatus {
   PENDING_PAYMENT = 'PENDING_PAYMENT',
   PLANNED = 'PLANNED',
   COMPLETED = 'COMPLETED',
   CANCELED = 'CANCELED',
+  MISSED = 'MISSED',
 }
+
+// Defined to check if the real status matches the type
+const _assertStatusType: { [K in AppointmentStatusT]: K } = {
+  [AppointmentStatus.PENDING_PAYMENT]: AppointmentStatus.PENDING_PAYMENT,
+  [AppointmentStatus.PLANNED]: AppointmentStatus.PLANNED,
+  [AppointmentStatus.COMPLETED]: AppointmentStatus.COMPLETED,
+  [AppointmentStatus.CANCELED]: AppointmentStatus.CANCELED,
+  [AppointmentStatus.MISSED]: AppointmentStatus.MISSED,
+};
 
 export interface INotesSummaryItemPosition {
   start: number;
