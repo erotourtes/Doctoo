@@ -1,6 +1,5 @@
 # doctoo
-
-WIP.
+[Design Document](https://docs.google.com/document/d/1Sn8YPKQ9s-fQu1v_ON21lP7M4qcCcVONxn55K6YaCz4/edit)
 
 ## Installation
 
